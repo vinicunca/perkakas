@@ -2,7 +2,7 @@
   "extends": "./tsconfig.json",
 
   "include": ["src"],
-  "exclude": ["**/*.test.ts"],
+  "exclude": ["**/*.spec.ts"],
 
   "compilerOptions": {
     "declaration": true,

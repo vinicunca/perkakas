@@ -23,6 +23,7 @@
     "clean": "rm -rf ./dist && mkdir dist",
     "test": "vitest run --coverage && pnpm run compile",
     "test:ci": "vitest run",
+    "test:w": "vitest",
     "compile": "tsc",
     "compile:dist": "tsc --project tsconfig.dist.json",
     "build": "pnpm run clean && pnpm run build:es && pnpm run build:cjs",
