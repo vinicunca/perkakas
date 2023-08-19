@@ -1,16 +1,27 @@
 {
+  "$schema": "http://json.schemastore.org/tsconfig",
+
+  "extends": "@tsconfig/recommended/tsconfig.json",
+
+  "include": ["src", "test", "**/.eslintrc.js", "*.config.js", "*.config.ts"],
+
   "compilerOptions": {
-    "target": "es2018",
-    "module": "esnext",
-    "lib": ["esnext", "DOM"],
-    "moduleResolution": "node",
-    "esModuleInterop": true,
-    "strict": true,
-    "strictNullChecks": true,
-    "resolveJsonModule": true
-  },
+    // TYPE CHECKING
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
 
-  "include": ["**/*.ts"],
+    // MODULES
+    "types": ["vitest/globals"],
 
-  "exclude": ["dist"]
+    // EMIT
+    "noEmit": true,
+
+    // LANGUAGE and ENVIRONMENT
+    "lib": ["ES6", "ES2017.Object"],
+    // TODO: The recommended target is ES2015 (ES6). Node10 supports es2018 and
+    // the vast majority of browsers are probably above that too already. It's
+    // most likely safe to up this value, and it would probably result in a
+    // smaller package size.
+    "target": "ES5"
+  }
 }
