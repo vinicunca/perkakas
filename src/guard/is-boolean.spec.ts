@@ -1,5 +1,3 @@
-import { assertType, describe, expect, test } from 'vitest';
-
 import { isBoolean } from './is-boolean';
 import { typesDataProvider } from '../../test/types-data-provider';
 

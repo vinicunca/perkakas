@@ -1,5 +1,3 @@
-import { assertType, describe, expect, test } from 'vitest';
-
 import { isDefined } from './is-defined';
 import { typesDataProvider } from '../../test/types-data-provider';
 
