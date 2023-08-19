@@ -14,5 +14,10 @@ module.exports = defineConfig({
     // TODO: There are a ton of `any` throughout the codebase, they should be
     // replaced by `unknown` or better types.
     '@typescript-eslint/no-explicit-any': 'off',
+
+    // TODO: The idiom for using `purry` right now is via the `arguments`
+    // reserved keyword, but it's recommended to use a variadic instead (e.g.
+    // `function foo(...args: readonly unknown[])`)
+    'prefer-rest-params': 'off',
   },
 });
