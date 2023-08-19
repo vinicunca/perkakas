@@ -14,10 +14,10 @@ type Chunked<T extends IterableContainer> = T[number] extends never
  * @param array the array
  * @param size the length of the chunk
  * @signature
- *    R.chunk(array, size)
+ *    P.chunk(array, size)
  * @example
- *    R.chunk(['a', 'b', 'c', 'd'], 2) // => [['a', 'b'], ['c', 'd']]
- *    R.chunk(['a', 'b', 'c', 'd'], 3) // => [['a', 'b', 'c'], ['d']]
+ *    P.chunk(['a', 'b', 'c', 'd'], 2) // => [['a', 'b'], ['c', 'd']]
+ *    P.chunk(['a', 'b', 'c', 'd'], 3) // => [['a', 'b', 'c'], ['d']]
  * @data_first
  * @category Array
  */
@@ -30,10 +30,10 @@ export function chunk<T extends IterableContainer>(
  * Split an array into groups the length of `size`. If `array` can't be split evenly, the final chunk will be the remaining elements.
  * @param size the length of the chunk
  * @signature
- *    R.chunk(size)(array)
+ *    P.chunk(size)(array)
  * @example
- *    R.chunk(2)(['a', 'b', 'c', 'd']) // => [['a', 'b'], ['c', 'd']]
- *    R.chunk(3)(['a', 'b', 'c', 'd']) // => [['a', 'b', 'c'], ['d']]
+ *    P.chunk(2)(['a', 'b', 'c', 'd']) // => [['a', 'b'], ['c', 'd']]
+ *    P.chunk(3)(['a', 'b', 'c', 'd']) // => [['a', 'b', 'c'], ['d']]
  * @data_last
  * @category Array
  */
