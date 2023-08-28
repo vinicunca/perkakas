@@ -1,8 +1,7 @@
 import { filter } from './filter';
 import { map } from './map';
-import { pipe } from '../function/pipe';
+import { identity, pipe } from '../function';
 import { take } from './take';
-import { identity } from '../function/identity';
 
 describe('data_first', () => {
   it('map', () => {

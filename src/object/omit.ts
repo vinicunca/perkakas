@@ -1,5 +1,5 @@
 import { fromPairs } from './from-pairs';
-import { purry } from '../function/purry';
+import { purry } from '../function';
 
 /**
  * Returns a partial copy of an object omitting the keys specified.

@@ -1,7 +1,5 @@
-import { filter } from '../array/filter';
-import { map } from '../array/map';
-import { take } from '../array/take';
-import { prop } from '../object/prop';
+import { filter, map, take } from '../array';
+import { prop } from '../object';
 import { identity } from './identity';
 import { pipe } from './pipe';
 

@@ -1,7 +1,7 @@
 import { createLazyInvocationCounter } from '../../test/lazy-invocation-counter';
 import { differenceWith } from './difference-with';
-import { equals } from '../object/equals';
-import { pipe } from '../function/pipe';
+import { equals } from '../object';
+import { pipe } from '../function';
 import { take } from './take';
 
 const source = [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 4 }];

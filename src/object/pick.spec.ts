@@ -1,6 +1,6 @@
 import { pick } from './pick';
-import { pipe } from '../function/pipe';
-import { concat } from '../array/concat';
+import { pipe } from '../function';
+import { concat } from '../array';
 
 describe('data first', () => {
   test('it should pick props', () => {

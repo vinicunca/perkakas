@@ -1,6 +1,6 @@
 import { type Path, type SupportsValueAtPath, type ValueAtPath } from '../utils/paths';
 import { type Narrow } from '../utils/narrow';
-import { purry } from '../function/purry';
+import { purry } from '../function';
 
 /**
  * Sets the value at `path` of `object`. `path` can be an array or a path string.

@@ -1,4 +1,4 @@
-import { pipe } from '../function/pipe';
+import { pipe } from '../function';
 import { reduce } from './reduce';
 
 const array = [1, 2, 3, 4, 5] as const;

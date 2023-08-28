@@ -1,5 +1,5 @@
 import { mapToObj } from './map-to-obj';
-import { pipe } from '../function/pipe';
+import { pipe } from '../function';
 
 describe('data_first', () => {
   it('mapToObj', () => {

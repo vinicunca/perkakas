@@ -1,6 +1,5 @@
 import { createLazyInvocationCounter } from '../../test/lazy-invocation-counter';
-import { identity } from '../function/identity';
-import { pipe } from '../function/pipe';
+import { identity, pipe } from '../function';
 import { take } from './take';
 import { uniqBy } from './uniq-by';
 

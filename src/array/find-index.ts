@@ -1,7 +1,7 @@
 import { type Pred, type PredIndexed, type PredIndexedOptional } from '../utils/types';
 import { toLazyIndexed } from '../utils/to-lazy-indexed';
 import { toSingle } from '../utils/to-single';
-import { purry } from '../function/purry';
+import { purry } from '../function';
 
 /**
  * Returns the index of the first element in the array where predicate is true, and -1 otherwise.

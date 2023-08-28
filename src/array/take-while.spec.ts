@@ -1,4 +1,4 @@
-import { pipe } from '../function/pipe';
+import { pipe } from '../function';
 import { takeWhile } from './take-while';
 
 describe('data_first', () => {

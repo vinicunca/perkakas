@@ -1,5 +1,5 @@
 import { indexBy } from './index-by';
-import { pipe } from '../function/pipe';
+import { pipe } from '../function';
 
 const array = [
   { dir: 'left', code: 97 },

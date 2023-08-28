@@ -1,4 +1,4 @@
-import { purry } from '../function/purry';
+import { purry } from '../function';
 
 type Reverse<
   T extends ReadonlyArray<unknown>,

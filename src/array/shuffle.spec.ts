@@ -1,5 +1,5 @@
 import { shuffle } from './shuffle';
-import { pipe } from '../function/pipe';
+import { pipe } from '../function';
 import { difference } from './difference';
 
 describe('data_first', () => {

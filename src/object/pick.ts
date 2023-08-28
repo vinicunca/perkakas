@@ -1,4 +1,4 @@
-import { purry } from '../function/purry';
+import { purry } from '../function';
 
 /**
  * Creates an object composed of the picked `object` properties.

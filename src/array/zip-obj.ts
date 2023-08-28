@@ -1,4 +1,4 @@
-import { purry } from '../function/purry';
+import { purry } from '../function';
 
 /**
  * Creates a new object from two supplied lists by pairing up equally-positioned items.

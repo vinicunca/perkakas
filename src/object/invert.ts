@@ -1,4 +1,4 @@
-import { purry } from '../function/purry';
+import { purry } from '../function';
 
 type Inverted<T extends object> = T[keyof T] extends PropertyKey
   ? Record<T[keyof T], keyof T>

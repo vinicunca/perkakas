@@ -1,4 +1,4 @@
-import { purry } from '../function/purry';
+import { purry } from '../function';
 
 type SwappedProps<T, K1 extends keyof T, K2 extends keyof T> = {
   [K in keyof T]: T[K1 extends K ? K2 : K2 extends K ? K1 : K];

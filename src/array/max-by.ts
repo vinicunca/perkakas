@@ -1,5 +1,5 @@
 import { type PredIndexed, type PredIndexedOptional } from '../utils/types';
-import { purry } from '../function/purry';
+import { purry } from '../function';
 
 function _maxBy(indexed: boolean) {
   return <T>(array: Array<T>, fn: PredIndexedOptional<T, number>) => {

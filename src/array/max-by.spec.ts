@@ -1,5 +1,5 @@
 import { maxBy } from './max-by';
-import { pipe } from '../function/pipe';
+import { pipe } from '../function';
 
 const array = [{ a: 2 }, { a: 5 }, { a: 1 }, { a: 4 }] as const;
 const expected = { a: 5 };

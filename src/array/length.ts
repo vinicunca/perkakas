@@ -1,4 +1,4 @@
-import { purry } from '../function/purry';
+import { purry } from '../function';
 
 type Enumerable<T> = ArrayLike<T> | Iterable<T>;
 

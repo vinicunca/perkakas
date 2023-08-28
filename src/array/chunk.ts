@@ -1,4 +1,4 @@
-import { purry } from '../function/purry';
+import { purry } from '../function';
 import { type IterableContainer, type NonEmptyArray } from '../utils/types';
 
 type Chunked<T extends IterableContainer> = T[number] extends never

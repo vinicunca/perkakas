@@ -1,4 +1,4 @@
-import { purry } from '../function/purry';
+import { purry } from '../function';
 
 /**
  * Given a union of indexable types `T`, we derive an indexable type

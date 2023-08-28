@@ -1,4 +1,4 @@
-import { purry } from '../function/purry';
+import { purry } from '../function';
 
 /**
  * Returns elements from the array until predicate returns false.

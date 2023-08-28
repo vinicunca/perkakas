@@ -1,4 +1,4 @@
-import { isNonNull } from './isNonNull';
+import { isNonNull } from './is-non-null';
 import { typesDataProvider } from '../../test/types-data-provider';
 
 describe('isNonNull', () => {

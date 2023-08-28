@@ -1,5 +1,5 @@
-import { pipe } from '../function/pipe';
-import { stringToPath } from '../string/string-to-path';
+import { pipe } from '../function';
+import { stringToPath } from '../string';
 import { setPath } from './set-path';
 
 interface SampleType {

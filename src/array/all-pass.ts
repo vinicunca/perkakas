@@ -1,4 +1,4 @@
-import { purry } from '../function/purry';
+import { purry } from '../function';
 
 /**
  * Determines whether all predicates returns true for the input data.

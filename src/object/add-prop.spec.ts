@@ -1,5 +1,5 @@
 import { addProp } from './add-prop';
-import { pipe } from '../function/pipe';
+import { pipe } from '../function';
 
 describe('data first', () => {
   test('addProp', () => {

@@ -1,7 +1,7 @@
 import { createLazyInvocationCounter } from '../../test/lazy-invocation-counter';
 import { filter } from './filter';
 import { first } from './first';
-import { pipe } from '../function/pipe';
+import { pipe } from '../function';
 
 function defaultTo<T>(d: T) {
   return function (v: T | undefined | null) {

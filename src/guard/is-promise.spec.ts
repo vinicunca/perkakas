@@ -1,4 +1,4 @@
-import { isPromise } from './isPromise';
+import { isPromise } from './is-promise';
 import { typesDataProvider } from '../../test/types-data-provider';
 
 describe('isPromise', () => {

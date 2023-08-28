@@ -1,4 +1,4 @@
-import { range } from '../array/range';
+import { range } from '../array';
 
 /**
  * Random a non-cryptographic random string from characters a-zA-Z0-9.

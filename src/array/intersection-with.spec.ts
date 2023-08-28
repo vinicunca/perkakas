@@ -1,7 +1,7 @@
 import { createLazyInvocationCounter } from '../../test/lazy-invocation-counter';
 import { intersectionWith } from './intersection-with';
-import { pipe } from '../function/pipe';
-import { equals } from '../object/equals';
+import { pipe } from '../function';
+import { equals } from '../object';
 import { take } from './take';
 
 const source = [

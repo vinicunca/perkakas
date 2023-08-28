@@ -1,7 +1,7 @@
 import { createLazyInvocationCounter } from '../../test/lazy-invocation-counter';
 import { find } from './find';
 import { flattenDeep } from './flatten-deep';
-import { pipe } from '../function/pipe';
+import { pipe } from '../function';
 
 test('flatten', () => {
   expect(flattenDeep([[1, 2], 3, [4, 5]] as const)).toEqual([1, 2, 3, 4, 5]);

@@ -1,4 +1,4 @@
-import { isNil } from './isNil';
+import { isNil } from './is-nil';
 import { typesDataProvider } from '../../test/types-data-provider';
 
 describe('isNil', () => {

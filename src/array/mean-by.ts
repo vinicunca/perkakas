@@ -1,11 +1,10 @@
-import { purry } from '../function/purry';
-import { PredIndexed, PredIndexedOptional } from '../utils/types';
+import { type PredIndexed, type PredIndexedOptional } from '../utils/types';
+import { purry } from '../function';
 
-const _meanBy =
-  (indexed: boolean) =>
-  <T>(array: Array<T>, fn: PredIndexedOptional<T, number>) => {
+function _meanBy(indexed: boolean) {
+  return <T>(array: Array<T>, fn: PredIndexedOptional<T, number>) => {
     if (array.length === 0) {
-      return NaN;
+      return Number.NaN;
     }
 
     let sum = 0;
@@ -15,6 +14,7 @@ const _meanBy =
 
     return sum / array.length;
   };
+}
 
 /**
  * Returns the mean of the elements of an array using the provided predicate.

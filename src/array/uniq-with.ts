@@ -1,5 +1,5 @@
 import { type LazyResult } from '../utils/reduce-lazy';
-import { purry } from '../function/purry';
+import { purry } from '../function';
 import { _reduceLazy } from '../utils/reduce-lazy';
 import { toLazyIndexed } from '../utils/to-lazy-indexed';
 

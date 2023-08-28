@@ -1,5 +1,5 @@
 import { forEach } from './for-each';
-import { pipe } from '../function/pipe';
+import { pipe } from '../function';
 import { take } from './take';
 
 const array = [1, 2, 3] as const;

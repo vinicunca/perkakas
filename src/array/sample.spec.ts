@@ -912,6 +912,8 @@ describe('typing', () => {
 });
 
 function generateRandomArray(): NonEmptyArray<number> {
+  // We use a set to remove duplicates, as it allows us to simplify our tests
+  // @ts-expect-error [ts2322]: we know this array isn't empty!
   return Array.from(new Set(Array.from({ length: 100 }).map(Math.random)));
 }
 

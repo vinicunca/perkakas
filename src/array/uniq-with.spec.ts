@@ -1,6 +1,6 @@
 import { createLazyInvocationCounter } from '../../test/lazy-invocation-counter';
-import { equals } from '../object/equals';
-import { pipe } from '../function/pipe';
+import { equals } from '../object';
+import { pipe } from '../function';
 import { take } from './take';
 import { uniqWith } from './uniq-with';
 

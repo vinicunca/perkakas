@@ -1,5 +1,5 @@
 import { mapValues } from './map-values';
-import { pipe } from '../function/pipe';
+import { pipe } from '../function';
 
 describe('data first', () => {
   test('mapValues', () => {

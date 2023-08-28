@@ -1,5 +1,5 @@
 import { type PredIndexedOptional } from '../utils/types';
-import { purry } from '../function/purry';
+import { purry } from '../function';
 
 /**
  * Map each element of an array into an object using a defined callback function and flatten the result.

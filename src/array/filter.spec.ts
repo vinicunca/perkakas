@@ -1,6 +1,6 @@
 import { createLazyInvocationCounter } from '../../test/lazy-invocation-counter';
 import { filter } from './filter';
-import { pipe } from '../function/pipe';
+import { pipe } from '../function';
 
 function assertType<T>(data: T): T {
   return data;

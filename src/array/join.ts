@@ -1,5 +1,5 @@
 import { type IterableContainer } from '../utils/types';
-import { purry } from '../function/purry';
+import { purry } from '../function';
 
 type Joinable = bigint | boolean | number | string | null | undefined;
 

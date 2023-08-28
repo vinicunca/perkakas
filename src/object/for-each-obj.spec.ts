@@ -1,5 +1,5 @@
 import { forEachObj } from './for-each-obj';
-import { pipe } from '../function/pipe';
+import { pipe } from '../function';
 
 const obj = {
   a: 1,

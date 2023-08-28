@@ -1,6 +1,6 @@
 import { createLazyInvocationCounter } from '../../test/lazy-invocation-counter';
 import { findIndex } from './find-index';
-import { pipe } from '../function/pipe';
+import { pipe } from '../function';
 
 describe('data first', () => {
   test('findIndex', () => {

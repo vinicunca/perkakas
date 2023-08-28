@@ -1,4 +1,4 @@
-import { pipe } from '../function/pipe';
+import { pipe } from '../function';
 import { sort } from './sort';
 
 describe('data_first', () => {

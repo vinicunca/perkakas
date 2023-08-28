@@ -1,5 +1,5 @@
 import { type IterableContainer } from '../utils/types';
-import { purry } from '../function/purry';
+import { purry } from '../function';
 
 type Sampled<T extends IterableContainer, N extends number> =
   // Check if N is generic (e.g. not '5' but 'number')

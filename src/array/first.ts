@@ -1,5 +1,5 @@
 import { type IterableContainer } from '../utils/types';
-import { purry } from '../function/purry';
+import { purry } from '../function';
 
 type FirstOut<T extends IterableContainer> = T extends []
   ? undefined

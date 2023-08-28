@@ -1,5 +1,5 @@
 import { findLast } from './find-last';
-import { pipe } from '../function/pipe';
+import { pipe } from '../function';
 
 const array = [1, 2, 3, 4];
 

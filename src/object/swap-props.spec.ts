@@ -1,4 +1,4 @@
-import { pipe } from '../function/pipe';
+import { pipe } from '../function';
 import { swapProps } from './swap-props';
 
 describe('runtime', () => {

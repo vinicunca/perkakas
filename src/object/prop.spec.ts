@@ -1,5 +1,5 @@
-import { sortBy } from '../array/sort-by';
-import { pipe } from '../function/pipe';
+import { sortBy } from '../array';
+import { pipe } from '../function';
 import { prop } from './prop';
 
 test('prop', () => {

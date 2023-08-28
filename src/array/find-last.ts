@@ -1,5 +1,5 @@
 import { type Pred, type PredIndexed, type PredIndexedOptional } from '../utils/types';
-import { purry } from '../function/purry';
+import { purry } from '../function';
 
 /**
  * Returns the value of the last element in the array where predicate is true, and undefined

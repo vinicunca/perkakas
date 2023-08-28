@@ -1,6 +1,6 @@
 import { type LazyResult } from '../utils/reduce-lazy';
 import { _reduceLazy } from '../utils/reduce-lazy';
-import { purry } from '../function/purry';
+import { purry } from '../function';
 
 type FlattenDeep<T> = T extends ReadonlyArray<infer K> ? FlattenDeep2<K> : T;
 type FlattenDeep2<T> = T extends ReadonlyArray<infer K> ? FlattenDeep3<K> : T;

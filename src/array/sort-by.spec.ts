@@ -1,5 +1,4 @@
-import { identity } from '../function/identity';
-import { pipe } from '../function/pipe';
+import { identity, pipe } from '../function';
 import { sortBy } from './sort-by';
 
 const items = [{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }] as const;

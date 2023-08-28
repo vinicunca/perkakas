@@ -1,6 +1,6 @@
 import { difference } from './difference';
 import { map } from './map';
-import { pipe } from '../function/pipe';
+import { pipe } from '../function';
 import { take } from './take';
 
 const source = [1, 2, 3, 4] as const;

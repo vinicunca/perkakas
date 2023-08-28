@@ -1,5 +1,5 @@
 import { keys } from './keys';
-import { pipe } from '../function/pipe';
+import { pipe } from '../function';
 
 describe('Test for keys', () => {
   it('should return keys of array', () => {

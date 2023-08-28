@@ -1,5 +1,5 @@
 import { meanBy } from './mean-by';
-import { pipe } from '../function/pipe';
+import { pipe } from '../function';
 
 const array = [{ a: 1 }, { a: 2 }, { a: 4 }, { a: 5 }, { a: 3 }] as const;
 

@@ -1,5 +1,5 @@
 import { flatMapToObj } from './flat-map-to-obj';
-import { pipe } from '../function/pipe';
+import { pipe } from '../function';
 
 describe('data_first', () => {
   it('flatMapToObj', () => {

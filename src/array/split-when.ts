@@ -1,5 +1,5 @@
 import { splitAt } from './split-at';
-import { purry } from '../function/purry';
+import { purry } from '../function';
 
 /**
  * Splits a given array at the first index where the given predicate returns true.

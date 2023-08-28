@@ -1,7 +1,7 @@
 import { createLazyInvocationCounter } from '../../test/lazy-invocation-counter';
 import { find } from './find';
 import { flatMap } from './flat-map';
-import { pipe } from '../function/pipe';
+import { pipe } from '../function';
 
 describe('data_first', () => {
   it('flatMap', () => {

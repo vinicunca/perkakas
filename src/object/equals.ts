@@ -1,4 +1,4 @@
-import { purry } from '../function/purry';
+import { purry } from '../function';
 
 // from https://github.com/epoberezkin/fast-deep-equal/blob/master/index.js
 const isArray = Array.isArray;

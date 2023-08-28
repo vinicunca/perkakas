@@ -1,5 +1,5 @@
 import { typesDataProvider } from '../../test/types-data-provider';
-import { isFunction } from './isFunction';
+import { isFunction } from './is-function';
 
 describe('isFunction', () => {
   test('isFunction: should work as type guard', () => {

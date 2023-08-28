@@ -1,5 +1,5 @@
 import { pickBy } from './pick-by';
-import { pipe } from '../function/pipe';
+import { pipe } from '../function';
 
 describe('data first', () => {
   test('it should pick props', () => {

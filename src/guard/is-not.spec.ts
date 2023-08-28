@@ -1,7 +1,7 @@
 import { typesDataProvider } from '../../test/types-data-provider';
 import { isString } from './is-string';
-import { isNot } from './isNot';
-import { isPromise } from './isPromise';
+import { isNot } from './is-not';
+import { isPromise } from './is-promise';
 
 describe('isNot', () => {
   test('isNot: should work as type guard', () => {

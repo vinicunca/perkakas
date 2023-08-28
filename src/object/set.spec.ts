@@ -1,4 +1,4 @@
-import { pipe } from '../function/pipe';
+import { pipe } from '../function';
 import { set } from './set';
 
 describe('data first', () => {

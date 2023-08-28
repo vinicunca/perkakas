@@ -1,5 +1,5 @@
 import { typesDataProvider } from '../../test/types-data-provider';
-import { isError } from './isError';
+import { isError } from './is-error';
 
 describe('isError', () => {
   test('isError: should work as type guard', () => {

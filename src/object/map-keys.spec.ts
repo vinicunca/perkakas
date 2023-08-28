@@ -1,5 +1,5 @@
 import { mapKeys } from './map-keys';
-import { pipe } from '../function/pipe';
+import { pipe } from '../function';
 
 describe('data first', () => {
   test('mapKeys', () => {

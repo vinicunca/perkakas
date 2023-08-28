@@ -1,5 +1,5 @@
 import { concat } from './concat';
-import { pipe } from '../function/pipe';
+import { pipe } from '../function';
 
 describe('data first', () => {
   test('concat', () => {

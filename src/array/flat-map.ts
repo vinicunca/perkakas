@@ -1,5 +1,5 @@
 import { flatten } from './flatten';
-import { purry } from '../function/purry';
+import { purry } from '../function';
 
 /**
  * Map each element of an array using a defined callback function and flatten the mapped result.

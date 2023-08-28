@@ -1,5 +1,5 @@
 import { pathOr } from './path-or';
-import { pipe } from '../function/pipe';
+import { pipe } from '../function';
 
 interface SampleType {
   a: {

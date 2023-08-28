@@ -1,5 +1,5 @@
 import { type PredIndexed, type PredIndexedOptional } from '../utils/types';
-import { purry } from '../function/purry';
+import { purry } from '../function';
 
 /**
  * Converts a list of objects into an object indexing the objects by the given key.
