@@ -1,1 +1,1 @@
-export * from './purry';
+export * from '../function/purry';

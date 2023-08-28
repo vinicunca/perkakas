@@ -1,4 +1,4 @@
-import { purry } from './purry';
+import { purry } from '../function/purry';
 
 function sub(a: number, b: number) {
   return a - b;

@@ -1,0 +1,42 @@
+import { purry } from '../function/purry';
+
+/**
+ * Returns a partial copy of an object omitting the keys matching predicate.
+ * @param object the target object
+ * @param fn the predicate
+ * @signature P.omitBy(object, fn)
+ * @example
+ *    P.omitBy({a: 1, b: 2, A: 3, B: 4}, (val, key) => key.toUpperCase() === key) // => {a: 1, b: 2}
+ * @data_first
+ * @category Object
+ */
+export function omitBy<T>(
+  object: T,
+  fn: <K extends keyof T>(value: T[K], key: K) => boolean
+): T extends Record<keyof T, T[keyof T]> ? T : Partial<T>;
+
+/**
+ * Returns a partial copy of an object omitting the keys matching predicate.
+ * @param fn the predicate
+ * @signature P.omitBy(fn)(object)
+ * @example
+ *    P.omitBy((val, key) => key.toUpperCase() === key)({a: 1, b: 2, A: 3, B: 4}) // => {a: 1, b: 2}
+ * @data_last
+ * @category Object
+ */
+export function omitBy<T>(
+  fn: <K extends keyof T>(value: T[K], key: K) => boolean
+): (object: T) => T extends Record<keyof T, T[keyof T]> ? T : Partial<T>;
+
+export function omitBy() {
+  return purry(_omitBy, arguments);
+}
+
+function _omitBy(object: any, fn: (value: any, key: any) => boolean) {
+  return Object.keys(object).reduce<any>((acc, key) => {
+    if (!fn(object[key], key)) {
+      acc[key] = object[key];
+    }
+    return acc;
+  }, {});
+}

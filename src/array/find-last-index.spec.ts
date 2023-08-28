@@ -1,0 +1,42 @@
+import { findLastIndex } from './find-last-index';
+import { pipe } from '../function/pipe';
+
+const array = [1, 2, 3, 4];
+
+describe('data first', () => {
+  test('findLastIndex', () => {
+    expect(findLastIndex(array, (x) => x % 2 === 1)).toBe(2);
+  });
+
+  test('findLastIndex.indexed', () => {
+    expect(findLastIndex.indexed(array, (x) => x % 2 === 1)).toBe(2);
+  });
+
+  test('findLast first value', () => {
+    expect(findLastIndex(array, (x) => x === 1)).toEqual(0);
+  });
+
+  test('findLastIndex -1', () => {
+    expect(findLastIndex(array, (x) => x === 5)).toBe(-1);
+  });
+});
+
+describe('data last', () => {
+  test('findLastIndex', () => {
+    expect(
+      pipe(
+        array,
+        findLastIndex((x) => x % 2 === 1),
+      ),
+    ).toEqual(2);
+  });
+
+  test('findLastIndex.indexed', () => {
+    expect(
+      pipe(
+        array,
+        findLastIndex.indexed((x) => x % 2 === 1),
+      ),
+    ).toEqual(2);
+  });
+});

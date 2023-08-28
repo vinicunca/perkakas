@@ -1,4 +1,4 @@
-import { map } from '../src/map';
+import { map } from '../src/array/map';
 
 export function createLazyInvocationCounter() {
   const count = vi.fn();

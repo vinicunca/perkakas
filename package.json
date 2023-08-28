@@ -36,13 +36,13 @@
   "devDependencies": {
     "@tsconfig/recommended": "^1.0.2",
     "@vinicunca/eslint-config": "^1.10.0",
-    "@vitest/coverage-v8": "^0.34.2",
-    "bumpp": "^9.1.1",
-    "eslint": "^8.47.0",
+    "@vitest/coverage-v8": "^0.34.3",
+    "bumpp": "^9.2.0",
+    "eslint": "^8.48.0",
     "eslint-define-config": "^1.23.0",
     "ts-node": "^10.9.1",
-    "typescript": "^5.1.6",
-    "vitest": "^0.34.2"
+    "typescript": "^5.2.2",
+    "vitest": "^0.34.3"
   },
   "publishConfig": {
     "access": "public"

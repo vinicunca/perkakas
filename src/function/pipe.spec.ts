@@ -1,9 +1,9 @@
-import { filter } from './filter';
+import { filter } from '../array/filter';
+import { map } from '../array/map';
+import { take } from '../array/take';
+import { prop } from '../object/prop';
 import { identity } from './identity';
-import { map } from './map';
 import { pipe } from './pipe';
-import { prop } from './prop';
-import { take } from './take';
 
 it('should pipe a single operation', () => {
   const result = pipe(1, (x) => x * 2);
