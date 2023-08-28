@@ -1,0 +1,21 @@
+import { pipe } from '../function/pipe';
+import { takeWhile } from './take-while';
+
+describe('data_first', () => {
+  it('takeWhile', () => {
+    expect(takeWhile([1, 2, 3, 4, 3, 2, 1] as const, (x) => x !== 4)).toEqual([
+      1, 2, 3,
+    ]);
+  });
+});
+
+describe('data_last', () => {
+  it('takeWhile', () => {
+    expect(
+      pipe(
+        [1, 2, 3, 4, 3, 2, 1] as const,
+        takeWhile((x) => x !== 4),
+      ),
+    ).toEqual([1, 2, 3]);
+  });
+});

@@ -1,4 +1,4 @@
-import { sortBy } from '../array/sortBy';
+import { sortBy } from '../array/sort-by';
 import { pipe } from '../function/pipe';
 import { prop } from './prop';
 

@@ -16,7 +16,7 @@
  */
 
 export function values<T>(
-  source: Record<PropertyKey, T> | ArrayLike<T>
+  source: Record<PropertyKey, T> | ArrayLike<T>,
 ): Array<T> {
   return Object.values(source);
 }

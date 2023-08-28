@@ -1,25 +1,25 @@
-import { NonEmptyArray } from '../utils/types';
+import { type NonEmptyArray } from '../utils/types';
 import { sample } from './sample';
 
 describe('at runtime', () => {
-  describe.each([[generateRandomArray()]])('mathy stuff', array => {
+  describe.each([[generateRandomArray()]])('mathy stuff', (array) => {
     it.each(allIndices(array))(
       'returns the right number of items',
-      sampleSize => {
+      (sampleSize) => {
         const result = sample(array, sampleSize);
         expect(result).toHaveLength(sampleSize);
-      }
+      },
     );
 
     it.each(allIndices(array))(
-      "doesn't make items up (returns a subset of the input array)",
-      sampleSize => {
+      'doesn\'t make items up (returns a subset of the input array)',
+      (sampleSize) => {
         const result = sample(array, sampleSize);
 
         for (const item of result) {
           expect(array).toContain(item);
         }
-      }
+      },
     );
 
     it('returns a random result', () => {
@@ -37,12 +37,12 @@ describe('at runtime', () => {
       expect(collector.size).toBeGreaterThan(1);
     });
 
-    it.each(allIndices(array))("doesn't return repetitions", sampleSize => {
+    it.each(allIndices(array))('doesn\'t return repetitions', (sampleSize) => {
       const result = sample(array, sampleSize);
       expect(result).toHaveLength(new Set(result).size);
     });
 
-    it.each(allIndices(array))("doesn't reorder items", sampleSize => {
+    it.each(allIndices(array))('doesn\'t reorder items', (sampleSize) => {
       const result = sample(array, sampleSize);
 
       // Scan the result array and make sure each item is after the previous one
@@ -429,28 +429,28 @@ describe('typing', () => {
         | [number, number, number, number, number, number, number]
         | [number, number, number, number, number, number, number, number]
         | [
-            number,
-            number,
-            number,
-            number,
-            number,
-            number,
-            number,
-            number,
-            number
-          ]
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+        ]
         | [
-            number,
-            number,
-            number,
-            number,
-            number,
-            number,
-            number,
-            number,
-            number,
-            number
-          ]
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+        ]
       >();
     });
 
@@ -468,28 +468,28 @@ describe('typing', () => {
         | [number, number, number, number, number, number, number]
         | [number, number, number, number, number, number, number, number]
         | [
-            number,
-            number,
-            number,
-            number,
-            number,
-            number,
-            number,
-            number,
-            number
-          ]
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+        ]
         | [
-            number,
-            number,
-            number,
-            number,
-            number,
-            number,
-            number,
-            number,
-            number,
-            number
-          ]
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+          number,
+        ]
       >();
     });
 
@@ -526,55 +526,55 @@ describe('typing', () => {
         | [string | number | boolean, string | boolean, string, string]
         | [string | number | boolean, string | boolean, string, string, string]
         | [
-            string | number | boolean,
-            string | boolean,
-            string,
-            string,
-            string,
-            string
-          ]
+          string | number | boolean,
+          string | boolean,
+          string,
+          string,
+          string,
+          string,
+        ]
         | [
-            string | number | boolean,
-            string | boolean,
-            string,
-            string,
-            string,
-            string,
-            string
-          ]
+          string | number | boolean,
+          string | boolean,
+          string,
+          string,
+          string,
+          string,
+          string,
+        ]
         | [
-            string | number | boolean,
-            string | boolean,
-            string,
-            string,
-            string,
-            string,
-            string,
-            string
-          ]
+          string | number | boolean,
+          string | boolean,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+        ]
         | [
-            string | number | boolean,
-            string | boolean,
-            string,
-            string,
-            string,
-            string,
-            string,
-            string,
-            string
-          ]
+          string | number | boolean,
+          string | boolean,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+        ]
         | [
-            string | number | boolean,
-            string | boolean,
-            string,
-            string,
-            string,
-            string,
-            string,
-            string,
-            string,
-            string
-          ]
+          string | number | boolean,
+          string | boolean,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+        ]
       >();
     });
 
@@ -599,55 +599,55 @@ describe('typing', () => {
         | [string | number | boolean, string | boolean, string, string]
         | [string | number | boolean, string | boolean, string, string, string]
         | [
-            string | number | boolean,
-            string | boolean,
-            string,
-            string,
-            string,
-            string
-          ]
+          string | number | boolean,
+          string | boolean,
+          string,
+          string,
+          string,
+          string,
+        ]
         | [
-            string | number | boolean,
-            string | boolean,
-            string,
-            string,
-            string,
-            string,
-            string
-          ]
+          string | number | boolean,
+          string | boolean,
+          string,
+          string,
+          string,
+          string,
+          string,
+        ]
         | [
-            string | number | boolean,
-            string | boolean,
-            string,
-            string,
-            string,
-            string,
-            string,
-            string
-          ]
+          string | number | boolean,
+          string | boolean,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+        ]
         | [
-            string | number | boolean,
-            string | boolean,
-            string,
-            string,
-            string,
-            string,
-            string,
-            string,
-            string
-          ]
+          string | number | boolean,
+          string | boolean,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+        ]
         | [
-            string | number | boolean,
-            string | boolean,
-            string,
-            string,
-            string,
-            string,
-            string,
-            string,
-            string,
-            string
-          ]
+          string | number | boolean,
+          string | boolean,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+        ]
       >();
     });
 
@@ -669,28 +669,28 @@ describe('typing', () => {
         | [string, string, string, string, string, boolean, number]
         | [string, string, string, string, string, string, boolean, number]
         | [
-            string,
-            string,
-            string,
-            string,
-            string,
-            string,
-            string,
-            boolean,
-            number
-          ]
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          boolean,
+          number,
+        ]
         | [
-            string,
-            string,
-            string,
-            string,
-            string,
-            string,
-            string,
-            string,
-            boolean,
-            number
-          ]
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          boolean,
+          number,
+        ]
       >();
     });
 
@@ -712,28 +712,28 @@ describe('typing', () => {
         | [string, string, string, string, string, boolean, number]
         | [string, string, string, string, string, string, boolean, number]
         | [
-            string,
-            string,
-            string,
-            string,
-            string,
-            string,
-            string,
-            boolean,
-            number
-          ]
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          boolean,
+          number,
+        ]
         | [
-            string,
-            string,
-            string,
-            string,
-            string,
-            string,
-            string,
-            string,
-            boolean,
-            number
-          ]
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          string,
+          boolean,
+          number,
+        ]
       >();
     });
   });
@@ -911,10 +911,10 @@ describe('typing', () => {
   });
 });
 
-const generateRandomArray = (): NonEmptyArray<number> =>
-  // We use a set to remove duplicates, as it allows us to simplify our tests
-  // @ts-expect-error [ts2322]: we know this array isn't empty!
-  Array.from(new Set(Array.from({ length: 100 }).map(Math.random)));
+function generateRandomArray(): NonEmptyArray<number> {
+  return Array.from(new Set(Array.from({ length: 100 }).map(Math.random)));
+}
 
-const allIndices = (array: Array<unknown>): Array<number> =>
-  array.map((_, index) => index);
+function allIndices(array: Array<unknown>): Array<number> {
+  return array.map((_, index) => index);
+}

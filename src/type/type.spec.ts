@@ -17,7 +17,7 @@ it('"Number" if given a numeric value', () => {
 });
 
 it('"Number" if given the NaN value', () => {
-  expect(type(NaN)).toEqual('Number');
+  expect(type(Number.NaN)).toEqual('Number');
 });
 
 it('"String" if given a String literal', () => {
@@ -25,6 +25,7 @@ it('"String" if given a String literal', () => {
 });
 
 it('"String" if given a String object', () => {
+  // eslint-disable-next-line no-new-wrappers
   expect(type(new String('I am a String object'))).toEqual('String');
 });
 

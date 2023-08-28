@@ -6,4 +6,6 @@
  *    onSomething(P.noop)
  * @category Function
  */
-export const noop = () => undefined;
+export function noop() {
+  return undefined;
+}

@@ -1,4 +1,4 @@
-import { fromPairs } from './fromPairs';
+import { fromPairs } from './from-pairs';
 import { purry } from '../function/purry';
 
 /**

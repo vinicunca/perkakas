@@ -1,6 +1,6 @@
 // from https://github.com/ramda/ramda/blob/master/source/internal/_clone.js
 
-import { type } from '../type/type';
+import { type } from '../type';
 
 function _cloneRegExp(pattern: RegExp) {
   return new RegExp(

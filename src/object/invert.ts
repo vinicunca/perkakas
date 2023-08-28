@@ -37,10 +37,10 @@ export function invert() {
 }
 
 function _invert(
-  object: Readonly<Record<PropertyKey, PropertyKey>>
+  object: Readonly<Record<PropertyKey, PropertyKey>>,
 ): Record<PropertyKey, PropertyKey> {
   const result: Record<PropertyKey, PropertyKey> = {};
-
+  // eslint-disable-next-line no-restricted-syntax
   for (const key in object) {
     result[object[key]] = key;
   }

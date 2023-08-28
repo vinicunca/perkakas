@@ -37,8 +37,8 @@ export function zip() {
 }
 
 function _zip(first: Array<unknown>, second: Array<unknown>) {
-  const resultLength =
-    first.length > second.length ? second.length : first.length;
+  const resultLength
+    = first.length > second.length ? second.length : first.length;
   const result = [];
   for (let i = 0; i < resultLength; i++) {
     result.push([first[i], second[i]]);
