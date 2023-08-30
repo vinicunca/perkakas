@@ -17,7 +17,7 @@
     "noEmit": true,
 
     // LANGUAGE and ENVIRONMENT
-    "lib": ["ES6", "ES2017.Object"],
+    "lib": ["ES6", "ES2017.Object", "DOM"],
 
     "target": "ES6"
   }
