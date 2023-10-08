@@ -3,7 +3,7 @@
  * @param path a string path
  * @signature P.stringToPathArray(path)
  * @example P.stringToPathArray('a.b[0].c') // => ['a', 'b', 0, 'c']
- * @data_first
+ * @dataFirst
  * @category String
  */
 export function stringToPath<Path extends string>(

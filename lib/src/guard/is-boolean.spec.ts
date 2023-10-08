@@ -1,8 +1,9 @@
-import { isBoolean } from './is-boolean';
+import { assertType, describe, expect, it } from 'vitest';
 import { typesDataProvider } from '../../test/types-data-provider';
+import { isBoolean } from './is-boolean';
 
 describe('isBoolean', () => {
-  test('isBoolean: should work as type guard', () => {
+  it('isBoolean: should work as type guard', () => {
     const data = typesDataProvider('boolean');
     if (isBoolean(data)) {
       expect(typeof data).toEqual('boolean');
@@ -22,7 +23,7 @@ describe('isBoolean', () => {
     }
   });
 
-  test('isBoolean: should work as type guard in filter', () => {
+  it('isBoolean: should work as type guard in filter', () => {
     const data = [
       typesDataProvider('error'),
       typesDataProvider('array'),

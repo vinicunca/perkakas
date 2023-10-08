@@ -1,8 +1,9 @@
-import { isArray } from './is-array';
+import { assertType, describe, expect, it } from 'vitest';
 import { typesDataProvider } from '../../test/types-data-provider';
+import { isArray } from './is-array';
 
 describe('isArray', () => {
-  test('isArray: should work as type guard', () => {
+  it('isArray: should work as type guard', () => {
     const data = typesDataProvider('array');
     if (isArray(data)) {
       expect(Array.isArray(data)).toEqual(true);
@@ -15,7 +16,7 @@ describe('isArray', () => {
     }
   });
 
-  test('isArray: should work as type guard in filter', () => {
+  it('isArray: should work as type guard in filter', () => {
     const data = [
       typesDataProvider('error'),
       typesDataProvider('array'),

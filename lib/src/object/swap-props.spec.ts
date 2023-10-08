@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { pipe } from '../function';
 import { swapProps } from './swap-props';
 

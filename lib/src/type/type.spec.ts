@@ -1,3 +1,4 @@
+import { expect, it } from 'vitest';
 import { type } from './type';
 
 it('"Array" if given an array literal', () => {

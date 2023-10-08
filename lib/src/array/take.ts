@@ -10,7 +10,7 @@ import { _reduceLazy } from '../utils/reduce-lazy';
  *    P.take(array, n)
  * @example
  *    P.take([1, 2, 3, 4, 3, 2, 1], 3) // => [1, 2, 3]
- * @data_first
+ * @dataFirst
  * @pipeable
  * @category Array
  */
@@ -23,7 +23,7 @@ export function take<T>(array: ReadonlyArray<T>, n: number): Array<T>;
  *    P.take(n)(array)
  * @example
  *    P.pipe([1, 2, 3, 4, 3, 2, 1], P.take(n)) // => [1, 2, 3]
- * @data_last
+ * @dataLast
  * @pipeable
  * @category Array
  */

@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { pipe } from '../function';
 import { stringToPath } from '../string';
 import { setPath } from './set-path';
@@ -26,7 +27,7 @@ const obj: SampleType = {
 };
 
 describe('data first', () => {
-  test('should set a deeply nested value', () => {
+  it('should set a deeply nested value', () => {
     expect<SampleType>(setPath(obj, ['a', 'b', 'c'], 2)).toEqual({
       ...obj,
       a: {
@@ -38,7 +39,7 @@ describe('data first', () => {
     });
   });
 
-  test('should work nested arrays', () => {
+  it('should work nested arrays', () => {
     expect<SampleType>(setPath(obj, ['a', 'e', 1, 'f', 'g'], 2)).toEqual({
       ...obj,
       a: {
@@ -48,7 +49,7 @@ describe('data first', () => {
     });
   });
 
-  test('should correctly type value argument', () => {
+  it('should correctly type value argument', () => {
     expect<SampleType>(
       // @ts-expect-error - this path should yield a type of number
       setPath(obj, ['a', 'e', 1, 'f', 'g'], 'hello'),
@@ -61,7 +62,7 @@ describe('data first', () => {
     });
   });
 
-  test('should correctly type path argument', () => {
+  it('should correctly type path argument', () => {
     // @ts-expect-error - 'hello' isn't a valid path
     expect<SampleType>(setPath(obj, ['a', 'hello'], 'hello')).toEqual({
       ...obj,
@@ -72,7 +73,7 @@ describe('data first', () => {
     });
   });
 
-  test('should work with undefined / optional types', () => {
+  it('should work with undefined / optional types', () => {
     expect<SampleType>(setPath(obj, ['a', 'z'], undefined)).toEqual({
       ...obj,
       a: {
@@ -82,7 +83,7 @@ describe('data first', () => {
     });
   });
 
-  test('should support partial paths', () => {
+  it('should support partial paths', () => {
     expect<SampleType>(setPath(obj, ['a', 'b'], { c: 2 })).toEqual({
       ...obj,
       a: {
@@ -92,7 +93,7 @@ describe('data first', () => {
     });
   });
 
-  test('should correctly type partial paths', () => {
+  it('should correctly type partial paths', () => {
     // @ts-expect-error - this path should yield a type of { c: number }
     expect<SampleType>(setPath(obj, ['a', 'b'], 123)).toEqual({
       ...obj,
@@ -103,7 +104,7 @@ describe('data first', () => {
     });
   });
 
-  test('should combo well with stringToPath', () => {
+  it('should combo well with stringToPath', () => {
     expect<SampleType>(setPath(obj, stringToPath('a.b.c'), 2)).toEqual({
       ...obj,
       a: {
@@ -117,7 +118,7 @@ describe('data first', () => {
 });
 
 describe('data last', () => {
-  test('should set a deeply nested value', () => {
+  it('should set a deeply nested value', () => {
     expect<SampleType>(pipe(obj, setPath(['a', 'b', 'c'], 2))).toEqual({
       ...obj,
       a: {
@@ -129,7 +130,7 @@ describe('data last', () => {
     });
   });
 
-  test('should work nested arrays', () => {
+  it('should work nested arrays', () => {
     expect<SampleType>(pipe(obj, setPath(['a', 'e', 1, 'f', 'g'], 2))).toEqual({
       ...obj,
       a: {
@@ -139,7 +140,7 @@ describe('data last', () => {
     });
   });
 
-  test('should correctly type value argument', () => {
+  it('should correctly type value argument', () => {
     expect<SampleType>(
       pipe(
         obj,
@@ -155,7 +156,7 @@ describe('data last', () => {
     });
   });
 
-  test('should correctly type path argument', () => {
+  it('should correctly type path argument', () => {
     // @ts-expect-error - 'hello' isn't a valid path
     expect<SampleType>(pipe(obj, setPath(['a', 'hello'], 'hello'))).toEqual({
       ...obj,
@@ -166,7 +167,7 @@ describe('data last', () => {
     });
   });
 
-  test('should work with undefined / optional types', () => {
+  it('should work with undefined / optional types', () => {
     const t = setPath(['a', 'z'], undefined);
     expect<SampleType>(pipe(obj, t)).toEqual({
       ...obj,
@@ -177,7 +178,7 @@ describe('data last', () => {
     });
   });
 
-  test('should support partial paths', () => {
+  it('should support partial paths', () => {
     expect<SampleType>(pipe(obj, setPath(['a', 'b'], { c: 2 }))).toEqual({
       ...obj,
       a: {
@@ -187,7 +188,7 @@ describe('data last', () => {
     });
   });
 
-  test('should correctly type partial paths', () => {
+  it('should correctly type partial paths', () => {
     // @ts-expect-error - this path should yield a type of { c: number }
     expect<SampleType>(pipe(obj, setPath(['a', 'b'], 123))).toEqual({
       ...obj,

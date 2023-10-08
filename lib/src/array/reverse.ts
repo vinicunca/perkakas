@@ -4,11 +4,11 @@ type Reverse<
   T extends ReadonlyArray<unknown>,
   R extends ReadonlyArray<unknown> = [],
 > = ReturnType<
-  T extends IsNoTuple<T>
-    ? () => [...T, ...R]
-    : T extends readonly [infer F, ...infer L]
-      ? () => Reverse<L, [F, ...R]>
-      : () => R
+T extends IsNoTuple<T>
+  ? () => [...T, ...R]
+  : T extends readonly [infer F, ...infer L]
+    ? () => Reverse<L, [F, ...R]>
+    : () => R
 >;
 
 type IsNoTuple<T> = T extends readonly [unknown, ...Array<unknown>] ? never : T;
@@ -20,7 +20,7 @@ type IsNoTuple<T> = T extends readonly [unknown, ...Array<unknown>] ? never : T;
  *    P.reverse(arr);
  * @example
  *    P.reverse([1, 2, 3]) // [3, 2, 1]
- * @data_first
+ * @dataFirst
  * @category Array
  */
 export function reverse<T extends ReadonlyArray<unknown>>(array: T): Reverse<T>;
@@ -32,7 +32,7 @@ export function reverse<T extends ReadonlyArray<unknown>>(array: T): Reverse<T>;
  *    P.reverse()(array);
  * @example
  *    P.reverse()([1, 2, 3]) // [3, 2, 1]
- * @data_last
+ * @dataLast
  * @category Array
  */
 export function reverse<T extends ReadonlyArray<unknown>>(): (

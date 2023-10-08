@@ -1,15 +1,16 @@
-import { isString } from './is-string';
+import { assertType, describe, expect, it } from 'vitest';
 import { typesDataProvider } from '../../test/types-data-provider';
+import { isString } from './is-string';
 
 describe('isString', () => {
-  test('isString: should work as type guard', () => {
+  it('isString: should work as type guard', () => {
     const data = typesDataProvider('string');
     if (isString(data)) {
       expect(typeof data).toEqual('string');
       assertType<string>(data);
     }
   });
-  test('isString: should work even if data type is unknown', () => {
+  it('isString: should work even if data type is unknown', () => {
     const data: unknown = typesDataProvider('string');
     if (isString(data)) {
       expect(typeof data).toEqual('string');
@@ -17,7 +18,7 @@ describe('isString', () => {
     }
   });
 
-  test('isString: should work with literal types', () => {
+  it('isString: should work with literal types', () => {
     const data = (): 'a' | 'b' | 'c' | number => {
       return 'a';
     };
@@ -27,7 +28,7 @@ describe('isString', () => {
       assertType<'a' | 'b' | 'c'>(x);
     }
   });
-  test('isString: should work as type guard in array', () => {
+  it('isString: should work as type guard in array', () => {
     const data = [
       typesDataProvider('error'),
       typesDataProvider('string'),

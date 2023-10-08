@@ -25,7 +25,7 @@ type ObjectEntry<T extends Record<PropertyKey, unknown>> = [
   ObjectValues<T>,
 ];
 type ObjectEntries<T extends Record<PropertyKey, unknown>> = Array<
-  ObjectEntry<T>
+ObjectEntry<T>
 >;
 
 export namespace toPairs {

@@ -1,32 +1,33 @@
+import { describe, expect, expectTypeOf, it } from 'vitest';
 import { type NonEmptyArray } from '../utils/types';
 import { chunk } from './chunk';
 
 describe('data first', () => {
-  test('equal size', () => {
+  it('equal size', () => {
     expect(chunk(['a', 'b', 'c', 'd'] as const, 2)).toEqual([
       ['a', 'b'],
       ['c', 'd'],
     ]);
   });
 
-  test('not equal size', () => {
+  it('not equal size', () => {
     expect(chunk(['a', 'b', 'c', 'd'] as const, 3)).toEqual([
       ['a', 'b', 'c'],
       ['d'],
     ]);
   });
 
-  test('1 element', () => {
+  it('1 element', () => {
     expect(chunk(['x'] as const, 3)).toEqual([['x']]);
   });
 
-  test('empty array', () => {
+  it('empty array', () => {
     expect(chunk([] as const, 3)).toEqual([]);
   });
 });
 
 describe('data last', () => {
-  test('equal size', () => {
+  it('equal size', () => {
     expect(chunk(2)(['a', 'b', 'c', 'd'] as const)).toEqual([
       ['a', 'b'],
       ['c', 'd'],
@@ -35,73 +36,73 @@ describe('data last', () => {
 });
 
 describe('strict typing', () => {
-  test('empty tuple', () => {
+  it('empty tuple', () => {
     const input: [] = [];
     const result = chunk(input, 2);
     expectTypeOf(result).toEqualTypeOf<[]>();
   });
 
-  test('readonly empty tuple', () => {
+  it('readonly empty tuple', () => {
     const input = [] as const;
     const result = chunk(input, 2);
     expectTypeOf(result).toEqualTypeOf<[]>();
   });
 
-  test('array', () => {
+  it('array', () => {
     const input: Array<number> = [];
     const result = chunk(input, 2);
     expectTypeOf(result).toEqualTypeOf<Array<NonEmptyArray<number>>>();
   });
 
-  test('readonly array', () => {
+  it('readonly array', () => {
     const input: ReadonlyArray<number> = [];
     const result = chunk(input, 2);
     expectTypeOf(result).toEqualTypeOf<Array<NonEmptyArray<number>>>();
   });
 
-  test('tuple', () => {
+  it('tuple', () => {
     const input: [number, number, number] = [123, 456, 789];
     const result = chunk(input, 2);
     expectTypeOf(result).toEqualTypeOf<NonEmptyArray<NonEmptyArray<number>>>();
   });
 
-  test('readonly tuple', () => {
+  it('readonly tuple', () => {
     const input: readonly [number, number, number] = [123, 456, 789];
     const result = chunk(input, 2);
     expectTypeOf(result).toEqualTypeOf<NonEmptyArray<NonEmptyArray<number>>>();
   });
 
-  test('tuple with rest tail', () => {
+  it('tuple with rest tail', () => {
     const input: [number, ...Array<number>] = [123, 456];
     const result = chunk(input, 2);
     expectTypeOf(result).toEqualTypeOf<NonEmptyArray<NonEmptyArray<number>>>();
   });
 
-  test('readonly tuple with rest tail', () => {
+  it('readonly tuple with rest tail', () => {
     const input: readonly [number, ...Array<number>] = [123, 456];
     const result = chunk(input, 2);
     expectTypeOf(result).toEqualTypeOf<NonEmptyArray<NonEmptyArray<number>>>();
   });
 
-  test('tuple with rest middle', () => {
+  it('tuple with rest middle', () => {
     const input: [number, ...Array<number>, number] = [123, 456];
     const result = chunk(input, 2);
     expectTypeOf(result).toEqualTypeOf<NonEmptyArray<NonEmptyArray<number>>>();
   });
 
-  test('readonly tuple with rest middle', () => {
+  it('readonly tuple with rest middle', () => {
     const input: readonly [number, ...Array<number>, number] = [123, 456];
     const result = chunk(input, 2);
     expectTypeOf(result).toEqualTypeOf<NonEmptyArray<NonEmptyArray<number>>>();
   });
 
-  test('tuple with rest head', () => {
+  it('tuple with rest head', () => {
     const input: [...Array<number>, number] = [123, 456];
     const result = chunk(input, 2);
     expectTypeOf(result).toEqualTypeOf<NonEmptyArray<NonEmptyArray<number>>>();
   });
 
-  test('readonly tuple with rest head', () => {
+  it('readonly tuple with rest head', () => {
     const input: readonly [...Array<number>, number] = [123, 456];
     const result = chunk(input, 2);
     expectTypeOf(result).toEqualTypeOf<NonEmptyArray<NonEmptyArray<number>>>();

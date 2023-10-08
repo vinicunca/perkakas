@@ -1,13 +1,14 @@
+import { describe, expect, it } from 'vitest';
 import { pipe } from '../function';
 import { reduce } from './reduce';
 
 const array = [1, 2, 3, 4, 5] as const;
 
 describe('data first', () => {
-  test('reduce', () => {
+  it('reduce', () => {
     expect(reduce(array, (acc, x) => acc + x, 100)).toEqual(115);
   });
-  test('reduce.indexed', () => {
+  it('reduce.indexed', () => {
     let i = 0;
     expect(
       reduce.indexed(
@@ -25,7 +26,7 @@ describe('data first', () => {
 });
 
 describe('data last', () => {
-  test('reduce', () => {
+  it('reduce', () => {
     expect(
       pipe(
         array,
@@ -34,7 +35,7 @@ describe('data last', () => {
     ).toEqual(115);
   });
 
-  test('reduce.indexed', () => {
+  it('reduce.indexed', () => {
     expect(
       pipe(
         array,

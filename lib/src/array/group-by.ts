@@ -13,7 +13,7 @@ import { purry } from '../function';
  *    P.groupBy(['one', 'two', 'three'], x => x.length) // => {3: ['one', 'two'], 5: ['three']}
  *    P.groupBy.strict([{a: 'cat'}, {a: 'dog'}] as const, prop('a')) // => {cat: [{a: 'cat'}], dog: [{a: 'dog'}]} typed Partial<Record<'cat' | 'dog', NonEmptyArray<{a: 'cat' | 'dog'}>>>
  *    P.groupBy([0, 1], x => x % 2 === 0 ? 'even' : undefined) // => {even: [0]}
- * @data_first
+ * @dataFirst
  * @indexed
  * @strict
  * @category Array
@@ -34,7 +34,7 @@ export function groupBy<T>(
  *    P.groupBy(fn)(array)
  * @example
  *    P.pipe(['one', 'two', 'three'], P.groupBy(x => x.length)) // => {3: ['one', 'two'], 5: ['three']}
- * @data_last
+ * @dataLast
  * @indexed
  * @category Array
  */

@@ -9,7 +9,7 @@ import { purry } from '../function';
  *    P.drop(array, n)
  * @example
  *    P.drop([1, 2, 3, 4, 5], 2) // => [3, 4, 5]
- * @data_first
+ * @dataFirst
  * @pipeable
  * @category Array
  */
@@ -23,7 +23,7 @@ export function drop<T>(array: ReadonlyArray<T>, n: number): Array<T>;
  *    P.drop(n)(array)
  * @example
  *    P.drop(2)([1, 2, 3, 4, 5]) // => [3, 4, 5]
- * @data_last
+ * @dataLast
  * @pipeable
  * @category Array
  */

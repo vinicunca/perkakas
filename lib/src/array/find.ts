@@ -13,7 +13,7 @@ import { purry } from '../function';
  * @example
  *    P.find([1, 3, 4, 6], n => n % 2 === 0) // => 4
  *    P.find.indexed([1, 3, 4, 6], (n, i) => n % 2 === 0) // => 4
- * @data_first
+ * @dataFirst
  * @indexed
  * @pipeable
  * @category Array
@@ -38,7 +38,7 @@ export function find<T>(
  *      [1, 3, 4, 6],
  *      P.find.indexed((n, i) => n % 2 === 0)
  *    ) // => 4
- * @data_last
+ * @dataLast
  * @indexed
  * @pipeable
  * @category Array

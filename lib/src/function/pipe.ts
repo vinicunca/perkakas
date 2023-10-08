@@ -13,7 +13,7 @@ import { type LazyResult } from '../utils/reduce-lazy';
  *    ) // => [6, 14]
  *
  *
- * @data_first
+ * @dataFirst
  * @category Function
  */
 export function pipe<A, B>(value: A, op1: (input: A) => B): B;

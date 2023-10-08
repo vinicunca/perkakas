@@ -1,6 +1,7 @@
+import { expect, it, vi } from 'vitest';
 import { once } from './once';
 
-test('should call only once', () => {
+it('should call only once', () => {
   const mock = vi.fn(() => ({}));
   const wrapped = once(mock as () => object);
   const ret1 = wrapped();

@@ -1,6 +1,7 @@
+import { describe, expect, it } from 'vitest';
 import { createLazyInvocationCounter } from '../../test/lazy-invocation-counter';
-import { filter } from './filter';
 import { pipe } from '../function';
+import { filter } from './filter';
 
 function assertType<T>(data: T): T {
   return data;
@@ -8,7 +9,7 @@ function assertType<T>(data: T): T {
 
 function isNumber<T>(data: T): data is Extract<T, number> {
   return typeof data === 'number';
-} // TODO Refactor to remeda function
+}
 
 describe('data_first', () => {
   it('filter', () => {
@@ -55,7 +56,7 @@ describe('data_last', () => {
     expect(result).toEqual([1, 3]);
   });
 
-  it('filter', () => {
+  it('filter counter', () => {
     const counter = createLazyInvocationCounter();
     const result = pipe(
       [1, 2, 3] as const,

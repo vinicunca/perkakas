@@ -27,7 +27,7 @@ function _meanBy(indexed: boolean) {
  *      [{a: 5}, {a: 1}, {a: 3}],
  *      P.meanBy(x => x.a)
  *    ) // 3
- * @data_last
+ * @dataLast
  * @indexed
  * @category Array
  */
@@ -48,7 +48,7 @@ export function meanBy<T>(
  *      [{a: 5}, {a: 1}, {a: 3}],
  *      x => x.a
  *    ) // 3
- * @data_first
+ * @dataFirst
  * @indexed
  * @category Array
  */

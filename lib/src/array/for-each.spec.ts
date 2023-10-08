@@ -1,5 +1,6 @@
-import { forEach } from './for-each';
+import { describe, expect, it, vi } from 'vitest';
 import { pipe } from '../function';
+import { forEach } from './for-each';
 import { take } from './take';
 
 const array = [1, 2, 3] as const;

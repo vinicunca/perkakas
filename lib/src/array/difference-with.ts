@@ -18,7 +18,7 @@ type IsEquals<TFirst, TSecond> = (a: TFirst, b: TSecond) => boolean;
  *      [{a: 2}, {a: 5}, {a: 3}],
  *      P.equals,
  *    ) // => [{a: 1}, {a: 4}]
- * @data_first
+ * @dataFirst
  * @category Array
  * @pipeable
  */
@@ -45,7 +45,7 @@ export function differenceWith<TFirst, TSecond>(
  *      P.differenceWith([{a: 2}, {a: 3}], P.equals),
  *      P.take(2),
  *    ) // => [{a: 1}, {a: 4}]
- * @data_last
+ * @dataLast
  * @category Array
  * @pipeable
  */

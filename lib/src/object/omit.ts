@@ -1,5 +1,5 @@
-import { fromPairs } from './from-pairs';
 import { purry } from '../function';
+import { fromPairs } from './from-pairs';
 
 /**
  * Returns a partial copy of an object omitting the keys specified.
@@ -9,7 +9,7 @@ import { purry } from '../function';
  *    P.omit(obj, names);
  * @example
  *    P.omit({ a: 1, b: 2, c: 3, d: 4 }, ['a', 'd']) // => { b: 2, c: 3 }
- * @data_first
+ * @dataFirst
  * @category Object
  */
 export function omit<T extends object, K extends keyof T>(
@@ -25,7 +25,7 @@ export function omit<T extends object, K extends keyof T>(
  *    P.omit(names)(obj);
  * @example
  *    P.pipe({ a: 1, b: 2, c: 3, d: 4 }, P.omit(['a', 'd'])) // => { b: 2, c: 3 }
- * @data_last
+ * @dataLast
  * @category Object
  */
 export function omit<K extends PropertyKey>(
@@ -38,7 +38,7 @@ export function omit() {
 
 function _omit<T extends object, K extends keyof T>(
   data: T,
-  propNames: ReadonlyArray<K>
+  propNames: ReadonlyArray<K>,
 ): Omit<T, K> {
   if (propNames.length === 0) {
     return { ...data };
@@ -54,12 +54,12 @@ function _omit<T extends object, K extends keyof T>(
     return remaining;
   }
 
-  if (!propNames.some(propName => propName in data)) {
+  if (!propNames.some((propName) => propName in data)) {
     return { ...data };
   }
 
   const asSet = new Set(propNames);
   return fromPairs(
-    Object.entries(data).filter(([key]) => !asSet.has(key as K))
+    Object.entries(data).filter(([key]) => !asSet.has(key as K)),
   ) as Omit<T, K>;
 }

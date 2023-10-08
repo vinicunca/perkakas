@@ -23,7 +23,7 @@ function _sumBy(indexed: boolean) {
  *      [{a: 5}, {a: 1}, {a: 3}],
  *      P.sumBy(x => x.a)
  *    ) // 9
- * @data_last
+ * @dataLast
  * @indexed
  * @category Array
  */
@@ -44,7 +44,7 @@ export function sumBy<T>(
  *      [{a: 5}, {a: 1}, {a: 3}],
  *      x => x.a
  *    ) // 9
- * @data_first
+ * @dataFirst
  * @indexed
  * @category Array
  */

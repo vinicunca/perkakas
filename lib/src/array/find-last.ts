@@ -12,7 +12,7 @@ import { purry } from '../function';
  * @example
  *    P.findLast([1, 3, 4, 6], n => n % 2 === 1) // => 3
  *    P.findLast.indexed([1, 3, 4, 6], (n, i) => n % 2 === 1) // => 3
- * @data_first
+ * @dataFirst
  * @indexed
  * @pipeable
  * @category Array
@@ -38,7 +38,7 @@ export function findLast<T>(
  *      [1, 3, 4, 6],
  *      P.findLast.indexed((n, i) => n % 2 === 1)
  *    ) // => 3
- * @data_last
+ * @dataLast
  * @indexed
  * @pipeable
  * @category Array

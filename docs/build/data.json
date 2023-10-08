@@ -1,0 +1,3830 @@
+[
+  {
+    "name": "addProp",
+    "description": "<p>Add a new property to an object.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.addProp(obj, prop, value)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.addProp({ firstName: 'john' }, 'lastName', 'doe') // => {firstName: 'john', lastName: 'doe'}\n",
+        "args": [
+          {
+            "name": "obj",
+            "description": "the target object"
+          },
+          {
+            "name": "prop",
+            "description": "the property name"
+          },
+          {
+            "name": "value",
+            "description": "the property value"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "P.addProp(prop, value)(obj)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.addProp('lastName', 'doe')({ firstName: 'john' }) // => {firstName: 'john', lastName: 'doe'}\n",
+        "args": [
+          {
+            "name": "prop",
+            "description": "the property name"
+          },
+          {
+            "name": "value",
+            "description": "the property value"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Object"
+  },
+  {
+    "name": "allPass",
+    "description": "<p>Determines whether all predicates returns true for the input data.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.allPass(data, fns)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "const isDivisibleBy3 = (x: number) => x % 3 === 0\nconst isDivisibleBy4 = (x: number) => x % 4 === 0\nconst fns = [isDivisibleBy3, isDivisibleBy4]\nP.allPass(12, fns) // => true\nP.allPass(8, fns) // => false\n",
+        "args": [
+          {
+            "name": "data",
+            "description": "The input data for predicates."
+          },
+          {
+            "name": "fns",
+            "description": "The list of predicates."
+          }
+        ],
+        "returns": {
+          "name": "boolean"
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "P.allPass(fns)(data)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "const isDivisibleBy3 = (x: number) => x % 3 === 0\nconst isDivisibleBy4 = (x: number) => x % 4 === 0\nconst fns = [isDivisibleBy3, isDivisibleBy4]\nP.allPass(fns)(12) // => true\nP.allPass(fns)(8) // => false\n",
+        "args": [
+          {
+            "name": "fns",
+            "description": "The list of predicates."
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Array"
+  },
+  {
+    "name": "anyPass",
+    "description": "<p>Determines whether any predicate returns true for the input data.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.anyPass(data, fns)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "const isDivisibleBy3 = (x: number) => x % 3 === 0\nconst isDivisibleBy4 = (x: number) => x % 4 === 0\nconst fns = [isDivisibleBy3, isDivisibleBy4]\nP.anyPass(8, fns) // => true\nP.anyPass(11, fns) // => false\n",
+        "args": [
+          {
+            "name": "data",
+            "description": "The input data for predicates."
+          },
+          {
+            "name": "fns",
+            "description": "The list of predicates."
+          }
+        ],
+        "returns": {
+          "name": "boolean"
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "P.anyPass(fns)(data)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "const isDivisibleBy3 = (x: number) => x % 3 === 0\nconst isDivisibleBy4 = (x: number) => x % 4 === 0\nconst fns = [isDivisibleBy3, isDivisibleBy4]\nP.anyPass(fns)(8) // => true\nP.anyPass(fns)(11) // => false\n",
+        "args": [
+          {
+            "name": "fns",
+            "description": "The list of predicates."
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Array"
+  },
+  {
+    "name": "chunk",
+    "description": "<p>Split an array into groups the length of <code>size</code>. If <code>array</code> can&#39;t be split evenly, the final chunk will be the remaining elements.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.chunk(array, size)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.chunk(['a', 'b', 'c', 'd'], 2) // => [['a', 'b'], ['c', 'd']]\nP.chunk(['a', 'b', 'c', 'd'], 3) // => [['a', 'b', 'c'], ['d']]\n",
+        "args": [
+          {
+            "name": "array",
+            "description": "the array"
+          },
+          {
+            "name": "size",
+            "description": "the length of the chunk"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "P.chunk(size)(array)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.chunk(2)(['a', 'b', 'c', 'd']) // => [['a', 'b'], ['c', 'd']]\nP.chunk(3)(['a', 'b', 'c', 'd']) // => [['a', 'b', 'c'], ['d']]\n",
+        "args": [
+          {
+            "name": "size",
+            "description": "the length of the chunk"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Array"
+  },
+  {
+    "name": "clamp",
+    "description": "<p>Clamp the given value within the inclusive min and max bounds.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.clamp(value, { min, max })\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "clamp(10, { min: 20 }) // => 20\nclamp(10, { max: 5 }) // => 5\nclamp(10, { max: 20, min: 5 }) // => 10\n",
+        "args": [
+          {
+            "name": "value",
+            "description": "the number"
+          },
+          {
+            "name": "limits",
+            "description": "the bounds limits"
+          }
+        ],
+        "returns": {
+          "name": "number"
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "P.clamp({ min, max })(value)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "clamp({ min: 20 })(10) // => 20\nclamp({ max: 5 })(10) // => 5\nclamp({ max: 20, min: 5 })(10) // => 10\n",
+        "args": [
+          {
+            "name": "limits",
+            "description": "the bounds limits"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Number"
+  },
+  {
+    "name": "clone",
+    "description": "<p>Creates a deep copy of the value. Supported types: <code>Array</code>, <code>Object</code>, <code>Number</code>, <code>String</code>, <code>Boolean</code>, <code>Date</code>, <code>RegExp</code>. Functions are assigned by reference rather than copied.</p>\n",
+    "methods": [
+      {
+        "signature": "P.clone(value)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.clone({ foo: 'bar' }) // {foo: 'bar'}\n",
+        "args": [
+          {
+            "name": "value",
+            "description": "the object to clone"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Object"
+  },
+  {
+    "name": "compact",
+    "description": "<p>Filter out all falsey values. The values <code>false</code>, <code>null</code>, <code>0</code>, <code>&quot;&quot;</code>, <code>undefined</code>, and <code>NaN</code> are falsey.</p>\n",
+    "methods": [
+      {
+        "signature": "P.compact(array)\n",
+        "indexed": false,
+        "pipeable": true,
+        "strict": false,
+        "example": "P.compact([0, 1, false, 2, '', 3]) // => [1, 2, 3]\n",
+        "args": [
+          {
+            "name": "items",
+            "description": "the array to compact"
+          }
+        ],
+        "returns": {
+          "name": "Array"
+        }
+      }
+    ],
+    "category": "Array"
+  },
+  {
+    "name": "concat",
+    "description": "<p>Combines two arrays.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.concat(arr1, arr2)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.concat([1, 2, 3], ['a']) // [1, 2, 3, 'a']\n",
+        "args": [
+          {
+            "name": "arr1",
+            "description": "the first array"
+          },
+          {
+            "name": "arr2",
+            "description": "the second array"
+          }
+        ],
+        "returns": {
+          "name": "Array"
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "P.concat(arr2)(arr1)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.concat(['a'])([1, 2, 3]) // [1, 2, 3, 'a']\n",
+        "args": [
+          {
+            "name": "arr2",
+            "description": "the second array"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Array"
+  },
+  {
+    "name": "countBy",
+    "description": "<p>Counts how many values of the collection pass the specified predicate.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.countBy(array, fn)\n",
+        "indexed": true,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.countBy([1, 2, 3, 4, 5], (x) => x % 2 === 0) // => 2\n",
+        "args": [
+          {
+            "name": "items",
+            "description": "The input data."
+          },
+          {
+            "name": "fn",
+            "description": "The predicate."
+          }
+        ],
+        "returns": {
+          "name": "number"
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "P.countBy(fn)(array)\n",
+        "indexed": true,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.pipe(\n  [1, 2, 3, 4, 5],\n  P.countBy((x) => x % 2 === 0)\n) // => 2\n",
+        "args": [
+          {
+            "name": "fn",
+            "description": "The predicate."
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Array"
+  },
+  {
+    "name": "createPipe",
+    "description": "<p>Creates a data-last pipe function. First function must be always annotated. Other functions are automatically inferred.</p>\n",
+    "methods": [
+      {
+        "signature": "P.createPipe(op1, op2, op3)(data)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.createPipe(\n  (x: number) => x * 2,\n  (x) => x * 3\n)(1) // => 6\n",
+        "args": [
+          {
+            "name": "op1"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Function"
+  },
+  {
+    "name": "difference",
+    "description": "<p>Excludes the values from <code>other</code> array.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.difference(array, other)\n",
+        "indexed": false,
+        "pipeable": true,
+        "strict": false,
+        "example": "P.difference([1, 2, 3, 4], [2, 5, 3]) // => [1, 4]\n",
+        "args": [
+          {
+            "name": "array",
+            "description": "the source array"
+          },
+          {
+            "name": "other",
+            "description": "the values to exclude"
+          }
+        ],
+        "returns": {
+          "name": "Array"
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "P.difference(other)(array)\n",
+        "indexed": false,
+        "pipeable": true,
+        "strict": false,
+        "example": "P.difference([2, 5, 3])([1, 2, 3, 4]) // => [1, 4]\nP.pipe(\n  [1, 2, 3, 4, 5, 6], // only 4 iterations\n  P.difference([2, 3]),\n  P.take(2)\n) // => [1, 4]\n",
+        "args": [
+          {
+            "name": "other",
+            "description": "the values to exclude"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Array"
+  },
+  {
+    "name": "differenceWith",
+    "description": "<p>Excludes the values from <code>other</code> array.<br>Elements are compared by custom comparator isEquals.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.differenceWith(array, other, isEquals)\n",
+        "indexed": false,
+        "pipeable": true,
+        "strict": false,
+        "example": "P.differenceWith(\n  [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 4 }],\n  [{ a: 2 }, { a: 5 }, { a: 3 }],\n  P.equals\n) // => [{a: 1}, {a: 4}]\n",
+        "args": [
+          {
+            "name": "array",
+            "description": "the source array"
+          },
+          {
+            "name": "other",
+            "description": "the values to exclude"
+          },
+          {
+            "name": "isEquals",
+            "description": "the comparator"
+          }
+        ],
+        "returns": {
+          "name": "Array"
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "P.differenceWith(other, isEquals)(array)\n",
+        "indexed": false,
+        "pipeable": true,
+        "strict": false,
+        "example": "P.differenceWith(\n  [{ a: 2 }, { a: 5 }, { a: 3 }],\n  P.equals\n)([{ a: 1 }, { a: 2 }, { a: 3 }, { a: 4 }]) // => [{a: 1}, {a: 4}]\nP.pipe(\n  [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 4 }, { a: 5 }, { a: 6 }], // only 4 iterations\n  P.differenceWith([{ a: 2 }, { a: 3 }], P.equals),\n  P.take(2)\n) // => [{a: 1}, {a: 4}]\n",
+        "args": [
+          {
+            "name": "other",
+            "description": "the values to exclude"
+          },
+          {
+            "name": "isEquals",
+            "description": "the comparator"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Array"
+  },
+  {
+    "name": "drop",
+    "description": "<p>Removes first <code>n</code> elements from the <code>array</code>.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.drop(array, n)\n",
+        "indexed": false,
+        "pipeable": true,
+        "strict": false,
+        "example": "P.drop([1, 2, 3, 4, 5], 2) // => [3, 4, 5]\n",
+        "args": [
+          {
+            "name": "array",
+            "description": "the target array"
+          },
+          {
+            "name": "n",
+            "description": "the number of elements to skip"
+          }
+        ],
+        "returns": {
+          "name": "Array"
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "P.drop(n)(array)\n",
+        "indexed": false,
+        "pipeable": true,
+        "strict": false,
+        "example": "P.drop(2)([1, 2, 3, 4, 5]) // => [3, 4, 5]\n",
+        "args": [
+          {
+            "name": "n",
+            "description": "the number of elements to skip"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Array"
+  },
+  {
+    "name": "dropLast",
+    "description": "<p>Removes last <code>n</code> elements from the <code>array</code>.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.dropLast(array, n)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.dropLast([1, 2, 3, 4, 5], 2) // => [1, 2, 3]\n",
+        "args": [
+          {
+            "name": "array",
+            "description": "the target array"
+          },
+          {
+            "name": "n",
+            "description": "the number of elements to skip"
+          }
+        ],
+        "returns": {
+          "name": "Array"
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "P.dropLast(n)(array)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.dropLast(2)([1, 2, 3, 4, 5]) // => [1, 2, 3]\n",
+        "args": [
+          {
+            "name": "n",
+            "description": "the number of elements to skip"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Array"
+  },
+  {
+    "name": "equals",
+    "description": "<p>Returns true if its arguments are equivalent, false otherwise.<br>NOTE: Doesn&#39;t handle cyclical data structures.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.equals(a, b)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.equals(1, 1) //=> true\nP.equals(1, '1') //=> false\nP.equals([1, 2, 3], [1, 2, 3]) //=> true\n",
+        "args": [
+          {
+            "name": "a",
+            "description": "the first object to compare"
+          },
+          {
+            "name": "b",
+            "description": "the second object to compare"
+          }
+        ],
+        "returns": {
+          "name": "boolean"
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "P.equals(b)(a)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.equals(1)(1) //=> true\nP.equals('1')(1) //=> false\nP.equals([1, 2, 3])([1, 2, 3]) //=> true\n",
+        "args": [
+          {
+            "name": "a",
+            "description": "the first object to compare"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Object"
+  },
+  {
+    "name": "filter",
+    "description": "<p>Filter the elements of an array that meet the condition specified in a callback function.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.filter(array, fn)\nP.filter.indexed(array, fn)\n",
+        "indexed": true,
+        "pipeable": true,
+        "strict": false,
+        "example": "P.filter([1, 2, 3], (x) => x % 2 === 1) // => [1, 3]\nP.filter.indexed([1, 2, 3], (x, i, array) => x % 2 === 1) // => [1, 3]\n",
+        "args": [
+          {
+            "name": "array",
+            "description": "The array to filter."
+          },
+          {
+            "name": "fn",
+            "description": "the callback function."
+          }
+        ],
+        "returns": {
+          "name": "Array"
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "P.filter(fn)(array)\nP.filter.indexed(fn)(array)\n",
+        "indexed": true,
+        "pipeable": true,
+        "strict": false,
+        "example": "P.pipe(\n  [1, 2, 3],\n  P.filter((x) => x % 2 === 1)\n) // => [1, 3]\nP.pipe(\n  [1, 2, 3],\n  P.filter.indexed((x, i) => x % 2 === 1)\n) // => [1, 3]\n",
+        "args": [
+          {
+            "name": "fn",
+            "description": "the callback function."
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Array"
+  },
+  {
+    "name": "find",
+    "description": "<p>Returns the value of the first element in the array where predicate is true, and undefined otherwise.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.find(items, fn)\nP.find.indexed(items, fn)\n",
+        "indexed": true,
+        "pipeable": true,
+        "strict": false,
+        "example": "P.find([1, 3, 4, 6], (n) => n % 2 === 0) // => 4\nP.find.indexed([1, 3, 4, 6], (n, i) => n % 2 === 0) // => 4\n",
+        "args": [
+          {
+            "name": "array"
+          },
+          {
+            "name": "fn",
+            "description": "the predicate"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "P.find(fn)(items)\nP.find.indexed(fn)(items)\n",
+        "indexed": true,
+        "pipeable": true,
+        "strict": false,
+        "example": "P.pipe(\n  [1, 3, 4, 6],\n  P.find((n) => n % 2 === 0)\n) // => 4\nP.pipe(\n  [1, 3, 4, 6],\n  P.find.indexed((n, i) => n % 2 === 0)\n) // => 4\n",
+        "args": [
+          {
+            "name": "fn",
+            "description": "the predicate"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Array"
+  },
+  {
+    "name": "findIndex",
+    "description": "<p>Returns the index of the first element in the array where predicate is true, and -1 otherwise.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.findIndex(items, fn)\nP.findIndex.indexed(items, fn)\n",
+        "indexed": true,
+        "pipeable": true,
+        "strict": false,
+        "example": "P.findIndex([1, 3, 4, 6], (n) => n % 2 === 0) // => 2\nP.findIndex.indexed([1, 3, 4, 6], (n, i) => n % 2 === 0) // => 2\n",
+        "args": [
+          {
+            "name": "array"
+          },
+          {
+            "name": "fn",
+            "description": "the predicate"
+          }
+        ],
+        "returns": {
+          "name": "number"
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "P.findIndex(fn)(items)\nP.findIndex.indexed(fn)(items)\n",
+        "indexed": true,
+        "pipeable": true,
+        "strict": false,
+        "example": "P.pipe(\n  [1, 3, 4, 6],\n  P.findIndex((n) => n % 2 === 0)\n) // => 2\nP.pipe(\n  [1, 3, 4, 6],\n  P.findIndex.indexed((n, i) => n % 2 === 0)\n) // => 2\n",
+        "args": [
+          {
+            "name": "fn",
+            "description": "the predicate"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Array"
+  },
+  {
+    "name": "findLast",
+    "description": "<p>Returns the value of the last element in the array where predicate is true, and undefined<br>otherwise.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.findLast(items, fn)\nP.findLast.indexed(items, fn)\n",
+        "indexed": true,
+        "pipeable": true,
+        "strict": false,
+        "example": "P.findLast([1, 3, 4, 6], (n) => n % 2 === 1) // => 3\nP.findLast.indexed([1, 3, 4, 6], (n, i) => n % 2 === 1) // => 3\n",
+        "args": [
+          {
+            "name": "array",
+            "description": "the array"
+          },
+          {
+            "name": "fn",
+            "description": "the predicate"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "P.findLast(fn)(items)\nP.findLast.indexed(fn)(items)\n",
+        "indexed": true,
+        "pipeable": true,
+        "strict": false,
+        "example": "P.pipe(\n  [1, 3, 4, 6],\n  P.findLast((n) => n % 2 === 1)\n) // => 3\nP.pipe(\n  [1, 3, 4, 6],\n  P.findLast.indexed((n, i) => n % 2 === 1)\n) // => 3\n",
+        "args": [
+          {
+            "name": "fn",
+            "description": "the predicate"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Array"
+  },
+  {
+    "name": "findLastIndex",
+    "description": "<p>Returns the index of the last element in the array where predicate is true, and -1 otherwise.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.findLastIndex(items, fn)\nP.findLastIndex.indexed(items, fn)\n",
+        "indexed": true,
+        "pipeable": true,
+        "strict": false,
+        "example": "P.findLastIndex([1, 3, 4, 6], (n) => n % 2 === 1) // => 1\nP.findLastIndex.indexed([1, 3, 4, 6], (n, i) => n % 2 === 1) // => 1\n",
+        "args": [
+          {
+            "name": "array",
+            "description": "the array"
+          },
+          {
+            "name": "fn",
+            "description": "the predicate"
+          }
+        ],
+        "returns": {
+          "name": "number"
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "P.findLastIndex(fn)(items)\nP.findLastIndex.indexed(fn)(items)\n",
+        "indexed": true,
+        "pipeable": true,
+        "strict": false,
+        "example": "P.pipe(\n  [1, 3, 4, 6],\n  P.findLastIndex((n) => n % 2 === 1)\n) // => 1\nP.pipe(\n  [1, 3, 4, 6],\n  P.findLastIndex.indexed((n, i) => n % 2 === 1)\n) // => 1\n",
+        "args": [
+          {
+            "name": "fn",
+            "description": "the predicate"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Array"
+  },
+  {
+    "name": "first",
+    "description": "<p>Gets the first element of <code>array</code>.<br>Note: In <code>pipe</code>, use <code>first()</code> form instead of <code>first</code>. Otherwise, the inferred type is lost.</p>\n",
+    "methods": [
+      {
+        "signature": "P.first(array)\n",
+        "indexed": false,
+        "pipeable": true,
+        "strict": false,
+        "example": "P.first([1, 2, 3]) // => 1\nP.first([]) // => undefined\nP.pipe(\n  [1, 2, 4, 8, 16],\n  P.filter((x) => x > 3),\n  P.first(),\n  (x) => x + 1\n) // => 5\n",
+        "args": [
+          {
+            "name": "array",
+            "description": "the array"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "array"
+  },
+  {
+    "name": "flatMap",
+    "description": "<p>Map each element of an array using a defined callback function and flatten the mapped result.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.flatMap(array, fn)\n",
+        "indexed": false,
+        "pipeable": true,
+        "strict": false,
+        "example": "P.flatMap([1, 2, 3], (x) => [x, x * 10]) // => [1, 10, 2, 20, 3, 30]\n",
+        "args": [
+          {
+            "name": "array",
+            "description": "The array to map."
+          },
+          {
+            "name": "fn",
+            "description": "The function mapper."
+          }
+        ],
+        "returns": {
+          "name": "Array"
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "P.flatMap(fn)(array)\n",
+        "indexed": false,
+        "pipeable": true,
+        "strict": false,
+        "example": "P.pipe(\n  [1, 2, 3],\n  P.flatMap((x) => [x, x * 10])\n) // => [1, 10, 2, 20, 3, 30]\n",
+        "args": [
+          {
+            "name": "fn",
+            "description": "The function mapper."
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Array"
+  },
+  {
+    "name": "flatMapToObj",
+    "description": "<p>Map each element of an array into an object using a defined callback function and flatten the result.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.flatMapToObj(array, fn)\nP.flatMapToObj.indexed(array, fn)\n",
+        "indexed": true,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.flatMapToObj([1, 2, 3], (x) => (x % 2 === 1 ? [[String(x), x]] : [])) // => {1: 1, 3: 3}\nP.flatMapToObj.indexed(['a', 'b'], (x, i) => [\n  [x, i],\n  [x + x, i + i],\n]) // => {a: 0, aa: 0, b: 1, bb: 2}\n",
+        "args": [
+          {
+            "name": "array",
+            "description": "The array to map."
+          },
+          {
+            "name": "fn",
+            "description": "The mapping function, which should return an Array of key-value pairs, similar to Object.fromEntries"
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": "The new mapped object."
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "P.flatMapToObj(fn)(array)\nP.flatMapToObj(fn)(array)\n",
+        "indexed": true,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.pipe(\n  [1, 2, 3],\n  P.flatMapToObj((x) => (x % 2 === 1 ? [[String(x), x]] : []))\n) // => {1: 1, 3: 3}\nP.pipe(\n  ['a', 'b'],\n  P.flatMapToObj.indexed((x, i) => [\n    [x, i],\n    [x + x, i + i],\n  ])\n) // => {a: 0, aa: 0, b: 1, bb: 2}\n",
+        "args": [
+          {
+            "name": "fn",
+            "description": "The mapping function, which should return an Array of key-value pairs, similar to Object.fromEntries"
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": "The new mapped object."
+        }
+      }
+    ],
+    "category": "Array"
+  },
+  {
+    "name": "flatten",
+    "description": "<p>Flattens <code>array</code> a single level deep.<br>Note: In <code>pipe</code>, use <code>flatten()</code> form instead of <code>flatten</code>. Otherwise, the inferred type is lost.</p>\n",
+    "methods": [
+      {
+        "signature": "P.flatten(array)\n",
+        "indexed": false,
+        "pipeable": true,
+        "strict": false,
+        "example": "P.flatten([[1, 2], [3], [4, 5]]) // => [1, 2, 3, 4, 5]\nP.pipe([[1, 2], [3], [4, 5]], P.flatten()) // => [1, 2, 3, 4, 5]\n",
+        "args": [
+          {
+            "name": "items",
+            "description": "the target array"
+          }
+        ],
+        "returns": {
+          "name": "Array"
+        }
+      }
+    ],
+    "category": "Array"
+  },
+  {
+    "name": "flattenDeep",
+    "description": "<p>Recursively flattens <code>array</code>.<br>Note: In <code>pipe</code>, use <code>flattenDeep()</code> form instead of <code>flattenDeep</code>. Otherwise, the inferred type is lost.</p>\n",
+    "methods": [
+      {
+        "signature": "P.flattenDeep(array)\n",
+        "indexed": false,
+        "pipeable": true,
+        "strict": false,
+        "example": "P.flattenDeep([\n  [1, 2],\n  [[3], [4, 5]],\n]) // => [1, 2, 3, 4, 5]\nP.pipe(\n  [\n    [1, 2],\n    [[3], [4, 5]],\n  ],\n  P.flattenDeep()\n) // => [1, 2, 3, 4, 5]\n",
+        "args": [
+          {
+            "name": "items",
+            "description": "the target array"
+          }
+        ],
+        "returns": {
+          "name": "Array"
+        }
+      }
+    ],
+    "category": "Array"
+  },
+  {
+    "name": "forEach",
+    "description": "<p>Iterate an array using a defined callback function. The original array is returned instead of <code>void</code>.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.forEach(array, fn)\nP.forEach.indexed(array, fn)\n",
+        "indexed": true,
+        "pipeable": true,
+        "strict": false,
+        "example": "P.forEach([1, 2, 3], (x) => {\n  console.log(x)\n}) // => [1, 2, 3]\nP.forEach.indexed([1, 2, 3], (x, i) => {\n  console.log(x, i)\n}) // => [1, 2, 3]\n",
+        "args": [
+          {
+            "name": "array",
+            "description": "The array."
+          },
+          {
+            "name": "fn",
+            "description": "The callback function."
+          }
+        ],
+        "returns": {
+          "name": "Array",
+          "description": "The original array"
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "P.forEach(fn)(array)\nP.forEach.indexed(fn)(array)\n",
+        "indexed": true,
+        "pipeable": true,
+        "strict": false,
+        "example": "P.pipe(\n  [1, 2, 3],\n  P.forEach((x) => {\n    console.log(x)\n  })\n) // => [1, 2, 3]\nP.pipe(\n  [1, 2, 3],\n  P.forEach.indexed((x, i) => {\n    console.log(x, i)\n  })\n) // => [1, 2, 3]\n",
+        "args": [
+          {
+            "name": "fn",
+            "description": "the function mapper"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Array"
+  },
+  {
+    "name": "forEachObj",
+    "description": "<p>Iterate an object using a defined callback function. The original object is returned.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.forEachObj(object, fn)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.forEachObj({ a: 1 }, (val) => {\n  console.log(`${val}`)\n}) // \"1\"\nP.forEachObj.indexed({ a: 1 }, (val, key, obj) => {\n  console.log(`${key}: ${val}`)\n}) // \"a: 1\"\n",
+        "args": [
+          {
+            "name": "object",
+            "description": "The object."
+          },
+          {
+            "name": "fn",
+            "description": "The callback function."
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": "The original object"
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "P.forEachObj(fn)(object)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.pipe(\n  { a: 1 },\n  P.forEachObj((val) => console.log(`${val}`))\n) // \"1\"\nP.pipe(\n  { a: 1 },\n  P.forEachObj.indexed((val, key) => console.log(`${key}: ${val}`))\n) // \"a: 1\"\n",
+        "args": [
+          {
+            "name": "fn",
+            "description": "The callback function."
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Object"
+  },
+  {
+    "name": "fromPairs",
+    "description": "<p>Creates a new object from an array of tuples by pairing up first and second elements as {[key]: value}.<br>If a tuple is not supplied for any element in the array, the element will be ignored<br>If duplicate keys exist, the tuple with the greatest index in the input array will be preferred.</p>\n<p>The strict option supports more sophisticated use-cases like those that would<br>result when calling the strict <code>toPairs</code> function.</p>\n",
+    "methods": [
+      {
+        "signature": "P.fromPairs(tuples)\nP.fromPairs.strict(tuples)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": true,
+        "example": "P.fromPairs([\n  ['a', 'b'],\n  ['c', 'd'],\n]) // => {a: 'b', c: 'd'} (type: Record<string, string>)\nP.fromPairs.strict(['a', 1] as const) // => {a: 1} (type: {a: 1})\n",
+        "args": [
+          {
+            "name": "pairs",
+            "description": "the list of input tuples"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Object"
+  },
+  {
+    "name": "groupBy",
+    "description": "<p>Splits a collection into sets, grouped by the result of running each value through <code>fn</code>.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.groupBy(array, fn)\nP.groupBy.strict(array, fn)\n",
+        "indexed": true,
+        "pipeable": false,
+        "strict": true,
+        "example": "P.groupBy(['one', 'two', 'three'], (x) => x.length) // => {3: ['one', 'two'], 5: ['three']}\nP.groupBy.strict([{ a: 'cat' }, { a: 'dog' }] as const, prop('a')) // => {cat: [{a: 'cat'}], dog: [{a: 'dog'}]} typed Partial<Record<'cat' | 'dog', NonEmptyArray<{a: 'cat' | 'dog'}>>>\nP.groupBy([0, 1], (x) => (x % 2 === 0 ? 'even' : undefined)) // => {even: [0]}\n",
+        "args": [
+          {
+            "name": "items",
+            "description": "the items to group"
+          },
+          {
+            "name": "fn",
+            "description": "the grouping function. When `undefined` is returned the item would\nbe skipped and not grouped under any key."
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "P.groupBy(fn)(array)\n",
+        "indexed": true,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.pipe(\n  ['one', 'two', 'three'],\n  P.groupBy((x) => x.length)\n) // => {3: ['one', 'two'], 5: ['three']}\n",
+        "args": [
+          {
+            "name": "fn",
+            "description": "the grouping function"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Array"
+  },
+  {
+    "name": "identity",
+    "description": "<p>A function that always returns the param passed to it</p>\n",
+    "methods": [
+      {
+        "signature": "P.identity(data)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.identity('foo') // => 'foo'\n",
+        "args": [
+          {
+            "name": "value"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Function"
+  },
+  {
+    "name": "increaseWithUnit",
+    "description": "<p>Increase string a value with unit</p>\n",
+    "methods": [
+      {
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "args": [
+          {
+            "name": "__namedParameters"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Other"
+  },
+  {
+    "name": "indexBy",
+    "description": "<p>Converts a list of objects into an object indexing the objects by the given key.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.indexBy(array, fn)\n",
+        "indexed": true,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.indexBy(['one', 'two', 'three'], (x) => x.length) // => {3: 'two', 5: 'three'}\n",
+        "args": [
+          {
+            "name": "array",
+            "description": "the array"
+          },
+          {
+            "name": "fn",
+            "description": "the indexing function"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "P.indexBy(fn)(array)\n",
+        "indexed": true,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.pipe(\n  ['one', 'two', 'three'],\n  P.indexBy((x) => x.length)\n) // => {3: 'two', 5: 'three'}\n",
+        "args": [
+          {
+            "name": "fn",
+            "description": "the indexing function"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Array"
+  },
+  {
+    "name": "intersection",
+    "description": "<p>Returns a list of elements that exist in both array.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.intersection(array, other)\n",
+        "indexed": false,
+        "pipeable": true,
+        "strict": false,
+        "example": "P.intersection([1, 2, 3], [2, 3, 5]) // => [2, 3]\n",
+        "args": [
+          {
+            "name": "source"
+          },
+          {
+            "name": "other",
+            "description": "the second array"
+          }
+        ],
+        "returns": {
+          "name": "Array"
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "P.intersection(other)(array)\n",
+        "indexed": false,
+        "pipeable": true,
+        "strict": false,
+        "example": "P.intersection([2, 3, 5])([1, 2, 3]) // => [2, 3]\n",
+        "args": [
+          {
+            "name": "other",
+            "description": "the second array"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Array"
+  },
+  {
+    "name": "intersectionWith",
+    "description": "<p>Returns a list of intersecting values based on a custom<br>comparator function that compares elements of both arrays.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.intersectionWith(array, other, comparator)\n",
+        "indexed": false,
+        "pipeable": true,
+        "strict": false,
+        "example": "P.intersectionWith(\n  [\n    { id: 1, name: 'Ryan' },\n    { id: 3, name: 'Emma' },\n  ],\n  [3, 5],\n  (a, b) => a.id === b\n) // => [{ id: 3, name: 'Emma' }]\n",
+        "args": [
+          {
+            "name": "array",
+            "description": "the source array"
+          },
+          {
+            "name": "other",
+            "description": "the second array"
+          },
+          {
+            "name": "comparator",
+            "description": "the custom comparator"
+          }
+        ],
+        "returns": {
+          "name": "Array"
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "P.intersectionWith(other, comparator)(array)\n",
+        "indexed": false,
+        "pipeable": true,
+        "strict": false,
+        "example": "P.intersectionWith(\n  [3, 5],\n  (a, b) => a.id === b\n)([\n  { id: 1, name: 'Ryan' },\n  { id: 3, name: 'Emma' },\n]) // => [{ id: 3, name: 'Emma' }]\n",
+        "args": [
+          {
+            "name": "other",
+            "description": "the second array"
+          },
+          {
+            "name": "comparator",
+            "description": "the custom comparator"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Array"
+  },
+  {
+    "name": "invert",
+    "description": "<p>Returns an object whose keys are values are swapped. If the object contains duplicate values,<br>subsequent values will overwrite previous values.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.invert(object)\n",
+        "indexed": false,
+        "pipeable": true,
+        "strict": false,
+        "example": "P.invert({ a: 'd', b: 'e', c: 'f' }) // => { d: \"a\", e: \"b\", f: \"c\" }\n",
+        "args": [
+          {
+            "name": "object",
+            "description": "the object"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "P.invert()(object)\n",
+        "indexed": false,
+        "pipeable": true,
+        "strict": false,
+        "example": "P.pipe({ a: 'd', b: 'e', c: 'f' }, P.invert()) // => { d: \"a\", e: \"b\", f: \"c\" }\n",
+        "args": [],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "object"
+  },
+  {
+    "name": "isArray",
+    "description": "<p>A function that checks if the passed parameter is an Array and narrows its type accordingly</p>\n",
+    "methods": [
+      {
+        "signature": "P.isArray(data)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.isArray([5]) //=> true\nP.isArray([]) //=> true\nP.isArray('somethingElse') //=> false\n",
+        "args": [
+          {
+            "name": "data",
+            "description": "the variable to check"
+          }
+        ],
+        "returns": {
+          "name": "boolean",
+          "description": "true if the passed input is an Array, false otherwise"
+        }
+      }
+    ],
+    "category": "Guard"
+  },
+  {
+    "name": "isBoolean",
+    "description": "<p>A function that checks if the passed parameter is a boolean and narrows its type accordingly</p>\n",
+    "methods": [
+      {
+        "signature": "P.isBoolean(data)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.isBoolean(true) //=> true\nP.isBoolean(false) //=> true\nP.isBoolean('somethingElse') //=> false\n",
+        "args": [
+          {
+            "name": "data",
+            "description": "the variable to check"
+          }
+        ],
+        "returns": {
+          "name": "boolean",
+          "description": "true if the passed input is a boolean, false otherwise"
+        }
+      }
+    ],
+    "category": "Guard"
+  },
+  {
+    "name": "isDate",
+    "description": "<p>A function that checks if the passed parameter is a Date and narrows its type accordingly</p>\n",
+    "methods": [
+      {
+        "signature": "P.isDate(data)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.isDate(new Date()) //=> true\nP.isDate('somethingElse') //=> false\n",
+        "args": [
+          {
+            "name": "data",
+            "description": "the variable to check"
+          }
+        ],
+        "returns": {
+          "name": "boolean",
+          "description": "true if the passed input is a Date, false otherwise"
+        }
+      }
+    ],
+    "category": "Guard"
+  },
+  {
+    "name": "isDefined",
+    "description": "<p>A function that checks if the passed parameter is defined and narrows its type accordingly.<br>To test specifically for <code>undefined</code> (and not <code>null</code>) use the strict variant of this function.</p>\n",
+    "methods": [
+      {
+        "signature": "P.isDefined(data)\nP.isDefined.strict(data)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": true,
+        "example": "P.isDefined('string') //=> true\nP.isDefined(null) //=> false\nP.isDefined(undefined) //=> false\nP.isDefined.strict(null) //=> true\nP.isDefined.strict(undefined) //=> false\n",
+        "args": [
+          {
+            "name": "data",
+            "description": "the variable to check"
+          }
+        ],
+        "returns": {
+          "name": "boolean",
+          "description": "true if the passed input is defined, false otherwise"
+        }
+      }
+    ],
+    "category": "Guard"
+  },
+  {
+    "name": "isEmpty",
+    "description": "<p>A function that checks if the passed parameter is empty</p>\n",
+    "methods": [
+      {
+        "signature": "P.isEmpty(data)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.isEmpty('') //=> true\nP.isEmpty([]) //=> true\nP.isEmpty({}) //=> true\nP.isEmpty('test') //=> false\nP.isEmpty([1, 2, 3]) //=> false\nP.isEmpty({ length: 0 }) //=> false\n",
+        "args": [
+          {
+            "name": "data",
+            "description": "the variable to check"
+          }
+        ],
+        "returns": {
+          "name": "boolean",
+          "description": "true if the passed input is empty, false otherwise"
+        }
+      }
+    ],
+    "category": "Function"
+  },
+  {
+    "name": "isError",
+    "description": "<p>A function that checks if the passed parameter is an Error and narrows its type accordingly</p>\n",
+    "methods": [
+      {
+        "signature": "P.isError(data)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.isError(new Error('message')) //=> true\nP.isError('somethingElse') //=> false\n",
+        "args": [
+          {
+            "name": "data",
+            "description": "the variable to check"
+          }
+        ],
+        "returns": {
+          "name": "boolean",
+          "description": "true if the passed input is an Error, false otherwise"
+        }
+      }
+    ],
+    "category": "Guard"
+  },
+  {
+    "name": "isFunction",
+    "description": "<p>A function that checks if the passed parameter is a Function and narrows its type accordingly</p>\n",
+    "methods": [
+      {
+        "signature": "P.isFunction(data)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.isFunction(() => {}) //=> true\nP.isFunction('somethingElse') //=> false\n",
+        "args": [
+          {
+            "name": "data",
+            "description": "the variable to check"
+          }
+        ],
+        "returns": {
+          "name": "boolean",
+          "description": "true if the passed input is a Function, false otherwise"
+        }
+      }
+    ],
+    "category": "Guard"
+  },
+  {
+    "name": "isNil",
+    "description": "<p>A function that checks if the passed parameter is Nil (null or undefined) and narrows its type accordingly</p>\n",
+    "methods": [
+      {
+        "signature": "P.isNil(data)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.isNil(undefined) //=> true\nP.isNil(null) //=> true\nP.isNil('somethingElse') //=> false\n",
+        "args": [
+          {
+            "name": "data",
+            "description": "the variable to check"
+          }
+        ],
+        "returns": {
+          "name": "boolean",
+          "description": "true if the passed input is Nil (null or undefined), false otherwise"
+        }
+      }
+    ],
+    "category": "Guard"
+  },
+  {
+    "name": "isNonNull",
+    "description": "<p>A function that checks if the passed parameter is not <code>null</code> and narrows its type accordingly.<br>Notice that <code>undefined</code> is not null!</p>\n",
+    "methods": [
+      {
+        "signature": "P.isNonNull(data)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.isNonNull('string') //=> true\nP.isNonNull(null) //=> false\nP.isNonNull(undefined) //=> true\n",
+        "args": [
+          {
+            "name": "data",
+            "description": "the variable to check"
+          }
+        ],
+        "returns": {
+          "name": "boolean",
+          "description": "true if the passed input is defined, false otherwise"
+        }
+      }
+    ],
+    "category": "Guard"
+  },
+  {
+    "name": "isNot",
+    "description": "<p>A function that takes a guard function as predicate and returns a guard that negates it</p>\n",
+    "methods": [
+      {
+        "tag": "Data Last",
+        "signature": "P.isNot(P.isTruthy)(data)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.isNot(P.isTruthy)(false) //=> true\nP.isNot(P.isTruthy)(true) //=> false\n",
+        "args": [
+          {
+            "name": "predicate",
+            "description": "the guard function to negate"
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": "function A guard function"
+        }
+      }
+    ],
+    "category": "Guard"
+  },
+  {
+    "name": "isNumber",
+    "description": "<p>A function that checks if the passed parameter is a number and narrows its type accordingly</p>\n",
+    "methods": [
+      {
+        "signature": "R.isNumber(data)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "R.isNumber(1) //=> true\nR.isNumber('notANumber') //=> false\n",
+        "args": [
+          {
+            "name": "data",
+            "description": "the variable to check"
+          }
+        ],
+        "returns": {
+          "name": "boolean",
+          "description": "true if the passed input is a number, false otherwise"
+        }
+      }
+    ],
+    "category": "Guard"
+  },
+  {
+    "name": "isObject",
+    "description": "<p>A function that checks if the passed parameter is of type Object and narrows its type accordingly</p>\n",
+    "methods": [
+      {
+        "signature": "P.isObject(data)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.isObject({}) //=> true\nP.isObject(Promise.resolve('something')) //=> true\nP.isObject(new Date()) //=> true\nP.isObject(new Error('error')) //=> true\nP.isObject('somethingElse') //=> false\n",
+        "args": [
+          {
+            "name": "data",
+            "description": "the variable to check"
+          }
+        ],
+        "returns": {
+          "name": "boolean",
+          "description": "true if the passed input is an Object, Promise, Date or Error, false otherwise"
+        }
+      }
+    ],
+    "category": "Guard"
+  },
+  {
+    "name": "isPromise",
+    "description": "<p>A function that checks if the passed parameter is a Promise and narrows its type accordingly</p>\n",
+    "methods": [
+      {
+        "signature": "P.isPromise(data)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.isPromise(Promise.resolve(5)) //=> true\nP.isPromise(Promise.reject(5)) //=> true\nP.isPromise('somethingElse') //=> false\n",
+        "args": [
+          {
+            "name": "data",
+            "description": "the variable to check"
+          }
+        ],
+        "returns": {
+          "name": "boolean",
+          "description": "true if the passed input is a Promise, false otherwise"
+        }
+      }
+    ],
+    "category": "Guard"
+  },
+  {
+    "name": "isString",
+    "description": "<p>A function that checks if the passed parameter is a string and narrows its type accordingly</p>\n",
+    "methods": [
+      {
+        "signature": "P.isString(data)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.isString('string') //=> true\nP.isString(1) //=> false\n",
+        "args": [
+          {
+            "name": "data",
+            "description": "the variable to check"
+          }
+        ],
+        "returns": {
+          "name": "boolean",
+          "description": "true if the passed input is a string, false otherwise"
+        }
+      }
+    ],
+    "category": "Guard"
+  },
+  {
+    "name": "isTruthy",
+    "description": "<p>A function that checks if the passed parameter is truthy and narrows its type accordingly</p>\n",
+    "methods": [
+      {
+        "signature": "P.isTruthy(data)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.isTruthy('somethingElse') //=> true\nP.isTruthy(null) //=> false\nP.isTruthy(undefined) //=> false\nP.isTruthy(false) //=> false\nP.isTruthy(0) //=> false\nP.isTruthy('') //=> false\n",
+        "args": [
+          {
+            "name": "data",
+            "description": "the variable to check"
+          }
+        ],
+        "returns": {
+          "name": "boolean",
+          "description": "true if the passed input is truthy, false otherwise"
+        }
+      }
+    ],
+    "category": "Guard"
+  },
+  {
+    "name": "join",
+    "description": "<p>Joins the elements of the array by: casting them to a string and<br>concatenating them one to the other, with the provided glue string in between<br>every two elements.</p>\n<p>When called on a tuple and with stricter item types (union of literal values,<br>the result is strictly typed to the tuples shape and it&#39;s item types).</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.join(data, glue)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.join([1, 2, 3], ',') // => \"1,2,3\" (typed `string`)\nP.join(['a', 'b', 'c'], '') // => \"abc\" (typed `string`)\nP.join(['hello', 'world'] as const, ' ') // => \"hello world\" (typed `hello world`)\n",
+        "args": [
+          {
+            "name": "data",
+            "description": "The array to join"
+          },
+          {
+            "name": "glue",
+            "description": "The string to put in between every two elements"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "P.join(glue)(data)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.pipe([1, 2, 3], P.join(',')) // => \"1,2,3\" (typed `string`)\nP.pipe(['a', 'b', 'c'], P.join('')) // => \"abc\" (typed `string`)\nP.pipe(['hello', 'world'] as const, P.join(' ')) // => \"hello world\" (typed `hello world`)\n",
+        "args": [
+          {
+            "name": "glue",
+            "description": "The string to put in between every two elements"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Array"
+  },
+  {
+    "name": "last",
+    "description": "<p>Gets the last element of <code>array</code>.<br>Note: In <code>pipe</code>, use <code>last()</code> form instead of <code>last</code>. Otherwise, the inferred type is lost.</p>\n",
+    "methods": [
+      {
+        "signature": "P.last(array)\n",
+        "indexed": false,
+        "pipeable": true,
+        "strict": false,
+        "example": "P.last([1, 2, 3]) // => 3\nP.last([]) // => undefined\nP.pipe(\n  [1, 2, 4, 8, 16],\n  P.filter((x) => x > 3),\n  P.last(),\n  (x) => x + 1\n) // => 17\n",
+        "args": [
+          {
+            "name": "array",
+            "description": "the array"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Array"
+  },
+  {
+    "name": "length",
+    "description": "<p>Counts values of the collection or iterable.</p>\n",
+    "methods": [
+      {
+        "signature": "P.length(array)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.length([1, 2, 3]) // => 3\n",
+        "args": [
+          {
+            "name": "items",
+            "description": "The input data."
+          }
+        ],
+        "returns": {
+          "name": "number"
+        }
+      },
+      {
+        "signature": "P.length()(array)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.pipe([1, 2, 3], P.length()) // => 3\n",
+        "args": [],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Array"
+  },
+  {
+    "name": "map",
+    "description": "<p>Map each element of an array using a defined callback function. If the input<br>array is a tuple use the <code>strict</code> variant to maintain it&#39;s shape.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.map(array, fn)\nP.map.indexed(array, fn)\nP.map.strict(array, fn)\nP.map.strict.indexed(array, fn)\n",
+        "indexed": true,
+        "pipeable": true,
+        "strict": true,
+        "example": "P.map([1, 2, 3], (x) => x * 2) // => [2, 4, 6], typed number[]\nP.map.indexed([0, 0, 0], (x, i) => i) // => [0, 1, 2], typed number[]\nP.map.strict([0, 0] as const, (x) => x + 1) // => [1, 1], typed [number, number]\nP.map.strict.indexed([0, 0] as const, (x, i) => x + i) // => [0, 1], typed [number, number]\n",
+        "args": [
+          {
+            "name": "array",
+            "description": "The array to map."
+          },
+          {
+            "name": "fn",
+            "description": "The function mapper."
+          }
+        ],
+        "returns": {
+          "name": "Array",
+          "description": "The new mapped array."
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "P.map(fn)(array)\nP.map.indexed(fn)(array)\n",
+        "indexed": true,
+        "pipeable": true,
+        "strict": false,
+        "example": "P.pipe(\n  [0, 1, 2],\n  P.map((x) => x * 2)\n) // => [0, 2, 4]\nP.pipe(\n  [0, 0, 0],\n  P.map.indexed((x, i) => i)\n) // => [0, 1, 2]\n",
+        "args": [
+          {
+            "name": "fn",
+            "description": "the function mapper"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Array"
+  },
+  {
+    "name": "mapKeys",
+    "description": "<p>Maps keys of <code>object</code> and keeps the same values.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.mapKeys(object, fn)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.mapKeys({ a: 1, b: 2 }, (key, value) => key + value) // => { a1: 1, b2: 2 }\n",
+        "args": [
+          {
+            "name": "object",
+            "description": "the object to map"
+          },
+          {
+            "name": "fn",
+            "description": "the mapping function"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "P.mapKeys(fn)(object)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.pipe(\n  { a: 1, b: 2 },\n  P.mapKeys((key, value) => key + value)\n) // => { a1: 1, b2: 2 }\n",
+        "args": [
+          {
+            "name": "fn",
+            "description": "the mapping function"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Object"
+  },
+  {
+    "name": "mapToObj",
+    "description": "<p>Map each element of an array into an object using a defined callback function.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.mapToObj(array, fn)\nP.mapToObj.indexed(array, fn)\n",
+        "indexed": true,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.mapToObj([1, 2, 3], (x) => [String(x), x * 2]) // => {1: 2, 2: 4, 3: 6}\nP.mapToObj.indexed([0, 0, 0], (x, i) => [i, i]) // => {0: 0, 1: 1, 2: 2}\n",
+        "args": [
+          {
+            "name": "array",
+            "description": "The array to map."
+          },
+          {
+            "name": "fn",
+            "description": "The mapping function, which should return a tuple of [key, value], similar to Object.fromEntries"
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": "The new mapped object."
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "P.mapToObj(fn)(array)\nP.mapToObj.indexed(fn)(array)\n",
+        "indexed": true,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.pipe(\n  [1, 2, 3],\n  P.mapToObj((x) => [String(x), x * 2])\n) // => {1: 2, 2: 4, 3: 6}\nP.pipe(\n  [0, 0, 0],\n  P.mapToObj.indexed((x, i) => [i, i])\n) // => {0: 0, 1: 1, 2: 2}\n",
+        "args": [
+          {
+            "name": "fn",
+            "description": "The mapping function, which should return a tuple of [key, value], similar to Object.fromEntries"
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": "The new mapped object."
+        }
+      }
+    ],
+    "category": "Array"
+  },
+  {
+    "name": "mapValues",
+    "description": "<p>Maps values of <code>object</code> and keeps the same keys.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.mapValues(object, fn)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.mapValues({ a: 1, b: 2 }, (value, key) => value + key) // => {a: '1a', b: '2b'}\n",
+        "args": [
+          {
+            "name": "object",
+            "description": "the object to map"
+          },
+          {
+            "name": "fn",
+            "description": "the mapping function"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "P.mapValues(fn)(object)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.pipe(\n  { a: 1, b: 2 },\n  P.mapValues((value, key) => value + key)\n) // => {a: '1a', b: '2b'}\n",
+        "args": [
+          {
+            "name": "fn",
+            "description": "the mapping function"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Object"
+  },
+  {
+    "name": "maxBy",
+    "description": "<p>Returns the max element using the provided predicate.</p>\n",
+    "methods": [
+      {
+        "tag": "Data Last",
+        "signature": "P.maxBy(fn)(array)\nP.maxBy.indexed(fn)(array)\n",
+        "indexed": true,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.pipe(\n  [{ a: 5 }, { a: 1 }, { a: 3 }],\n  P.maxBy((x) => x.a)\n) // { a: 5 }\n",
+        "args": [
+          {
+            "name": "fn",
+            "description": "the predicate"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      },
+      {
+        "tag": "Data First",
+        "signature": "P.maxBy(array, fn)\nP.maxBy.indexed(array, fn)\n",
+        "indexed": true,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.maxBy([{ a: 5 }, { a: 1 }, { a: 3 }], (x) => x.a) // { a: 5 }\n",
+        "args": [
+          {
+            "name": "items",
+            "description": "the array"
+          },
+          {
+            "name": "fn",
+            "description": "the predicate"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Array"
+  },
+  {
+    "name": "meanBy",
+    "description": "<p>Returns the mean of the elements of an array using the provided predicate.</p>\n",
+    "methods": [
+      {
+        "tag": "Data Last",
+        "signature": "P.meanBy(fn)(array)\nP.meanBy.indexed(fn)(array)\n",
+        "indexed": true,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.pipe(\n  [{ a: 5 }, { a: 1 }, { a: 3 }],\n  P.meanBy((x) => x.a)\n) // 3\n",
+        "args": [
+          {
+            "name": "fn",
+            "description": "predicate function"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      },
+      {
+        "tag": "Data First",
+        "signature": "P.meanBy(array, fn)\nP.meanBy.indexed(array, fn)\n",
+        "indexed": true,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.meanBy([{ a: 5 }, { a: 1 }, { a: 3 }], (x) => x.a) // 3\n",
+        "args": [
+          {
+            "name": "items",
+            "description": "the array"
+          },
+          {
+            "name": "fn",
+            "description": "predicate function"
+          }
+        ],
+        "returns": {
+          "name": "number"
+        }
+      }
+    ],
+    "category": "Array"
+  },
+  {
+    "name": "merge",
+    "description": "<p>Merges two objects. The same as <code>Object.assign</code>.<br><code>b</code> object will override properties of <code>a</code>.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.merge(a, b)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.merge({ x: 1, y: 2 }, { y: 10, z: 2 }) // => { x: 1, y: 10, z: 2 }\n",
+        "args": [
+          {
+            "name": "a",
+            "description": "the first object"
+          },
+          {
+            "name": "b",
+            "description": "the second object"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "P.merge(b)(a)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.merge({ y: 10, z: 2 })({ x: 1, y: 2 }) // => { x: 1, y: 10, z: 2 }\n",
+        "args": [
+          {
+            "name": "b",
+            "description": "the second object"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Object"
+  },
+  {
+    "name": "mergeAll",
+    "description": "<p>Merges a list of objects into a single object.</p>\n",
+    "methods": [
+      {
+        "signature": "P.mergeAll(objects)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.mergeAll([{ a: 1, b: 1 }, { b: 2, c: 3 }, { d: 10 }]) // => { a: 1, b: 2, c: 3, d: 10 }\n",
+        "args": [
+          {
+            "name": "array",
+            "description": "the array of objects"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Array"
+  },
+  {
+    "name": "minBy",
+    "description": "<p>Returns the min element using the provided predicate.</p>\n",
+    "methods": [
+      {
+        "tag": "Data Last",
+        "signature": "P.minBy(fn)(array)\nP.minBy.indexed(fn)(array)\n",
+        "indexed": true,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.pipe(\n  [{ a: 5 }, { a: 1 }, { a: 3 }],\n  P.minBy((x) => x.a)\n) // { a: 1 }\n",
+        "args": [
+          {
+            "name": "fn",
+            "description": "the predicate"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      },
+      {
+        "tag": "Data First",
+        "signature": "P.minBy(array, fn)\nP.minBy.indexed(array, fn)\n",
+        "indexed": true,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.minBy([{ a: 5 }, { a: 1 }, { a: 3 }], (x) => x.a) // { a: 1 }\n",
+        "args": [
+          {
+            "name": "items",
+            "description": "the array"
+          },
+          {
+            "name": "fn",
+            "description": "the predicate"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Array"
+  },
+  {
+    "name": "noop",
+    "description": "<p>A function that returns always <code>undefined</code>.</p>\n",
+    "methods": [
+      {
+        "signature": "P.noop()\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "onSomething(P.noop)\n",
+        "args": [],
+        "returns": {
+          "name": "undefined"
+        }
+      }
+    ],
+    "category": "Function"
+  },
+  {
+    "name": "omit",
+    "description": "<p>Returns a partial copy of an object omitting the keys specified.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.omit(obj, names)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.omit({ a: 1, b: 2, c: 3, d: 4 }, ['a', 'd']) // => { b: 2, c: 3 }\n",
+        "args": [
+          {
+            "name": "data",
+            "description": "the object"
+          },
+          {
+            "name": "propNames",
+            "description": "the property names"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "P.omit(names)(obj)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.pipe({ a: 1, b: 2, c: 3, d: 4 }, P.omit(['a', 'd'])) // => { b: 2, c: 3 }\n",
+        "args": [
+          {
+            "name": "propNames",
+            "description": "the property names"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Object"
+  },
+  {
+    "name": "omitBy",
+    "description": "<p>Returns a partial copy of an object omitting the keys matching predicate.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.omitBy(object, fn)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.omitBy({ a: 1, b: 2, A: 3, B: 4 }, (val, key) => key.toUpperCase() === key) // => {a: 1, b: 2}\n",
+        "args": [
+          {
+            "name": "object",
+            "description": "the target object"
+          },
+          {
+            "name": "fn",
+            "description": "the predicate"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "P.omitBy(fn)(object)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.omitBy((val, key) => key.toUpperCase() === key)({ a: 1, b: 2, A: 3, B: 4 }) // => {a: 1, b: 2}\n",
+        "args": [
+          {
+            "name": "fn",
+            "description": "the predicate"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Object"
+  },
+  {
+    "name": "once",
+    "description": "<p>Creates a function that is restricted to invoking <code>func</code> once. Repeat calls to the function return the value of the first invocation.</p>\n",
+    "methods": [
+      {
+        "signature": "P.once(fn)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "const initialize = P.once(createApplication)\ninitialize()\ninitialize()\n// => `createApplication` is invoked once\n",
+        "args": [
+          {
+            "name": "fn",
+            "description": "the function to wrap"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Function"
+  },
+  {
+    "name": "partition",
+    "description": "<p>Splits a collection into two groups, the first of which contains elements the <code>predicate</code> type guard passes, and the second one containing the rest.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.partition(array, fn)\n",
+        "indexed": true,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.partition(['one', 'two', 'forty two'], (x) => x.length === 3) // => [['one', 'two'], ['forty two']]\n",
+        "args": [
+          {
+            "name": "items",
+            "description": "the items to split"
+          },
+          {
+            "name": "predicate",
+            "description": "a type guard function to invoke on every item"
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": "the array of grouped elements."
+        }
+      },
+      {
+        "tag": "Data First",
+        "signature": "P.partition(array, fn)\n",
+        "indexed": true,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.partition(['one', 'two', 'forty two'], (x) => x.length === 3) // => [['one', 'two'], ['forty two']]\n",
+        "args": [
+          {
+            "name": "items",
+            "description": "the items to split"
+          },
+          {
+            "name": "predicate",
+            "description": "the function invoked per iteration"
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": "the array of grouped elements."
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "P.partition(fn)(array)\n",
+        "indexed": true,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.pipe(\n  ['one', 'two', 'forty two'],\n  P.partition((x) => x.length === 3)\n) // => [['one', 'two'], ['forty two']]\n",
+        "args": [
+          {
+            "name": "predicate",
+            "description": "the grouping function"
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": "the array of grouped elements."
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "P.partition(fn)(array)\n",
+        "indexed": true,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.pipe(\n  ['one', 'two', 'forty two'],\n  P.partition((x) => x.length === 3)\n) // => [['one', 'two'], ['forty two']]\n",
+        "args": [
+          {
+            "name": "predicate",
+            "description": "the grouping function"
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": "the array of grouped elements."
+        }
+      }
+    ],
+    "category": "Array"
+  },
+  {
+    "name": "pathOr",
+    "description": "<p>Gets the value at <code>path</code> of <code>object</code>. If the resolved value is <code>undefined</code>, the <code>defaultValue</code> is returned in its place.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.pathOr(object, array, defaultValue)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.pathOr({ x: 10 }, ['y'], 2) // 2\nP.pathOr({ y: 10 }, ['y'], 2) // 10\n",
+        "args": [
+          {
+            "name": "object",
+            "description": "the target object"
+          },
+          {
+            "name": "path",
+            "description": "the path of the property to get"
+          },
+          {
+            "name": "defaultValue",
+            "description": "the default value"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "P.pathOr(array, defaultValue)(object)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.pipe({ x: 10 }, P.pathOr(['y'], 2)) // 2\nP.pipe({ y: 10 }, P.pathOr(['y'], 2)) // 10\n",
+        "args": [
+          {
+            "name": "path",
+            "description": "the path of the property to get"
+          },
+          {
+            "name": "defaultValue",
+            "description": "the default value"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Object"
+  },
+  {
+    "name": "pick",
+    "description": "<p>Creates an object composed of the picked <code>object</code> properties.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.pick(object, [prop1, prop2])\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.pick({ a: 1, b: 2, c: 3, d: 4 }, ['a', 'd']) // => { a: 1, d: 4 }\n",
+        "args": [
+          {
+            "name": "object",
+            "description": "the target object"
+          },
+          {
+            "name": "names",
+            "description": "the properties names"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "P.pick([prop1, prop2])(object)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.pipe({ a: 1, b: 2, c: 3, d: 4 }, P.pick(['a', 'd'])) // => { a: 1, d: 4 }\n",
+        "args": [
+          {
+            "name": "names",
+            "description": "the properties names"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Object"
+  },
+  {
+    "name": "pickBy",
+    "description": "<p>Creates an object composed of the picked <code>object</code> properties.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.pickBy(object, fn)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.pickBy({ a: 1, b: 2, A: 3, B: 4 }, (val, key) => key.toUpperCase() === key) // => {A: 3, B: 4}\n",
+        "args": [
+          {
+            "name": "object",
+            "description": "the target object"
+          },
+          {
+            "name": "fn",
+            "description": "the predicate"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "P.pickBy(fn)(object)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.pickBy((val, key) => key.toUpperCase() === key)({ a: 1, b: 2, A: 3, B: 4 }) // => {A: 3, B: 4}\n",
+        "args": [
+          {
+            "name": "fn",
+            "description": "the predicate"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Object"
+  },
+  {
+    "name": "pipe",
+    "description": "<p>Perform left-to-right function composition.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.pipe(data, op1, op2, op3)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.pipe(\n  [1, 2, 3, 4],\n  P.map((x) => x * 2),\n  (arr) => [arr[0] + arr[1], arr[2] + arr[3]]\n) // => [6, 14]\n",
+        "args": [
+          {
+            "name": "value",
+            "description": "The initial value."
+          },
+          {
+            "name": "op1"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Function"
+  },
+  {
+    "name": "prop",
+    "description": "<p>Gets the value of the given property.</p>\n",
+    "methods": [
+      {
+        "tag": "Data Last",
+        "signature": "P.prop(prop)(object)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.pipe({ foo: 'bar' }, P.prop('foo')) // => 'bar'\n",
+        "args": [
+          {
+            "name": "propName",
+            "description": "the property name"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Object"
+  },
+  {
+    "name": "purry",
+    "description": "<p>Creates a function with <code>data-first</code> and <code>data-last</code> signatures.</p>\n<p><code>purry</code> is a dynamic function and it&#39;s not type safe. It should be wrapped by a function that have proper typings.<br>Refer to the example below for correct usage.</p>\n",
+    "methods": [
+      {
+        "signature": "P.purry(fn, arguments)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "function _findIndex(array, fn) {\n  for (let i = 0; i < array.length; i++) {\n    if (fn(array[i])) {\n      return i;\n    }\n  }\n  return -1;\n}\n\n// data-first\nfunction findIndex<T>(array: T[], fn: (item: T) => boolean): number;\n\n// data-last\nfunction findIndex<T>(fn: (item: T) => boolean): (array: T[]) => number;\n\nfunction findIndex() {\n  return P.purry(_findIndex, arguments);\n}",
+        "args": [
+          {
+            "name": "fn",
+            "description": "the function to purry."
+          },
+          {
+            "name": "args",
+            "description": "the arguments"
+          },
+          {
+            "name": "lazy"
+          }
+        ],
+        "returns": {
+          "name": "any"
+        }
+      }
+    ],
+    "category": "Function"
+  },
+  {
+    "name": "randomString",
+    "description": "<p>Random a non-cryptographic random string from characters a-zA-Z0-9.</p>\n",
+    "methods": [
+      {
+        "signature": "randomString(length)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "randomString(5) // => aB92J\n",
+        "args": [
+          {
+            "name": "length",
+            "description": "the length of the random string"
+          }
+        ],
+        "returns": {
+          "name": "string"
+        }
+      }
+    ],
+    "category": "String"
+  },
+  {
+    "name": "range",
+    "description": "<p>Returns a list of numbers from <code>start</code> (inclusive) to <code>end</code> (exclusive).</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "range(start, end)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.range(1, 5) // => [1, 2, 3, 4]\n",
+        "args": [
+          {
+            "name": "start",
+            "description": "the start number"
+          },
+          {
+            "name": "end",
+            "description": "the end number"
+          }
+        ],
+        "returns": {
+          "name": "Array"
+        }
+      },
+      {
+        "tag": "Data First",
+        "signature": "range(end)(start)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.range(5)(1) // => [1, 2, 3, 4]\n",
+        "args": [
+          {
+            "name": "end",
+            "description": "the end number"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Array"
+  },
+  {
+    "name": "reduce",
+    "description": "<p>Calls the specified callback function for all the elements in an array. The return value of the callback function is the accumulated result, and is provided as an argument in the next call to the callback function.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.reduce(items, fn, initialValue)\nP.reduce.indexed(items, fn, initialValue)\n",
+        "indexed": true,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.reduce([1, 2, 3, 4, 5], (acc, x) => acc + x, 100) // => 115\nP.reduce.indexed([1, 2, 3, 4, 5], (acc, x, i, array) => acc + x, 100) // => 115\n",
+        "args": [
+          {
+            "name": "items"
+          },
+          {
+            "name": "fn",
+            "description": "the callback function"
+          },
+          {
+            "name": "initialValue",
+            "description": "the initial value to use as an accumulator value in the callback function"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "P.reduce(fn, initialValue)(array)\n",
+        "indexed": true,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.pipe(\n  [1, 2, 3, 4, 5],\n  P.reduce((acc, x) => acc + x, 100)\n) // => 115\nP.pipe(\n  [1, 2, 3, 4, 5],\n  P.reduce.indexed((acc, x, i, array) => acc + x, 100)\n) // => 115\n",
+        "args": [
+          {
+            "name": "fn",
+            "description": "the callback function"
+          },
+          {
+            "name": "initialValue",
+            "description": "the initial value to use as an accumulator value in the callback function"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Array"
+  },
+  {
+    "name": "reject",
+    "description": "<p>Reject the elements of an array that meet the condition specified in a callback function.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.reject(array, fn)\nP.reject.indexed(array, fn)\n",
+        "indexed": true,
+        "pipeable": true,
+        "strict": false,
+        "example": "P.reject([1, 2, 3], (x) => x % 2 === 0) // => [1, 3]\nP.reject.indexed([1, 2, 3], (x, i, array) => x % 2 === 0) // => [1, 3]\n",
+        "args": [
+          {
+            "name": "items",
+            "description": "The array to reject."
+          },
+          {
+            "name": "fn",
+            "description": "the callback function."
+          }
+        ],
+        "returns": {
+          "name": "Array"
+        }
+      },
+      {
+        "tag": "Data First",
+        "signature": "P.reject(array, fn)\nP.reject.indexed(array, fn)\n",
+        "indexed": true,
+        "pipeable": true,
+        "strict": false,
+        "example": "P.reject([1, 2, 3], (x) => x % 2 === 0) // => [1, 3]\nP.reject.indexed([1, 2, 3], (x, i, array) => x % 2 === 0) // => [1, 3]\n",
+        "args": [
+          {
+            "name": "fn",
+            "description": "the callback function."
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Array"
+  },
+  {
+    "name": "reverse",
+    "description": "<p>Reverses array.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.reverse(arr)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.reverse([1, 2, 3]) // [3, 2, 1]\n",
+        "args": [
+          {
+            "name": "array",
+            "description": "the array"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "P.reverse()(array)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.reverse()([1, 2, 3]) // [3, 2, 1]\n",
+        "args": [],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Array"
+  },
+  {
+    "name": "sample",
+    "description": "<p>Returns a random subset of size <code>sampleSize</code> from <code>array</code>.</p>\n<p>Maintains and infers most of the typing information that could be passed<br>along to the output. This means that when using tuples, the output will be<br>a tuple too, and when using literals, those literals would be preserved.</p>\n<p>The items in the result are kept in the same order as they are in the input.<br>If you need to get a shuffled response you can pipe the shuffle function<br>after this one.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.sample(array, sampleSize)\n",
+        "indexed": false,
+        "pipeable": true,
+        "strict": false,
+        "example": "P.sample(['hello', 'world'], 1) // => [\"hello\"] // typed string[]\nP.sample(['hello', 'world'] as const, 1) // => [\"world\"] // typed [\"hello\" | \"world\"]\n",
+        "args": [
+          {
+            "name": "data"
+          },
+          {
+            "name": "sampleSize",
+            "description": "the number of elements to take"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "P.sample(sampleSize)(array)\n",
+        "indexed": false,
+        "pipeable": true,
+        "strict": false,
+        "example": "P.sample(1)(['hello', 'world']) // => [\"hello\"] // typed string[]\nP.sample(1)(['hello', 'world'] as const) // => [\"world\"] // typed [\"hello\" | \"world\"]\n",
+        "args": [
+          {
+            "name": "sampleSize",
+            "description": "the number of elements to take"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Array"
+  },
+  {
+    "name": "set",
+    "description": "<p>Sets the <code>value</code> at <code>prop</code> of <code>object</code>.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.set(obj, prop, value)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.set({ a: 1 }, 'a', 2) // => { a: 2 }\n",
+        "args": [
+          {
+            "name": "obj",
+            "description": "the target method"
+          },
+          {
+            "name": "prop",
+            "description": "the property name"
+          },
+          {
+            "name": "value",
+            "description": "the value to set"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "P.set(prop, value)(obj)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.pipe({ a: 1 }, P.set('a', 2)) // => { a: 2 }\n",
+        "args": [
+          {
+            "name": "prop",
+            "description": "the property name"
+          },
+          {
+            "name": "value",
+            "description": "the value to set"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Object"
+  },
+  {
+    "name": "setPath",
+    "description": "<p>Sets the value at <code>path</code> of <code>object</code>. <code>path</code> can be an array or a path string.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.setPath(obj, path, value)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.setPath({ a: { b: 1 } }, ['a', 'b'], 2) // => { a: { b: 2 } }\n",
+        "args": [
+          {
+            "name": "object",
+            "description": "the target method"
+          },
+          {
+            "name": "path",
+            "description": "the property name"
+          },
+          {
+            "name": "value",
+            "description": "the value to set"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      },
+      {
+        "tag": "Data First",
+        "signature": "P.setPath(obj, path, value)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.pipe({ a: { b: 1 } }, P.setPath(['a', 'b'], 2)) // { a: { b: 2 } }\n",
+        "args": [
+          {
+            "name": "path",
+            "description": "the property name"
+          },
+          {
+            "name": "value",
+            "description": "the value to set"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Object"
+  },
+  {
+    "name": "shuffle",
+    "description": "<p>Shuffles the input array, returning a new array with the same elements in a random order.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.shuffle(array)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.shuffle([4, 2, 7, 5]) // => [7, 5, 4, 2]\n",
+        "args": [
+          {
+            "name": "items",
+            "description": "the array to shuffle"
+          }
+        ],
+        "returns": {
+          "name": "Array"
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "P.shuffle()(array)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.pipe([4, 2, 7, 5], P.shuffle()) // => [7, 5, 4, 2]\n",
+        "args": [],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Array"
+  },
+  {
+    "name": "sort",
+    "description": "<p>Sorts an array. The comparator function should accept two values at a time and return a negative number if the first value is smaller, a positive number if it&#39;s larger, and zero if they are equal.<br>Sorting is based on a native <code>sort</code> function. It&#39;s not guaranteed to be stable.</p>\n<p>If the input array is more complex (non-empty array, tuple, etc...) use the<br>strict mode to maintain it&#39;s shape.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.sort(items, cmp)\nP.sort.strict(items, cmp)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": true,
+        "example": "P.sort([4, 2, 7, 5], (a, b) => a - b) // => [2, 4, 5, 7] typed Array<number>\nP.sort.strict([4, 2] as [number, number], (a, b) => a - b) // [2, 4] typed [number, number]\n",
+        "args": [
+          {
+            "name": "items",
+            "description": "the array to sort"
+          },
+          {
+            "name": "cmp",
+            "description": "the comparator function"
+          }
+        ],
+        "returns": {
+          "name": "Array"
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "P.sort(cmp)(items)\nP.sort.strict(cmp)(items)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": true,
+        "example": "P.pipe(\n  [4, 2, 7, 5],\n  P.sort((a, b) => a - b)\n) // => [2, 4, 5, 7] typed Array<number>\nP.pipe(\n  [4, 2] as [number, number],\n  P.sort.strict((a, b) => a - b)\n) // => [2, 4] typed [number, number]\n",
+        "args": [
+          {
+            "name": "cmp",
+            "description": "the comparator function"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Array"
+  },
+  {
+    "name": "sortBy",
+    "description": "<p>Sorts the list according to the supplied functions and directions.<br>Sorting is based on a native <code>sort</code> function. It&#39;s not guaranteed to be stable.</p>\n<p>Directions are applied to functions in order and default to ascending if not specified.</p>\n<p>If the input array is more complex (non-empty array, tuple, etc...) use the<br>strict mode to maintain it&#39;s shape.</p>\n",
+    "methods": [
+      {
+        "tag": "Data Last",
+        "signature": "P.sortBy(sortRule, ...additionalSortRules)(array)\nP.sortBy.strict(sortRule, ...additionalSortRules)(array)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": true,
+        "example": "P.pipe(\n  [{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }],\n  P.sortBy((x) => x.a)\n) // => [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 7 }] typed Array<{a:number}>\nP.pipe(\n  [{ a: 1 }, { a: 3 }] as const,\n  P.sortBy.strict((x) => x.a)\n) // => [{ a: 1 }, { a: 3 }] typed [{a: 1 | 3}, {a: 1 | 3}]\n",
+        "args": [
+          {
+            "name": "sortRules"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      },
+      {
+        "tag": "Data First",
+        "signature": "P.sortBy(array, sortRule, ...additionalSortRules)\nP.sortBy.strict(array, sortRule, ...additionalSortRules)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": true,
+        "example": "P.sortBy([{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }], (x) => x.a)\n// => [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 7 }] typed Array<{a:number}>\n\nP.sortBy(\n  [\n    { color: 'red', weight: 2 },\n    { color: 'blue', weight: 3 },\n    { color: 'green', weight: 1 },\n    { color: 'purple', weight: 1 },\n  ],\n  [(x) => x.weight, 'asc'],\n  (x) => x.color\n)\n// =>\n//   {color: 'green', weight: 1},\n//   {color: 'purple', weight: 1},\n//   {color: 'red', weight: 2},\n//   {color: 'blue', weight: 3},\n// typed Array<{color: string, weight: number}>\n\nP.sortBy.strict([{ a: 1 }, { a: 3 }] as const, (x) => x.a)\n// => [{ a: 1 }, { a: 3 }] typed [{a: 1 | 3}, {a: 1 | 3}]\n",
+        "args": [
+          {
+            "name": "array",
+            "description": "the array to sort"
+          },
+          {
+            "name": "sortRules"
+          }
+        ],
+        "returns": {
+          "name": "Array"
+        }
+      }
+    ],
+    "category": "Array"
+  },
+  {
+    "name": "splitAt",
+    "description": "<p>Splits a given array at a given index.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.splitAt(array, index)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.splitAt([1, 2, 3], 1) // => [[1], [2, 3]]\nP.splitAt([1, 2, 3, 4, 5], -1) // => [[1, 2, 3, 4], [5]]\n",
+        "args": [
+          {
+            "name": "array",
+            "description": "the array to split"
+          },
+          {
+            "name": "index",
+            "description": "the index to split at"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "P.splitAt(index)(array)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.splitAt(1)([1, 2, 3]) // => [[1], [2, 3]]\nP.splitAt(-1)([1, 2, 3, 4, 5]) // => [[1, 2, 3, 4], [5]]\n",
+        "args": [
+          {
+            "name": "index",
+            "description": "the index to split at"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Array"
+  },
+  {
+    "name": "splitWhen",
+    "description": "<p>Splits a given array at the first index where the given predicate returns true.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.splitWhen(array, fn)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.splitWhen([1, 2, 3], (x) => x === 2) // => [[1], [2, 3]]\n",
+        "args": [
+          {
+            "name": "array",
+            "description": "the array to split"
+          },
+          {
+            "name": "fn",
+            "description": "the predicate"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "P.splitWhen(fn)(array)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.splitWhen((x) => x === 2)([1, 2, 3]) // => [[1], [2, 3]]\n",
+        "args": [
+          {
+            "name": "fn",
+            "description": "the predicate"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Array"
+  },
+  {
+    "name": "stringToPath",
+    "description": "<p>Converts a path string to an array of keys.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.stringToPathArray(path)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.stringToPathArray('a.b[0].c') // => ['a', 'b', 0, 'c']\n",
+        "args": [
+          {
+            "name": "path",
+            "description": "a string path"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "String"
+  },
+  {
+    "name": "sumBy",
+    "description": "<p>Returns the sum of the elements of an array using the provided predicate.</p>\n",
+    "methods": [
+      {
+        "tag": "Data Last",
+        "signature": "P.sumBy(fn)(array)\nP.sumBy.indexed(fn)(array)\n",
+        "indexed": true,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.pipe(\n  [{ a: 5 }, { a: 1 }, { a: 3 }],\n  P.sumBy((x) => x.a)\n) // 9\n",
+        "args": [
+          {
+            "name": "fn",
+            "description": "predicate function"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      },
+      {
+        "tag": "Data First",
+        "signature": "P.sumBy(array, fn)\nP.sumBy.indexed(array, fn)\n",
+        "indexed": true,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.sumBy([{ a: 5 }, { a: 1 }, { a: 3 }], (x) => x.a) // 9\n",
+        "args": [
+          {
+            "name": "items",
+            "description": "the array"
+          },
+          {
+            "name": "fn",
+            "description": "predicate function"
+          }
+        ],
+        "returns": {
+          "name": "number"
+        }
+      }
+    ],
+    "category": "Array"
+  },
+  {
+    "name": "swapIndices",
+    "description": "<p>Swaps the positions of two elements in an array or string at the provided indices.</p>\n<p>Negative indices are supported and would be treated as an offset from the end of the array. The resulting type thought would be less strict than when using positive indices.</p>\n<p>If either index is out of bounds the result would be a shallow copy of the input, as-is.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "swapIndices(data, index1, index2)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "swapIndices(['a', 'b', 'c'], 0, 1) // => ['b', 'a', 'c']\nswapIndices(['a', 'b', 'c'], 1, -1) // => ['c', 'b', 'a']\nswapIndices('abc', 0, 1) // => 'bac'\n",
+        "args": [
+          {
+            "name": "data",
+            "description": "the item to be manipulated. This can be an array, or a string."
+          },
+          {
+            "name": "index1",
+            "description": "the first index"
+          },
+          {
+            "name": "index2",
+            "description": "the second index"
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": "Returns the manipulated array or string."
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "swapIndices(index1, index2)(data)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "swapIndices(0, 1)(['a', 'b', 'c']) // => ['b', 'a', 'c']\nswapIndices(0, -1)('abc') // => 'cba'\n",
+        "args": [
+          {
+            "name": "index1",
+            "description": "the first index"
+          },
+          {
+            "name": "index2",
+            "description": "the second index"
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": "Returns the manipulated array or string."
+        }
+      }
+    ],
+    "category": "Array"
+  },
+  {
+    "name": "swapProps",
+    "description": "<p>Swaps the positions of two properties in an object based on the provided keys.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "swap(data, key1, key2)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "swap({ a: 1, b: 2, c: 3 }, 'a', 'b') // => {a: 2, b: 1, c: 3}\n",
+        "args": [
+          {
+            "name": "data",
+            "description": "the object to be manipulated"
+          },
+          {
+            "name": "key1",
+            "description": "the first property key"
+          },
+          {
+            "name": "key2",
+            "description": "the second property key"
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": "Returns the manipulated object."
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "swap(key1, key2)(data)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "swap('a', 'b')({ a: 1, b: 2, c: 3 }) // => {a: 2, b: 1, c: 3}\n",
+        "args": [
+          {
+            "name": "key1",
+            "description": "the first property key"
+          },
+          {
+            "name": "key2",
+            "description": "the second property key"
+          }
+        ],
+        "returns": {
+          "name": "Object",
+          "description": "Returns the manipulated object."
+        }
+      }
+    ],
+    "category": "Object"
+  },
+  {
+    "name": "take",
+    "description": "<p>Returns the first <code>n</code> elements of <code>array</code>.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.take(array, n)\n",
+        "indexed": false,
+        "pipeable": true,
+        "strict": false,
+        "example": "P.take([1, 2, 3, 4, 3, 2, 1], 3) // => [1, 2, 3]\n",
+        "args": [
+          {
+            "name": "array",
+            "description": "the array"
+          },
+          {
+            "name": "n",
+            "description": "the number of elements to take"
+          }
+        ],
+        "returns": {
+          "name": "Array"
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "P.take(n)(array)\n",
+        "indexed": false,
+        "pipeable": true,
+        "strict": false,
+        "example": "P.pipe([1, 2, 3, 4, 3, 2, 1], P.take(n)) // => [1, 2, 3]\n",
+        "args": [
+          {
+            "name": "n",
+            "description": "the number of elements to take"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Array"
+  },
+  {
+    "name": "takeWhile",
+    "description": "<p>Returns elements from the array until predicate returns false.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.takeWhile(array, fn)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.takeWhile([1, 2, 3, 4, 3, 2, 1], (x) => x !== 4) // => [1, 2, 3]\n",
+        "args": [
+          {
+            "name": "array",
+            "description": "the array"
+          },
+          {
+            "name": "fn",
+            "description": "the predicate"
+          }
+        ],
+        "returns": {
+          "name": "Array"
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "P.takeWhile(fn)(array)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.pipe(\n  [1, 2, 3, 4, 3, 2, 1],\n  P.takeWhile((x) => x !== 4)\n) // => [1, 2, 3]\n",
+        "args": [
+          {
+            "name": "fn",
+            "description": "the predicate"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Array"
+  },
+  {
+    "name": "toPairs",
+    "description": "<p>Returns an array of key/values of the enumerable properties of an object.</p>\n",
+    "methods": [
+      {
+        "signature": "P.toPairs(object)\nP.toPairs.strict(object)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": true,
+        "example": "P.toPairs({ a: 1, b: 2, c: 3 }) // => [['a', 1], ['b', 2], ['c', 3]]\nP.toPairs.strict({ a: 1 } as const) // => [['a', 1]] typed Array<['a', 1]>\n",
+        "args": [
+          {
+            "name": "object"
+          }
+        ],
+        "returns": {
+          "name": "Array"
+        }
+      }
+    ],
+    "category": "Object"
+  },
+  {
+    "name": "type",
+    "description": "<p>Gives a single-word string description of the (native) type of a value, returning such answers as &#39;Object&#39;, &#39;Number&#39;, &#39;Array&#39;, or &#39;Null&#39;. Does not attempt to distinguish user Object types any further, reporting them all as &#39;Object&#39;.</p>\n",
+    "methods": [
+      {
+        "signature": "P.type(obj)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.type({}) //=> \"Object\"\nP.type(1) //=> \"Number\"\nP.type(false) //=> \"Boolean\"\nP.type('s') //=> \"String\"\nP.type(null) //=> \"Null\"\nP.type([]) //=> \"Array\"\nP.type(/[A-z]/) //=> \"RegExp\"\nP.type(() => {}) //=> \"Function\"\nP.type(undefined) //=> \"Undefined\"\n",
+        "args": [
+          {
+            "name": "val"
+          }
+        ],
+        "returns": {
+          "name": "string"
+        }
+      }
+    ],
+    "category": "Type"
+  },
+  {
+    "name": "uniq",
+    "description": "<p>Returns a new array containing only one copy of each element in the original list.<br>Elements are compared by reference using Set.<br>Note: In <code>pipe</code>, use <code>uniq()</code> form instead of <code>uniq</code>. Otherwise, the inferred type is lost.</p>\n",
+    "methods": [
+      {
+        "signature": "P.uniq(array)\n",
+        "indexed": false,
+        "pipeable": true,
+        "strict": false,
+        "example": "P.uniq([1, 2, 2, 5, 1, 6, 7]) // => [1, 2, 5, 6, 7]\nP.pipe(\n  [1, 2, 2, 5, 1, 6, 7], // only 4 iterations\n  P.uniq(),\n  P.take(3)\n) // => [1, 2, 5]\n",
+        "args": [
+          {
+            "name": "array"
+          }
+        ],
+        "returns": {
+          "name": "Array"
+        }
+      }
+    ],
+    "category": "Array"
+  },
+  {
+    "name": "uniqBy",
+    "description": "<p>Returns a new array containing only one copy of each element in the original list transformed by a function.<br>Elements are compared by reference using Set.</p>\n",
+    "methods": [
+      {
+        "signature": "P.uniqBy(array, fn)\n",
+        "indexed": false,
+        "pipeable": true,
+        "strict": false,
+        "example": "P.uniqBy(\n  [{ n: 1 }, { n: 2 }, { n: 2 }, { n: 5 }, { n: 1 }, { n: 6 }, { n: 7 }],\n  (obj) => obj.n\n) // => [{n: 1}, {n: 2}, {n: 5}, {n: 6}, {n: 7}]\nP.pipe(\n  [{ n: 1 }, { n: 2 }, { n: 2 }, { n: 5 }, { n: 1 }, { n: 6 }, { n: 7 }], // only 4 iterations\n  P.uniqBy((obj) => obj.n),\n  P.take(3)\n) // => [{n: 1}, {n: 2}, {n: 5}]\n",
+        "args": [
+          {
+            "name": "transformer"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Array"
+  },
+  {
+    "name": "uniqWith",
+    "description": "<p>Returns a new array containing only one copy of each element in the original list.<br>Elements are compared by custom comparator isEquals.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.uniqWith(array, isEquals)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.uniqWith(\n  [{ a: 1 }, { a: 2 }, { a: 2 }, { a: 5 }, { a: 1 }, { a: 6 }, { a: 7 }],\n  P.equals\n) // => [{a: 1}, {a: 2}, {a: 5}, {a: 6}, {a: 7}]\n",
+        "args": [
+          {
+            "name": "array"
+          },
+          {
+            "name": "isEquals",
+            "description": "the comparator"
+          }
+        ],
+        "returns": {
+          "name": "Array"
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "P.uniqWith(isEquals)(array)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.uniqWith(P.equals)([\n  { a: 1 },\n  { a: 2 },\n  { a: 2 },\n  { a: 5 },\n  { a: 1 },\n  { a: 6 },\n  { a: 7 },\n]) // => [{a: 1}, {a: 2}, {a: 5}, {a: 6}, {a: 7}]\nP.pipe(\n  [{ a: 1 }, { a: 2 }, { a: 2 }, { a: 5 }, { a: 1 }, { a: 6 }, { a: 7 }], // only 4 iterations\n  P.uniqWith(P.equals),\n  P.take(3)\n) // => [{a: 1}, {a: 2}, {a: 5}]\n",
+        "args": [
+          {
+            "name": "isEquals",
+            "description": "the comparator"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Object"
+  },
+  {
+    "name": "values",
+    "description": "<p>Returns a new array containing the values of the array or object.</p>\n",
+    "methods": [
+      {
+        "signature": "P.values(source)\n",
+        "indexed": false,
+        "pipeable": true,
+        "strict": false,
+        "example": "P.values(['x', 'y', 'z']) // => ['x', 'y', 'z']\nP.values({ a: 'x', b: 'y', c: 'z' }) // => ['x', 'y', 'z']\nP.pipe({ a: 'x', b: 'y', c: 'z' }, P.values, P.first) // => 'x'\n",
+        "args": [
+          {
+            "name": "source",
+            "description": "Either an array or an object"
+          }
+        ],
+        "returns": {
+          "name": "Array"
+        }
+      }
+    ],
+    "category": "Object"
+  },
+  {
+    "name": "zip",
+    "description": "<p>Creates a new list from two supplied lists by pairing up equally-positioned items.<br>The length of the returned list will match the shortest of the two inputs.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.zip(first, second)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.zip([1, 2], ['a', 'b']) // => [1, 'a'], [2, 'b']\n",
+        "args": [
+          {
+            "name": "first",
+            "description": "the first input list"
+          },
+          {
+            "name": "second",
+            "description": "the second input list"
+          }
+        ],
+        "returns": {
+          "name": "Array"
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "P.zip(second)(first)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.zip(['a', 'b'])([1, 2]) // => [[1, 'a'], [2, 'b']\n",
+        "args": [
+          {
+            "name": "second",
+            "description": "the second input list"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Array"
+  },
+  {
+    "name": "zipObj",
+    "description": "<p>Creates a new object from two supplied lists by pairing up equally-positioned items.<br>Key/value pairing is truncated to the length of the shorter of the two lists</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.zipObj(first, second)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.zipObj(['a', 'b'], [1, 2]) // => {a: 1, b: 2}\n",
+        "args": [
+          {
+            "name": "first",
+            "description": "the first input list"
+          },
+          {
+            "name": "second",
+            "description": "the second input list"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "P.zipObj(second)(first)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.zipObj([1, 2])(['a', 'b']) // => {a: 1, b: 2}\n",
+        "args": [
+          {
+            "name": "second",
+            "description": "the second input list"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Array"
+  },
+  {
+    "name": "zipWith",
+    "description": "<p>Creates a new list from two supplied lists by calling the supplied function<br>with the same-positioned element from each list.</p>\n",
+    "methods": [
+      {
+        "tag": "Data First",
+        "signature": "P.zipWith(first, second, fn)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.zipWith(['1', '2', '3'], ['a', 'b', 'c'], (a, b) => a + b) // => ['1a', '2b', '3c']\n",
+        "args": [
+          {
+            "name": "first",
+            "description": "the first input list"
+          },
+          {
+            "name": "second",
+            "description": "the second input list"
+          },
+          {
+            "name": "fn",
+            "description": "the function applied to each position of the list"
+          }
+        ],
+        "returns": {
+          "name": "Array"
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "P.zipWith(fn)(first, second)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.zipWith((a, b) => a + b)(['1', '2', '3'], ['a', 'b', 'c']) // => ['1a', '2b', '3c']\n",
+        "args": [
+          {
+            "name": "fn",
+            "description": "the function applied to each position of the list"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      },
+      {
+        "tag": "Data Last",
+        "signature": "P.zipWith(fn)(first, second)\n",
+        "indexed": false,
+        "pipeable": false,
+        "strict": false,
+        "example": "P.zipWith((a, b) => a + b, ['a', 'b', 'c'])(['1', '2', '3']) // => ['1a', '2b', '3c']\n",
+        "args": [
+          {
+            "name": "fn",
+            "description": "the function applied to each position of the list"
+          },
+          {
+            "name": "second",
+            "description": "the second input list"
+          }
+        ],
+        "returns": {
+          "name": "Object"
+        }
+      }
+    ],
+    "category": "Array"
+  }
+]

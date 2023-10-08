@@ -9,7 +9,7 @@ import { purry } from '../function';
  *    P.splitWhen(array, fn)
  * @example
  *    P.splitWhen([1, 2, 3], x => x === 2) // => [[1], [2, 3]]
- * @data_first
+ * @dataFirst
  * @category Array
  */
 export function splitWhen<T>(
@@ -24,7 +24,7 @@ export function splitWhen<T>(
  *    P.splitWhen(fn)(array)
  * @example
  *    P.splitWhen(x => x === 2)([1, 2, 3]) // => [[1], [2, 3]]
- * @data_last
+ * @dataLast
  * @category Array
  */
 export function splitWhen<T>(

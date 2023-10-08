@@ -1,24 +1,25 @@
-import { meanBy } from './mean-by';
+import { describe, expect, it } from 'vitest';
 import { pipe } from '../function';
+import { meanBy } from './mean-by';
 
 const array = [{ a: 1 }, { a: 2 }, { a: 4 }, { a: 5 }, { a: 3 }] as const;
 
 describe('data first', () => {
-  test('meanBy', () => {
+  it('meanBy', () => {
     expect(meanBy(array, (x) => x.a)).toEqual(3);
   });
 
-  test('meanBy.indexed', () => {
+  it('meanBy.indexed', () => {
     expect(meanBy.indexed(array, (x, idx) => x.a + idx)).toEqual(5);
   });
 
-  test('should handle empty array', () => {
+  it('should handle empty array', () => {
     expect(meanBy([], (x) => x)).toBeNaN();
   });
 });
 
 describe('data last', () => {
-  test('meanBy', () => {
+  it('meanBy', () => {
     expect(
       pipe(
         array,
@@ -27,7 +28,7 @@ describe('data last', () => {
     ).toEqual(3);
   });
 
-  test('meanBy.indexed', () => {
+  it('meanBy.indexed', () => {
     expect(
       pipe(
         array,
@@ -36,7 +37,7 @@ describe('data last', () => {
     ).toEqual(5);
   });
 
-  test('should handle empty array', () => {
+  it('should handle empty array', () => {
     expect(
       pipe(
         [],

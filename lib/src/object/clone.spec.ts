@@ -1,4 +1,5 @@
 import * as assert from 'node:assert';
+import { describe, expect, it } from 'vitest';
 
 import { clone } from './clone';
 

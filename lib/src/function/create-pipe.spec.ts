@@ -1,3 +1,4 @@
+import { expect, it } from 'vitest';
 import { createPipe } from './create-pipe';
 
 it('should pipe a single operation', () => {

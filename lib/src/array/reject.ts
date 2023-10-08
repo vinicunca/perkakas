@@ -14,7 +14,7 @@ import { toLazyIndexed } from '../utils/to-lazy-indexed';
  * @example
  *    P.reject([1, 2, 3], x => x % 2 === 0) // => [1, 3]
  *    P.reject.indexed([1, 2, 3], (x, i, array) => x % 2 === 0) // => [1, 3]
- * @data_first
+ * @dataFirst
  * @indexed
  * @pipeable
  * @category Array
@@ -34,7 +34,7 @@ export function reject<T>(
  * @example
  *    P.reject([1, 2, 3], x => x % 2 === 0) // => [1, 3]
  *    P.reject.indexed([1, 2, 3], (x, i, array) => x % 2 === 0) // => [1, 3]
- * @data_first
+ * @dataFirst
  * @indexed
  * @pipeable
  * @category Array

@@ -9,7 +9,7 @@ import { purry } from '../function';
  *    P.indexBy(array, fn)
  * @example
  *    P.indexBy(['one', 'two', 'three'], x => x.length) // => {3: 'two', 5: 'three'}
- * @data_first
+ * @dataFirst
  * @indexed
  * @category Array
  */
@@ -29,7 +29,7 @@ export function indexBy<T>(
  *      ['one', 'two', 'three'],
  *      P.indexBy(x => x.length)
  *    ) // => {3: 'two', 5: 'three'}
- * @data_last
+ * @dataLast
  * @indexed
  * @category Array
  */

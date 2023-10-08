@@ -6,10 +6,10 @@ import { purry } from '../function';
  * @param prop the property name
  * @param value the property value
  * @signature
- *    P.addProp(obj, prop, value)
+ *  P.addProp(obj, prop, value)
  * @example
- *    P.addProp({firstName: 'john'}, 'lastName', 'doe') // => {firstName: 'john', lastName: 'doe'}
- * @data_first
+ *  P.addProp({firstName: 'john'}, 'lastName', 'doe') // => {firstName: 'john', lastName: 'doe'}
+ * @dataFirst
  * @category Object
  */
 export function addProp<
@@ -23,10 +23,10 @@ export function addProp<
  * @param prop the property name
  * @param value the property value
  * @signature
- *    P.addProp(prop, value)(obj)
+ *  P.addProp(prop, value)(obj)
  * @example
- *    P.addProp('lastName', 'doe')({firstName: 'john'}) // => {firstName: 'john', lastName: 'doe'}
- * @data_last
+ *  P.addProp('lastName', 'doe')({firstName: 'john'}) // => {firstName: 'john', lastName: 'doe'}
+ * @dataLast
  * @category Object
  */
 export function addProp<
@@ -35,8 +35,8 @@ export function addProp<
   V,
 >(prop: K, value: V): (obj: T) => T & { [x in K]: V };
 
-export function addProp(): any {
-  return purry(_addProp, arguments);
+export function addProp(...args: IArguments[]): any {
+  return purry(_addProp, args);
 }
 
 function _addProp(obj: any, prop: string, value: any) {

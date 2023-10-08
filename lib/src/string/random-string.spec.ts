@@ -1,5 +1,6 @@
+import { expect, it } from 'vitest';
 import { randomString } from './random-string';
 
-test('randomString', () => {
+it('randomString', () => {
   expect(randomString(10).length).toBe(10);
 });

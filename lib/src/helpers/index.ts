@@ -18,8 +18,6 @@ export function convertToUnit(
 /**
  * Increase string a value with unit
  *
- * @example '2px' + 1 = '3px'
- * @example '15em' + (-2) = '13em'
  */
 export function increaseWithUnit({ target, delta }: { target: string | number; delta: number }): string | number {
   if (isNumber(target)) {

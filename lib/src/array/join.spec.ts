@@ -1,3 +1,4 @@
+import { describe, expect, expectTypeOf, it } from 'vitest';
 import { join } from './join';
 
 describe('at runtime', () => {
@@ -178,7 +179,7 @@ describe('typing', () => {
       const array: [
         'prefix' | undefined,
         'midfix' | undefined,
-        'suffix' | undefined
+        'suffix' | undefined,
       ] = ['prefix', undefined, 'suffix'];
       const result = join(array, ',');
       expectTypeOf(result).toEqualTypeOf<`${'prefix' | ''},${'midfix' | ''},${

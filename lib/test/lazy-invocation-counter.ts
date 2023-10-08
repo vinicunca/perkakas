@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { map } from '../src/array/map';
 
 export function createLazyInvocationCounter() {

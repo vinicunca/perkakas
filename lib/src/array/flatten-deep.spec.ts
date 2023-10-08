@@ -1,13 +1,14 @@
+import { describe, expect, it } from 'vitest';
 import { createLazyInvocationCounter } from '../../test/lazy-invocation-counter';
+import { pipe } from '../function';
 import { find } from './find';
 import { flattenDeep } from './flatten-deep';
-import { pipe } from '../function';
 
-test('flatten', () => {
+it('flatten', () => {
   expect(flattenDeep([[1, 2], 3, [4, 5]] as const)).toEqual([1, 2, 3, 4, 5]);
 });
 
-test('nested', () => {
+it('nested', () => {
   expect(
     flattenDeep([
       [1, 2],
@@ -17,7 +18,7 @@ test('nested', () => {
 });
 
 describe('pipe', () => {
-  test('with find', () => {
+  it('with find', () => {
     const counter1 = createLazyInvocationCounter();
     const counter2 = createLazyInvocationCounter();
     const result = pipe(

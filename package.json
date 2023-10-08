@@ -13,7 +13,8 @@
     "prepublish": "pnpm run build:lib",
     "deploy:docs": "pnpm run gen:meta && pnpm -C docs generate",
     "release": "pnpm -C lib release",
-    "gen:meta": "tsx scripts/gen-meta.ts",
+    "transform": "bun run scripts/transform.ts docs/build/out.json docs/build/data.json",
+    "typedoc": "typedoc --json docs/build/out.json",
     "registry": "pnpm publish --access public --no-git-checks"
   },
   "devDependencies": {
@@ -21,9 +22,9 @@
     "@vinicunca/eslint-config": "^2.0.0-beta.5",
     "@vinicunca/perkakas": "^0.0.4",
     "bumpp": "^9.2.0",
+    "bun": "^1.0.4",
     "eslint": "^8.50.0",
     "rimraf": "^5.0.5",
-    "tsx": "^3.13.0",
     "typescript": "^5.2.2",
     "vitest": "^0.34.6"
   },

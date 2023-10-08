@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest';
+
 /* eslint-disable no-restricted-syntax */
 
 import {
@@ -13,7 +15,7 @@ import {
 
 const UNDEFINED_INPUT = 'undefined input';
 
-describe('Split by case', () => {
+describe('split by case', () => {
   const tests: any = {
     '': [],
     'foo': ['foo'],
@@ -32,7 +34,7 @@ describe('Split by case', () => {
   }
 });
 
-describe('Pascal case', () => {
+describe('pascal case', () => {
   const tests: any = {
     'foo': 'Foo',
     'foo-bAr': 'FooBAr',
@@ -52,7 +54,7 @@ describe('Pascal case', () => {
   });
 });
 
-describe('Camel case', () => {
+describe('camel case', () => {
   const tests: any = {
     FooBarBaz: 'fooBarBaz',
   };
@@ -68,7 +70,7 @@ describe('Camel case', () => {
   });
 });
 
-describe('Kebab case', () => {
+describe('kebab case', () => {
   const tests: any = {
     'foo': 'foo',
     'foo/Bar': 'foo-bar',
@@ -89,7 +91,7 @@ describe('Kebab case', () => {
   });
 });
 
-describe('Snake case', () => {
+describe('snake case', () => {
   const tests: any = {
     FooBarBaz: 'foo_bar_baz',
   };
@@ -105,7 +107,7 @@ describe('Snake case', () => {
   });
 });
 
-describe('Upper first', () => {
+describe('upper first', () => {
   const tests: any = {
     '': '',
     'foo': 'Foo',
@@ -119,7 +121,7 @@ describe('Upper first', () => {
   }
 });
 
-describe('Lower first', () => {
+describe('lower first', () => {
   const tests: any = {
     '': '',
     'foo': 'foo',
@@ -133,7 +135,7 @@ describe('Lower first', () => {
   }
 });
 
-describe('Is uppercase', () => {
+describe('is uppercase', () => {
   it('base', () => {
     expect(isUppercase('a')).toBe(false);
   });

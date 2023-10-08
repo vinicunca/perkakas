@@ -1,8 +1,9 @@
+import { expect, it } from 'vitest';
 import { mergeAll } from './merge-all';
 
-test('merge objects', () => {
+it('merge objects', () => {
   expect(
-    mergeAll([{ a: 1, b: 1 }, { b: 2, c: 3 }, { d: 10 }] as const)
+    mergeAll([{ a: 1, b: 1 }, { b: 2, c: 3 }, { d: 10 }] as const),
   ).toEqual({
     a: 1,
     b: 2,

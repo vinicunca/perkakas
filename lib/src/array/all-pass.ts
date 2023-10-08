@@ -12,7 +12,7 @@ import { purry } from '../function';
  *    const fns = [isDivisibleBy3, isDivisibleBy4]
  *    P.allPass(12, fns) // => true
  *    P.allPass(8, fns) // => false
- * @data_first
+ * @dataFirst
  * @category Array
  */
 export function allPass<T>(
@@ -31,7 +31,7 @@ export function allPass<T>(
  *    const fns = [isDivisibleBy3, isDivisibleBy4]
  *    P.allPass(fns)(12) // => true
  *    P.allPass(fns)(8) // => false
- * @data_last
+ * @dataLast
  * @category Array
  */
 export function allPass<T>(

@@ -1,13 +1,14 @@
+import { describe, expect, it } from 'vitest';
 import { createLazyInvocationCounter } from '../../test/lazy-invocation-counter';
+import { pipe } from '../function';
 import { find } from './find';
 import { flatten } from './flatten';
-import { pipe } from '../function';
 
-test('flatten', () => {
+it('flatten', () => {
   expect(flatten([[1, 2], 3, [4, 5]] as const)).toEqual([1, 2, 3, 4, 5]);
 });
 
-test('nested', () => {
+it('nested', () => {
   expect(
     flatten([
       [1, 2],
@@ -17,17 +18,17 @@ test('nested', () => {
 });
 
 describe('pipe', () => {
-  test('flatten multiple values', () => {
+  it('flatten multiple values', () => {
     const result = pipe([[1, 2], 3, [4, 5]] as const, flatten());
     expect(result).toEqual([1, 2, 3, 4, 5]);
   });
 
-  test('flatten single value', () => {
+  it('flatten single value', () => {
     const result = pipe([[1]] as const, flatten());
     expect(result).toEqual([1]);
   });
 
-  test('with find', () => {
+  it('with find', () => {
     const counter1 = createLazyInvocationCounter();
     const counter2 = createLazyInvocationCounter();
     const result = pipe(

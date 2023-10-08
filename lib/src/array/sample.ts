@@ -64,7 +64,7 @@ type SampledLiteral<
  * @example
  *    P.sample(["hello", "world"], 1); // => ["hello"] // typed string[]
  *    P.sample(["hello", "world"] as const, 1); // => ["world"] // typed ["hello" | "world"]
- * @data_first
+ * @dataFirst
  * @pipeable
  * @category Array
  */
@@ -91,7 +91,7 @@ export function sample<T extends IterableContainer, N extends number = number>(
  * @example
  *    P.sample(1)(["hello", "world"]); // => ["hello"] // typed string[]
  *    P.sample(1)(["hello", "world"] as const); // => ["world"] // typed ["hello" | "world"]
- * @data_last
+ * @dataLast
  * @pipeable
  * @category Array
  */

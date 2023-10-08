@@ -11,7 +11,7 @@ import { purry } from '../function';
  *    P.setPath(obj, path, value)
  * @example
  *    P.setPath({ a: { b: 1 } }, ['a', 'b'], 2) // => { a: { b: 2 } }
- * @data_first
+ * @dataFirst
  * @category Object
  */
 export function setPath<T, TPath extends Array<PropertyKey> & Path<T>>(
@@ -29,7 +29,7 @@ export function setPath<T, TPath extends Array<PropertyKey> & Path<T>>(
  *    P.setPath(obj, path, value)
  * @example
  *    P.pipe({ a: { b: 1 } }, P.setPath(['a', 'b'], 2)) // { a: { b: 2 } }
- * @data_first
+ * @dataFirst
  * @category Object
  */
 export function setPath<TPath extends Array<PropertyKey>, Value>(

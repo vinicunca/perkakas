@@ -1,17 +1,18 @@
-import { countBy } from './count-by';
+import { describe, expect, it } from 'vitest';
 import { pipe } from '../function';
+import { countBy } from './count-by';
 
 describe('data first', () => {
-  test('countBy', () => {
+  it('countBy', () => {
     expect(countBy([1, 2, 3, 4, 5], (x) => x % 2 === 0)).toEqual(2);
   });
-  test('countBy.indexed', () => {
+  it('countBy.indexed', () => {
     expect(countBy.indexed([1, 2, 3, 4, 5], (x) => x % 2 === 0)).toEqual(2);
   });
 });
 
 describe('data last', () => {
-  test('countBy', () => {
+  it('countBy', () => {
     expect(
       pipe(
         [1, 2, 3, 4, 5],
@@ -19,7 +20,7 @@ describe('data last', () => {
       ),
     ).toEqual(2);
   });
-  test('countBy.indexed', () => {
+  it('countBy.indexed', () => {
     expect(
       pipe(
         [1, 2, 3, 4, 5],

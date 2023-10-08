@@ -41,7 +41,7 @@ type StrictlyRequired<T> = { [K in keyof T]-?: NonNullable<T[K]> };
  * null or undefined.
  */
 type PathValue1<T, A extends keyof Pathable<T>> = StrictlyRequired<
-  Pathable<T>
+Pathable<T>
 >[A];
 /** All possible options after successfully reaching `T[A]` */
 type Pathable1<T, A extends keyof Pathable<T>> = Pathable<PathValue1<T, A>>;
@@ -76,7 +76,7 @@ type PathValue3<
  * @example
  *    P.pathOr({x: 10}, ['y'], 2) // 2
  *    P.pathOr({y: 10}, ['y'], 2) // 10
- * @data_first
+ * @dataFirst
  * @category Object
  */
 export function pathOr<T, A extends keyof Pathable<T>>(
@@ -115,7 +115,7 @@ export function pathOr<
  * @example
  *    P.pipe({x: 10}, P.pathOr(['y'], 2)) // 2
  *    P.pipe({y: 10}, P.pathOr(['y'], 2)) // 10
- * @data_last
+ * @dataLast
  * @category Object
  */
 export function pathOr<T, A extends keyof Pathable<T>>(

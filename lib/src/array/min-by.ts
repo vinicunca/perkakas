@@ -28,7 +28,7 @@ function _minBy(indexed: boolean) {
  *      [{a: 5}, {a: 1}, {a: 3}],
  *      P.minBy(x => x.a)
  *    ) // { a: 1 }
- * @data_last
+ * @dataLast
  * @indexed
  * @category Array
  */
@@ -48,7 +48,7 @@ export function minBy<T>(
  *      [{a: 5}, {a: 1}, {a: 3}],
  *      x => x.a
  *    ) // { a: 1 }
- * @data_first
+ * @dataFirst
  * @indexed
  * @category Array
  */

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
+import { type FunctionsData } from '../scripts/transform';
 import { useContent, useRequestEvent, useSeoMeta } from '#imports';
-import { type ConfigItem } from '~~/domains/docs/types';
 
 const { page, layout } = useContent();
 
@@ -15,11 +15,7 @@ useSeoMeta({
   description: () => page.value?.description,
 });
 
-const route = useRoute();
-
-const { data, pending } = useFetch<{ configs: ConfigItem[] }>('/api/meta', {
-  query: { config: route.params.all },
-});
+const { data, pending } = useFetch<{ metaDocs: FunctionsData }>('/api/meta');
 </script>
 
 <template>
@@ -30,7 +26,7 @@ const { data, pending } = useFetch<{ configs: ConfigItem[] }>('/api/meta', {
         :key="(page as any)._id"
         :value="{
           ...page,
-          configs: data?.configs,
+          metaDocs: data.metaDocs,
         }"
       >
         <template #empty="{ value }">

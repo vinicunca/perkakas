@@ -45,7 +45,7 @@ type NullishCoalesce<T, Fallback> = T extends Joinable
  *    P.join([1,2,3], ",") // => "1,2,3" (typed `string`)
  *    P.join(['a','b','c'], "") // => "abc" (typed `string`)
  *    P.join(['hello', 'world'] as const, " ") // => "hello world" (typed `hello world`)
- * @data_first
+ * @dataFirst
  * @category Array
  */
 export function join<
@@ -69,7 +69,7 @@ export function join<
  *    P.pipe([1,2,3], P.join(",")) // => "1,2,3" (typed `string`)
  *    P.pipe(['a','b','c'], P.join("")) // => "abc" (typed `string`)
  *    P.pipe(['hello', 'world'] as const, P.join(" ")) // => "hello world" (typed `hello world`)
- * @data_last
+ * @dataLast
  * @category Array
  */
 export function join<

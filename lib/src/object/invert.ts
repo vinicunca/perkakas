@@ -12,7 +12,7 @@ type Inverted<T extends object> = T[keyof T] extends PropertyKey
  *    P.invert(object)
  * @example
  *    P.invert({ a: "d", b: "e", c: "f" }) // => { d: "a", e: "b", f: "c" }
- * @data_first
+ * @dataFirst
  * @category object
  * @pipeable
  */
@@ -26,7 +26,7 @@ export function invert<T extends object>(object: T): Inverted<T>;
  *    P.invert()(object)
  * @example
  *    P.pipe({ a: "d", b: "e", c: "f" }, P.invert()); // => { d: "a", e: "b", f: "c" }
- * @data_last
+ * @dataLast
  * @category object
  * @pipeable
  */

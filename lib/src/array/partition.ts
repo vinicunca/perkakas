@@ -10,7 +10,7 @@ import { purry } from '../function';
  *    P.partition(array, fn)
  * @example
  *    P.partition(['one', 'two', 'forty two'], x => x.length === 3) // => [['one', 'two'], ['forty two']]
- * @data_first
+ * @dataFirst
  * @indexed
  * @category Array
  */
@@ -28,7 +28,7 @@ export function partition<T, S extends T>(
  *    P.partition(array, fn)
  * @example
  *    P.partition(['one', 'two', 'forty two'], x => x.length === 3) // => [['one', 'two'], ['forty two']]
- * @data_first
+ * @dataFirst
  * @indexed
  * @category Array
  */
@@ -45,7 +45,7 @@ export function partition<T>(
  *    P.partition(fn)(array)
  * @example
  *    P.pipe(['one', 'two', 'forty two'], P.partition(x => x.length === 3)) // => [['one', 'two'], ['forty two']]
- * @data_last
+ * @dataLast
  * @indexed
  * @category Array
  */
@@ -61,7 +61,7 @@ export function partition<T, S extends T>(
  *    P.partition(fn)(array)
  * @example
  *    P.pipe(['one', 'two', 'forty two'], P.partition(x => x.length === 3)) // => [['one', 'two'], ['forty two']]
- * @data_last
+ * @dataLast
  * @indexed
  * @category Array
  */

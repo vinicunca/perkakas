@@ -1,14 +1,15 @@
+import { describe, expect, expectTypeOf, it } from 'vitest';
 import { pipe } from '../function';
 import { sort } from './sort';
 
 describe('data_first', () => {
-  test('sort', () => {
+  it('sort', () => {
     expect(sort([4, 2, 7, 5] as const, (a, b) => a - b)).toEqual([2, 4, 5, 7]);
   });
 });
 
 describe('data_last', () => {
-  test('sort', () => {
+  it('sort', () => {
     expect(
       pipe(
         [4, 2, 7, 5] as const,
@@ -83,11 +84,11 @@ describe('strict', () => {
     const array: [number, string, boolean] = [1, 'hello', true];
     const result = sort.strict(array, () => 1);
     expectTypeOf(result).toEqualTypeOf<
-      [
-        number | string | boolean,
-        number | string | boolean,
-        number | string | boolean,
-      ]
+    [
+      number | string | boolean,
+      number | string | boolean,
+      number | string | boolean,
+    ]
     >();
   });
 });

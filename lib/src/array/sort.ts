@@ -16,7 +16,7 @@ import { purry } from '../function';
  * @example
  *    P.sort([4, 2, 7, 5], (a, b) => a - b) // => [2, 4, 5, 7] typed Array<number>
  *    P.sort.strict([4, 2] as [number, number], (a, b) => a - b) // [2, 4] typed [number, number]
- * @data_first
+ * @dataFirst
  * @category Array
  * @strict
  */
@@ -39,7 +39,7 @@ export function sort<T>(
  * @example
  *    P.pipe([4, 2, 7, 5], P.sort((a, b) => a - b)) // => [2, 4, 5, 7] typed Array<number>
  *    P.pipe([4, 2] as [number, number], P.sort.strict((a, b) => a - b)) // => [2, 4] typed [number, number]
- * @data_last
+ * @dataLast
  * @category Array
  * @strict
  */

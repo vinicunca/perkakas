@@ -18,7 +18,7 @@ function _countBy(indexed: boolean) {
  *    P.countBy(array, fn)
  * @example
  *    P.countBy([1, 2, 3, 4, 5], x => x % 2 === 0) // => 2
- * @data_first
+ * @dataFirst
  * @indexed
  * @category Array
  */
@@ -38,7 +38,7 @@ export function countBy<T>(
  *    P.countBy(fn)(array)
  * @example
  *    P.pipe([1, 2, 3, 4, 5], P.countBy(x => x % 2 === 0)) // => 2
- * @data_last
+ * @dataLast
  * @indexed
  * @category Array
  */

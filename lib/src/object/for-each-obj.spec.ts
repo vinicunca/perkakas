@@ -1,5 +1,6 @@
-import { forEachObj } from './for-each-obj';
+import { describe, expect, it, vi } from 'vitest';
 import { pipe } from '../function';
+import { forEachObj } from './for-each-obj';
 
 const obj = {
   a: 1,

@@ -1,100 +1,40 @@
 <script lang="ts" setup>
-import { type ConfigItem } from '../types';
-import { getPluginColor } from '../utils/plugin-colors';
-import CoreTooltip from '~/domains/core/components/core-tooltip.vue';
+import DataMethod from '~/domains/data/components/data-method.vue';
+import DataTitle from '~/domains/data/components/data-title.vue';
+import { type FunctionsData } from '~~/scripts/transform';
 
-const props = withDefaults(
-  defineProps<{
-    configs: ConfigItem[];
-    index?: number;
-  }>(),
-  {
-    index: 0,
-  },
-);
-
-const config = computed(() => props.configs[props.index]);
+defineProps<{
+  metaDocs: FunctionsData;
+}>();
 </script>
 
 <template>
-  <div class="flex flex-col gap-4">
-    <DocsConfigBox v-if="config">
-      <div class="flex flex-col gap-4">
-        <!-- File pattern matching -->
-        <DocsConfigHeading
-          v-if="config.files"
-          icon="i-carbon-batch-job"
-          label="Applies to files matching"
-        >
-          <code
-            v-for="(glob, idx) of config.files"
+  <div class="flex flex-col gap-4 mt-10">
+    <div
+      v-for="doc in metaDocs"
+      :key="doc.name"
+    >
+      <div class="rounded-1 flex flex-col border border-$vd-c-gray-1">
+        <a :id="doc.name" />
+
+        <div class="p-4 flex-auto">
+          <DataTitle
+            :name="doc.name"
+            :methods="doc.methods[0]"
+          />
+
+          <div
+            class="not-prose mt-1"
+            v-html="doc.description"
+          />
+
+          <DataMethod
+            v-for="(method, idx) in doc.methods"
             :key="idx"
-            class="plain-color"
-          >
-            {{ glob }}
-          </code>
-        </DocsConfigHeading>
-
-        <DocsConfigHeading
-          v-else-if="config.rules"
-          icon="i-carbon-categories"
-          label="Generally applies to all files"
-        />
-
-        <!-- Plugins -->
-        <DocsConfigHeading
-          v-if="config.plugins"
-          icon="i-carbon-plug"
-          label="Plugins"
-        >
-          <NuxtLink
-            v-for="(pluginItem, name) of config.plugins"
-            :key="name"
-            target="_blank"
-            :to="pluginItem.url"
-          >
-            <code :style="{ color: getPluginColor(name) }">
-              {{ name }}
-            </code>
-          </NuxtLink>
-        </DocsConfigHeading>
-
-        <!-- Rules -->
-        <DocsConfigHeading
-          v-if="config.rules.length > 0"
-          icon="i-carbon-list-checked"
-          label="Rules"
-        >
-          <div class="mt-2 grid grid-flow-row gap-4">
-            <div
-              v-for="rule in config.rules"
-              :key="rule.name"
-              class="not-last:(pb-3 border-b-1 border-$vd-c-divider)"
-            >
-              <div class="flex items-center gap-2">
-                <DocsRuleName :rule="rule" />
-
-                <DocsRuleItem :rule="rule" />
-
-                <CoreTooltip
-                  v-if="rule.fixable"
-                  label="Fixable"
-                >
-                  <i class="i-carbon-ibm-toolchain opacity-50" />
-                </CoreTooltip>
-              </div>
-
-              <div class="not-prose">
-                <MDCRenderer
-                  :prose="false"
-                  class="mt-2"
-                  :body="rule.docs?.description"
-                />
-              </div>
-            </div>
-          </div>
-        </DocsConfigHeading>
+            :method="method"
+          />
+        </div>
       </div>
-    </DocsConfigBox>
+    </div>
   </div>
 </template>

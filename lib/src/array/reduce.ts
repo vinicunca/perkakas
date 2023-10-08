@@ -11,7 +11,7 @@ import { purry } from '../function';
  * @example
  *    P.reduce([1, 2, 3, 4, 5], (acc, x) => acc + x, 100) // => 115
  *    P.reduce.indexed([1, 2, 3, 4, 5], (acc, x, i, array) => acc + x, 100) // => 115
- * @data_first
+ * @dataFirst
  * @indexed
  * @category Array
  */
@@ -30,7 +30,7 @@ export function reduce<T, K>(
  * @example
  *    P.pipe([1, 2, 3, 4, 5], P.reduce((acc, x) => acc + x, 100)) // => 115
  *    P.pipe([1, 2, 3, 4, 5], P.reduce.indexed((acc, x, i, array) => acc + x, 100)) // => 115
- * @data_last
+ * @dataLast
  * @indexed
  * @category Array
  */
@@ -50,8 +50,7 @@ function _reduce(indexed: boolean) {
     initialValue: K,
   ): K => {
     return items.reduce(
-      (acc, item, index) =>
-        indexed ? fn(acc, item, index, items) : fn(acc, item),
+      (acc, item, index) => indexed ? fn(acc, item, index, items) : fn(acc, item),
       initialValue,
     );
   };

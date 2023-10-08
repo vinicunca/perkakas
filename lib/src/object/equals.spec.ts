@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { equals } from './equals';
 
 const tests: any = [
@@ -84,8 +85,8 @@ const tests: any = [
       },
       {
         description: 'NaN and NaN are equal',
-        value1: NaN,
-        value2: NaN,
+        value1: Number.NaN,
+        value2: Number.NaN,
         equal: true,
       },
       {
@@ -96,14 +97,14 @@ const tests: any = [
       },
       {
         description: 'Infinity and Infinity are equal',
-        value1: Infinity,
-        value2: Infinity,
+        value1: Number.POSITIVE_INFINITY,
+        value2: Number.POSITIVE_INFINITY,
         equal: true,
       },
       {
         description: 'Infinity and -Infinity are not equal',
-        value1: Infinity,
-        value2: -Infinity,
+        value1: Number.POSITIVE_INFINITY,
+        value2: Number.NEGATIVE_INFINITY,
         equal: false,
       },
     ],
@@ -258,7 +259,7 @@ const tests: any = [
       },
       {
         description: 'pseudo array and equivalent array are not equal',
-        value1: { '0': 0, '1': 1, length: 2 },
+        value1: { 0: 0, 1: 1, length: 2 },
         value2: [0, 1],
         equal: false,
       },

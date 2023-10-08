@@ -22,7 +22,7 @@ export default defineNuxtConfig({
     '@nuxtjs/color-mode',
     '@nuxt/content',
     '@unocss/nuxt',
-    'nuxt-gtag',
+    // 'nuxt-gtag',
     resolve('./app/content-post-process'),
   ],
 
@@ -37,11 +37,11 @@ export default defineNuxtConfig({
     applicationId: process.env.ALGOLIA_APPLICATION_ID,
     // DocSearch key is used to configure DocSearch extension.
     docSearch: {
-      indexName: 'eslint-vinicunca',
+      indexName: 'perkakas-vinicunca',
     },
 
     crawler: {
-      indexName: 'eslint-vinicunca',
+      indexName: 'perkakas-vinicunca',
       apiKey: process.env.ALGOLIA_CRAWLER_API_KEY,
     },
   },
@@ -73,9 +73,9 @@ export default defineNuxtConfig({
     },
   },
 
-  gtag: {
-    id: 'G-38W7J3MEER',
-  },
+  // gtag: {
+  //   id: 'G-38W7J3MEER',
+  // },
 
   postcss: {
     plugins: {

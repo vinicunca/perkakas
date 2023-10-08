@@ -1,6 +1,7 @@
+import { assertType, expect, it } from 'vitest';
 import { toPairs } from './to-pairs';
 
-test('should return pairs', () => {
+it('should return pairs', () => {
   const actual = toPairs({ a: 1, b: 2, c: 3 });
   expect(actual).toEqual([
     ['a', 1],
@@ -9,7 +10,7 @@ test('should return pairs', () => {
   ]);
 });
 
-test('should return pairs, strict', () => {
+it('should return pairs, strict', () => {
   const actual = toPairs.strict({ a: 1, b: 2, c: 3 });
   expect(actual).toEqual([
     ['a', 1],
@@ -18,25 +19,25 @@ test('should return pairs, strict', () => {
   ]);
 });
 
-test('stricter typing', () => {
+it('stricter typing', () => {
   const actual = toPairs.strict({ a: 1, b: 2, c: 3 } as const);
   assertType<Array<['a' | 'b' | 'c', 1 | 2 | 3]>>(actual);
 });
 
-test('stricter typing with optional', () => {
+it('stricter typing with optional', () => {
   const actual = toPairs.strict({} as { a?: string });
   assertType<Array<['a', string]>>(actual);
 });
 
-test('stricter typing with undefined', () => {
+it('stricter typing with undefined', () => {
   const actual = toPairs.strict({ a: undefined } as { a: string | undefined });
   assertType<Array<['a', string | undefined]>>(actual);
 });
 
-test('stricter with a broad type', () => {
+it('stricter with a broad type', () => {
   const actual = toPairs.strict({ a: 1, b: 2, c: 3 } as Record<
-    string,
-    unknown
+  string,
+  unknown
   >);
 
   assertType<Array<[string, unknown]>>(actual);

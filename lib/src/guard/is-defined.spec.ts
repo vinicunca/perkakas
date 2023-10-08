@@ -1,26 +1,28 @@
-import { isDefined } from './is-defined';
+import { assertType, describe, expect, it } from 'vitest';
 import { typesDataProvider } from '../../test/types-data-provider';
+import { isDefined } from './is-defined';
 
 describe('isDefined', () => {
-  test('isDefined": should work as type guard', () => {
+  it('isDefined": should work as type guard', () => {
     const data = typesDataProvider('date');
     if (isDefined(data)) {
       expect(data instanceof Date).toEqual(true);
       assertType<
-        | boolean
-        | string
-        | { a: string }
-        | (() => void)
-        | Array<number>
-        | Date
-        | Error
-        | number
-        | Promise<number>
-          >(data);
+      | boolean
+      | string
+      | { a: string }
+      | (() => void)
+      | Array<number>
+      | Date
+      | Error
+      | number
+      | Promise<number>
+      >(data,
+        );
     }
   });
 
-  test('isDefined: should work as type guard in filter', () => {
+  it('isDefined: should work as type guard in filter', () => {
     const data = [
       typesDataProvider('error'),
       typesDataProvider('array'),
@@ -30,43 +32,45 @@ describe('isDefined', () => {
     ].filter(isDefined);
     expect(data).toHaveLength(4);
     assertType<
-      Array<
-        | string
-        | number
-        | boolean
-        | {
-          a: string;
-        }
-        | (() => void)
-        | Array<number>
-        | Date
-        | Error
-        | Promise<number>
-      >
-          >(data);
+    Array<
+    | string
+    | number
+    | boolean
+    | {
+      a: string;
+    }
+    | (() => void)
+    | Array<number>
+    | Date
+    | Error
+    | Promise<number>
+    >
+    >(data,
+      );
   });
 });
 
 describe('strict', () => {
-  test('isDefined": should work as type guard', () => {
+  it('isDefined": should work as type guard', () => {
     const data = typesDataProvider('date');
     if (isDefined.strict(data)) {
       expect(data instanceof Date).toEqual(true);
       assertType<
-        | boolean
-        | string
-        | { a: string }
-        | (() => void)
-        | Array<number>
-        | Date
-        | Error
-        | number
-        | Promise<number>
-        | null
-          >(data);
+      | boolean
+      | string
+      | { a: string }
+      | (() => void)
+      | Array<number>
+      | Date
+      | Error
+      | number
+      | Promise<number>
+      | null
+      >(data,
+        );
     }
   });
-  test('isDefined: should work as type guard in filter', () => {
+  it('isDefined: should work as type guard in filter', () => {
     const data = [
       typesDataProvider('error'),
       typesDataProvider('array'),
@@ -77,20 +81,21 @@ describe('strict', () => {
     ].filter(isDefined.strict);
     expect(data).toHaveLength(5);
     assertType<
-      Array<
-        | string
-        | number
-        | boolean
-        | {
-          a: string;
-        }
-        | (() => void)
-        | Array<number>
-        | Date
-        | Error
-        | Promise<number>
-        | null
-      >
-          >(data);
+    Array<
+    | string
+    | number
+    | boolean
+    | {
+      a: string;
+    }
+    | (() => void)
+    | Array<number>
+    | Date
+    | Error
+    | Promise<number>
+    | null
+    >
+    >(data,
+      );
   });
 });

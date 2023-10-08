@@ -41,7 +41,7 @@ const COMPARATOR = {
  *      [{ a: 1 }, { a: 3 }] as const,
  *      P.sortBy.strict(x => x.a)
  *    ) // => [{ a: 1 }, { a: 3 }] typed [{a: 1 | 3}, {a: 1 | 3}]
- * @data_last
+ * @dataLast
  * @category Array
  * @strict
  */
@@ -92,7 +92,7 @@ export function sortBy<T>(
  *      x => x.a
  *    )
  *    // => [{ a: 1 }, { a: 3 }] typed [{a: 1 | 3}, {a: 1 | 3}]
- * @data_first
+ * @dataFirst
  * @category Array
  * @strict
  */
@@ -138,8 +138,7 @@ function isSortRule<T>(x: ReadonlyArray<T> | SortRule<T>): x is SortRule<T> {
   );
 }
 
-function _sortBy<T>(array: ReadonlyArray<T>,
-  sorts: Readonly<NonEmptyArray<SortRule<T>>>): Array<T> {
+function _sortBy<T>(array: ReadonlyArray<T>, sorts: Readonly<NonEmptyArray<SortRule<T>>>): Array<T> {
   return [...array].sort(comparer(...sorts));
 }
 

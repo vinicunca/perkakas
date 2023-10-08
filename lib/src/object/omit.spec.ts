@@ -1,13 +1,14 @@
-import { omit } from './omit';
+import { describe, expect, expectTypeOf, it } from 'vitest';
 import { pipe } from '../function';
+import { omit } from './omit';
 
 describe('data first', () => {
-  test('omit', () => {
+  it('omit', () => {
     const result = omit({ a: 1, b: 2, c: 3, d: 4 }, ['a', 'd'] as const);
     expect(result).toEqual({ b: 2, c: 3 });
   });
 
-  test('single removed prop works', () => {
+  it('single removed prop works', () => {
     const obj: { a: number } = { a: 1 };
     const result = omit(obj, ['a']);
     expect(result).toEqual({});
@@ -15,13 +16,13 @@ describe('data first', () => {
 });
 
 describe('data last', () => {
-  test('omit', () => {
+  it('omit', () => {
     const result = pipe({ a: 1, b: 2, c: 3, d: 4 }, omit(['a', 'd'] as const));
     expect(result).toEqual({ b: 2, c: 3 });
   });
 });
 
-test('type for curried form', () => {
+it('type for curried form', () => {
   const omitFoo = omit(['foo']);
 
   const result = omitFoo({ foo: 1, bar: 'potato' });

@@ -9,7 +9,7 @@ import { purry } from '../function';
  *    P.difference(array, other)
  * @example
  *    P.difference([1, 2, 3, 4], [2, 5, 3]) // => [1, 4]
- * @data_first
+ * @dataFirst
  * @category Array
  * @pipeable
  */
@@ -30,7 +30,7 @@ export function difference<T>(
  *      P.difference([2, 3]),
  *      P.take(2)
  *    ) // => [1, 4]
- * @data_last
+ * @dataLast
  * @category Array
  * @pipeable
  */

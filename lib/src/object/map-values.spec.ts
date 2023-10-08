@@ -1,8 +1,9 @@
-import { mapValues } from './map-values';
+import { describe, expect, it } from 'vitest';
 import { pipe } from '../function';
+import { mapValues } from './map-values';
 
 describe('data first', () => {
-  test('mapValues', () => {
+  it('mapValues', () => {
     expect(
       mapValues(
         {
@@ -19,7 +20,7 @@ describe('data first', () => {
 });
 
 describe('data last', () => {
-  test('mapValues', () => {
+  it('mapValues', () => {
     expect(
       pipe(
         {

@@ -25,7 +25,7 @@ import {
  *    P.map.indexed([0, 0, 0], (x, i) => i) // => [0, 1, 2], typed number[]
  *    P.map.strict([0, 0] as const, x => x + 1) // => [1, 1], typed [number, number]
  *    P.map.strict.indexed([0, 0] as const, (x, i) => x + i) // => [0, 1], typed [number, number]
- * @data_first
+ * @dataFirst
  * @indexed
  * @pipeable
  * @strict
@@ -42,7 +42,7 @@ export function map<T, K>(array: ReadonlyArray<T>, fn: Pred<T, K>): Array<K>;
  * @example
  *    P.pipe([0, 1, 2], P.map(x => x * 2)) // => [0, 2, 4]
  *    P.pipe([0, 0, 0], P.map.indexed((x, i) => i)) // => [0, 1, 2]
- * @data_last
+ * @dataLast
  * @indexed
  * @pipeable
  * @category Array

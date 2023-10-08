@@ -15,7 +15,7 @@ const keyList = Object.keys;
  *    P.equals(1, 1) //=> true
  *    P.equals(1, '1') //=> false
  *    P.equals([1, 2, 3], [1, 2, 3]) //=> true
- * @data_first
+ * @dataFirst
  * @category Object
  */
 export function equals(a: any, b: any): boolean;
@@ -31,7 +31,7 @@ export function equals(a: any, b: any): boolean;
  *    P.equals(1)(1) //=> true
  *    P.equals('1')(1) //=> false
  *    P.equals([1, 2, 3])([1, 2, 3]) //=> true
- * @data_last
+ * @dataLast
  * @category Object
  */
 export function equals(a: any): (b: any) => boolean;
@@ -57,7 +57,7 @@ function _equals(a: any, b: any) {
       if (length !== b.length) {
         return false;
       }
-      for (i = length; i-- !== 0; ) {
+      for (i = length; i-- !== 0;) {
         if (!equals(a[i], b[i])) {
           return false;
         }
@@ -94,13 +94,13 @@ function _equals(a: any, b: any) {
       return false;
     }
 
-    for (i = length; i-- !== 0; ) {
+    for (i = length; i-- !== 0;) {
       if (!Object.prototype.hasOwnProperty.call(b, keys[i])) {
         return false;
       }
     }
 
-    for (i = length; i-- !== 0; ) {
+    for (i = length; i-- !== 0;) {
       key = keys[i];
       if (!equals(a[key], b[key])) {
         return false;

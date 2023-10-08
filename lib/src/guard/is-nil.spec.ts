@@ -1,15 +1,16 @@
-import { isNil } from './is-nil';
+import { assertType, describe, expect, it } from 'vitest';
 import { typesDataProvider } from '../../test/types-data-provider';
+import { isNil } from './is-nil';
 
 describe('isNil', () => {
-  test('isNil: should work as type guard', () => {
+  it('isNil: should work as type guard', () => {
     const data = typesDataProvider('null');
     if (isNil(data)) {
       expect(data).toEqual(null);
       assertType<undefined | null>(data);
     }
   });
-  test('isNil: should work as type guard in filter', () => {
+  it('isNil: should work as type guard in filter', () => {
     const data = [
       typesDataProvider('error'),
       typesDataProvider('array'),
