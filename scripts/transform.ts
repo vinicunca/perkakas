@@ -4,17 +4,15 @@
  */
 import process from 'node:process';
 import fs from 'node:fs/promises';
-import { type MarkedOptions, parse as markedParse } from 'marked';
 import {
   type Options as PrettierOptions,
   format as prettierFormat,
 } from 'prettier';
+
 import invariant from 'tiny-invariant';
 import { type PartialOnUndefinedDeep, type SetRequired } from 'type-fest';
 import { type JSONOutput, ReflectionKind } from 'typedoc';
-
-// @ts-expect-error missing types
-import { parseMarkdown } from '@nuxtjs/mdc/runtime';
+import { isDefined, isEmpty } from '@vinicunca/perkakas';
 
 /**
  * Allows the site to "parse" the output of this script and use it's types as is
@@ -42,14 +40,9 @@ Awaited<ReturnType<typeof transformProject>>[number],
 >
 >;
 
-const MARKED_OPTIONS = {
-  gfm: true,
-  breaks: true,
-} satisfies MarkedOptions;
-
 const PRETTIER_OPTIONS = {
   parser: 'typescript',
-  semi: false,
+  semi: true,
   singleQuote: true,
   trailingComma: 'es5',
 } satisfies PrettierOptions;
@@ -82,7 +75,7 @@ async function main(
 
 async function transformProject(project: JSONOutput.ProjectReflection) {
   const { children } = project;
-  invariant(children !== undefined, 'The typedoc output is empty!');
+  invariant(isDefined(children), 'The typedoc output is empty!');
 
   const functions = await Promise.all(
     children
@@ -105,7 +98,7 @@ async function transformFunction({
   }
 
   const signaturesWithComments = signatures.filter(hasComment);
-  if (!isNonEmpty(signaturesWithComments)) {
+  if (isEmpty(signaturesWithComments)) {
     return;
   }
 
@@ -117,7 +110,7 @@ async function transformFunction({
   const description
     = summary.length === 0
       ? undefined
-      : markedParse(summary.map(({ text }) => text).join(''), MARKED_OPTIONS);
+      : summary.map(({ text }) => text).join('');
 
   const methods = await Promise.all(
     signaturesWithComments.map(transformSignature),
@@ -134,9 +127,7 @@ async function transformSignature({
   return {
     tag: getFunctionCurriedVariant(comment),
     signature: await getFunctionSignature(comment),
-    indexed: hasTag(comment, 'indexed'),
-    pipeable: hasTag(comment, 'pipeable'),
-    strict: hasTag(comment, 'strict'),
+    badges: getBadges(comment),
     example: await getExample(comment),
     args: parameters.map(getParameter),
     returns: {
@@ -146,12 +137,22 @@ async function transformSignature({
   };
 }
 
-function isDefined<T>(value: T | undefined): value is T {
-  return value !== undefined;
-}
+function getBadges(comment: JSONOutput.Comment): string[] {
+  const badges: string[] = [];
 
-function isNonEmpty<T>(value: ReadonlyArray<T>): value is [T, ...Array<T>] {
-  return value.length > 0;
+  if (hasTag(comment, 'indexed')) {
+    badges.push('indexed');
+  }
+
+  if (hasTag(comment, 'pipeable')) {
+    badges.push('pipeable');
+  }
+
+  if (hasTag(comment, 'strict')) {
+    badges.push('strict');
+  }
+
+  return badges;
 }
 
 function getFunctionCurriedVariant(comment: JSONOutput.Comment) {
@@ -169,26 +170,34 @@ function getFunctionCurriedVariant(comment: JSONOutput.Comment) {
 function hasComment(
   item: JSONOutput.SignatureReflection,
 ): item is SetRequired<JSONOutput.SignatureReflection, 'comment'> {
-  return item.comment !== undefined;
+  return isDefined(item.comment);
 }
 
 function getReturnType(type: JSONOutput.SomeType | undefined) {
-  return type === undefined
-    ? 'Object'
-    : type.type === 'intrinsic'
-      ? type.name
-      : type.type === 'array'
-        ? 'Array'
-        : type.type === 'predicate'
-          ? 'boolean'
-          : 'Object';
+  if (!isDefined(type)) {
+    return 'Object';
+  }
+
+  if (type.type === 'intrinsic') {
+    return type.name;
+  }
+
+  if (type.type === 'array') {
+    return 'Array';
+  }
+
+  if (type.type === 'predicate') {
+    return 'boolean';
+  }
+
+  return 'Object';
 }
 
 async function getExample(
   comment: JSONOutput.Comment,
 ): Promise<string | undefined> {
   const example = tagContent(comment, 'example');
-  if (example !== undefined) {
+  if (isDefined(example)) {
     return prettierFormat(example, PRETTIER_OPTIONS);
   }
 
@@ -215,7 +224,7 @@ async function getFunctionSignature(
 ): Promise<string | undefined> {
   const signatureRaw = tagContent(comment, 'signature');
 
-  if (signatureRaw === undefined) {
+  if (!isDefined(signatureRaw)) {
     return;
   }
 
@@ -223,7 +232,7 @@ async function getFunctionSignature(
 }
 
 function hasTag({ blockTags }: JSONOutput.Comment, tagName: string): boolean {
-  return blockTags === undefined
+  return !isDefined(blockTags)
     ? false
     : blockTags.some(({ tag }) => tag === `@${tagName}`);
 }
@@ -232,13 +241,13 @@ function tagContent(
   { blockTags }: JSONOutput.Comment,
   tagName: string,
 ): string | undefined {
-  if (blockTags === undefined) {
+  if (!isDefined(blockTags)) {
     return;
   }
 
   const tag = blockTags.find(({ tag }) => tag === `@${tagName}`);
 
-  if (tag === undefined) {
+  if (!isDefined(tag)) {
     return;
   }
 
@@ -257,7 +266,7 @@ function addCategories(
   >,
 ) {
   invariant(
-    categories !== undefined,
+    isDefined(categories),
     'Category data is missing from typedoc output!',
   );
   const categoriesLookup = createCategoriesLookup(categories);
@@ -273,12 +282,10 @@ function createCategoriesLookup(
   const result = new Map<number, string>();
 
   for (const { children, title } of categories) {
-    if (children === undefined) {
+    if (!isDefined(children)) {
       continue;
     }
 
-    // TODO: We can enforce that only a predefined set of categories is
-    // acceptable and break the build on any unknown categories
     for (const id of children) {
       result.set(id, title);
     }

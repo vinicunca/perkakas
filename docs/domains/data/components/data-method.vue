@@ -15,8 +15,10 @@ const props = defineProps<{
       {{ method.tag }}
     </div>
 
-    <div>
-      {{ method.signature }}
+    <div class="self-stretch">
+      <ProseCode>
+        {{ method.signature }}
+      </ProseCode>
     </div>
   </div>
 </template>

@@ -9,7 +9,7 @@ defineProps<{
 </script>
 
 <template>
-  <div class="flex flex-col gap-4 mt-10">
+  <div class="flex flex-col gap-4">
     <div
       v-for="doc in metaDocs"
       :key="doc.name"
