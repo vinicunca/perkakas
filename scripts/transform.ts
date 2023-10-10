@@ -8,37 +8,10 @@ import {
   type Options as PrettierOptions,
   format as prettierFormat,
 } from 'prettier';
-
 import invariant from 'tiny-invariant';
-import { type PartialOnUndefinedDeep, type SetRequired } from 'type-fest';
+import { type SetRequired } from 'type-fest';
 import { type JSONOutput, ReflectionKind } from 'typedoc';
-import { isDefined, isEmpty } from '@vinicunca/perkakas';
-
-/**
- * Allows the site to "parse" the output of this script and use it's types as is
- * without needing to use `any`, `unknown` or sync types manually. It is built
- * dynamically from the return type of the main function so that the actual
- * logic is the source of truth for the types so we don't get any type drifts.
- *
- * !IMPORTANT - Don't change this type if you have a typing issue! You most likely need to change one of the functions in this file to return something different.
- *
- * @example
- *   import { type FunctionsData } from '../scripts/transform';
- *   import data from '../build/data.json';
- *   const FUNCTIONS_DATA = data as unknown as FunctionsData;
- */
-export type FunctionsData = ReadonlyArray<
-// We use PartialOnUndefinedDeep because the output goes through
-// `JSON.stringify` which strips any object properties which have a value of
-// `undefined`.
-PartialOnUndefinedDeep<
-// We had to "break" the array and rebuild it because type-fest's
-// `PartialOnUndefinedDeep` works on objects at the top level and not arrays
-// even while using the `recurseIntoArrays` option).
-Awaited<ReturnType<typeof transformProject>>[number],
-{ recurseIntoArrays: true }
->
->;
+import { isDefined, isEmpty, toKebabCase } from '@vinicunca/perkakas';
 
 const PRETTIER_OPTIONS = {
   parser: 'typescript',
@@ -47,7 +20,7 @@ const PRETTIER_OPTIONS = {
   trailingComma: 'es5',
 } satisfies PrettierOptions;
 
-main(process.argv.slice(1))
+main()
   .then(() => {
     console.log('✅ Done!');
   })
@@ -56,21 +29,16 @@ main(process.argv.slice(1))
     process.exit(1);
   });
 
-async function main(
-  [_, dataFileName, outputFileName]: ReadonlyArray<string>,
-): Promise<void> {
-  if (dataFileName === undefined || outputFileName === undefined) {
-    console.log('Usage: script <inputFile> <outputFile>');
-    process.exit(1);
-  }
-
-  const jsonData = await fs.readFile(dataFileName, 'utf8');
+async function main(): Promise<void> {
+  const jsonData = await fs.readFile('docs/build/out.json', 'utf8');
   const data = JSON.parse(jsonData) as unknown as JSONOutput.ProjectReflection;
 
   const output = await transformProject(data);
 
   const jsonOutput = JSON.stringify(output, null, 2);
-  await fs.writeFile(outputFileName, jsonOutput);
+  await fs.writeFile('docs/build/data.json', jsonOutput);
+
+  await generateDocFiles(output);
 }
 
 async function transformProject(project: JSONOutput.ProjectReflection) {
@@ -98,25 +66,24 @@ async function transformFunction({
   }
 
   const signaturesWithComments = signatures.filter(hasComment);
+
   if (isEmpty(signaturesWithComments)) {
     return;
   }
 
-  const [
-    {
-      comment: { summary },
-    },
-  ] = signaturesWithComments;
+  const summary = signaturesWithComments[0]!.comment.summary;
   const description
     = summary.length === 0
       ? undefined
       : summary.map(({ text }) => text).join('');
 
+  const badges = getBadges(signaturesWithComments[0]!.comment);
+
   const methods = await Promise.all(
     signaturesWithComments.map(transformSignature),
   );
 
-  return { id, name, description, methods };
+  return { id, name, badges, description, methods };
 }
 
 async function transformSignature({
@@ -127,7 +94,6 @@ async function transformSignature({
   return {
     tag: getFunctionCurriedVariant(comment),
     signature: await getFunctionSignature(comment),
-    badges: getBadges(comment),
     example: await getExample(comment),
     args: parameters.map(getParameter),
     returns: {
@@ -292,4 +258,38 @@ function createCategoriesLookup(
   }
 
   return result;
+}
+
+async function generateDocFiles(inputs: Awaited<ReturnType<typeof transformProject>>) {
+  const promises: any[] = [];
+
+  // for (let idx = 0; idx < inputs.length; idx++) {
+  for (let idx = 0; idx < inputs.slice(0, 1).length; idx++) {
+    const input = inputs[idx]!;
+
+    const methodContent = input.methods.map((method) => {
+      return `
+## ${method.tag}
+
+\`\`\`js [light]
+${method.signature}\`\`\`
+
+:docs-parameters{ :params='${JSON.stringify(method.args)}' :returns='${JSON.stringify(method.returns)}' }
+
+\`\`\`js
+${method.example}\`\`\``;
+    });
+
+    const content = `# ${input.name}
+
+${input.description ?? ''}
+
+:docs-badges{ :badges='${JSON.stringify(input.badges)}' }
+
+${methodContent.join('\n')}`;
+
+    promises.push(fs.writeFile(`docs/content/${idx + 1}.${toKebabCase(input.name)}.md`, content));
+  }
+
+  await Promise.all(promises);
 }

@@ -53,7 +53,7 @@ export default defineNuxtConfig({
 
   content: {
     documentDriven: {
-      injectPage: false,
+      // injectPage: false,
     },
 
     highlight: {

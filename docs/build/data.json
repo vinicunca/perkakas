@@ -1,12 +1,12 @@
 [
   {
     "name": "addProp",
+    "badges": [],
     "description": "Add a new property to an object.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.addProp(obj, prop, value);\n",
-        "badges": [],
         "example": "P.addProp({ firstName: 'john' }, 'lastName', 'doe'); // => {firstName: 'john', lastName: 'doe'}\n",
         "args": [
           {
@@ -29,7 +29,6 @@
       {
         "tag": "Data Last",
         "signature": "P.addProp(prop, value)(obj);\n",
-        "badges": [],
         "example": "P.addProp('lastName', 'doe')({ firstName: 'john' }); // => {firstName: 'john', lastName: 'doe'}\n",
         "args": [
           {
@@ -50,12 +49,12 @@
   },
   {
     "name": "allPass",
+    "badges": [],
     "description": "Determines whether all predicates returns true for the input data.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.allPass(data, fns);\n",
-        "badges": [],
         "example": "const isDivisibleBy3 = (x: number) => x % 3 === 0;\nconst isDivisibleBy4 = (x: number) => x % 4 === 0;\nconst fns = [isDivisibleBy3, isDivisibleBy4];\nP.allPass(12, fns); // => true\nP.allPass(8, fns); // => false\n",
         "args": [
           {
@@ -74,7 +73,6 @@
       {
         "tag": "Data Last",
         "signature": "P.allPass(fns)(data);\n",
-        "badges": [],
         "example": "const isDivisibleBy3 = (x: number) => x % 3 === 0;\nconst isDivisibleBy4 = (x: number) => x % 4 === 0;\nconst fns = [isDivisibleBy3, isDivisibleBy4];\nP.allPass(fns)(12); // => true\nP.allPass(fns)(8); // => false\n",
         "args": [
           {
@@ -91,12 +89,12 @@
   },
   {
     "name": "anyPass",
+    "badges": [],
     "description": "Determines whether any predicate returns true for the input data.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.anyPass(data, fns);\n",
-        "badges": [],
         "example": "const isDivisibleBy3 = (x: number) => x % 3 === 0;\nconst isDivisibleBy4 = (x: number) => x % 4 === 0;\nconst fns = [isDivisibleBy3, isDivisibleBy4];\nP.anyPass(8, fns); // => true\nP.anyPass(11, fns); // => false\n",
         "args": [
           {
@@ -115,7 +113,6 @@
       {
         "tag": "Data Last",
         "signature": "P.anyPass(fns)(data);\n",
-        "badges": [],
         "example": "const isDivisibleBy3 = (x: number) => x % 3 === 0;\nconst isDivisibleBy4 = (x: number) => x % 4 === 0;\nconst fns = [isDivisibleBy3, isDivisibleBy4];\nP.anyPass(fns)(8); // => true\nP.anyPass(fns)(11); // => false\n",
         "args": [
           {
@@ -132,12 +129,12 @@
   },
   {
     "name": "chunk",
+    "badges": [],
     "description": "Split an array into groups the length of `size`. If `array` can't be split evenly, the final chunk will be the remaining elements.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.chunk(array, size);\n",
-        "badges": [],
         "example": "P.chunk(['a', 'b', 'c', 'd'], 2); // => [['a', 'b'], ['c', 'd']]\nP.chunk(['a', 'b', 'c', 'd'], 3); // => [['a', 'b', 'c'], ['d']]\n",
         "args": [
           {
@@ -156,7 +153,6 @@
       {
         "tag": "Data Last",
         "signature": "P.chunk(size)(array);\n",
-        "badges": [],
         "example": "P.chunk(2)(['a', 'b', 'c', 'd']); // => [['a', 'b'], ['c', 'd']]\nP.chunk(3)(['a', 'b', 'c', 'd']); // => [['a', 'b', 'c'], ['d']]\n",
         "args": [
           {
@@ -173,12 +169,12 @@
   },
   {
     "name": "clamp",
+    "badges": [],
     "description": "Clamp the given value within the inclusive min and max bounds.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.clamp(value, { min, max });\n",
-        "badges": [],
         "example": "clamp(10, { min: 20 }); // => 20\nclamp(10, { max: 5 }); // => 5\nclamp(10, { max: 20, min: 5 }); // => 10\n",
         "args": [
           {
@@ -197,7 +193,6 @@
       {
         "tag": "Data Last",
         "signature": "P.clamp({ min, max })(value);\n",
-        "badges": [],
         "example": "clamp({ min: 20 })(10); // => 20\nclamp({ max: 5 })(10); // => 5\nclamp({ max: 20, min: 5 })(10); // => 10\n",
         "args": [
           {
@@ -214,11 +209,11 @@
   },
   {
     "name": "clone",
+    "badges": [],
     "description": "Creates a deep copy of the value. Supported types: `Array`, `Object`, `Number`, `String`, `Boolean`, `Date`, `RegExp`. Functions are assigned by reference rather than copied.",
     "methods": [
       {
         "signature": "P.clone(value);\n",
-        "badges": [],
         "example": "P.clone({ foo: 'bar' }); // {foo: 'bar'}\n",
         "args": [
           {
@@ -235,13 +230,13 @@
   },
   {
     "name": "compact",
+    "badges": [
+      "pipeable"
+    ],
     "description": "Filter out all falsey values. The values `false`, `null`, `0`, `\"\"`, `undefined`, and `NaN` are falsey.",
     "methods": [
       {
         "signature": "P.compact(array);\n",
-        "badges": [
-          "pipeable"
-        ],
         "example": "P.compact([0, 1, false, 2, '', 3]); // => [1, 2, 3]\n",
         "args": [
           {
@@ -258,12 +253,12 @@
   },
   {
     "name": "concat",
+    "badges": [],
     "description": "Combines two arrays.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.concat(arr1, arr2);\n",
-        "badges": [],
         "example": "P.concat([1, 2, 3], ['a']); // [1, 2, 3, 'a']\n",
         "args": [
           {
@@ -282,7 +277,6 @@
       {
         "tag": "Data Last",
         "signature": "P.concat(arr2)(arr1);\n",
-        "badges": [],
         "example": "P.concat(['a'])([1, 2, 3]); // [1, 2, 3, 'a']\n",
         "args": [
           {
@@ -299,14 +293,14 @@
   },
   {
     "name": "countBy",
+    "badges": [
+      "indexed"
+    ],
     "description": "Counts how many values of the collection pass the specified predicate.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.countBy(array, fn);\n",
-        "badges": [
-          "indexed"
-        ],
         "example": "P.countBy([1, 2, 3, 4, 5], (x) => x % 2 === 0); // => 2\n",
         "args": [
           {
@@ -325,9 +319,6 @@
       {
         "tag": "Data Last",
         "signature": "P.countBy(fn)(array);\n",
-        "badges": [
-          "indexed"
-        ],
         "example": "P.pipe(\n  [1, 2, 3, 4, 5],\n  P.countBy((x) => x % 2 === 0)\n); // => 2\n",
         "args": [
           {
@@ -344,11 +335,11 @@
   },
   {
     "name": "createPipe",
+    "badges": [],
     "description": "Creates a data-last pipe function. First function must be always annotated. Other functions are automatically inferred.",
     "methods": [
       {
         "signature": "P.createPipe(op1, op2, op3)(data);\n",
-        "badges": [],
         "example": "P.createPipe(\n  (x: number) => x * 2,\n  (x) => x * 3\n)(1); // => 6\n",
         "args": [
           {
@@ -364,14 +355,14 @@
   },
   {
     "name": "difference",
+    "badges": [
+      "pipeable"
+    ],
     "description": "Excludes the values from `other` array.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.difference(array, other);\n",
-        "badges": [
-          "pipeable"
-        ],
         "example": "P.difference([1, 2, 3, 4], [2, 5, 3]); // => [1, 4]\n",
         "args": [
           {
@@ -390,9 +381,6 @@
       {
         "tag": "Data Last",
         "signature": "P.difference(other)(array);\n",
-        "badges": [
-          "pipeable"
-        ],
         "example": "P.difference([2, 5, 3])([1, 2, 3, 4]); // => [1, 4]\nP.pipe(\n  [1, 2, 3, 4, 5, 6], // only 4 iterations\n  P.difference([2, 3]),\n  P.take(2)\n); // => [1, 4]\n",
         "args": [
           {
@@ -409,14 +397,14 @@
   },
   {
     "name": "differenceWith",
+    "badges": [
+      "pipeable"
+    ],
     "description": "Excludes the values from `other` array.\nElements are compared by custom comparator isEquals.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.differenceWith(array, other, isEquals);\n",
-        "badges": [
-          "pipeable"
-        ],
         "example": "P.differenceWith(\n  [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 4 }],\n  [{ a: 2 }, { a: 5 }, { a: 3 }],\n  P.equals\n); // => [{a: 1}, {a: 4}]\n",
         "args": [
           {
@@ -439,9 +427,6 @@
       {
         "tag": "Data Last",
         "signature": "P.differenceWith(other, isEquals)(array);\n",
-        "badges": [
-          "pipeable"
-        ],
         "example": "P.differenceWith(\n  [{ a: 2 }, { a: 5 }, { a: 3 }],\n  P.equals\n)([{ a: 1 }, { a: 2 }, { a: 3 }, { a: 4 }]); // => [{a: 1}, {a: 4}]\nP.pipe(\n  [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 4 }, { a: 5 }, { a: 6 }], // only 4 iterations\n  P.differenceWith([{ a: 2 }, { a: 3 }], P.equals),\n  P.take(2)\n); // => [{a: 1}, {a: 4}]\n",
         "args": [
           {
@@ -462,14 +447,14 @@
   },
   {
     "name": "drop",
+    "badges": [
+      "pipeable"
+    ],
     "description": "Removes first `n` elements from the `array`.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.drop(array, n);\n",
-        "badges": [
-          "pipeable"
-        ],
         "example": "P.drop([1, 2, 3, 4, 5], 2); // => [3, 4, 5]\n",
         "args": [
           {
@@ -488,9 +473,6 @@
       {
         "tag": "Data Last",
         "signature": "P.drop(n)(array);\n",
-        "badges": [
-          "pipeable"
-        ],
         "example": "P.drop(2)([1, 2, 3, 4, 5]); // => [3, 4, 5]\n",
         "args": [
           {
@@ -507,12 +489,12 @@
   },
   {
     "name": "dropLast",
+    "badges": [],
     "description": "Removes last `n` elements from the `array`.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.dropLast(array, n);\n",
-        "badges": [],
         "example": "P.dropLast([1, 2, 3, 4, 5], 2); // => [1, 2, 3]\n",
         "args": [
           {
@@ -531,7 +513,6 @@
       {
         "tag": "Data Last",
         "signature": "P.dropLast(n)(array);\n",
-        "badges": [],
         "example": "P.dropLast(2)([1, 2, 3, 4, 5]); // => [1, 2, 3]\n",
         "args": [
           {
@@ -548,12 +529,12 @@
   },
   {
     "name": "equals",
+    "badges": [],
     "description": "Returns true if its arguments are equivalent, false otherwise.\nNOTE: Doesn't handle cyclical data structures.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.equals(a, b);\n",
-        "badges": [],
         "example": "P.equals(1, 1); //=> true\nP.equals(1, '1'); //=> false\nP.equals([1, 2, 3], [1, 2, 3]); //=> true\n",
         "args": [
           {
@@ -572,7 +553,6 @@
       {
         "tag": "Data Last",
         "signature": "P.equals(b)(a);\n",
-        "badges": [],
         "example": "P.equals(1)(1); //=> true\nP.equals('1')(1); //=> false\nP.equals([1, 2, 3])([1, 2, 3]); //=> true\n",
         "args": [
           {
@@ -589,15 +569,15 @@
   },
   {
     "name": "filter",
+    "badges": [
+      "indexed",
+      "pipeable"
+    ],
     "description": "Filter the elements of an array that meet the condition specified in a callback function.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.filter(array, fn);\nP.filter.indexed(array, fn);\n",
-        "badges": [
-          "indexed",
-          "pipeable"
-        ],
         "example": "P.filter([1, 2, 3], (x) => x % 2 === 1); // => [1, 3]\nP.filter.indexed([1, 2, 3], (x, i, array) => x % 2 === 1); // => [1, 3]\n",
         "args": [
           {
@@ -616,10 +596,6 @@
       {
         "tag": "Data Last",
         "signature": "P.filter(fn)(array);\nP.filter.indexed(fn)(array);\n",
-        "badges": [
-          "indexed",
-          "pipeable"
-        ],
         "example": "P.pipe(\n  [1, 2, 3],\n  P.filter((x) => x % 2 === 1)\n); // => [1, 3]\nP.pipe(\n  [1, 2, 3],\n  P.filter.indexed((x, i) => x % 2 === 1)\n); // => [1, 3]\n",
         "args": [
           {
@@ -636,15 +612,15 @@
   },
   {
     "name": "find",
+    "badges": [
+      "indexed",
+      "pipeable"
+    ],
     "description": "Returns the value of the first element in the array where predicate is true, and undefined otherwise.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.find(items, fn);\nP.find.indexed(items, fn);\n",
-        "badges": [
-          "indexed",
-          "pipeable"
-        ],
         "example": "P.find([1, 3, 4, 6], (n) => n % 2 === 0); // => 4\nP.find.indexed([1, 3, 4, 6], (n, i) => n % 2 === 0); // => 4\n",
         "args": [
           {
@@ -662,10 +638,6 @@
       {
         "tag": "Data Last",
         "signature": "P.find(fn)(items);\nP.find.indexed(fn)(items);\n",
-        "badges": [
-          "indexed",
-          "pipeable"
-        ],
         "example": "P.pipe(\n  [1, 3, 4, 6],\n  P.find((n) => n % 2 === 0)\n); // => 4\nP.pipe(\n  [1, 3, 4, 6],\n  P.find.indexed((n, i) => n % 2 === 0)\n); // => 4\n",
         "args": [
           {
@@ -682,15 +654,15 @@
   },
   {
     "name": "findIndex",
+    "badges": [
+      "indexed",
+      "pipeable"
+    ],
     "description": "Returns the index of the first element in the array where predicate is true, and -1 otherwise.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.findIndex(items, fn);\nP.findIndex.indexed(items, fn);\n",
-        "badges": [
-          "indexed",
-          "pipeable"
-        ],
         "example": "P.findIndex([1, 3, 4, 6], (n) => n % 2 === 0); // => 2\nP.findIndex.indexed([1, 3, 4, 6], (n, i) => n % 2 === 0); // => 2\n",
         "args": [
           {
@@ -708,10 +680,6 @@
       {
         "tag": "Data Last",
         "signature": "P.findIndex(fn)(items);\nP.findIndex.indexed(fn)(items);\n",
-        "badges": [
-          "indexed",
-          "pipeable"
-        ],
         "example": "P.pipe(\n  [1, 3, 4, 6],\n  P.findIndex((n) => n % 2 === 0)\n); // => 2\nP.pipe(\n  [1, 3, 4, 6],\n  P.findIndex.indexed((n, i) => n % 2 === 0)\n); // => 2\n",
         "args": [
           {
@@ -728,15 +696,15 @@
   },
   {
     "name": "findLast",
+    "badges": [
+      "indexed",
+      "pipeable"
+    ],
     "description": "Returns the value of the last element in the array where predicate is true, and undefined\notherwise.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.findLast(items, fn);\nP.findLast.indexed(items, fn);\n",
-        "badges": [
-          "indexed",
-          "pipeable"
-        ],
         "example": "P.findLast([1, 3, 4, 6], (n) => n % 2 === 1); // => 3\nP.findLast.indexed([1, 3, 4, 6], (n, i) => n % 2 === 1); // => 3\n",
         "args": [
           {
@@ -755,10 +723,6 @@
       {
         "tag": "Data Last",
         "signature": "P.findLast(fn)(items);\nP.findLast.indexed(fn)(items);\n",
-        "badges": [
-          "indexed",
-          "pipeable"
-        ],
         "example": "P.pipe(\n  [1, 3, 4, 6],\n  P.findLast((n) => n % 2 === 1)\n); // => 3\nP.pipe(\n  [1, 3, 4, 6],\n  P.findLast.indexed((n, i) => n % 2 === 1)\n); // => 3\n",
         "args": [
           {
@@ -775,15 +739,15 @@
   },
   {
     "name": "findLastIndex",
+    "badges": [
+      "indexed",
+      "pipeable"
+    ],
     "description": "Returns the index of the last element in the array where predicate is true, and -1 otherwise.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.findLastIndex(items, fn);\nP.findLastIndex.indexed(items, fn);\n",
-        "badges": [
-          "indexed",
-          "pipeable"
-        ],
         "example": "P.findLastIndex([1, 3, 4, 6], (n) => n % 2 === 1); // => 1\nP.findLastIndex.indexed([1, 3, 4, 6], (n, i) => n % 2 === 1); // => 1\n",
         "args": [
           {
@@ -802,10 +766,6 @@
       {
         "tag": "Data Last",
         "signature": "P.findLastIndex(fn)(items);\nP.findLastIndex.indexed(fn)(items);\n",
-        "badges": [
-          "indexed",
-          "pipeable"
-        ],
         "example": "P.pipe(\n  [1, 3, 4, 6],\n  P.findLastIndex((n) => n % 2 === 1)\n); // => 1\nP.pipe(\n  [1, 3, 4, 6],\n  P.findLastIndex.indexed((n, i) => n % 2 === 1)\n); // => 1\n",
         "args": [
           {
@@ -822,13 +782,13 @@
   },
   {
     "name": "first",
+    "badges": [
+      "pipeable"
+    ],
     "description": "Gets the first element of `array`.\nNote: In `pipe`, use `first()` form instead of `first`. Otherwise, the inferred type is lost.",
     "methods": [
       {
         "signature": "P.first(array);\n",
-        "badges": [
-          "pipeable"
-        ],
         "example": "P.first([1, 2, 3]); // => 1\nP.first([]); // => undefined\nP.pipe(\n  [1, 2, 4, 8, 16],\n  P.filter((x) => x > 3),\n  P.first(),\n  (x) => x + 1\n); // => 5\n",
         "args": [
           {
@@ -845,14 +805,14 @@
   },
   {
     "name": "flatMap",
+    "badges": [
+      "pipeable"
+    ],
     "description": "Map each element of an array using a defined callback function and flatten the mapped result.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.flatMap(array, fn);\n",
-        "badges": [
-          "pipeable"
-        ],
         "example": "P.flatMap([1, 2, 3], (x) => [x, x * 10]); // => [1, 10, 2, 20, 3, 30]\n",
         "args": [
           {
@@ -871,9 +831,6 @@
       {
         "tag": "Data Last",
         "signature": "P.flatMap(fn)(array);\n",
-        "badges": [
-          "pipeable"
-        ],
         "example": "P.pipe(\n  [1, 2, 3],\n  P.flatMap((x) => [x, x * 10])\n); // => [1, 10, 2, 20, 3, 30]\n",
         "args": [
           {
@@ -890,14 +847,14 @@
   },
   {
     "name": "flatMapToObj",
+    "badges": [
+      "indexed"
+    ],
     "description": "Map each element of an array into an object using a defined callback function and flatten the result.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.flatMapToObj(array, fn);\nP.flatMapToObj.indexed(array, fn);\n",
-        "badges": [
-          "indexed"
-        ],
         "example": "P.flatMapToObj([1, 2, 3], (x) => (x % 2 === 1 ? [[String(x), x]] : [])); // => {1: 1, 3: 3}\nP.flatMapToObj.indexed(['a', 'b'], (x, i) => [\n  [x, i],\n  [x + x, i + i],\n]); // => {a: 0, aa: 0, b: 1, bb: 2}\n",
         "args": [
           {
@@ -917,9 +874,6 @@
       {
         "tag": "Data Last",
         "signature": "P.flatMapToObj(fn)(array);\nP.flatMapToObj(fn)(array);\n",
-        "badges": [
-          "indexed"
-        ],
         "example": "P.pipe(\n  [1, 2, 3],\n  P.flatMapToObj((x) => (x % 2 === 1 ? [[String(x), x]] : []))\n); // => {1: 1, 3: 3}\nP.pipe(\n  ['a', 'b'],\n  P.flatMapToObj.indexed((x, i) => [\n    [x, i],\n    [x + x, i + i],\n  ])\n); // => {a: 0, aa: 0, b: 1, bb: 2}\n",
         "args": [
           {
@@ -937,13 +891,13 @@
   },
   {
     "name": "flatten",
+    "badges": [
+      "pipeable"
+    ],
     "description": "Flattens `array` a single level deep.\nNote: In `pipe`, use `flatten()` form instead of `flatten`. Otherwise, the inferred type is lost.",
     "methods": [
       {
         "signature": "P.flatten(array);\n",
-        "badges": [
-          "pipeable"
-        ],
         "example": "P.flatten([[1, 2], [3], [4, 5]]); // => [1, 2, 3, 4, 5]\nP.pipe([[1, 2], [3], [4, 5]], P.flatten()); // => [1, 2, 3, 4, 5]\n",
         "args": [
           {
@@ -960,13 +914,13 @@
   },
   {
     "name": "flattenDeep",
+    "badges": [
+      "pipeable"
+    ],
     "description": "Recursively flattens `array`.\nNote: In `pipe`, use `flattenDeep()` form instead of `flattenDeep`. Otherwise, the inferred type is lost.",
     "methods": [
       {
         "signature": "P.flattenDeep(array);\n",
-        "badges": [
-          "pipeable"
-        ],
         "example": "P.flattenDeep([\n  [1, 2],\n  [[3], [4, 5]],\n]); // => [1, 2, 3, 4, 5]\nP.pipe(\n  [\n    [1, 2],\n    [[3], [4, 5]],\n  ],\n  P.flattenDeep()\n); // => [1, 2, 3, 4, 5]\n",
         "args": [
           {
@@ -983,15 +937,15 @@
   },
   {
     "name": "forEach",
+    "badges": [
+      "indexed",
+      "pipeable"
+    ],
     "description": "Iterate an array using a defined callback function. The original array is returned instead of `void`.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.forEach(array, fn);\nP.forEach.indexed(array, fn);\n",
-        "badges": [
-          "indexed",
-          "pipeable"
-        ],
         "example": "P.forEach([1, 2, 3], (x) => {\n  console.log(x);\n}); // => [1, 2, 3]\nP.forEach.indexed([1, 2, 3], (x, i) => {\n  console.log(x, i);\n}); // => [1, 2, 3]\n",
         "args": [
           {
@@ -1011,10 +965,6 @@
       {
         "tag": "Data Last",
         "signature": "P.forEach(fn)(array);\nP.forEach.indexed(fn)(array);\n",
-        "badges": [
-          "indexed",
-          "pipeable"
-        ],
         "example": "P.pipe(\n  [1, 2, 3],\n  P.forEach((x) => {\n    console.log(x);\n  })\n); // => [1, 2, 3]\nP.pipe(\n  [1, 2, 3],\n  P.forEach.indexed((x, i) => {\n    console.log(x, i);\n  })\n); // => [1, 2, 3]\n",
         "args": [
           {
@@ -1031,12 +981,12 @@
   },
   {
     "name": "forEachObj",
+    "badges": [],
     "description": "Iterate an object using a defined callback function. The original object is returned.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.forEachObj(object, fn);\n",
-        "badges": [],
         "example": "P.forEachObj({ a: 1 }, (val) => {\n  console.log(`${val}`);\n}); // \"1\"\nP.forEachObj.indexed({ a: 1 }, (val, key, obj) => {\n  console.log(`${key}: ${val}`);\n}); // \"a: 1\"\n",
         "args": [
           {
@@ -1056,7 +1006,6 @@
       {
         "tag": "Data Last",
         "signature": "P.forEachObj(fn)(object);\n",
-        "badges": [],
         "example": "P.pipe(\n  { a: 1 },\n  P.forEachObj((val) => console.log(`${val}`))\n); // \"1\"\nP.pipe(\n  { a: 1 },\n  P.forEachObj.indexed((val, key) => console.log(`${key}: ${val}`))\n); // \"a: 1\"\n",
         "args": [
           {
@@ -1073,13 +1022,13 @@
   },
   {
     "name": "fromPairs",
+    "badges": [
+      "strict"
+    ],
     "description": "Creates a new object from an array of tuples by pairing up first and second elements as {[key]: value}.\nIf a tuple is not supplied for any element in the array, the element will be ignored\nIf duplicate keys exist, the tuple with the greatest index in the input array will be preferred.\n\nThe strict option supports more sophisticated use-cases like those that would\nresult when calling the strict `toPairs` function.",
     "methods": [
       {
         "signature": "P.fromPairs(tuples);\nP.fromPairs.strict(tuples);\n",
-        "badges": [
-          "strict"
-        ],
         "example": "P.fromPairs([\n  ['a', 'b'],\n  ['c', 'd'],\n]); // => {a: 'b', c: 'd'} (type: Record<string, string>)\nP.fromPairs.strict(['a', 1] as const); // => {a: 1} (type: {a: 1})\n",
         "args": [
           {
@@ -1096,15 +1045,15 @@
   },
   {
     "name": "groupBy",
+    "badges": [
+      "indexed",
+      "strict"
+    ],
     "description": "Splits a collection into sets, grouped by the result of running each value through `fn`.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.groupBy(array, fn);\nP.groupBy.strict(array, fn);\n",
-        "badges": [
-          "indexed",
-          "strict"
-        ],
         "example": "P.groupBy(['one', 'two', 'three'], (x) => x.length); // => {3: ['one', 'two'], 5: ['three']}\nP.groupBy.strict([{ a: 'cat' }, { a: 'dog' }] as const, prop('a')); // => {cat: [{a: 'cat'}], dog: [{a: 'dog'}]} typed Partial<Record<'cat' | 'dog', NonEmptyArray<{a: 'cat' | 'dog'}>>>\nP.groupBy([0, 1], (x) => (x % 2 === 0 ? 'even' : undefined)); // => {even: [0]}\n",
         "args": [
           {
@@ -1123,9 +1072,6 @@
       {
         "tag": "Data Last",
         "signature": "P.groupBy(fn)(array);\n",
-        "badges": [
-          "indexed"
-        ],
         "example": "P.pipe(\n  ['one', 'two', 'three'],\n  P.groupBy((x) => x.length)\n); // => {3: ['one', 'two'], 5: ['three']}\n",
         "args": [
           {
@@ -1142,11 +1088,11 @@
   },
   {
     "name": "identity",
+    "badges": [],
     "description": "A function that always returns the param passed to it",
     "methods": [
       {
         "signature": "P.identity(data);\n",
-        "badges": [],
         "example": "P.identity('foo'); // => 'foo'\n",
         "args": [
           {
@@ -1162,10 +1108,10 @@
   },
   {
     "name": "increaseWithUnit",
+    "badges": [],
     "description": "Increase string a value with unit",
     "methods": [
       {
-        "badges": [],
         "args": [
           {
             "name": "__namedParameters"
@@ -1180,14 +1126,14 @@
   },
   {
     "name": "indexBy",
+    "badges": [
+      "indexed"
+    ],
     "description": "Converts a list of objects into an object indexing the objects by the given key.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.indexBy(array, fn);\n",
-        "badges": [
-          "indexed"
-        ],
         "example": "P.indexBy(['one', 'two', 'three'], (x) => x.length); // => {3: 'two', 5: 'three'}\n",
         "args": [
           {
@@ -1206,9 +1152,6 @@
       {
         "tag": "Data Last",
         "signature": "P.indexBy(fn)(array);\n",
-        "badges": [
-          "indexed"
-        ],
         "example": "P.pipe(\n  ['one', 'two', 'three'],\n  P.indexBy((x) => x.length)\n); // => {3: 'two', 5: 'three'}\n",
         "args": [
           {
@@ -1225,14 +1168,14 @@
   },
   {
     "name": "intersection",
+    "badges": [
+      "pipeable"
+    ],
     "description": "Returns a list of elements that exist in both array.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.intersection(array, other);\n",
-        "badges": [
-          "pipeable"
-        ],
         "example": "P.intersection([1, 2, 3], [2, 3, 5]); // => [2, 3]\n",
         "args": [
           {
@@ -1250,9 +1193,6 @@
       {
         "tag": "Data Last",
         "signature": "P.intersection(other)(array);\n",
-        "badges": [
-          "pipeable"
-        ],
         "example": "P.intersection([2, 3, 5])([1, 2, 3]); // => [2, 3]\n",
         "args": [
           {
@@ -1269,14 +1209,14 @@
   },
   {
     "name": "intersectionWith",
+    "badges": [
+      "pipeable"
+    ],
     "description": "Returns a list of intersecting values based on a custom\ncomparator function that compares elements of both arrays.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.intersectionWith(array, other, comparator);\n",
-        "badges": [
-          "pipeable"
-        ],
         "example": "P.intersectionWith(\n  [\n    { id: 1, name: 'Ryan' },\n    { id: 3, name: 'Emma' },\n  ],\n  [3, 5],\n  (a, b) => a.id === b\n); // => [{ id: 3, name: 'Emma' }]\n",
         "args": [
           {
@@ -1299,9 +1239,6 @@
       {
         "tag": "Data Last",
         "signature": "P.intersectionWith(other, comparator)(array);\n",
-        "badges": [
-          "pipeable"
-        ],
         "example": "P.intersectionWith(\n  [3, 5],\n  (a, b) => a.id === b\n)([\n  { id: 1, name: 'Ryan' },\n  { id: 3, name: 'Emma' },\n]); // => [{ id: 3, name: 'Emma' }]\n",
         "args": [
           {
@@ -1322,14 +1259,14 @@
   },
   {
     "name": "invert",
+    "badges": [
+      "pipeable"
+    ],
     "description": "Returns an object whose keys are values are swapped. If the object contains duplicate values,\nsubsequent values will overwrite previous values.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.invert(object);\n",
-        "badges": [
-          "pipeable"
-        ],
         "example": "P.invert({ a: 'd', b: 'e', c: 'f' }); // => { d: \"a\", e: \"b\", f: \"c\" }\n",
         "args": [
           {
@@ -1344,9 +1281,6 @@
       {
         "tag": "Data Last",
         "signature": "P.invert()(object);\n",
-        "badges": [
-          "pipeable"
-        ],
         "example": "P.pipe({ a: 'd', b: 'e', c: 'f' }, P.invert()); // => { d: \"a\", e: \"b\", f: \"c\" }\n",
         "args": [],
         "returns": {
@@ -1358,11 +1292,11 @@
   },
   {
     "name": "isArray",
+    "badges": [],
     "description": "A function that checks if the passed parameter is an Array and narrows its type accordingly",
     "methods": [
       {
         "signature": "P.isArray(data);\n",
-        "badges": [],
         "example": "P.isArray([5]); //=> true\nP.isArray([]); //=> true\nP.isArray('somethingElse'); //=> false\n",
         "args": [
           {
@@ -1380,11 +1314,11 @@
   },
   {
     "name": "isBoolean",
+    "badges": [],
     "description": "A function that checks if the passed parameter is a boolean and narrows its type accordingly",
     "methods": [
       {
         "signature": "P.isBoolean(data);\n",
-        "badges": [],
         "example": "P.isBoolean(true); //=> true\nP.isBoolean(false); //=> true\nP.isBoolean('somethingElse'); //=> false\n",
         "args": [
           {
@@ -1402,11 +1336,11 @@
   },
   {
     "name": "isDate",
+    "badges": [],
     "description": "A function that checks if the passed parameter is a Date and narrows its type accordingly",
     "methods": [
       {
         "signature": "P.isDate(data);\n",
-        "badges": [],
         "example": "P.isDate(new Date()); //=> true\nP.isDate('somethingElse'); //=> false\n",
         "args": [
           {
@@ -1424,13 +1358,13 @@
   },
   {
     "name": "isDefined",
+    "badges": [
+      "strict"
+    ],
     "description": "A function that checks if the passed parameter is defined and narrows its type accordingly.\nTo test specifically for `undefined` (and not `null`) use the strict variant of this function.",
     "methods": [
       {
         "signature": "P.isDefined(data);\nP.isDefined.strict(data);\n",
-        "badges": [
-          "strict"
-        ],
         "example": "P.isDefined('string'); //=> true\nP.isDefined(null); //=> false\nP.isDefined(undefined); //=> false\nP.isDefined.strict(null); //=> true\nP.isDefined.strict(undefined); //=> false\n",
         "args": [
           {
@@ -1448,11 +1382,11 @@
   },
   {
     "name": "isEmpty",
+    "badges": [],
     "description": "A function that checks if the passed parameter is empty",
     "methods": [
       {
         "signature": "P.isEmpty(data);\n",
-        "badges": [],
         "example": "P.isEmpty(''); //=> true\nP.isEmpty([]); //=> true\nP.isEmpty({}); //=> true\nP.isEmpty('test'); //=> false\nP.isEmpty([1, 2, 3]); //=> false\nP.isEmpty({ length: 0 }); //=> false\n",
         "args": [
           {
@@ -1470,11 +1404,11 @@
   },
   {
     "name": "isError",
+    "badges": [],
     "description": "A function that checks if the passed parameter is an Error and narrows its type accordingly",
     "methods": [
       {
         "signature": "P.isError(data);\n",
-        "badges": [],
         "example": "P.isError(new Error('message')); //=> true\nP.isError('somethingElse'); //=> false\n",
         "args": [
           {
@@ -1492,11 +1426,11 @@
   },
   {
     "name": "isFunction",
+    "badges": [],
     "description": "A function that checks if the passed parameter is a Function and narrows its type accordingly",
     "methods": [
       {
         "signature": "P.isFunction(data);\n",
-        "badges": [],
         "example": "P.isFunction(() => {}); //=> true\nP.isFunction('somethingElse'); //=> false\n",
         "args": [
           {
@@ -1514,11 +1448,11 @@
   },
   {
     "name": "isNil",
+    "badges": [],
     "description": "A function that checks if the passed parameter is Nil (null or undefined) and narrows its type accordingly",
     "methods": [
       {
         "signature": "P.isNil(data);\n",
-        "badges": [],
         "example": "P.isNil(undefined); //=> true\nP.isNil(null); //=> true\nP.isNil('somethingElse'); //=> false\n",
         "args": [
           {
@@ -1536,11 +1470,11 @@
   },
   {
     "name": "isNonNull",
+    "badges": [],
     "description": "A function that checks if the passed parameter is not `null` and narrows its type accordingly.\nNotice that `undefined` is not null!",
     "methods": [
       {
         "signature": "P.isNonNull(data);\n",
-        "badges": [],
         "example": "P.isNonNull('string'); //=> true\nP.isNonNull(null); //=> false\nP.isNonNull(undefined); //=> true\n",
         "args": [
           {
@@ -1558,12 +1492,12 @@
   },
   {
     "name": "isNot",
+    "badges": [],
     "description": "A function that takes a guard function as predicate and returns a guard that negates it",
     "methods": [
       {
         "tag": "Data Last",
         "signature": "P.isNot(P.isTruthy)(data);\n",
-        "badges": [],
         "example": "P.isNot(P.isTruthy)(false); //=> true\nP.isNot(P.isTruthy)(true); //=> false\n",
         "args": [
           {
@@ -1581,11 +1515,11 @@
   },
   {
     "name": "isNumber",
+    "badges": [],
     "description": "A function that checks if the passed parameter is a number and narrows its type accordingly",
     "methods": [
       {
         "signature": "R.isNumber(data);\n",
-        "badges": [],
         "example": "R.isNumber(1); //=> true\nR.isNumber('notANumber'); //=> false\n",
         "args": [
           {
@@ -1603,11 +1537,11 @@
   },
   {
     "name": "isObject",
+    "badges": [],
     "description": "A function that checks if the passed parameter is of type Object and narrows its type accordingly",
     "methods": [
       {
         "signature": "P.isObject(data);\n",
-        "badges": [],
         "example": "P.isObject({}); //=> true\nP.isObject(Promise.resolve('something')); //=> true\nP.isObject(new Date()); //=> true\nP.isObject(new Error('error')); //=> true\nP.isObject('somethingElse'); //=> false\n",
         "args": [
           {
@@ -1625,11 +1559,11 @@
   },
   {
     "name": "isPromise",
+    "badges": [],
     "description": "A function that checks if the passed parameter is a Promise and narrows its type accordingly",
     "methods": [
       {
         "signature": "P.isPromise(data);\n",
-        "badges": [],
         "example": "P.isPromise(Promise.resolve(5)); //=> true\nP.isPromise(Promise.reject(5)); //=> true\nP.isPromise('somethingElse'); //=> false\n",
         "args": [
           {
@@ -1647,11 +1581,11 @@
   },
   {
     "name": "isString",
+    "badges": [],
     "description": "A function that checks if the passed parameter is a string and narrows its type accordingly",
     "methods": [
       {
         "signature": "P.isString(data);\n",
-        "badges": [],
         "example": "P.isString('string'); //=> true\nP.isString(1); //=> false\n",
         "args": [
           {
@@ -1669,11 +1603,11 @@
   },
   {
     "name": "isTruthy",
+    "badges": [],
     "description": "A function that checks if the passed parameter is truthy and narrows its type accordingly",
     "methods": [
       {
         "signature": "P.isTruthy(data);\n",
-        "badges": [],
         "example": "P.isTruthy('somethingElse'); //=> true\nP.isTruthy(null); //=> false\nP.isTruthy(undefined); //=> false\nP.isTruthy(false); //=> false\nP.isTruthy(0); //=> false\nP.isTruthy(''); //=> false\n",
         "args": [
           {
@@ -1691,12 +1625,12 @@
   },
   {
     "name": "join",
+    "badges": [],
     "description": "Joins the elements of the array by: casting them to a string and\nconcatenating them one to the other, with the provided glue string in between\nevery two elements.\n\nWhen called on a tuple and with stricter item types (union of literal values,\nthe result is strictly typed to the tuples shape and it's item types).",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.join(data, glue);\n",
-        "badges": [],
         "example": "P.join([1, 2, 3], ','); // => \"1,2,3\" (typed `string`)\nP.join(['a', 'b', 'c'], ''); // => \"abc\" (typed `string`)\nP.join(['hello', 'world'] as const, ' '); // => \"hello world\" (typed `hello world`)\n",
         "args": [
           {
@@ -1715,7 +1649,6 @@
       {
         "tag": "Data Last",
         "signature": "P.join(glue)(data);\n",
-        "badges": [],
         "example": "P.pipe([1, 2, 3], P.join(',')); // => \"1,2,3\" (typed `string`)\nP.pipe(['a', 'b', 'c'], P.join('')); // => \"abc\" (typed `string`)\nP.pipe(['hello', 'world'] as const, P.join(' ')); // => \"hello world\" (typed `hello world`)\n",
         "args": [
           {
@@ -1732,13 +1665,13 @@
   },
   {
     "name": "last",
+    "badges": [
+      "pipeable"
+    ],
     "description": "Gets the last element of `array`.\nNote: In `pipe`, use `last()` form instead of `last`. Otherwise, the inferred type is lost.",
     "methods": [
       {
         "signature": "P.last(array);\n",
-        "badges": [
-          "pipeable"
-        ],
         "example": "P.last([1, 2, 3]); // => 3\nP.last([]); // => undefined\nP.pipe(\n  [1, 2, 4, 8, 16],\n  P.filter((x) => x > 3),\n  P.last(),\n  (x) => x + 1\n); // => 17\n",
         "args": [
           {
@@ -1755,11 +1688,11 @@
   },
   {
     "name": "length",
+    "badges": [],
     "description": "Counts values of the collection or iterable.",
     "methods": [
       {
         "signature": "P.length(array);\n",
-        "badges": [],
         "example": "P.length([1, 2, 3]); // => 3\n",
         "args": [
           {
@@ -1773,7 +1706,6 @@
       },
       {
         "signature": "P.length()(array);\n",
-        "badges": [],
         "example": "P.pipe([1, 2, 3], P.length()); // => 3\n",
         "args": [],
         "returns": {
@@ -1785,16 +1717,16 @@
   },
   {
     "name": "map",
+    "badges": [
+      "indexed",
+      "pipeable",
+      "strict"
+    ],
     "description": "Map each element of an array using a defined callback function. If the input\narray is a tuple use the `strict` variant to maintain it's shape.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.map(array, fn);\nP.map.indexed(array, fn);\nP.map.strict(array, fn);\nP.map.strict.indexed(array, fn);\n",
-        "badges": [
-          "indexed",
-          "pipeable",
-          "strict"
-        ],
         "example": "P.map([1, 2, 3], (x) => x * 2); // => [2, 4, 6], typed number[]\nP.map.indexed([0, 0, 0], (x, i) => i); // => [0, 1, 2], typed number[]\nP.map.strict([0, 0] as const, (x) => x + 1); // => [1, 1], typed [number, number]\nP.map.strict.indexed([0, 0] as const, (x, i) => x + i); // => [0, 1], typed [number, number]\n",
         "args": [
           {
@@ -1814,10 +1746,6 @@
       {
         "tag": "Data Last",
         "signature": "P.map(fn)(array);\nP.map.indexed(fn)(array);\n",
-        "badges": [
-          "indexed",
-          "pipeable"
-        ],
         "example": "P.pipe(\n  [0, 1, 2],\n  P.map((x) => x * 2)\n); // => [0, 2, 4]\nP.pipe(\n  [0, 0, 0],\n  P.map.indexed((x, i) => i)\n); // => [0, 1, 2]\n",
         "args": [
           {
@@ -1834,12 +1762,12 @@
   },
   {
     "name": "mapKeys",
+    "badges": [],
     "description": "Maps keys of `object` and keeps the same values.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.mapKeys(object, fn);\n",
-        "badges": [],
         "example": "P.mapKeys({ a: 1, b: 2 }, (key, value) => key + value); // => { a1: 1, b2: 2 }\n",
         "args": [
           {
@@ -1858,7 +1786,6 @@
       {
         "tag": "Data Last",
         "signature": "P.mapKeys(fn)(object);\n",
-        "badges": [],
         "example": "P.pipe(\n  { a: 1, b: 2 },\n  P.mapKeys((key, value) => key + value)\n); // => { a1: 1, b2: 2 }\n",
         "args": [
           {
@@ -1875,14 +1802,14 @@
   },
   {
     "name": "mapToObj",
+    "badges": [
+      "indexed"
+    ],
     "description": "Map each element of an array into an object using a defined callback function.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.mapToObj(array, fn);\nP.mapToObj.indexed(array, fn);\n",
-        "badges": [
-          "indexed"
-        ],
         "example": "P.mapToObj([1, 2, 3], (x) => [String(x), x * 2]); // => {1: 2, 2: 4, 3: 6}\nP.mapToObj.indexed([0, 0, 0], (x, i) => [i, i]); // => {0: 0, 1: 1, 2: 2}\n",
         "args": [
           {
@@ -1902,9 +1829,6 @@
       {
         "tag": "Data Last",
         "signature": "P.mapToObj(fn)(array);\nP.mapToObj.indexed(fn)(array);\n",
-        "badges": [
-          "indexed"
-        ],
         "example": "P.pipe(\n  [1, 2, 3],\n  P.mapToObj((x) => [String(x), x * 2])\n); // => {1: 2, 2: 4, 3: 6}\nP.pipe(\n  [0, 0, 0],\n  P.mapToObj.indexed((x, i) => [i, i])\n); // => {0: 0, 1: 1, 2: 2}\n",
         "args": [
           {
@@ -1922,12 +1846,12 @@
   },
   {
     "name": "mapValues",
+    "badges": [],
     "description": "Maps values of `object` and keeps the same keys.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.mapValues(object, fn);\n",
-        "badges": [],
         "example": "P.mapValues({ a: 1, b: 2 }, (value, key) => value + key); // => {a: '1a', b: '2b'}\n",
         "args": [
           {
@@ -1946,7 +1870,6 @@
       {
         "tag": "Data Last",
         "signature": "P.mapValues(fn)(object);\n",
-        "badges": [],
         "example": "P.pipe(\n  { a: 1, b: 2 },\n  P.mapValues((value, key) => value + key)\n); // => {a: '1a', b: '2b'}\n",
         "args": [
           {
@@ -1963,14 +1886,14 @@
   },
   {
     "name": "maxBy",
+    "badges": [
+      "indexed"
+    ],
     "description": "Returns the max element using the provided predicate.",
     "methods": [
       {
         "tag": "Data Last",
         "signature": "P.maxBy(fn)(array);\nP.maxBy.indexed(fn)(array);\n",
-        "badges": [
-          "indexed"
-        ],
         "example": "P.pipe(\n  [{ a: 5 }, { a: 1 }, { a: 3 }],\n  P.maxBy((x) => x.a)\n); // { a: 5 }\n",
         "args": [
           {
@@ -1985,9 +1908,6 @@
       {
         "tag": "Data First",
         "signature": "P.maxBy(array, fn);\nP.maxBy.indexed(array, fn);\n",
-        "badges": [
-          "indexed"
-        ],
         "example": "P.maxBy([{ a: 5 }, { a: 1 }, { a: 3 }], (x) => x.a); // { a: 5 }\n",
         "args": [
           {
@@ -2008,14 +1928,14 @@
   },
   {
     "name": "meanBy",
+    "badges": [
+      "indexed"
+    ],
     "description": "Returns the mean of the elements of an array using the provided predicate.",
     "methods": [
       {
         "tag": "Data Last",
         "signature": "P.meanBy(fn)(array);\nP.meanBy.indexed(fn)(array);\n",
-        "badges": [
-          "indexed"
-        ],
         "example": "P.pipe(\n  [{ a: 5 }, { a: 1 }, { a: 3 }],\n  P.meanBy((x) => x.a)\n); // 3\n",
         "args": [
           {
@@ -2030,9 +1950,6 @@
       {
         "tag": "Data First",
         "signature": "P.meanBy(array, fn);\nP.meanBy.indexed(array, fn);\n",
-        "badges": [
-          "indexed"
-        ],
         "example": "P.meanBy([{ a: 5 }, { a: 1 }, { a: 3 }], (x) => x.a); // 3\n",
         "args": [
           {
@@ -2053,12 +1970,12 @@
   },
   {
     "name": "merge",
+    "badges": [],
     "description": "Merges two objects. The same as `Object.assign`.\n`b` object will override properties of `a`.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.merge(a, b);\n",
-        "badges": [],
         "example": "P.merge({ x: 1, y: 2 }, { y: 10, z: 2 }); // => { x: 1, y: 10, z: 2 }\n",
         "args": [
           {
@@ -2077,7 +1994,6 @@
       {
         "tag": "Data Last",
         "signature": "P.merge(b)(a);\n",
-        "badges": [],
         "example": "P.merge({ y: 10, z: 2 })({ x: 1, y: 2 }); // => { x: 1, y: 10, z: 2 }\n",
         "args": [
           {
@@ -2094,11 +2010,11 @@
   },
   {
     "name": "mergeAll",
+    "badges": [],
     "description": "Merges a list of objects into a single object.",
     "methods": [
       {
         "signature": "P.mergeAll(objects);\n",
-        "badges": [],
         "example": "P.mergeAll([{ a: 1, b: 1 }, { b: 2, c: 3 }, { d: 10 }]); // => { a: 1, b: 2, c: 3, d: 10 }\n",
         "args": [
           {
@@ -2115,14 +2031,14 @@
   },
   {
     "name": "minBy",
+    "badges": [
+      "indexed"
+    ],
     "description": "Returns the min element using the provided predicate.",
     "methods": [
       {
         "tag": "Data Last",
         "signature": "P.minBy(fn)(array);\nP.minBy.indexed(fn)(array);\n",
-        "badges": [
-          "indexed"
-        ],
         "example": "P.pipe(\n  [{ a: 5 }, { a: 1 }, { a: 3 }],\n  P.minBy((x) => x.a)\n); // { a: 1 }\n",
         "args": [
           {
@@ -2137,9 +2053,6 @@
       {
         "tag": "Data First",
         "signature": "P.minBy(array, fn);\nP.minBy.indexed(array, fn);\n",
-        "badges": [
-          "indexed"
-        ],
         "example": "P.minBy([{ a: 5 }, { a: 1 }, { a: 3 }], (x) => x.a); // { a: 1 }\n",
         "args": [
           {
@@ -2160,11 +2073,11 @@
   },
   {
     "name": "noop",
+    "badges": [],
     "description": "A function that returns always `undefined`.",
     "methods": [
       {
         "signature": "P.noop();\n",
-        "badges": [],
         "example": "onSomething(P.noop);\n",
         "args": [],
         "returns": {
@@ -2176,12 +2089,12 @@
   },
   {
     "name": "omit",
+    "badges": [],
     "description": "Returns a partial copy of an object omitting the keys specified.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.omit(obj, names);\n",
-        "badges": [],
         "example": "P.omit({ a: 1, b: 2, c: 3, d: 4 }, ['a', 'd']); // => { b: 2, c: 3 }\n",
         "args": [
           {
@@ -2200,7 +2113,6 @@
       {
         "tag": "Data Last",
         "signature": "P.omit(names)(obj);\n",
-        "badges": [],
         "example": "P.pipe({ a: 1, b: 2, c: 3, d: 4 }, P.omit(['a', 'd'])); // => { b: 2, c: 3 }\n",
         "args": [
           {
@@ -2217,12 +2129,12 @@
   },
   {
     "name": "omitBy",
+    "badges": [],
     "description": "Returns a partial copy of an object omitting the keys matching predicate.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.omitBy(object, fn);\n",
-        "badges": [],
         "example": "P.omitBy({ a: 1, b: 2, A: 3, B: 4 }, (val, key) => key.toUpperCase() === key); // => {a: 1, b: 2}\n",
         "args": [
           {
@@ -2241,7 +2153,6 @@
       {
         "tag": "Data Last",
         "signature": "P.omitBy(fn)(object);\n",
-        "badges": [],
         "example": "P.omitBy((val, key) => key.toUpperCase() === key)({ a: 1, b: 2, A: 3, B: 4 }); // => {a: 1, b: 2}\n",
         "args": [
           {
@@ -2258,11 +2169,11 @@
   },
   {
     "name": "once",
+    "badges": [],
     "description": "Creates a function that is restricted to invoking `func` once. Repeat calls to the function return the value of the first invocation.",
     "methods": [
       {
         "signature": "P.once(fn);\n",
-        "badges": [],
         "example": "const initialize = P.once(createApplication);\ninitialize();\ninitialize();\n// => `createApplication` is invoked once\n",
         "args": [
           {
@@ -2279,14 +2190,14 @@
   },
   {
     "name": "partition",
+    "badges": [
+      "indexed"
+    ],
     "description": "Splits a collection into two groups, the first of which contains elements the `predicate` type guard passes, and the second one containing the rest.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.partition(array, fn);\n",
-        "badges": [
-          "indexed"
-        ],
         "example": "P.partition(['one', 'two', 'forty two'], (x) => x.length === 3); // => [['one', 'two'], ['forty two']]\n",
         "args": [
           {
@@ -2306,9 +2217,6 @@
       {
         "tag": "Data First",
         "signature": "P.partition(array, fn);\n",
-        "badges": [
-          "indexed"
-        ],
         "example": "P.partition(['one', 'two', 'forty two'], (x) => x.length === 3); // => [['one', 'two'], ['forty two']]\n",
         "args": [
           {
@@ -2328,9 +2236,6 @@
       {
         "tag": "Data Last",
         "signature": "P.partition(fn)(array);\n",
-        "badges": [
-          "indexed"
-        ],
         "example": "P.pipe(\n  ['one', 'two', 'forty two'],\n  P.partition((x) => x.length === 3)\n); // => [['one', 'two'], ['forty two']]\n",
         "args": [
           {
@@ -2346,9 +2251,6 @@
       {
         "tag": "Data Last",
         "signature": "P.partition(fn)(array);\n",
-        "badges": [
-          "indexed"
-        ],
         "example": "P.pipe(\n  ['one', 'two', 'forty two'],\n  P.partition((x) => x.length === 3)\n); // => [['one', 'two'], ['forty two']]\n",
         "args": [
           {
@@ -2366,12 +2268,12 @@
   },
   {
     "name": "pathOr",
+    "badges": [],
     "description": "Gets the value at `path` of `object`. If the resolved value is `undefined`, the `defaultValue` is returned in its place.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.pathOr(object, array, defaultValue);\n",
-        "badges": [],
         "example": "P.pathOr({ x: 10 }, ['y'], 2); // 2\nP.pathOr({ y: 10 }, ['y'], 2); // 10\n",
         "args": [
           {
@@ -2394,7 +2296,6 @@
       {
         "tag": "Data Last",
         "signature": "P.pathOr(array, defaultValue)(object);\n",
-        "badges": [],
         "example": "P.pipe({ x: 10 }, P.pathOr(['y'], 2)); // 2\nP.pipe({ y: 10 }, P.pathOr(['y'], 2)); // 10\n",
         "args": [
           {
@@ -2415,12 +2316,12 @@
   },
   {
     "name": "pick",
+    "badges": [],
     "description": "Creates an object composed of the picked `object` properties.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.pick(object, [prop1, prop2]);\n",
-        "badges": [],
         "example": "P.pick({ a: 1, b: 2, c: 3, d: 4 }, ['a', 'd']); // => { a: 1, d: 4 }\n",
         "args": [
           {
@@ -2439,7 +2340,6 @@
       {
         "tag": "Data Last",
         "signature": "P.pick([prop1, prop2])(object);\n",
-        "badges": [],
         "example": "P.pipe({ a: 1, b: 2, c: 3, d: 4 }, P.pick(['a', 'd'])); // => { a: 1, d: 4 }\n",
         "args": [
           {
@@ -2456,12 +2356,12 @@
   },
   {
     "name": "pickBy",
+    "badges": [],
     "description": "Creates an object composed of the picked `object` properties.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.pickBy(object, fn);\n",
-        "badges": [],
         "example": "P.pickBy({ a: 1, b: 2, A: 3, B: 4 }, (val, key) => key.toUpperCase() === key); // => {A: 3, B: 4}\n",
         "args": [
           {
@@ -2480,7 +2380,6 @@
       {
         "tag": "Data Last",
         "signature": "P.pickBy(fn)(object);\n",
-        "badges": [],
         "example": "P.pickBy((val, key) => key.toUpperCase() === key)({ a: 1, b: 2, A: 3, B: 4 }); // => {A: 3, B: 4}\n",
         "args": [
           {
@@ -2497,12 +2396,12 @@
   },
   {
     "name": "pipe",
+    "badges": [],
     "description": "Perform left-to-right function composition.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.pipe(data, op1, op2, op3);\n",
-        "badges": [],
         "example": "P.pipe(\n  [1, 2, 3, 4],\n  P.map((x) => x * 2),\n  (arr) => [arr[0] + arr[1], arr[2] + arr[3]]\n); // => [6, 14]\n",
         "args": [
           {
@@ -2522,12 +2421,12 @@
   },
   {
     "name": "prop",
+    "badges": [],
     "description": "Gets the value of the given property.",
     "methods": [
       {
         "tag": "Data Last",
         "signature": "P.prop(prop)(object);\n",
-        "badges": [],
         "example": "P.pipe({ foo: 'bar' }, P.prop('foo')); // => 'bar'\n",
         "args": [
           {
@@ -2544,11 +2443,11 @@
   },
   {
     "name": "purry",
+    "badges": [],
     "description": "Creates a function with `data-first` and `data-last` signatures.\n\n`purry` is a dynamic function and it's not type safe. It should be wrapped by a function that have proper typings.\nRefer to the example below for correct usage.",
     "methods": [
       {
         "signature": "P.purry(fn, arguments);\n",
-        "badges": [],
         "example": "function _findIndex(array, fn) {\n  for (let i = 0; i < array.length; i++) {\n    if (fn(array[i])) {\n      return i;\n    }\n  }\n  return -1;\n}\n\n// data-first\nfunction findIndex<T>(array: T[], fn: (item: T) => boolean): number;\n\n// data-last\nfunction findIndex<T>(fn: (item: T) => boolean): (array: T[]) => number;\n\nfunction findIndex() {\n  return P.purry(_findIndex, arguments);\n}",
         "args": [
           {
@@ -2572,11 +2471,11 @@
   },
   {
     "name": "randomString",
+    "badges": [],
     "description": "Random a non-cryptographic random string from characters a-zA-Z0-9.",
     "methods": [
       {
         "signature": "randomString(length);\n",
-        "badges": [],
         "example": "randomString(5); // => aB92J\n",
         "args": [
           {
@@ -2593,12 +2492,12 @@
   },
   {
     "name": "range",
+    "badges": [],
     "description": "Returns a list of numbers from `start` (inclusive) to `end` (exclusive).",
     "methods": [
       {
         "tag": "Data First",
         "signature": "range(start, end);\n",
-        "badges": [],
         "example": "P.range(1, 5); // => [1, 2, 3, 4]\n",
         "args": [
           {
@@ -2617,7 +2516,6 @@
       {
         "tag": "Data First",
         "signature": "range(end)(start);\n",
-        "badges": [],
         "example": "P.range(5)(1); // => [1, 2, 3, 4]\n",
         "args": [
           {
@@ -2634,14 +2532,14 @@
   },
   {
     "name": "reduce",
+    "badges": [
+      "indexed"
+    ],
     "description": "Calls the specified callback function for all the elements in an array. The return value of the callback function is the accumulated result, and is provided as an argument in the next call to the callback function.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.reduce(items, fn, initialValue);\nP.reduce.indexed(items, fn, initialValue);\n",
-        "badges": [
-          "indexed"
-        ],
         "example": "P.reduce([1, 2, 3, 4, 5], (acc, x) => acc + x, 100); // => 115\nP.reduce.indexed([1, 2, 3, 4, 5], (acc, x, i, array) => acc + x, 100); // => 115\n",
         "args": [
           {
@@ -2663,9 +2561,6 @@
       {
         "tag": "Data Last",
         "signature": "P.reduce(fn, initialValue)(array);\n",
-        "badges": [
-          "indexed"
-        ],
         "example": "P.pipe(\n  [1, 2, 3, 4, 5],\n  P.reduce((acc, x) => acc + x, 100)\n); // => 115\nP.pipe(\n  [1, 2, 3, 4, 5],\n  P.reduce.indexed((acc, x, i, array) => acc + x, 100)\n); // => 115\n",
         "args": [
           {
@@ -2686,15 +2581,15 @@
   },
   {
     "name": "reject",
+    "badges": [
+      "indexed",
+      "pipeable"
+    ],
     "description": "Reject the elements of an array that meet the condition specified in a callback function.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.reject(array, fn);\nP.reject.indexed(array, fn);\n",
-        "badges": [
-          "indexed",
-          "pipeable"
-        ],
         "example": "P.reject([1, 2, 3], (x) => x % 2 === 0); // => [1, 3]\nP.reject.indexed([1, 2, 3], (x, i, array) => x % 2 === 0); // => [1, 3]\n",
         "args": [
           {
@@ -2713,10 +2608,6 @@
       {
         "tag": "Data First",
         "signature": "P.reject(array, fn);\nP.reject.indexed(array, fn);\n",
-        "badges": [
-          "indexed",
-          "pipeable"
-        ],
         "example": "P.reject([1, 2, 3], (x) => x % 2 === 0); // => [1, 3]\nP.reject.indexed([1, 2, 3], (x, i, array) => x % 2 === 0); // => [1, 3]\n",
         "args": [
           {
@@ -2733,12 +2624,12 @@
   },
   {
     "name": "reverse",
+    "badges": [],
     "description": "Reverses array.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.reverse(arr);\n",
-        "badges": [],
         "example": "P.reverse([1, 2, 3]); // [3, 2, 1]\n",
         "args": [
           {
@@ -2753,7 +2644,6 @@
       {
         "tag": "Data Last",
         "signature": "P.reverse()(array);\n",
-        "badges": [],
         "example": "P.reverse()([1, 2, 3]); // [3, 2, 1]\n",
         "args": [],
         "returns": {
@@ -2765,14 +2655,14 @@
   },
   {
     "name": "sample",
+    "badges": [
+      "pipeable"
+    ],
     "description": "Returns a random subset of size `sampleSize` from `array`.\n\nMaintains and infers most of the typing information that could be passed\nalong to the output. This means that when using tuples, the output will be\na tuple too, and when using literals, those literals would be preserved.\n\nThe items in the result are kept in the same order as they are in the input.\nIf you need to get a shuffled response you can pipe the shuffle function\nafter this one.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.sample(array, sampleSize);\n",
-        "badges": [
-          "pipeable"
-        ],
         "example": "P.sample(['hello', 'world'], 1); // => [\"hello\"] // typed string[]\nP.sample(['hello', 'world'] as const, 1); // => [\"world\"] // typed [\"hello\" | \"world\"]\n",
         "args": [
           {
@@ -2790,9 +2680,6 @@
       {
         "tag": "Data Last",
         "signature": "P.sample(sampleSize)(array);\n",
-        "badges": [
-          "pipeable"
-        ],
         "example": "P.sample(1)(['hello', 'world']); // => [\"hello\"] // typed string[]\nP.sample(1)(['hello', 'world'] as const); // => [\"world\"] // typed [\"hello\" | \"world\"]\n",
         "args": [
           {
@@ -2809,12 +2696,12 @@
   },
   {
     "name": "set",
+    "badges": [],
     "description": "Sets the `value` at `prop` of `object`.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.set(obj, prop, value);\n",
-        "badges": [],
         "example": "P.set({ a: 1 }, 'a', 2); // => { a: 2 }\n",
         "args": [
           {
@@ -2837,7 +2724,6 @@
       {
         "tag": "Data Last",
         "signature": "P.set(prop, value)(obj);\n",
-        "badges": [],
         "example": "P.pipe({ a: 1 }, P.set('a', 2)); // => { a: 2 }\n",
         "args": [
           {
@@ -2858,12 +2744,12 @@
   },
   {
     "name": "setPath",
+    "badges": [],
     "description": "Sets the value at `path` of `object`. `path` can be an array or a path string.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.setPath(obj, path, value);\n",
-        "badges": [],
         "example": "P.setPath({ a: { b: 1 } }, ['a', 'b'], 2); // => { a: { b: 2 } }\n",
         "args": [
           {
@@ -2886,7 +2772,6 @@
       {
         "tag": "Data First",
         "signature": "P.setPath(obj, path, value);\n",
-        "badges": [],
         "example": "P.pipe({ a: { b: 1 } }, P.setPath(['a', 'b'], 2)); // { a: { b: 2 } }\n",
         "args": [
           {
@@ -2907,12 +2792,12 @@
   },
   {
     "name": "shuffle",
+    "badges": [],
     "description": "Shuffles the input array, returning a new array with the same elements in a random order.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.shuffle(array);\n",
-        "badges": [],
         "example": "P.shuffle([4, 2, 7, 5]); // => [7, 5, 4, 2]\n",
         "args": [
           {
@@ -2927,7 +2812,6 @@
       {
         "tag": "Data Last",
         "signature": "P.shuffle()(array);\n",
-        "badges": [],
         "example": "P.pipe([4, 2, 7, 5], P.shuffle()); // => [7, 5, 4, 2]\n",
         "args": [],
         "returns": {
@@ -2939,14 +2823,14 @@
   },
   {
     "name": "sort",
+    "badges": [
+      "strict"
+    ],
     "description": "Sorts an array. The comparator function should accept two values at a time and return a negative number if the first value is smaller, a positive number if it's larger, and zero if they are equal.\nSorting is based on a native `sort` function. It's not guaranteed to be stable.\n\nIf the input array is more complex (non-empty array, tuple, etc...) use the\nstrict mode to maintain it's shape.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.sort(items, cmp);\nP.sort.strict(items, cmp);\n",
-        "badges": [
-          "strict"
-        ],
         "example": "P.sort([4, 2, 7, 5], (a, b) => a - b); // => [2, 4, 5, 7] typed Array<number>\nP.sort.strict([4, 2] as [number, number], (a, b) => a - b); // [2, 4] typed [number, number]\n",
         "args": [
           {
@@ -2965,9 +2849,6 @@
       {
         "tag": "Data Last",
         "signature": "P.sort(cmp)(items);\nP.sort.strict(cmp)(items);\n",
-        "badges": [
-          "strict"
-        ],
         "example": "P.pipe(\n  [4, 2, 7, 5],\n  P.sort((a, b) => a - b)\n); // => [2, 4, 5, 7] typed Array<number>\nP.pipe(\n  [4, 2] as [number, number],\n  P.sort.strict((a, b) => a - b)\n); // => [2, 4] typed [number, number]\n",
         "args": [
           {
@@ -2984,14 +2865,14 @@
   },
   {
     "name": "sortBy",
+    "badges": [
+      "strict"
+    ],
     "description": "Sorts the list according to the supplied functions and directions.\nSorting is based on a native `sort` function. It's not guaranteed to be stable.\n\nDirections are applied to functions in order and default to ascending if not specified.\n\nIf the input array is more complex (non-empty array, tuple, etc...) use the\nstrict mode to maintain it's shape.",
     "methods": [
       {
         "tag": "Data Last",
         "signature": "P.sortBy(sortRule, ...additionalSortRules)(array);\nP.sortBy.strict(sortRule, ...additionalSortRules)(array);\n",
-        "badges": [
-          "strict"
-        ],
         "example": "P.pipe(\n  [{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }],\n  P.sortBy((x) => x.a)\n); // => [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 7 }] typed Array<{a:number}>\nP.pipe(\n  [{ a: 1 }, { a: 3 }] as const,\n  P.sortBy.strict((x) => x.a)\n); // => [{ a: 1 }, { a: 3 }] typed [{a: 1 | 3}, {a: 1 | 3}]\n",
         "args": [
           {
@@ -3005,9 +2886,6 @@
       {
         "tag": "Data First",
         "signature": "P.sortBy(array, sortRule, ...additionalSortRules);\nP.sortBy.strict(array, sortRule, ...additionalSortRules);\n",
-        "badges": [
-          "strict"
-        ],
         "example": "P.sortBy([{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }], (x) => x.a);\n// => [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 7 }] typed Array<{a:number}>\n\nP.sortBy(\n  [\n    { color: 'red', weight: 2 },\n    { color: 'blue', weight: 3 },\n    { color: 'green', weight: 1 },\n    { color: 'purple', weight: 1 },\n  ],\n  [(x) => x.weight, 'asc'],\n  (x) => x.color\n);\n// =>\n//   {color: 'green', weight: 1},\n//   {color: 'purple', weight: 1},\n//   {color: 'red', weight: 2},\n//   {color: 'blue', weight: 3},\n// typed Array<{color: string, weight: number}>\n\nP.sortBy.strict([{ a: 1 }, { a: 3 }] as const, (x) => x.a);\n// => [{ a: 1 }, { a: 3 }] typed [{a: 1 | 3}, {a: 1 | 3}]\n",
         "args": [
           {
@@ -3027,12 +2905,12 @@
   },
   {
     "name": "splitAt",
+    "badges": [],
     "description": "Splits a given array at a given index.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.splitAt(array, index);\n",
-        "badges": [],
         "example": "P.splitAt([1, 2, 3], 1); // => [[1], [2, 3]]\nP.splitAt([1, 2, 3, 4, 5], -1); // => [[1, 2, 3, 4], [5]]\n",
         "args": [
           {
@@ -3051,7 +2929,6 @@
       {
         "tag": "Data Last",
         "signature": "P.splitAt(index)(array);\n",
-        "badges": [],
         "example": "P.splitAt(1)([1, 2, 3]); // => [[1], [2, 3]]\nP.splitAt(-1)([1, 2, 3, 4, 5]); // => [[1, 2, 3, 4], [5]]\n",
         "args": [
           {
@@ -3068,12 +2945,12 @@
   },
   {
     "name": "splitWhen",
+    "badges": [],
     "description": "Splits a given array at the first index where the given predicate returns true.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.splitWhen(array, fn);\n",
-        "badges": [],
         "example": "P.splitWhen([1, 2, 3], (x) => x === 2); // => [[1], [2, 3]]\n",
         "args": [
           {
@@ -3092,7 +2969,6 @@
       {
         "tag": "Data Last",
         "signature": "P.splitWhen(fn)(array);\n",
-        "badges": [],
         "example": "P.splitWhen((x) => x === 2)([1, 2, 3]); // => [[1], [2, 3]]\n",
         "args": [
           {
@@ -3109,12 +2985,12 @@
   },
   {
     "name": "stringToPath",
+    "badges": [],
     "description": "Converts a path string to an array of keys.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.stringToPathArray(path);\n",
-        "badges": [],
         "example": "P.stringToPathArray('a.b[0].c'); // => ['a', 'b', 0, 'c']\n",
         "args": [
           {
@@ -3131,14 +3007,14 @@
   },
   {
     "name": "sumBy",
+    "badges": [
+      "indexed"
+    ],
     "description": "Returns the sum of the elements of an array using the provided predicate.",
     "methods": [
       {
         "tag": "Data Last",
         "signature": "P.sumBy(fn)(array);\nP.sumBy.indexed(fn)(array);\n",
-        "badges": [
-          "indexed"
-        ],
         "example": "P.pipe(\n  [{ a: 5 }, { a: 1 }, { a: 3 }],\n  P.sumBy((x) => x.a)\n); // 9\n",
         "args": [
           {
@@ -3153,9 +3029,6 @@
       {
         "tag": "Data First",
         "signature": "P.sumBy(array, fn);\nP.sumBy.indexed(array, fn);\n",
-        "badges": [
-          "indexed"
-        ],
         "example": "P.sumBy([{ a: 5 }, { a: 1 }, { a: 3 }], (x) => x.a); // 9\n",
         "args": [
           {
@@ -3176,12 +3049,12 @@
   },
   {
     "name": "swapIndices",
+    "badges": [],
     "description": "Swaps the positions of two elements in an array or string at the provided indices.\n\nNegative indices are supported and would be treated as an offset from the end of the array. The resulting type thought would be less strict than when using positive indices.\n\nIf either index is out of bounds the result would be a shallow copy of the input, as-is.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "swapIndices(data, index1, index2);\n",
-        "badges": [],
         "example": "swapIndices(['a', 'b', 'c'], 0, 1); // => ['b', 'a', 'c']\nswapIndices(['a', 'b', 'c'], 1, -1); // => ['c', 'b', 'a']\nswapIndices('abc', 0, 1); // => 'bac'\n",
         "args": [
           {
@@ -3205,7 +3078,6 @@
       {
         "tag": "Data Last",
         "signature": "swapIndices(index1, index2)(data);\n",
-        "badges": [],
         "example": "swapIndices(0, 1)(['a', 'b', 'c']); // => ['b', 'a', 'c']\nswapIndices(0, -1)('abc'); // => 'cba'\n",
         "args": [
           {
@@ -3227,12 +3099,12 @@
   },
   {
     "name": "swapProps",
+    "badges": [],
     "description": "Swaps the positions of two properties in an object based on the provided keys.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "swap(data, key1, key2);\n",
-        "badges": [],
         "example": "swap({ a: 1, b: 2, c: 3 }, 'a', 'b'); // => {a: 2, b: 1, c: 3}\n",
         "args": [
           {
@@ -3256,7 +3128,6 @@
       {
         "tag": "Data Last",
         "signature": "swap(key1, key2)(data);\n",
-        "badges": [],
         "example": "swap('a', 'b')({ a: 1, b: 2, c: 3 }); // => {a: 2, b: 1, c: 3}\n",
         "args": [
           {
@@ -3278,14 +3149,14 @@
   },
   {
     "name": "take",
+    "badges": [
+      "pipeable"
+    ],
     "description": "Returns the first `n` elements of `array`.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.take(array, n);\n",
-        "badges": [
-          "pipeable"
-        ],
         "example": "P.take([1, 2, 3, 4, 3, 2, 1], 3); // => [1, 2, 3]\n",
         "args": [
           {
@@ -3304,9 +3175,6 @@
       {
         "tag": "Data Last",
         "signature": "P.take(n)(array);\n",
-        "badges": [
-          "pipeable"
-        ],
         "example": "P.pipe([1, 2, 3, 4, 3, 2, 1], P.take(n)); // => [1, 2, 3]\n",
         "args": [
           {
@@ -3323,12 +3191,12 @@
   },
   {
     "name": "takeWhile",
+    "badges": [],
     "description": "Returns elements from the array until predicate returns false.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.takeWhile(array, fn);\n",
-        "badges": [],
         "example": "P.takeWhile([1, 2, 3, 4, 3, 2, 1], (x) => x !== 4); // => [1, 2, 3]\n",
         "args": [
           {
@@ -3347,7 +3215,6 @@
       {
         "tag": "Data Last",
         "signature": "P.takeWhile(fn)(array);\n",
-        "badges": [],
         "example": "P.pipe(\n  [1, 2, 3, 4, 3, 2, 1],\n  P.takeWhile((x) => x !== 4)\n); // => [1, 2, 3]\n",
         "args": [
           {
@@ -3364,13 +3231,13 @@
   },
   {
     "name": "toPairs",
+    "badges": [
+      "strict"
+    ],
     "description": "Returns an array of key/values of the enumerable properties of an object.",
     "methods": [
       {
         "signature": "P.toPairs(object);\nP.toPairs.strict(object);\n",
-        "badges": [
-          "strict"
-        ],
         "example": "P.toPairs({ a: 1, b: 2, c: 3 }); // => [['a', 1], ['b', 2], ['c', 3]]\nP.toPairs.strict({ a: 1 } as const); // => [['a', 1]] typed Array<['a', 1]>\n",
         "args": [
           {
@@ -3386,11 +3253,11 @@
   },
   {
     "name": "type",
+    "badges": [],
     "description": "Gives a single-word string description of the (native) type of a value, returning such answers as 'Object', 'Number', 'Array', or 'Null'. Does not attempt to distinguish user Object types any further, reporting them all as 'Object'.",
     "methods": [
       {
         "signature": "P.type(obj);\n",
-        "badges": [],
         "example": "P.type({}); //=> \"Object\"\nP.type(1); //=> \"Number\"\nP.type(false); //=> \"Boolean\"\nP.type('s'); //=> \"String\"\nP.type(null); //=> \"Null\"\nP.type([]); //=> \"Array\"\nP.type(/[A-z]/); //=> \"RegExp\"\nP.type(() => {}); //=> \"Function\"\nP.type(undefined); //=> \"Undefined\"\n",
         "args": [
           {
@@ -3406,13 +3273,13 @@
   },
   {
     "name": "uniq",
+    "badges": [
+      "pipeable"
+    ],
     "description": "Returns a new array containing only one copy of each element in the original list.\nElements are compared by reference using Set.\nNote: In `pipe`, use `uniq()` form instead of `uniq`. Otherwise, the inferred type is lost.",
     "methods": [
       {
         "signature": "P.uniq(array);\n",
-        "badges": [
-          "pipeable"
-        ],
         "example": "P.uniq([1, 2, 2, 5, 1, 6, 7]); // => [1, 2, 5, 6, 7]\nP.pipe(\n  [1, 2, 2, 5, 1, 6, 7], // only 4 iterations\n  P.uniq(),\n  P.take(3)\n); // => [1, 2, 5]\n",
         "args": [
           {
@@ -3428,13 +3295,13 @@
   },
   {
     "name": "uniqBy",
+    "badges": [
+      "pipeable"
+    ],
     "description": "Returns a new array containing only one copy of each element in the original list transformed by a function.\nElements are compared by reference using Set.",
     "methods": [
       {
         "signature": "P.uniqBy(array, fn);\n",
-        "badges": [
-          "pipeable"
-        ],
         "example": "P.uniqBy(\n  [{ n: 1 }, { n: 2 }, { n: 2 }, { n: 5 }, { n: 1 }, { n: 6 }, { n: 7 }],\n  (obj) => obj.n\n); // => [{n: 1}, {n: 2}, {n: 5}, {n: 6}, {n: 7}]\nP.pipe(\n  [{ n: 1 }, { n: 2 }, { n: 2 }, { n: 5 }, { n: 1 }, { n: 6 }, { n: 7 }], // only 4 iterations\n  P.uniqBy((obj) => obj.n),\n  P.take(3)\n); // => [{n: 1}, {n: 2}, {n: 5}]\n",
         "args": [
           {
@@ -3450,12 +3317,12 @@
   },
   {
     "name": "uniqWith",
+    "badges": [],
     "description": "Returns a new array containing only one copy of each element in the original list.\nElements are compared by custom comparator isEquals.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.uniqWith(array, isEquals);\n",
-        "badges": [],
         "example": "P.uniqWith(\n  [{ a: 1 }, { a: 2 }, { a: 2 }, { a: 5 }, { a: 1 }, { a: 6 }, { a: 7 }],\n  P.equals\n); // => [{a: 1}, {a: 2}, {a: 5}, {a: 6}, {a: 7}]\n",
         "args": [
           {
@@ -3473,7 +3340,6 @@
       {
         "tag": "Data Last",
         "signature": "P.uniqWith(isEquals)(array);\n",
-        "badges": [],
         "example": "P.uniqWith(P.equals)([\n  { a: 1 },\n  { a: 2 },\n  { a: 2 },\n  { a: 5 },\n  { a: 1 },\n  { a: 6 },\n  { a: 7 },\n]); // => [{a: 1}, {a: 2}, {a: 5}, {a: 6}, {a: 7}]\nP.pipe(\n  [{ a: 1 }, { a: 2 }, { a: 2 }, { a: 5 }, { a: 1 }, { a: 6 }, { a: 7 }], // only 4 iterations\n  P.uniqWith(P.equals),\n  P.take(3)\n); // => [{a: 1}, {a: 2}, {a: 5}]\n",
         "args": [
           {
@@ -3490,13 +3356,13 @@
   },
   {
     "name": "values",
+    "badges": [
+      "pipeable"
+    ],
     "description": "Returns a new array containing the values of the array or object.",
     "methods": [
       {
         "signature": "P.values(source);\n",
-        "badges": [
-          "pipeable"
-        ],
         "example": "P.values(['x', 'y', 'z']); // => ['x', 'y', 'z']\nP.values({ a: 'x', b: 'y', c: 'z' }); // => ['x', 'y', 'z']\nP.pipe({ a: 'x', b: 'y', c: 'z' }, P.values, P.first); // => 'x'\n",
         "args": [
           {
@@ -3513,12 +3379,12 @@
   },
   {
     "name": "zip",
+    "badges": [],
     "description": "Creates a new list from two supplied lists by pairing up equally-positioned items.\nThe length of the returned list will match the shortest of the two inputs.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.zip(first, second);\n",
-        "badges": [],
         "example": "P.zip([1, 2], ['a', 'b']); // => [1, 'a'], [2, 'b']\n",
         "args": [
           {
@@ -3537,7 +3403,6 @@
       {
         "tag": "Data Last",
         "signature": "P.zip(second)(first);\n",
-        "badges": [],
         "example": "P.zip(['a', 'b'])([1, 2]); // => [[1, 'a'], [2, 'b']\n",
         "args": [
           {
@@ -3554,12 +3419,12 @@
   },
   {
     "name": "zipObj",
+    "badges": [],
     "description": "Creates a new object from two supplied lists by pairing up equally-positioned items.\nKey/value pairing is truncated to the length of the shorter of the two lists",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.zipObj(first, second);\n",
-        "badges": [],
         "example": "P.zipObj(['a', 'b'], [1, 2]); // => {a: 1, b: 2}\n",
         "args": [
           {
@@ -3578,7 +3443,6 @@
       {
         "tag": "Data Last",
         "signature": "P.zipObj(second)(first);\n",
-        "badges": [],
         "example": "P.zipObj([1, 2])(['a', 'b']); // => {a: 1, b: 2}\n",
         "args": [
           {
@@ -3595,12 +3459,12 @@
   },
   {
     "name": "zipWith",
+    "badges": [],
     "description": "Creates a new list from two supplied lists by calling the supplied function\nwith the same-positioned element from each list.",
     "methods": [
       {
         "tag": "Data First",
         "signature": "P.zipWith(first, second, fn);\n",
-        "badges": [],
         "example": "P.zipWith(['1', '2', '3'], ['a', 'b', 'c'], (a, b) => a + b); // => ['1a', '2b', '3c']\n",
         "args": [
           {
@@ -3623,7 +3487,6 @@
       {
         "tag": "Data Last",
         "signature": "P.zipWith(fn)(first, second);\n",
-        "badges": [],
         "example": "P.zipWith((a, b) => a + b)(['1', '2', '3'], ['a', 'b', 'c']); // => ['1a', '2b', '3c']\n",
         "args": [
           {
@@ -3638,7 +3501,6 @@
       {
         "tag": "Data Last",
         "signature": "P.zipWith(fn)(first, second);\n",
-        "badges": [],
         "example": "P.zipWith((a, b) => a + b, ['a', 'b', 'c'])(['1', '2', '3']); // => ['1a', '2b', '3c']\n",
         "args": [
           {

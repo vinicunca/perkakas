@@ -58,8 +58,6 @@
   }
 
   div[class*='language-'] {
-    @apply relative my-4 -mx-6 bg-$vd-code-block-bg overflow-x-auto sm:(rounded-2 mx-0);
-
     transition: background-color 0.5s;
 
     + div[class*='language-'], + div[class$='-api'] > div[class*='language-'] {
@@ -80,7 +78,7 @@
     }
 
     code {
-      @apply block px-6 min-w-full w-[fit-content] leading-[1.7] text-size-[0.875em] text-$vd-code-block-color;
+      @apply block min-w-full w-[fit-content] leading-[1.7] text-size-[0.875em] text-$vd-code-block-color;
 
       .highlight {
         @apply block bg-$vd-code-line-highlight-color -mx-6 px-6;
@@ -96,45 +94,7 @@
           @apply bg-$vd-code-line-warning-color;
         }
       }
-
-      .diff {
-        @apply inline-block -my-6 py-6 before:(absolute left-[10px]);
-
-        transition: background-color 0.5s;
-        margin: 0 -24px;
-        padding: 0 24px;
-        width: calc(100% + 2 * 24px);
-
-        &.remove {
-          @apply opacity-70 bg-$vd-code-line-diff-remove-color before:(content-[quoted:-] text-$vd-code-line-diff-remove-symbol-color);
-        }
-
-        &.add {
-          @apply opacity-70 bg-$vd-code-line-diff-add-color before:(content-[quoted:+] text-$vd-code-line-diff-add-symbol-color);
-        }
-      }
     }
-
-    .has-focused-lines {
-      .line:not(.has-focus) {
-        filter: blur(0.095rem);
-        opacity: 0.7;
-        transition: filter 0.35s, opacity 0.35s;
-      }
-    }
-
-    &:hover {
-      .has-focused-lines .line:not(.has-focus) {
-        filter: blur(0);
-        opacity: 1;
-      }
-    }
-
-    &.line-numbers-mode {
-      @apply pl-8;
-    }
-
-    @apply sm:my-4;
   }
 
   div[class$='-api'] + div[class*='language-'] {
@@ -149,12 +109,6 @@
     .file-name {
       @apply hidden;
     }
-  }
-
-  .line-numbers-wrapper {
-    @apply absolute top-0 bottom-0 left-0 z-3 border-r border-r-$vd-code-block-divider-color pt-5 w-8 text-center leading-[1.7] text-size-[0.875em] text-$vd-code-line-number-color;
-
-    transition: border-color 0.5s, color 0.5s;
   }
 
   /* Custom Block */

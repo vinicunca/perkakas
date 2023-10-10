@@ -1,13 +1,13 @@
 export function useNavItems() {
   const navItems = [
-    {
-      title: 'User Guide',
-      _path: '/user-guide',
-    },
-    {
-      title: 'Configs',
-      _path: '/configs',
-    },
+    // {
+    //   title: 'User Guide',
+    //   _path: '/user-guide',
+    // },
+    // {
+    //   title: 'Configs',
+    //   _path: '/configs',
+    // },
   ];
 
   const route = useRoute();

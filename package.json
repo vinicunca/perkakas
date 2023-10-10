@@ -13,13 +13,13 @@
     "prepublish": "pnpm run build:lib",
     "deploy:docs": "pnpm run gen:meta && pnpm -C docs generate",
     "release": "pnpm -C lib release",
-    "transform": "bun scripts/transform.ts docs/build/out.json docs/build/data.json",
+    "transform": "bun scripts/transform.ts",
     "typedoc": "typedoc --json docs/build/out.json",
     "registry": "pnpm publish --access public --no-git-checks"
   },
   "devDependencies": {
-    "@types/node": "^20.8.3",
-    "@vinicunca/eslint-config": "^2.0.0-beta.7",
+    "@types/node": "^20.8.4",
+    "@vinicunca/eslint-config": "2.0.0-beta.8",
     "@vinicunca/perkakas": "workspace:*",
     "bumpp": "^9.2.0",
     "bun": "^1.0.4",
@@ -33,7 +33,7 @@
   },
   "pnpm": {
     "overrides": {
-      "eslint": "$eslint"
+      "eslint": "^8.51.0"
     }
   },
   "publishConfig": {
