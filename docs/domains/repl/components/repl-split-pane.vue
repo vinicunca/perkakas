@@ -55,7 +55,7 @@ function dragEnd() {
     @mouseleave="dragEnd"
   >
     <div
-      class="relative border-r border-$vd-c-divider"
+      class="flex flex-col relative border-r border-$vd-c-divider"
       :class="{
         'pointer-events-none': state.dragging,
       }"
@@ -70,7 +70,7 @@ function dragEnd() {
     </div>
 
     <div
-      class="relative"
+      class="flex flex-col relative"
       :class="{
         'pointer-events-none': state.dragging,
       }"
