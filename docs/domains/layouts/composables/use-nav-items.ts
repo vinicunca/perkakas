@@ -1,13 +1,17 @@
 export function useNavItems() {
   const navItems = [
-    // {
-    //   title: 'User Guide',
-    //   _path: '/user-guide',
-    // },
-    // {
-    //   title: 'Configs',
-    //   _path: '/configs',
-    // },
+    {
+      title: 'Installation',
+      _path: '/installation',
+    },
+    {
+      title: 'Documentation',
+      _path: '/docs',
+    },
+    {
+      title: 'Try Perkakas',
+      _path: '/try-perkakas',
+    },
   ];
 
   const route = useRoute();

@@ -5,11 +5,13 @@ import LayoutBackdrop from './layout-backdrop.vue';
 import LayoutHeader from '~~/domains/layouts/components/layout-header.vue';
 import LayoutMobileNav from '~~/domains/layouts/components/layout-mobile-nav.vue';
 import LayoutSidebar from '~~/domains/layouts/components/layout-sidebar.vue';
-import LayoutOutlineDropdown from '~~/domains/layouts/components/layout-outline-dropdown.vue';
-import LayoutAside from '~~/domains/layouts/components/layout-aside.vue';
 import LayoutFooter from '~~/domains/layouts/components/layout-footer.vue';
 
 const { isSidebarOpen, openSidebar, closeSidebar } = useNav();
+
+const route = useRoute();
+
+const isRepl = computed(() => route.path === '/try-perkakas');
 </script>
 
 <template>
@@ -27,10 +29,19 @@ const { isSidebarOpen, openSidebar, closeSidebar } = useNav();
     />
 
     <LayoutSidebar
+      v-if="!isRepl"
       :is-open="isSidebarOpen"
     />
 
     <div
+      v-if="isRepl"
+      class="w-full shrink-0 grow-1 flex flex-col lg:(pt-$vd-nav-height)"
+    >
+      <slot />
+    </div>
+
+    <div
+      v-else
       class="w-full shrink-0 grow-1 2xl:(pl-[calc((100vw-var(--vd-layout-max-w))/2+var(--vd-sidebar-w))] pr-[calc((100vw-var(--vd-layout-max-w))/2)]) lg:(pl-$vd-sidebar-w pt-$vd-nav-height)"
     >
       <div class="w-full px-6 pb-24 pt-8 lg:(px-8 pb-0 pt-8) md:(px-8 pb-32 pt-12)">

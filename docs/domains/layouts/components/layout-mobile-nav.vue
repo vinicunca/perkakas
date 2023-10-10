@@ -1,8 +1,6 @@
 <script lang="ts" setup>
 import { useWindowScroll } from '@vueuse/core';
 
-import LayoutMobileNavDropdown from './layout-mobile-nav-dropdown.vue';
-
 defineProps<{
   isOpen: boolean;
 }>();
@@ -45,8 +43,6 @@ const classes = computed(() => ({
         Menu
       </span>
     </button>
-
-    <LayoutMobileNavDropdown :nav-height="navHeight" />
   </div>
 </template>
 
