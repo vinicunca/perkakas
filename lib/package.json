@@ -1,7 +1,7 @@
 {
   "name": "@vinicunca/perkakas",
   "type": "module",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Utility for JavaScript and Typescript.",
   "author": {
     "name": "praburangki",
@@ -27,8 +27,8 @@
   ],
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.cjs.js"
     }
   },
   "main": "./dist/index.js",
