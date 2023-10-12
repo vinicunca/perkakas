@@ -18,10 +18,10 @@
  * @category Object
  */
 
-import { IterableContainer } from '../utils/types';
+import type { IterableContainer } from '../utils/types';
 
 export function keys(
-  source: Record<PropertyKey, unknown> | ArrayLike<unknown>
+  source: Record<PropertyKey, unknown> | ArrayLike<unknown>,
 ): Array<string> {
   return Object.keys(source);
 }
@@ -38,18 +38,18 @@ type ArrayKeys<T extends IterableContainer> = {
       // Object.keys always returns strings, even for arrays.
       `${IsIndexAfterSpread<T, Index> extends true ? number : Index}`
     : // Index is typed as a symbol, this can't happen, but we need to guard
-      // against it for typescript.
-      never;
+  // against it for typescript.
+    never;
 };
 
 type IsIndexAfterSpread<
   T extends IterableContainer,
-  Index extends string | number
+  Index extends string | number,
 > = IndicesAfterSpread<T> extends never
   ? false
   : Index extends `${IndicesAfterSpread<T>}`
-  ? true
-  : false;
+    ? true
+    : false;
 
 // Find the index of the tuple where a spread item is located, and return all
 // indices in the tuple which are located after it. The tuple could be prefixed
@@ -60,14 +60,14 @@ type IndicesAfterSpread<
   T extends ReadonlyArray<unknown> | [],
   // We use this type to count how many items we consumed, it's just a pseudo-
   // element that is used for its length.
-  Iterations extends ReadonlyArray<unknown> = []
+  Iterations extends ReadonlyArray<unknown> = [],
 > = T[number] extends never
   ? never
   : T extends readonly [unknown, ...infer Tail]
-  ? IndicesAfterSpread<Tail, [unknown, ...Iterations]>
-  : T extends readonly [...infer Head, unknown]
-  ? IndicesAfterSpread<Head, [unknown, ...Iterations]> | Iterations['length']
-  : Iterations['length'];
+    ? IndicesAfterSpread<Tail, [unknown, ...Iterations]>
+    : T extends readonly [...infer Head, unknown]
+      ? IndicesAfterSpread<Head, [unknown, ...Iterations]> | Iterations['length']
+      : Iterations['length'];
 
 type ObjectKeys<T> = T extends Record<PropertyKey, never>
   ? []

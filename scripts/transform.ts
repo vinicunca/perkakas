@@ -9,9 +9,9 @@ import {
   format as prettierFormat,
 } from 'prettier';
 import invariant from 'tiny-invariant';
-import { type SetRequired } from 'type-fest';
+import type { SetRequired } from 'type-fest';
 import { type JSONOutput, ReflectionKind } from 'typedoc';
-import { isDefined, isEmpty, toKebabCase } from '@vinicunca/perkakas';
+import { groupBy, isDefined, isEmpty, toKebabCase } from '@vinicunca/perkakas';
 
 const PRETTIER_OPTIONS = {
   parser: 'typescript',
@@ -30,7 +30,7 @@ main()
   });
 
 async function main(): Promise<void> {
-  const jsonData = await fs.readFile('docs/build/out.json', 'utf8');
+  const jsonData = await fs.readFile('scripts/out.json', 'utf8');
   const data = JSON.parse(jsonData) as unknown as JSONOutput.ProjectReflection;
 
   const output = await transformProject(data);
@@ -39,6 +39,7 @@ async function main(): Promise<void> {
   await fs.writeFile('docs/build/data.json', jsonOutput);
 
   await generateDocFiles(output);
+  await generateNavItems(output);
 }
 
 async function transformProject(project: JSONOutput.ProjectReflection) {
@@ -260,11 +261,12 @@ function createCategoriesLookup(
   return result;
 }
 
-async function generateDocFiles(inputs: Awaited<ReturnType<typeof transformProject>>) {
+type OutputResult = Awaited<ReturnType<typeof transformProject>>;
+
+async function generateDocFiles(inputs: OutputResult) {
   const promises: any[] = [];
 
-  // for (let idx = 0; idx < inputs.length; idx++) {
-  for (let idx = 0; idx < inputs.slice(0, 1).length; idx++) {
+  for (let idx = 0; idx < inputs.length; idx++) {
     const input = inputs[idx]!;
 
     const methodContent = input.methods.map((method) => {
@@ -288,8 +290,25 @@ ${input.description ?? ''}
 
 ${methodContent.join('\n')}`;
 
-    promises.push(fs.writeFile(`docs/content/${idx + 1}.${toKebabCase(input.name)}.md`, content));
+    promises.push(fs.writeFile(`docs/content/docs/${idx + 1}.${toKebabCase(input.name)}.md`, content));
   }
 
   await Promise.all(promises);
+}
+
+async function generateNavItems(inputs: OutputResult) {
+  const categories = groupBy(inputs, (input) => input.category);
+  const navs: any[] = [];
+
+  for (const [name, value] of Object.entries(categories)) {
+    navs.push({
+      title: name,
+      children: value.map((item) => ({
+        title: item.name,
+        _path: `/docs/${toKebabCase(item.name)}`,
+      })),
+    });
+  }
+
+  fs.writeFile('docs/data/nav.json', JSON.stringify(navs, null, 2));
 }

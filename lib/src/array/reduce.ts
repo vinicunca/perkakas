@@ -2,7 +2,7 @@ import { purry } from '../function';
 
 /**
  * Calls the specified callback function for all the elements in an array. The return value of the callback function is the accumulated result, and is provided as an argument in the next call to the callback function.
- * @param array the array to reduce
+ * @param items the array to reduce
  * @param fn the callback function
  * @param initialValue the initial value to use as an accumulator value in the callback function
  * @signature
@@ -39,8 +39,8 @@ export function reduce<T, K>(
   initialValue: K
 ): (items: ReadonlyArray<T>) => K;
 
-export function reduce() {
-  return purry(_reduce(false), arguments);
+export function reduce(...args: any[]) {
+  return purry(_reduce(false), args);
 }
 
 function _reduce(indexed: boolean) {
@@ -66,7 +66,7 @@ export namespace reduce {
     fn: (acc: K, item: T, index: number, items: Array<T>) => K,
     initialValue: K
   ): (array: ReadonlyArray<T>) => K;
-  export function indexed() {
-    return purry(_reduce(true), arguments);
+  export function indexed(...args: any[]) {
+    return purry(_reduce(true), args);
   }
 }

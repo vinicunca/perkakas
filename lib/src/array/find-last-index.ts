@@ -1,4 +1,4 @@
-import { type Pred, type PredIndexed, type PredIndexedOptional } from '../utils/types';
+import type { Pred, PredIndexed, PredIndexedOptional } from '../utils/types';
 import { purry } from '../function';
 
 /**
@@ -23,7 +23,6 @@ export function findLastIndex<T>(
 
 /**
  * Returns the index of the last element in the array where predicate is true, and -1 otherwise.
- * @param array the array
  * @param fn the predicate
  * @signature
  *    P.findLastIndex(fn)(items)
@@ -46,8 +45,8 @@ export function findLastIndex<T>(
   fn: Pred<T, boolean>
 ): (array: ReadonlyArray<T>) => number;
 
-export function findLastIndex() {
-  return purry(_findLastIndex(false), arguments);
+export function findLastIndex(...args: any[]) {
+  return purry(_findLastIndex(false), args);
 }
 
 function _findLastIndex(indexed: boolean) {
@@ -71,7 +70,7 @@ export namespace findLastIndex {
     fn: PredIndexed<T, boolean>
   ): (array: ReadonlyArray<T>) => number;
 
-  export function indexed() {
-    return purry(_findLastIndex(true), arguments);
+  export function indexed(...args: any[]) {
+    return purry(_findLastIndex(true), args);
   }
 }

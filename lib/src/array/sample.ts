@@ -1,4 +1,4 @@
-import { type IterableContainer } from '../utils/types';
+import type { IterableContainer } from '../utils/types';
 import { purry } from '../function';
 
 type Sampled<T extends IterableContainer, N extends number> =
@@ -57,7 +57,7 @@ type SampledLiteral<
  * If you need to get a shuffled response you can pipe the shuffle function
  * after this one.
  *
- * @param array the array
+ * @param data the array
  * @param sampleSize the number of elements to take
  * @signature
  *    P.sample(array, sampleSize)
@@ -84,7 +84,6 @@ export function sample<T extends IterableContainer, N extends number = number>(
  * If you need to get a shuffled response you can pipe the shuffle function
  * after this one.
  *
- * @param array the array
  * @param sampleSize the number of elements to take
  * @signature
  *    P.sample(sampleSize)(array)

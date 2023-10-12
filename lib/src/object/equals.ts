@@ -24,7 +24,6 @@ export function equals(a: any, b: any): boolean;
  * Returns true if its arguments are equivalent, false otherwise.
  * NOTE: Doesn't handle cyclical data structures.
  * @param a the first object to compare
- * @param b the second object to compare
  * @signature
  *    P.equals(b)(a)
  * @example
@@ -36,8 +35,8 @@ export function equals(a: any, b: any): boolean;
  */
 export function equals(a: any): (b: any) => boolean;
 
-export function equals() {
-  return purry(_equals, arguments);
+export function equals(...args: any[]) {
+  return purry(_equals, args);
 }
 
 function _equals(a: any, b: any) {
@@ -110,5 +109,6 @@ function _equals(a: any, b: any) {
     return true;
   }
 
+  // eslint-disable-next-line no-self-compare
   return a !== a && b !== b;
 }

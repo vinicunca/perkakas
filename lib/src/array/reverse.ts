@@ -27,7 +27,6 @@ export function reverse<T extends ReadonlyArray<unknown>>(array: T): Reverse<T>;
 
 /**
  * Reverses array.
- * @param array the array
  * @signature
  *    P.reverse()(array);
  * @example
@@ -39,8 +38,8 @@ export function reverse<T extends ReadonlyArray<unknown>>(): (
   array: T
 ) => Reverse<T>;
 
-export function reverse() {
-  return purry(_reverse, arguments);
+export function reverse(...args: any[]) {
+  return purry(_reverse, args);
 }
 
 function _reverse(array: Array<any>) {

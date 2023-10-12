@@ -1,4 +1,4 @@
-import { type PredIndexed, type PredIndexedOptional } from '../utils/types';
+import type { PredIndexed, PredIndexedOptional } from '../utils/types';
 import { purry } from '../function';
 
 function _meanBy(indexed: boolean) {
@@ -58,8 +58,8 @@ export function meanBy<T>(
   fn: (item: T) => number
 ): number;
 
-export function meanBy() {
-  return purry(_meanBy(false), arguments);
+export function meanBy(...args: any[]) {
+  return purry(_meanBy(false), args);
 }
 
 export namespace meanBy {
@@ -72,7 +72,7 @@ export namespace meanBy {
     fn: PredIndexed<T, number>
   ): (array: ReadonlyArray<T>) => number;
 
-  export function indexed() {
-    return purry(_meanBy(true), arguments);
+  export function indexed(...args: any[]) {
+    return purry(_meanBy(true), args);
   }
 }

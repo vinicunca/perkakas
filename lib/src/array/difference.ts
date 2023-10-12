@@ -38,8 +38,8 @@ export function difference<T, K>(
   other: ReadonlyArray<T>
 ): (array: ReadonlyArray<K>) => Array<T>;
 
-export function difference() {
-  return purry(_difference, arguments, difference.lazy);
+export function difference(...args: any[]) {
+  return purry(_difference, args, difference.lazy);
 }
 
 function _difference<T>(array: Array<T>, other: Array<T>) {

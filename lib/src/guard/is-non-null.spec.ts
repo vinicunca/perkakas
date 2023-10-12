@@ -18,7 +18,7 @@ describe('isNonNull', () => {
       | number
       | Promise<number>
       | undefined
-      >(data,
+        >(data,
         );
     }
   });
@@ -47,7 +47,7 @@ describe('isNonNull', () => {
     | Promise<number>
     | undefined
     >
-    >(data,
+      >(data,
       );
   });
 });

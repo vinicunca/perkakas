@@ -1,4 +1,4 @@
-import { type IterableContainer } from '../utils/types';
+import type { IterableContainer } from '../utils/types';
 
 type Entry<Key extends PropertyKey = PropertyKey, Value = unknown> = readonly [
   key: Key,

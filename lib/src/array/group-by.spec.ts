@@ -1,5 +1,5 @@
 import { assertType, describe, expect, expectTypeOf, it } from 'vitest';
-import { type NonEmptyArray } from '../utils/types';
+import type { NonEmptyArray } from '../utils/types';
 import { pipe } from '../function';
 import { groupBy } from './group-by';
 

@@ -17,7 +17,7 @@ describe('isDefined', () => {
       | Error
       | number
       | Promise<number>
-      >(data,
+        >(data,
         );
     }
   });
@@ -45,7 +45,7 @@ describe('isDefined', () => {
     | Error
     | Promise<number>
     >
-    >(data,
+      >(data,
       );
   });
 });
@@ -66,7 +66,7 @@ describe('strict', () => {
       | number
       | Promise<number>
       | null
-      >(data,
+        >(data,
         );
     }
   });
@@ -95,7 +95,7 @@ describe('strict', () => {
     | Promise<number>
     | null
     >
-    >(data,
+      >(data,
       );
   });
 });

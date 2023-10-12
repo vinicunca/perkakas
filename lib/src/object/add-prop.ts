@@ -35,7 +35,7 @@ export function addProp<
   V,
 >(prop: K, value: V): (obj: T) => T & { [x in K]: V };
 
-export function addProp(...args: IArguments[]): any {
+export function addProp(...args: any[]): any {
   return purry(_addProp, args);
 }
 

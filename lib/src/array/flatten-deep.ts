@@ -1,4 +1,4 @@
-import { type LazyResult } from '../utils/reduce-lazy';
+import type { LazyResult } from '../utils/reduce-lazy';
 import { _reduceLazy } from '../utils/reduce-lazy';
 import { purry } from '../function';
 
@@ -27,8 +27,8 @@ export function flattenDeep<T>(): (
   items: ReadonlyArray<T>
 ) => Array<FlattenDeep<T>>;
 
-export function flattenDeep() {
-  return purry(_flattenDeep, arguments, flattenDeep.lazy);
+export function flattenDeep(...args: any[]) {
+  return purry(_flattenDeep, args, flattenDeep.lazy);
 }
 
 function _flattenDeep<T>(items: Array<T>): Array<FlattenDeep<T>> {

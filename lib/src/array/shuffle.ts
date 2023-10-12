@@ -23,8 +23,8 @@ export function shuffle<T>(items: ReadonlyArray<T>): Array<T>;
  */
 export function shuffle<T>(): (items: ReadonlyArray<T>) => Array<T>;
 
-export function shuffle() {
-  return purry(_shuffle, arguments);
+export function shuffle(...args: any[]) {
+  return purry(_shuffle, args);
 }
 
 function _shuffle<T>(items: ReadonlyArray<T>): Array<T> {

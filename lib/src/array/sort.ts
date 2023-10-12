@@ -1,4 +1,4 @@
-import { type IterableContainer } from '../utils/types';
+import type { IterableContainer } from '../utils/types';
 import { purry } from '../function';
 
 /**
@@ -47,8 +47,8 @@ export function sort<T>(
   cmp: (a: T, b: T) => number
 ): (items: ReadonlyArray<T>) => Array<T>;
 
-export function sort() {
-  return purry(_sort, arguments);
+export function sort(...args: any[]) {
+  return purry(_sort, args);
 }
 
 function _sort<T>(items: Array<T>, cmp: (a: T, b: T) => number) {

@@ -1,7 +1,7 @@
-import { type LazyResult } from '../utils/reduce-lazy';
+import type { LazyResult } from '../utils/reduce-lazy';
 import { purry } from '../function';
 import { _reduceLazy } from '../utils/reduce-lazy';
-import { type Pred, type PredIndexed, type PredIndexedOptional } from '../utils/types';
+import type { Pred, PredIndexed, PredIndexedOptional } from '../utils/types';
 import { toLazyIndexed } from '../utils/to-lazy-indexed';
 
 /**
@@ -26,7 +26,6 @@ export function reject<T>(
 
 /**
  * Reject the elements of an array that meet the condition specified in a callback function.
- * @param items The array to reject.
  * @param fn the callback function.
  * @signature
  *    P.reject(array, fn)
@@ -43,8 +42,8 @@ export function reject<T>(
   fn: Pred<T, boolean>
 ): (items: ReadonlyArray<T>) => Array<T>;
 
-export function reject() {
-  return purry(_reject(false), arguments, reject.lazy);
+export function reject(...args: any[]) {
+  return purry(_reject(false), args, reject.lazy);
 }
 
 function _reject(indexed: boolean) {
@@ -84,8 +83,8 @@ export namespace reject {
   export function indexed<T, K>(
     fn: PredIndexed<T, boolean>
   ): (array: ReadonlyArray<T>) => Array<K>;
-  export function indexed() {
-    return purry(_reject(true), arguments, reject.lazyIndexed);
+  export function indexed(...args: any[]) {
+    return purry(_reject(true), args, reject.lazyIndexed);
   }
 
   export const lazy = _lazy(false);

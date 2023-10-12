@@ -1,3 +1,4 @@
+import process from 'node:process';
 import { createResolver } from '@nuxt/kit';
 
 const { resolve } = createResolver(import.meta.url);
@@ -17,10 +18,11 @@ export default defineNuxtConfig({
 
   modules: [
     '@nuxt/devtools',
+    '@nuxtjs/algolia',
     '@nuxtjs/color-mode',
     '@nuxt/content',
     '@unocss/nuxt',
-    // 'nuxt-gtag',
+    'nuxt-gtag',
     resolve('./app/content-post-process'),
   ],
 
@@ -29,6 +31,20 @@ export default defineNuxtConfig({
     '~~/designs/styles/index.css',
     '~~/designs/styles/docs.css',
   ],
+
+  algolia: {
+    apiKey: process.env.ALGOLIA_SEARCH_API_KEY,
+    applicationId: process.env.ALGOLIA_APPLICATION_ID,
+    // DocSearch key is used to configure DocSearch extension.
+    docSearch: {
+      indexName: 'perkakas-vinicunca',
+    },
+
+    crawler: {
+      indexName: 'perkakas-vinicunca',
+      apiKey: process.env.ALGOLIA_CRAWLER_API_KEY,
+    },
+  },
 
   colorMode: {
     classSuffix: '',

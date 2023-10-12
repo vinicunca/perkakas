@@ -1,4 +1,4 @@
-import { type PredIndexed, type PredIndexedOptional } from '../utils/types';
+import type { PredIndexed, PredIndexedOptional } from '../utils/types';
 import { purry } from '../function';
 
 function _sumBy(indexed: boolean) {
@@ -54,8 +54,8 @@ export function sumBy<T>(
   fn: (item: T) => number
 ): number;
 
-export function sumBy() {
-  return purry(_sumBy(false), arguments);
+export function sumBy(...args: any[]) {
+  return purry(_sumBy(false), args);
 }
 
 export namespace sumBy {
@@ -68,7 +68,7 @@ export namespace sumBy {
     fn: PredIndexed<T, number>
   ): (array: ReadonlyArray<T>) => number;
 
-  export function indexed() {
-    return purry(_sumBy(true), arguments);
+  export function indexed(...args: any[]) {
+    return purry(_sumBy(true), args);
   }
 }

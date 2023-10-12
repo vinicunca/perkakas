@@ -1,4 +1,4 @@
-import { type Pred, type PredIndexed, type PredIndexedOptional } from '../utils/types';
+import type { Pred, PredIndexed, PredIndexedOptional } from '../utils/types';
 import { toLazyIndexed } from '../utils/to-lazy-indexed';
 import { toSingle } from '../utils/to-single';
 import { purry } from '../function';
@@ -19,7 +19,7 @@ import { purry } from '../function';
  * @category Array
  */
 export function find<T>(
-  array: ReadonlyArray<T>,
+  items: ReadonlyArray<T>,
   fn: Pred<T, boolean>
 ): T | undefined;
 
@@ -47,8 +47,8 @@ export function find<T = never>(
   fn: Pred<T, boolean>
 ): (array: ReadonlyArray<T>) => T | undefined;
 
-export function find() {
-  return purry(_find(false), arguments, find.lazy);
+export function find(...args: any[]) {
+  return purry(_find(false), args, find.lazy);
 }
 
 function _find(indexed: boolean) {
@@ -82,8 +82,8 @@ export namespace find {
   export function indexed<T>(
     fn: PredIndexed<T, boolean>
   ): (array: ReadonlyArray<T>) => T | undefined;
-  export function indexed() {
-    return purry(_find(true), arguments, find.lazyIndexed);
+  export function indexed(...args: any[]) {
+    return purry(_find(true), args, find.lazyIndexed);
   }
 
   export const lazy = toSingle(_lazy(false));

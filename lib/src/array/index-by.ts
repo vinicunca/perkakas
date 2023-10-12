@@ -1,4 +1,4 @@
-import { type PredIndexed, type PredIndexedOptional } from '../utils/types';
+import type { PredIndexed, PredIndexedOptional } from '../utils/types';
 import { purry } from '../function';
 
 /**
@@ -20,7 +20,6 @@ export function indexBy<T>(
 
 /**
  * Converts a list of objects into an object indexing the objects by the given key.
- * @param array the array
  * @param fn the indexing function
  * @signature
  *    P.indexBy(fn)(array)
@@ -37,8 +36,8 @@ export function indexBy<T>(
   fn: (item: T) => any
 ): (array: ReadonlyArray<T>) => Record<string, T>;
 
-export function indexBy() {
-  return purry(_indexBy(false), arguments);
+export function indexBy(...args: any[]) {
+  return purry(_indexBy(false), args);
 }
 
 function _indexBy(indexed: boolean) {
@@ -60,7 +59,7 @@ export namespace indexBy {
   export function indexed<T>(
     fn: PredIndexed<T, any>
   ): (array: ReadonlyArray<T>) => Record<string, T>;
-  export function indexed() {
-    return purry(_indexBy(true), arguments);
+  export function indexed(...args: any[]) {
+    return purry(_indexBy(true), args);
   }
 }

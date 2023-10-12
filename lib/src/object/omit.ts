@@ -19,10 +19,9 @@ export function omit<T extends object, K extends keyof T>(
 
 /**
  * Returns a partial copy of an object omitting the keys specified.
- * @param data the object
  * @param propNames the property names
  * @signature
- *    P.omit(names)(obj);
+ *    P.omit(propNames)(obj);
  * @example
  *    P.pipe({ a: 1, b: 2, c: 3, d: 4 }, P.omit(['a', 'd'])) // => { b: 2, c: 3 }
  * @dataLast
@@ -32,8 +31,8 @@ export function omit<K extends PropertyKey>(
   propNames: ReadonlyArray<K>
 ): <T extends object>(data: T) => Omit<T, K>;
 
-export function omit() {
-  return purry(_omit, arguments);
+export function omit(...args: any[]) {
+  return purry(_omit, args);
 }
 
 function _omit<T extends object, K extends keyof T>(
@@ -47,7 +46,6 @@ function _omit<T extends object, K extends keyof T>(
   if (propNames.length === 1) {
     const [propName] = propNames;
     const {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars -- use destructuring to remove a single key, letting JS optimize here...
       [propName]: omitted,
       ...remaining
     } = data;

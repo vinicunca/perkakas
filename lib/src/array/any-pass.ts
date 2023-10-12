@@ -38,8 +38,8 @@ export function anyPass<T>(
   fns: ReadonlyArray<(data: T) => boolean>
 ): (data: T) => boolean;
 
-export function anyPass() {
-  return purry(_anyPass, arguments);
+export function anyPass(...args: any[]) {
+  return purry(_anyPass, args);
 }
 
 function _anyPass(data: any, fns: Array<(data: any) => boolean>) {

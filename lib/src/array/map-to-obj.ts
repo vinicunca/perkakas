@@ -1,4 +1,4 @@
-import { type PredIndexedOptional } from '../utils/types';
+import type { PredIndexedOptional } from '../utils/types';
 import { purry } from '../function';
 
 /**
@@ -45,8 +45,8 @@ export function mapToObj<T, K extends keyof any, V>(
   fn: (element: T) => [K, V]
 ): (array: ReadonlyArray<T>) => Record<K, V>;
 
-export function mapToObj() {
-  return purry(_mapToObj(false), arguments);
+export function mapToObj(...args: any[]) {
+  return purry(_mapToObj(false), args);
 }
 
 function _mapToObj(indexed: boolean) {
@@ -67,7 +67,7 @@ export namespace mapToObj {
   export function indexed<T, K extends keyof any, V>(
     fn: (element: T, index: number, array: ReadonlyArray<T>) => [K, V]
   ): (array: ReadonlyArray<T>) => Record<K, V>;
-  export function indexed() {
-    return purry(_mapToObj(true), arguments);
+  export function indexed(...args: any[]) {
+    return purry(_mapToObj(true), args);
   }
 }

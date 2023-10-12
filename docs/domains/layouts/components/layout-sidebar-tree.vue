@@ -1,22 +1,9 @@
 <script setup lang="ts">
 import { sleep } from '@vinicunca/perkakas';
-
-import { type INavItem } from '~/typings';
 import CoreList from '~/domains/core/components/list/core-list.vue';
-
-const { navigation } = useContent();
+import navJson from '~~/data/nav.json';
 
 const opened = ref<string[]>([]);
-
-const navItems = computed(() => (navigation.value as INavItem[]).map((navItem) => {
-  return {
-    title: navItem.title,
-    value: navItem.title,
-    icon: navItem.icon,
-    children: navItem.children,
-    _path: navItem.children ? undefined : navItem._path,
-  };
-}));
 
 onMounted(async () => {
   await sleep(1000);
@@ -40,6 +27,6 @@ onMounted(async () => {
     id="app-sidebar"
     v-model:opened="opened"
     class="mt-3"
-    :nav-items="navItems"
+    :nav-items="navJson"
   />
 </template>

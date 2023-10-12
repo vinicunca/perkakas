@@ -1,5 +1,5 @@
-import { splitAt } from './split-at';
 import { purry } from '../function';
+import { splitAt } from './split-at';
 
 /**
  * Splits a given array at the first index where the given predicate returns true.
@@ -31,8 +31,8 @@ export function splitWhen<T>(
   fn: (item: T) => boolean
 ): (array: ReadonlyArray<T>) => [Array<T>, Array<T>];
 
-export function splitWhen() {
-  return purry(_splitWhen, arguments);
+export function splitWhen(...args: any[]) {
+  return purry(_splitWhen, args);
 }
 
 function _splitWhen<T>(array: Array<T>, fn: (item: T) => boolean) {

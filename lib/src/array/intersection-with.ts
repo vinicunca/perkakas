@@ -1,4 +1,4 @@
-import { type LazyResult } from '../utils/reduce-lazy';
+import type { LazyResult } from '../utils/reduce-lazy';
 import { _reduceLazy } from '../utils/reduce-lazy';
 import { purry } from '../function';
 
@@ -59,8 +59,8 @@ export function intersectionWith<TFirst, TSecond>(
   comparator: Comparator<TFirst, TSecond>
 ): (array: ReadonlyArray<TFirst>) => Array<TFirst>;
 
-export function intersectionWith() {
-  return purry(_intersectionWith, arguments, intersectionWith.lazy);
+export function intersectionWith(...args: any[]) {
+  return purry(_intersectionWith, args, intersectionWith.lazy);
 }
 
 function _intersectionWith<TFirst, TSecond>(

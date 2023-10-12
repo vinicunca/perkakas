@@ -1,4 +1,4 @@
-import { type IterableContainer, type NonEmptyArray } from '../utils/types';
+import type { IterableContainer, NonEmptyArray } from '../utils/types';
 import { purry } from '../function';
 
 const ALL_DIRECTIONS = ['asc', 'desc'] as const;
@@ -27,8 +27,7 @@ const COMPARATOR = {
  * If the input array is more complex (non-empty array, tuple, etc...) use the
  * strict mode to maintain it's shape.
  *
- * @param sortRule main sort rule
- * @param additionalSortRules subsequent sort rules (these are only relevant when two items are equal based on the previous sort rule)
+ * @param sortRules main sort rule
  * @signature
  *    P.sortBy(sortRule, ...additionalSortRules)(array)
  *    P.sortBy.strict(sortRule, ...additionalSortRules)(array)
@@ -59,8 +58,7 @@ export function sortBy<T>(
  * strict mode to maintain it's shape.
  *
  * @param array the array to sort
- * @param sortRule main sort rule
- * @param additionalSortRules subsequent sort rules (these are only relevant when two items are equal based on the previous sort rule)
+ * @param sortRules main sort rule
  * @signature
  *    P.sortBy(array, sortRule, ...additionalSortRules)
  *    P.sortBy.strict(array, sortRule, ...additionalSortRules)
@@ -106,14 +104,14 @@ export function sortBy<T>(
   ...sortRules: ReadonlyArray<SortRule<T>>
 ): unknown {
   const args = isSortRule(arrayOrSortRule)
-    ? // *data-last invocation*: put all sort rules into a single array to be
-      // passed as the first param.
-      [[arrayOrSortRule, ...sortRules]]
-    : // *data-first invocation*: put the arrayOrSort (which is array now) as
-      // the first param, and all the sorts (as an array) into the second param.
-      // `purry` would pick the right "flavour" based on the length of the
-      // params tuple.
-      [arrayOrSortRule, sortRules];
+    // *data-last invocation*: put all sort rules into a single array to be passed as the first param.
+    ? [[arrayOrSortRule, ...sortRules]]
+    /**
+     * data-first invocation*: put the arrayOrSort (which is array now) as
+     * the first param, and all the sorts (as an array) into the second param.
+     * `purry` would pick the right "flavour" based on the length of the params tuple.
+     */
+    : [arrayOrSortRule, sortRules];
 
   return purry(_sortBy, args);
 }

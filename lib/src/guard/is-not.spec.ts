@@ -23,7 +23,7 @@ describe('isNot', () => {
       | null
       | undefined
       // TODO: fix this weird whitespace in @vinicunca/eslint-config
-      >(data,
+        >(data,
         );
     }
   });
@@ -50,7 +50,7 @@ describe('isNot', () => {
     | Error
     | number
     >
-    >(result,
+      >(result,
       );
   });
 });

@@ -4,6 +4,8 @@ import { purry } from '../function';
  * Clamp the given value within the inclusive min and max bounds.
  * @param value the number
  * @param limits the bounds limits
+ * @param limits.min the minimal bounds limits
+ * @param limits.max the maximal bounds limits
  * @signature
  *    P.clamp(value, { min, max });
  * @example
@@ -20,8 +22,9 @@ export function clamp(
 
 /**
  * Clamp the given value within the inclusive min and max bounds.
- * @param value the number
  * @param limits the bounds limits
+ * @param limits.min the minimal bounds limits
+ * @param limits.max the maximal bounds limits
  * @signature
  *    P.clamp({ min, max })(value);
  * @example
@@ -36,8 +39,8 @@ export function clamp(limits: {
   max?: number;
 }): (value: number) => number;
 
-export function clamp() {
-  return purry(_clamp, arguments);
+export function clamp(...args: any[]) {
+  return purry(_clamp, args);
 }
 
 function _clamp(value: number, limits: { min?: number; max?: number }) {

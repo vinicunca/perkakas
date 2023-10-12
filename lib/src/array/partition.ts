@@ -1,4 +1,4 @@
-import { type PredIndexed, type PredIndexedOptional } from '../utils/types';
+import type { PredIndexed, PredIndexedOptional } from '../utils/types';
 import { purry } from '../function';
 
 /**
@@ -69,8 +69,8 @@ export function partition<T>(
   predicate: (item: T) => boolean
 ): (array: ReadonlyArray<T>) => [Array<T>, Array<T>];
 
-export function partition() {
-  return purry(_partition(false), arguments);
+export function partition(...args: any[]) {
+  return purry(_partition(false), args);
 }
 
 function _partition(indexed: boolean) {
@@ -92,7 +92,7 @@ export namespace partition {
   export function indexed<T>(
     predicate: PredIndexed<T, boolean>
   ): (array: ReadonlyArray<T>) => [Array<T>, Array<T>];
-  export function indexed() {
-    return purry(_partition(true), arguments);
+  export function indexed(...args: any[]) {
+    return purry(_partition(true), args);
   }
 }

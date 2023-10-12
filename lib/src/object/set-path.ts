@@ -1,5 +1,5 @@
-import { type Path, type SupportsValueAtPath, type ValueAtPath } from '../utils/paths';
-import { type Narrow } from '../utils/narrow';
+import type { Path, SupportsValueAtPath, ValueAtPath } from '../utils/paths';
+import type { Narrow } from '../utils/narrow';
 import { purry } from '../function';
 
 /**
@@ -22,11 +22,10 @@ export function setPath<T, TPath extends Array<PropertyKey> & Path<T>>(
 
 /**
  * Sets the value at `path` of `object`. `path` can be an array or a path string.
- * @param obj the target method
  * @param path the property name
  * @param value the value to set
  * @signature
- *    P.setPath(obj, path, value)
+ *    P.setPath(path, value)
  * @example
  *    P.pipe({ a: { b: 1 } }, P.setPath(['a', 'b'], 2)) // { a: { b: 2 } }
  * @dataFirst
@@ -37,8 +36,8 @@ export function setPath<TPath extends Array<PropertyKey>, Value>(
   value: Value
 ): <Obj>(object: SupportsValueAtPath<Obj, TPath, Value>) => Obj;
 
-export function setPath() {
-  return purry(_setPath, arguments);
+export function setPath(...args: any[]) {
+  return purry(_setPath, args);
 }
 
 export function _setPath(

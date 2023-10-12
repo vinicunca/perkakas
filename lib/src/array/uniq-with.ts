@@ -1,4 +1,4 @@
-import { type LazyResult } from '../utils/reduce-lazy';
+import type { LazyResult } from '../utils/reduce-lazy';
 import { purry } from '../function';
 import { _reduceLazy } from '../utils/reduce-lazy';
 import { toLazyIndexed } from '../utils/to-lazy-indexed';
@@ -46,8 +46,8 @@ export function uniqWith<T>(
   isEquals: IsEquals<T>
 ): (array: ReadonlyArray<T>) => Array<T>;
 
-export function uniqWith() {
-  return purry(_uniqWith, arguments, uniqWith.lazy);
+export function uniqWith(...args: any[]) {
+  return purry(_uniqWith, args, uniqWith.lazy);
 }
 
 function _uniqWith<T>(array: Array<T>, isEquals: IsEquals<T>) {

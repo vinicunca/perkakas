@@ -108,7 +108,6 @@ export function pathOr<
 
 /**
  * Gets the value at `path` of `object`. If the resolved value is `undefined`, the `defaultValue` is returned in its place.
- * @param object the target object
  * @param path the path of the property to get
  * @param defaultValue the default value
  * @signature P.pathOr(array, defaultValue)(object)
@@ -142,8 +141,8 @@ export function pathOr<
   defaultValue: PathValue3<T, A, B, C>
 ): (object: T) => PathValue3<T, A, B, C>;
 
-export function pathOr() {
-  return purry(_pathOr, arguments);
+export function pathOr(...args: any[]) {
+  return purry(_pathOr, args);
 }
 
 function _pathOr(object: any, path: Array<any>, defaultValue: any): any {

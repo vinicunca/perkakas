@@ -28,8 +28,8 @@ export function pick<K extends PropertyKey>(
   names: ReadonlyArray<K>
 ): <T extends Record<PropertyKey, any>>(object: T) => Pick<T, K>;
 
-export function pick() {
-  return purry(_pick, arguments);
+export function pick(...args: any[]) {
+  return purry(_pick, args);
 }
 
 function _pick(object: any, names: Array<string>) {

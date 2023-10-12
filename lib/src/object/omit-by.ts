@@ -28,8 +28,8 @@ export function omitBy<T>(
   fn: <K extends keyof T>(value: T[K], key: K) => boolean
 ): (object: T) => T extends Record<keyof T, T[keyof T]> ? T : Partial<T>;
 
-export function omitBy() {
-  return purry(_omitBy, arguments);
+export function omitBy(...args: any[]) {
+  return purry(_omitBy, args);
 }
 
 function _omitBy(object: any, fn: (value: any, key: any) => boolean) {

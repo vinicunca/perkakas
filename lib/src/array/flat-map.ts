@@ -20,7 +20,6 @@ export function flatMap<T, K>(
 
 /**
  * Map each element of an array using a defined callback function and flatten the mapped result.
- * @param array The array to map.
  * @param fn The function mapper.
  * @signature
  *    P.flatMap(fn)(array)
@@ -34,8 +33,8 @@ export function flatMap<T, K>(
   fn: (input: T) => K | Array<K>
 ): (array: ReadonlyArray<T>) => Array<K>;
 
-export function flatMap() {
-  return purry(_flatMap, arguments, flatMap.lazy);
+export function flatMap(...args: any[]) {
+  return purry(_flatMap, args, flatMap.lazy);
 }
 
 function _flatMap<T, K>(array: Array<T>, fn: (input: T) => Array<K>): Array<K> {

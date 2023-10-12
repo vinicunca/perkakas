@@ -4,6 +4,7 @@ import { useWindowScroll } from '@vueuse/core';
 import LayoutNavbarMenu from './layout-navbar-menu.vue';
 import LayoutSwitchTheme from './layout-switch-theme.vue';
 import LayoutHamburger from './layout-hamburger.vue';
+import LayoutNavbarSearch from './layout-navbar-search.vue';
 
 defineProps<{
   isDrawerOpen: boolean;
@@ -25,10 +26,6 @@ onMounted(() => {
 watch(y, (value) => {
   yValue.value = value;
 });
-
-const route = useRoute();
-
-const isRepl = computed(() => route.path === '/try-perkakas');
 </script>
 
 <template>
@@ -46,10 +43,7 @@ const isRepl = computed(() => route.path === '/try-perkakas');
         <NuxtLink
           to="/"
           aria-label="Home"
-          class="h-$vd-nav-height w-full flex items-center border-b border-transparent text-base font-600"
-          :class="{
-            'lg:(border-$vd-c-divider)': !isRepl,
-          }"
+          class="h-$vd-nav-height w-full flex items-center border-b border-transparent text-base font-600 lg:(border-$vd-c-divider)"
         >
           Perkakas
         </NuxtLink>
@@ -65,6 +59,8 @@ const isRepl = computed(() => route.path === '/try-perkakas');
             },
           ]"
         >
+          <LayoutNavbarSearch />
+
           <LayoutNavbarMenu />
 
           <div class="hidden before:(ml-2 mr-4 h-6 w-[1px] bg-$vd-c-divider content-empty) md:(flex items-center)">

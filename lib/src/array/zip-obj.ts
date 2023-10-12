@@ -34,8 +34,8 @@ export function zipObj<S>(
   first: ReadonlyArray<F>
 ) => Record<F, S>;
 
-export function zipObj() {
-  return purry(_zipObj, arguments);
+export function zipObj(...args: any[]) {
+  return purry(_zipObj, args);
 }
 
 function _zipObj(

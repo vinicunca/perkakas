@@ -1,4 +1,4 @@
-import { type LazyResult } from '../utils/reduce-lazy';
+import type { LazyResult } from '../utils/reduce-lazy';
 import { purry } from '../function';
 import { _reduceLazy } from '../utils/reduce-lazy';
 
@@ -54,8 +54,8 @@ export function differenceWith<TFirst, TSecond>(
   isEquals: IsEquals<TFirst, TSecond>
 ): (array: ReadonlyArray<TFirst>) => Array<TFirst>;
 
-export function differenceWith() {
-  return purry(_differenceWith, arguments, differenceWith.lazy);
+export function differenceWith(...args: any[]) {
+  return purry(_differenceWith, args, differenceWith.lazy);
 }
 
 function _differenceWith<TFirst, TSecond>(

@@ -1,4 +1,4 @@
-import { type NonEmptyArray, type PredIndexed, type PredIndexedOptional } from '../utils/types';
+import type { NonEmptyArray, PredIndexed, PredIndexedOptional } from '../utils/types';
 import { purry } from '../function';
 
 /**
@@ -29,7 +29,7 @@ export function groupBy<T>(
 
 /**
  * Splits a collection into sets, grouped by the result of running each value through `fn`.
- * @param fn the grouping function
+ * @param args the grouping function
  * @signature
  *    P.groupBy(fn)(array)
  * @example
@@ -38,8 +38,8 @@ export function groupBy<T>(
  * @indexed
  * @category Array
  */
-export function groupBy() {
-  return purry(_groupBy(false), arguments);
+export function groupBy(...args: any[]) {
+  return purry(_groupBy(false), args);
 }
 
 function _groupBy(indexed: boolean) {
@@ -118,8 +118,8 @@ export namespace groupBy {
   export function indexed<T>(
     fn: PredIndexed<T, PropertyKey | undefined>
   ): (array: ReadonlyArray<T>) => Record<string, NonEmptyArray<T>>;
-  export function indexed() {
-    return purry(_groupBy(true), arguments);
+  export function indexed(...args: any[]) {
+    return purry(_groupBy(true), args);
   }
 
   export const strict: Strict = groupBy;

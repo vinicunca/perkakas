@@ -1,5 +1,5 @@
 import { describe, expect, expectTypeOf, it } from 'vitest';
-import { type NonEmptyArray } from '../utils/types';
+import type { NonEmptyArray } from '../utils/types';
 import { sample } from './sample';
 
 describe('at runtime', () => {

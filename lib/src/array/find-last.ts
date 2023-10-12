@@ -1,4 +1,4 @@
-import { type Pred, type PredIndexed, type PredIndexedOptional } from '../utils/types';
+import type { Pred, PredIndexed, PredIndexedOptional } from '../utils/types';
 import { purry } from '../function';
 
 /**
@@ -47,8 +47,8 @@ export function findLast<T = never>(
   fn: Pred<T, boolean>
 ): (array: ReadonlyArray<T>) => T | undefined;
 
-export function findLast() {
-  return purry(_findLast(false), arguments);
+export function findLast(...args: any[]) {
+  return purry(_findLast(false), args);
 }
 
 function _findLast(indexed: boolean) {
@@ -70,7 +70,7 @@ export namespace findLast {
     fn: PredIndexed<T, boolean>
   ): (array: ReadonlyArray<T>) => T | undefined;
 
-  export function indexed() {
-    return purry(_findLast(true), arguments);
+  export function indexed(...args: any[]) {
+    return purry(_findLast(true), args);
   }
 }

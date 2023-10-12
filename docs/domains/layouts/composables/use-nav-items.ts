@@ -8,10 +8,6 @@ export function useNavItems() {
       title: 'Documentation',
       _path: '/docs',
     },
-    {
-      title: 'Try Perkakas',
-      _path: '/try-perkakas',
-    },
   ];
 
   const route = useRoute();

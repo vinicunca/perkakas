@@ -1,4 +1,4 @@
-import { type PredIndexed, type PredIndexedOptional } from '../utils/types';
+import type { PredIndexed, PredIndexedOptional } from '../utils/types';
 import { purry } from '../function';
 
 function _minBy(indexed: boolean) {
@@ -57,8 +57,8 @@ export function minBy<T>(
   fn: (item: T) => number
 ): T | undefined;
 
-export function minBy() {
-  return purry(_minBy(false), arguments);
+export function minBy(...args: any[]) {
+  return purry(_minBy(false), args);
 }
 
 export namespace minBy {
@@ -69,7 +69,7 @@ export namespace minBy {
   export function indexed<T>(
     fn: PredIndexed<T, number>
   ): (array: ReadonlyArray<T>) => T | undefined;
-  export function indexed() {
-    return purry(_minBy(true), arguments);
+  export function indexed(...args: any[]) {
+    return purry(_minBy(true), args);
   }
 }

@@ -1,4 +1,4 @@
-import { type LazyResult } from '../utils/reduce-lazy';
+import type { LazyResult } from '../utils/reduce-lazy';
 import { purry } from '../function';
 import { _reduceLazy } from '../utils/reduce-lazy';
 
@@ -15,13 +15,12 @@ import { _reduceLazy } from '../utils/reduce-lazy';
  * @pipeable
  */
 export function intersection<T>(
-  source: ReadonlyArray<T>,
+  array: ReadonlyArray<T>,
   other: ReadonlyArray<T>
 ): Array<T>;
 
 /**
  * Returns a list of elements that exist in both array.
- * @param array the source array
  * @param other the second array
  * @signature
  *    P.intersection(other)(array)
@@ -35,8 +34,8 @@ export function intersection<T, K>(
   other: ReadonlyArray<T>
 ): (source: ReadonlyArray<K>) => Array<T>;
 
-export function intersection() {
-  return purry(_intersection, arguments, intersection.lazy);
+export function intersection(...args: any[]) {
+  return purry(_intersection, args, intersection.lazy);
 }
 
 function _intersection<T>(array: Array<T>, other: Array<T>) {

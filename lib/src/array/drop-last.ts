@@ -15,7 +15,6 @@ export function dropLast<T>(array: ReadonlyArray<T>, n: number): Array<T>;
 
 /**
  * Removes last `n` elements from the `array`.
- * @param array the target array
  * @param n the number of elements to skip
  * @signature
  *    P.dropLast(n)(array)
@@ -26,8 +25,8 @@ export function dropLast<T>(array: ReadonlyArray<T>, n: number): Array<T>;
  */
 export function dropLast<T>(n: number): (array: ReadonlyArray<T>) => Array<T>;
 
-export function dropLast() {
-  return purry(_dropLast, arguments);
+export function dropLast(...args: any[]) {
+  return purry(_dropLast, args);
 }
 
 function _dropLast<T>(array: Array<T>, n: number) {

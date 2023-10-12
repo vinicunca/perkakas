@@ -1,4 +1,4 @@
-import { type LazyResult } from '../utils/reduce-lazy';
+import type { LazyResult } from '../utils/reduce-lazy';
 import { purry } from '../function';
 import { _reduceLazy } from '../utils/reduce-lazy';
 
@@ -29,8 +29,8 @@ export function take<T>(array: ReadonlyArray<T>, n: number): Array<T>;
  */
 export function take<T>(n: number): (array: ReadonlyArray<T>) => Array<T>;
 
-export function take() {
-  return purry(_take, arguments, take.lazy);
+export function take(...args: any[]) {
+  return purry(_take, args, take.lazy);
 }
 
 function _take<T>(array: Array<T>, n: number) {

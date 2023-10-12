@@ -23,8 +23,8 @@ export function range(start: number, end: number): Array<number>;
  */
 export function range(end: number): (start: number) => Array<number>;
 
-export function range() {
-  return purry(_range, arguments);
+export function range(...args: any[]) {
+  return purry(_range, args);
 }
 
 function _range(start: number, end: number) {
