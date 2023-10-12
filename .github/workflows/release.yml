@@ -21,17 +21,27 @@ jobs:
       - name: Setup
         run: npm i -g pnpm
 
-      - run: pnpm dlx conventional-github-releaser -p angular
-        env:
-          CONVENTIONAL_GITHUB_RELEASER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Install Dependencies
         run: pnpm install
+        env:
+          ALGOLIA_APPLICATION_ID: ${{ secrets.ALGOLIA_APPLICATION_ID }}
+          ALGOLIA_SEARCH_API_KEY: ${{ secrets.ALGOLIA_SEARCH_API_KEY }}
+          ALGOLIA_CRAWLER_API_KEY: ${{ secrets.ALGOLIA_CRAWLER_API_KEY }}
 
-      - name: Build
-        run: pnpm build
+      - name: Generate Changelog
+        run: pnpm dlx changelogithub
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
       - name: Publish to NPM
-        run: pnpm publish --access public --no-git-checks
+        run: pnpm run registry
         env:
           NODE_AUTH_TOKEN: ${{ secrets.VINICUNCA_NPM_TOKEN }}
+
+      - run: pnpm run deploy:docs
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_VINICUNCA_ESLINT }}'
+          channelId: live
+          projectId: vinicunca-eslint
