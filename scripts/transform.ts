@@ -35,9 +35,6 @@ async function main(): Promise<void> {
 
   const output = await transformProject(data);
 
-  const jsonOutput = JSON.stringify(output, null, 2);
-  await fs.writeFile('docs/build/data.json', jsonOutput);
-
   await generateDocFiles(output);
   await generateNavItems(output);
 }
