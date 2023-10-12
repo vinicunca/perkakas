@@ -12,7 +12,7 @@
     "clean": "nuxt cleanup",
     "preview": "nuxt preview",
     "preinstall": "npx only-allow pnpm",
-    "postinstall": "nuxt prepare"
+    "postinstall": "is-ci || nuxt prepare"
   },
   "dependencies": {
     "@docsearch/css": "^3.5.2",
