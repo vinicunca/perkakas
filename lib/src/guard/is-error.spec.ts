@@ -1,8 +1,9 @@
+import { assertType, describe, expect, it } from 'vitest';
 import { typesDataProvider } from '../../test/types-data-provider';
 import { isError } from './is-error';
 
 describe('isError', () => {
-  test('isError: should work as type guard', () => {
+  it('isError: should work as type guard', () => {
     const data = typesDataProvider('error');
     if (isError(data)) {
       expect(data instanceof Error).toEqual(true);
@@ -16,7 +17,7 @@ describe('isError', () => {
       assertType<MyError>(maybeError);
     }
   });
-  test('isError: should work as type guard in filter', () => {
+  it('isError: should work as type guard in filter', () => {
     const data = [
       typesDataProvider('error'),
       typesDataProvider('array'),

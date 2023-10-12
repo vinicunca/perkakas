@@ -1,28 +1,29 @@
-import { findLastIndex } from './find-last-index';
+import { describe, expect, it } from 'vitest';
 import { pipe } from '../function';
+import { findLastIndex } from './find-last-index';
 
 const array = [1, 2, 3, 4];
 
 describe('data first', () => {
-  test('findLastIndex', () => {
+  it('findLastIndex', () => {
     expect(findLastIndex(array, (x) => x % 2 === 1)).toBe(2);
   });
 
-  test('findLastIndex.indexed', () => {
+  it('findLastIndex.indexed', () => {
     expect(findLastIndex.indexed(array, (x) => x % 2 === 1)).toBe(2);
   });
 
-  test('findLast first value', () => {
+  it('findLast first value', () => {
     expect(findLastIndex(array, (x) => x === 1)).toEqual(0);
   });
 
-  test('findLastIndex -1', () => {
+  it('findLastIndex -1', () => {
     expect(findLastIndex(array, (x) => x === 5)).toBe(-1);
   });
 });
 
 describe('data last', () => {
-  test('findLastIndex', () => {
+  it('findLastIndex', () => {
     expect(
       pipe(
         array,
@@ -31,7 +32,7 @@ describe('data last', () => {
     ).toEqual(2);
   });
 
-  test('findLastIndex.indexed', () => {
+  it('findLastIndex.indexed', () => {
     expect(
       pipe(
         array,

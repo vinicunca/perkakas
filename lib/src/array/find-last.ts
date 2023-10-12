@@ -1,4 +1,4 @@
-import { type Pred, type PredIndexed, type PredIndexedOptional } from '../utils/types';
+import type { Pred, PredIndexed, PredIndexedOptional } from '../utils/types';
 import { purry } from '../function';
 
 /**
@@ -12,7 +12,7 @@ import { purry } from '../function';
  * @example
  *    P.findLast([1, 3, 4, 6], n => n % 2 === 1) // => 3
  *    P.findLast.indexed([1, 3, 4, 6], (n, i) => n % 2 === 1) // => 3
- * @data_first
+ * @dataFirst
  * @indexed
  * @pipeable
  * @category Array
@@ -38,7 +38,7 @@ export function findLast<T>(
  *      [1, 3, 4, 6],
  *      P.findLast.indexed((n, i) => n % 2 === 1)
  *    ) // => 3
- * @data_last
+ * @dataLast
  * @indexed
  * @pipeable
  * @category Array
@@ -47,8 +47,8 @@ export function findLast<T = never>(
   fn: Pred<T, boolean>
 ): (array: ReadonlyArray<T>) => T | undefined;
 
-export function findLast() {
-  return purry(_findLast(false), arguments);
+export function findLast(...args: any[]) {
+  return purry(_findLast(false), args);
 }
 
 function _findLast(indexed: boolean) {
@@ -70,7 +70,7 @@ export namespace findLast {
     fn: PredIndexed<T, boolean>
   ): (array: ReadonlyArray<T>) => T | undefined;
 
-  export function indexed() {
-    return purry(_findLast(true), arguments);
+  export function indexed(...args: any[]) {
+    return purry(_findLast(true), args);
   }
 }

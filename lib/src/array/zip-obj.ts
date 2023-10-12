@@ -9,7 +9,7 @@ import { purry } from '../function';
  *   P.zipObj(first, second)
  * @example
  *   P.zipObj(['a', 'b'], [1, 2]) // => {a: 1, b: 2}
- * @data_first
+ * @dataFirst
  * @category Array
  */
 export function zipObj<F extends string | number | symbol, S>(
@@ -25,7 +25,7 @@ export function zipObj<F extends string | number | symbol, S>(
  *   P.zipObj(second)(first)
  * @example
  *   P.zipObj([1, 2])(['a', 'b']) // => {a: 1, b: 2}
- * @data_last
+ * @dataLast
  * @category Array
  */
 export function zipObj<S>(
@@ -34,8 +34,8 @@ export function zipObj<S>(
   first: ReadonlyArray<F>
 ) => Record<F, S>;
 
-export function zipObj() {
-  return purry(_zipObj, arguments);
+export function zipObj(...args: any[]) {
+  return purry(_zipObj, args);
 }
 
 function _zipObj(

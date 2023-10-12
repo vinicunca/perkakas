@@ -4,3 +4,4 @@ export * from './noop';
 export * from './once';
 export * from './pipe';
 export * from './purry';
+export * from './sleep';

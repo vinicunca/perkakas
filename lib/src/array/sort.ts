@@ -1,4 +1,4 @@
-import { type IterableContainer } from '../utils/types';
+import type { IterableContainer } from '../utils/types';
 import { purry } from '../function';
 
 /**
@@ -16,7 +16,7 @@ import { purry } from '../function';
  * @example
  *    P.sort([4, 2, 7, 5], (a, b) => a - b) // => [2, 4, 5, 7] typed Array<number>
  *    P.sort.strict([4, 2] as [number, number], (a, b) => a - b) // [2, 4] typed [number, number]
- * @data_first
+ * @dataFirst
  * @category Array
  * @strict
  */
@@ -39,7 +39,7 @@ export function sort<T>(
  * @example
  *    P.pipe([4, 2, 7, 5], P.sort((a, b) => a - b)) // => [2, 4, 5, 7] typed Array<number>
  *    P.pipe([4, 2] as [number, number], P.sort.strict((a, b) => a - b)) // => [2, 4] typed [number, number]
- * @data_last
+ * @dataLast
  * @category Array
  * @strict
  */
@@ -47,8 +47,8 @@ export function sort<T>(
   cmp: (a: T, b: T) => number
 ): (items: ReadonlyArray<T>) => Array<T>;
 
-export function sort() {
-  return purry(_sort, arguments);
+export function sort(...args: any[]) {
+  return purry(_sort, args);
 }
 
 function _sort<T>(items: Array<T>, cmp: (a: T, b: T) => number) {

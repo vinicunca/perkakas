@@ -1,5 +1,6 @@
-import { partition } from './partition';
+import { assertType, describe, expect, it } from 'vitest';
 import { pipe } from '../function';
+import { partition } from './partition';
 
 const array = [
   { a: 1, b: 1 },
@@ -17,11 +18,11 @@ const expected = [
 ];
 
 describe('data first', () => {
-  test('partition', () => {
+  it('partition', () => {
     expect(partition(array, (x) => x.a === 1)).toEqual(expected);
   });
-  test('partition with type guard', () => {
-    const isNumber = function (value: any): value is number {
+  it('partition with type guard', () => {
+    const isNumber = function(value: any): value is number {
       return typeof value === 'number';
     };
     const actual = partition([1, 'a', 2, 'b'], isNumber);
@@ -31,7 +32,7 @@ describe('data first', () => {
     ]);
     assertType<[Array<number>, Array<string>]>(actual);
   });
-  test('partition with type guard in pipe', () => {
+  it('partition with type guard in pipe', () => {
     const actual = pipe(
       [1, 'a', 2, 'b'],
       partition((value): value is number => {
@@ -44,7 +45,7 @@ describe('data first', () => {
     ]);
     assertType<[Array<number>, Array<string>]>(actual);
   });
-  test('partition.indexed', () => {
+  it('partition.indexed', () => {
     expect(partition.indexed(array, (_, index) => index !== 2)).toEqual(
       expected,
     );
@@ -52,7 +53,7 @@ describe('data first', () => {
 });
 
 describe('data last', () => {
-  test('partition', () => {
+  it('partition', () => {
     expect(
       pipe(
         array,
@@ -60,7 +61,7 @@ describe('data last', () => {
       ),
     ).toEqual(expected);
   });
-  test('partition.indexed', () => {
+  it('partition.indexed', () => {
     expect(
       pipe(
         array,

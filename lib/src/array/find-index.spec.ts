@@ -1,23 +1,24 @@
+import { describe, expect, it } from 'vitest';
 import { createLazyInvocationCounter } from '../../test/lazy-invocation-counter';
-import { findIndex } from './find-index';
 import { pipe } from '../function';
+import { findIndex } from './find-index';
 
 describe('data first', () => {
-  test('findIndex', () => {
+  it('findIndex', () => {
     expect(findIndex([10, 20, 30] as const, (x) => x === 20)).toBe(1);
   });
 
-  test('findIndex.indexed', () => {
+  it('findIndex.indexed', () => {
     expect(findIndex([10, 20, 30] as const, (x) => x === 20)).toBe(1);
   });
 
-  test('findIndex -1', () => {
+  it('findIndex -1', () => {
     expect(findIndex([2, 3, 4] as const, (x) => x === (20 as number))).toBe(-1);
   });
 });
 
 describe('data last', () => {
-  test('findIndex', () => {
+  it('findIndex', () => {
     const counter = createLazyInvocationCounter();
     const actual = pipe(
       [10, 20, 30] as const,
@@ -28,7 +29,7 @@ describe('data last', () => {
     expect(actual).toEqual(1);
   });
 
-  test('findIndex.indexed', () => {
+  it('findIndex.indexed', () => {
     const counter = createLazyInvocationCounter();
     const actual = pipe(
       [10, 20, 30] as const,

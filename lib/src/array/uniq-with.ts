@@ -1,4 +1,4 @@
-import { type LazyResult } from '../utils/reduce-lazy';
+import type { LazyResult } from '../utils/reduce-lazy';
 import { purry } from '../function';
 import { _reduceLazy } from '../utils/reduce-lazy';
 import { toLazyIndexed } from '../utils/to-lazy-indexed';
@@ -17,7 +17,7 @@ type IsEquals<T> = (a: T, b: T) => boolean;
  *      [{a: 1}, {a: 2}, {a: 2}, {a: 5}, {a: 1}, {a: 6}, {a: 7}],
  *      P.equals,
  *    ) // => [{a: 1}, {a: 2}, {a: 5}, {a: 6}, {a: 7}]
- * @data_first
+ * @dataFirst
  * @category Array
  */
 export function uniqWith<T>(
@@ -39,15 +39,15 @@ export function uniqWith<T>(
  *      P.uniqWith(P.equals),
  *      P.take(3)
  *    ) // => [{a: 1}, {a: 2}, {a: 5}]
- * @data_last
+ * @dataLast
  * @category Object
  */
 export function uniqWith<T>(
   isEquals: IsEquals<T>
 ): (array: ReadonlyArray<T>) => Array<T>;
 
-export function uniqWith() {
-  return purry(_uniqWith, arguments, uniqWith.lazy);
+export function uniqWith(...args: any[]) {
+  return purry(_uniqWith, args, uniqWith.lazy);
 }
 
 function _uniqWith<T>(array: Array<T>, isEquals: IsEquals<T>) {

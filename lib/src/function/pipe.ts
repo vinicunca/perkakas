@@ -1,9 +1,10 @@
-import { type LazyResult } from '../utils/reduce-lazy';
+/* eslint-disable jsdoc/check-param-names */
+import type { LazyResult } from '../utils/reduce-lazy';
 
 /**
  * Perform left-to-right function composition.
  * @param value The initial value.
- * @param operations the list of operations to apply.
+ * @param arguments the list of operations to apply.
  * @signature P.pipe(data, op1, op2, op3)
  * @example
  *    P.pipe(
@@ -13,7 +14,7 @@ import { type LazyResult } from '../utils/reduce-lazy';
  *    ) // => [6, 14]
  *
  *
- * @data_first
+ * @dataFirst
  * @category Function
  */
 export function pipe<A, B>(value: A, op1: (input: A) => B): B;

@@ -1,4 +1,4 @@
-import { type PredIndexedOptional } from '../utils/types';
+import type { PredIndexedOptional } from '../utils/types';
 import { purry } from '../function';
 
 /**
@@ -12,7 +12,7 @@ import { purry } from '../function';
  * @example
  *    P.mapToObj([1, 2, 3], x => [String(x), x * 2]) // => {1: 2, 2: 4, 3: 6}
  *    P.mapToObj.indexed([0, 0, 0], (x, i) => [i, i]) // => {0: 0, 1: 1, 2: 2}
- * @data_first
+ * @dataFirst
  * @indexed
  * @category Array
  */
@@ -37,7 +37,7 @@ export function mapToObj<T, K extends keyof any, V>(
  *      [0, 0, 0],
  *      P.mapToObj.indexed((x, i) => [i, i])
  *    ) // => {0: 0, 1: 1, 2: 2}
- * @data_last
+ * @dataLast
  * @indexed
  * @category Array
  */
@@ -45,8 +45,8 @@ export function mapToObj<T, K extends keyof any, V>(
   fn: (element: T) => [K, V]
 ): (array: ReadonlyArray<T>) => Record<K, V>;
 
-export function mapToObj() {
-  return purry(_mapToObj(false), arguments);
+export function mapToObj(...args: any[]) {
+  return purry(_mapToObj(false), args);
 }
 
 function _mapToObj(indexed: boolean) {
@@ -67,7 +67,7 @@ export namespace mapToObj {
   export function indexed<T, K extends keyof any, V>(
     fn: (element: T, index: number, array: ReadonlyArray<T>) => [K, V]
   ): (array: ReadonlyArray<T>) => Record<K, V>;
-  export function indexed() {
-    return purry(_mapToObj(true), arguments);
+  export function indexed(...args: any[]) {
+    return purry(_mapToObj(true), args);
   }
 }

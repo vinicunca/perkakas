@@ -8,7 +8,7 @@ import { purry } from '../function';
  * @example
  *    P.shuffle([4, 2, 7, 5]) // => [7, 5, 4, 2]
  * @category Array
- * @data_first
+ * @dataFirst
  */
 export function shuffle<T>(items: ReadonlyArray<T>): Array<T>;
 
@@ -19,12 +19,12 @@ export function shuffle<T>(items: ReadonlyArray<T>): Array<T>;
  * @example
  *    P.pipe([4, 2, 7, 5], P.shuffle()) // => [7, 5, 4, 2]
  * @category Array
- * @data_last
+ * @dataLast
  */
 export function shuffle<T>(): (items: ReadonlyArray<T>) => Array<T>;
 
-export function shuffle() {
-  return purry(_shuffle, arguments);
+export function shuffle(...args: any[]) {
+  return purry(_shuffle, args);
 }
 
 function _shuffle<T>(items: ReadonlyArray<T>): Array<T> {

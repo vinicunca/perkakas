@@ -1,4 +1,4 @@
-import { type NonEmptyArray } from '../utils/types';
+import type { NonEmptyArray } from '../utils/types';
 import { purry } from '../function';
 
 /**
@@ -23,8 +23,8 @@ import { purry } from '../function';
 export function last<T>(array: NonEmptyArray<T>): T;
 export function last<T>(array: ReadonlyArray<T>): T | undefined;
 export function last<T>(): (array: ReadonlyArray<T>) => T | undefined;
-export function last() {
-  return purry(_last, arguments);
+export function last(...args: any[]) {
+  return purry(_last, args);
 }
 
 function _last<T>(array: Array<T>) {

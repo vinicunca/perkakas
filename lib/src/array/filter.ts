@@ -1,5 +1,5 @@
 import { type LazyResult, _reduceLazy } from '../utils/reduce-lazy';
-import { type Pred, type PredIndexed, type PredIndexedOptional } from '../utils/types';
+import type { Pred, PredIndexed, PredIndexedOptional } from '../utils/types';
 import { toLazyIndexed } from '../utils/to-lazy-indexed';
 import { purry } from '../function';
 
@@ -13,7 +13,7 @@ import { purry } from '../function';
  * @example
  *    P.filter([1, 2, 3], x => x % 2 === 1) // => [1, 3]
  *    P.filter.indexed([1, 2, 3], (x, i, array) => x % 2 === 1) // => [1, 3]
- * @data_first
+ * @dataFirst
  * @indexed
  * @pipeable
  * @category Array
@@ -36,7 +36,7 @@ export function filter<T>(
  * @example
  *    P.pipe([1, 2, 3], P.filter(x => x % 2 === 1)) // => [1, 3]
  *    P.pipe([1, 2, 3], P.filter.indexed((x, i) => x % 2 === 1)) // => [1, 3]
- * @data_last
+ * @dataLast
  * @indexed
  * @pipeable
  * @category Array
@@ -48,8 +48,8 @@ export function filter<T>(
   fn: Pred<T, boolean>
 ): (array: ReadonlyArray<T>) => Array<T>;
 
-export function filter() {
-  return purry(_filter(false), arguments, filter.lazy);
+export function filter(...args: any[]) {
+  return purry(_filter(false), args, filter.lazy);
 }
 
 function _filter(indexed: boolean) {
@@ -91,7 +91,7 @@ export namespace filter {
     fn: PredIndexed<T, boolean>
   ): Array<T>;
   /**
-   * @data_last
+   * @dataLast
    */
   export function indexed<T, S extends T>(
     fn: (input: T, index: number, array: Array<T>) => input is S
@@ -99,8 +99,8 @@ export namespace filter {
   export function indexed<T>(
     fn: PredIndexed<T, boolean>
   ): (array: ReadonlyArray<T>) => Array<T>;
-  export function indexed() {
-    return purry(_filter(true), arguments, filter.lazyIndexed);
+  export function indexed(...args: any[]) {
+    return purry(_filter(true), args, filter.lazyIndexed);
   }
 
   export const lazy = _lazy(false);

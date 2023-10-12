@@ -1,5 +1,6 @@
-import { indexBy } from './index-by';
+import { describe, expect, it } from 'vitest';
 import { pipe } from '../function';
+import { indexBy } from './index-by';
 
 const array = [
   { dir: 'left', code: 97 },
@@ -11,17 +12,17 @@ const expected = {
 };
 
 describe('data first', () => {
-  test('indexBy', () => {
+  it('indexBy', () => {
     expect(indexBy(array, (x) => x.dir)).toEqual(expected);
   });
 
-  test('indexBy.indexed', () => {
+  it('indexBy.indexed', () => {
     expect(indexBy.indexed(array, (x) => x.dir)).toEqual(expected);
   });
 });
 
 describe('data last', () => {
-  test('indexBy', () => {
+  it('indexBy', () => {
     expect(
       pipe(
         array,
@@ -30,7 +31,7 @@ describe('data last', () => {
     ).toEqual(expected);
   });
 
-  test('indexBy.indexed', () => {
+  it('indexBy.indexed', () => {
     expect(
       pipe(
         array,

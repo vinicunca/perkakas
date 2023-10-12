@@ -1,4 +1,4 @@
-import { type IterableContainer } from '../utils/types';
+import type { IterableContainer } from '../utils/types';
 import { purry } from '../function';
 
 type FirstOut<T extends IterableContainer> = T extends []
@@ -25,7 +25,7 @@ type FirstOut<T extends IterableContainer> = T extends []
  *      x => x + 1
  *    ); // => 5
  *
- * @category array
+ * @category Array
  * @pipeable
  */
 export function first<T extends IterableContainer>(
@@ -35,8 +35,8 @@ export function first<T extends IterableContainer>(): (
   array: Readonly<T>
 ) => FirstOut<T>;
 
-export function first() {
-  return purry(_first, arguments, first.lazy);
+export function first(...args: any[]) {
+  return purry(_first, args, first.lazy);
 }
 
 function _first<T>([first]: ReadonlyArray<T>) {

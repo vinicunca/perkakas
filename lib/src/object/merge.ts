@@ -9,7 +9,7 @@ import { purry } from '../function';
  *    P.merge(a, b)
  * @example
  *    P.merge({ x: 1, y: 2 }, { y: 10, z: 2 }) // => { x: 1, y: 10, z: 2 }
- * @data_first
+ * @dataFirst
  * @category Object
  */
 export function merge<A, B>(a: A, b: B): A & B;
@@ -21,13 +21,13 @@ export function merge<A, B>(a: A, b: B): A & B;
  *    P.merge(b)(a)
  * @example
  *    P.merge({ y: 10, z: 2 })({ x: 1, y: 2 }) // => { x: 1, y: 10, z: 2 }
- * @data_last
+ * @dataLast
  * @category Object
  */
 export function merge<A, B>(b: B): (a: A) => A & B;
 
-export function merge() {
-  return purry(_merge, arguments);
+export function merge(...args: any[]) {
+  return purry(_merge, args);
 }
 
 function _merge<A, B>(a: A, b: B) {

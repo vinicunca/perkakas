@@ -8,7 +8,7 @@ import { purry } from '../function';
  *    P.takeWhile(array, fn)
  * @example
  *    P.takeWhile([1, 2, 3, 4, 3, 2, 1], x => x !== 4) // => [1, 2, 3]
- * @data_first
+ * @dataFirst
  * @category Array
  */
 export function takeWhile<T>(
@@ -23,15 +23,15 @@ export function takeWhile<T>(
  *    P.takeWhile(fn)(array)
  * @example
  *    P.pipe([1, 2, 3, 4, 3, 2, 1], P.takeWhile(x => x !== 4))  // => [1, 2, 3]
- * @data_last
+ * @dataLast
  * @category Array
  */
 export function takeWhile<T>(
   fn: (item: T) => boolean
 ): (array: ReadonlyArray<T>) => Array<T>;
 
-export function takeWhile() {
-  return purry(_takeWhile, arguments);
+export function takeWhile(...args: any[]) {
+  return purry(_takeWhile, args);
 }
 
 function _takeWhile<T>(array: Array<T>, fn: (item: T) => boolean) {

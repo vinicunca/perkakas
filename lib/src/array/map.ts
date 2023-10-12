@@ -1,12 +1,12 @@
-import { type LazyResult } from '../utils/reduce-lazy';
+import type { LazyResult } from '../utils/reduce-lazy';
 import { purry } from '../function';
 import { _reduceLazy } from '../utils/reduce-lazy';
 import { toLazyIndexed } from '../utils/to-lazy-indexed';
-import {
-  type IterableContainer,
-  type Pred,
-  type PredIndexed,
-  type PredIndexedOptional,
+import type {
+  IterableContainer,
+  Pred,
+  PredIndexed,
+  PredIndexedOptional,
 } from '../utils/types';
 
 /**
@@ -25,7 +25,7 @@ import {
  *    P.map.indexed([0, 0, 0], (x, i) => i) // => [0, 1, 2], typed number[]
  *    P.map.strict([0, 0] as const, x => x + 1) // => [1, 1], typed [number, number]
  *    P.map.strict.indexed([0, 0] as const, (x, i) => x + i) // => [0, 1], typed [number, number]
- * @data_first
+ * @dataFirst
  * @indexed
  * @pipeable
  * @strict
@@ -42,7 +42,7 @@ export function map<T, K>(array: ReadonlyArray<T>, fn: Pred<T, K>): Array<K>;
  * @example
  *    P.pipe([0, 1, 2], P.map(x => x * 2)) // => [0, 2, 4]
  *    P.pipe([0, 0, 0], P.map.indexed((x, i) => i)) // => [0, 1, 2]
- * @data_last
+ * @dataLast
  * @indexed
  * @pipeable
  * @category Array
@@ -51,8 +51,8 @@ export function map<T, K>(
   fn: Pred<T, K>
 ): (array: ReadonlyArray<T>) => Array<K>;
 
-export function map() {
-  return purry(_map(false), arguments, map.lazy);
+export function map(...args: any[]) {
+  return purry(_map(false), args, map.lazy);
 }
 
 function _map(indexed: boolean) {
@@ -113,8 +113,8 @@ export namespace map {
   export function indexed<T, K>(
     fn: PredIndexed<T, K>
   ): (array: ReadonlyArray<T>) => Array<K>;
-  export function indexed() {
-    return purry(_map(true), arguments, map.lazyIndexed);
+  export function indexed(...args: any[]) {
+    return purry(_map(true), args, map.lazyIndexed);
   }
 
   export const lazy = _lazy(false);

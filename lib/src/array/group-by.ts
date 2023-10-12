@@ -1,4 +1,4 @@
-import { type NonEmptyArray, type PredIndexed, type PredIndexedOptional } from '../utils/types';
+import type { NonEmptyArray, PredIndexed, PredIndexedOptional } from '../utils/types';
 import { purry } from '../function';
 
 /**
@@ -13,7 +13,7 @@ import { purry } from '../function';
  *    P.groupBy(['one', 'two', 'three'], x => x.length) // => {3: ['one', 'two'], 5: ['three']}
  *    P.groupBy.strict([{a: 'cat'}, {a: 'dog'}] as const, prop('a')) // => {cat: [{a: 'cat'}], dog: [{a: 'dog'}]} typed Partial<Record<'cat' | 'dog', NonEmptyArray<{a: 'cat' | 'dog'}>>>
  *    P.groupBy([0, 1], x => x % 2 === 0 ? 'even' : undefined) // => {even: [0]}
- * @data_first
+ * @dataFirst
  * @indexed
  * @strict
  * @category Array
@@ -29,17 +29,17 @@ export function groupBy<T>(
 
 /**
  * Splits a collection into sets, grouped by the result of running each value through `fn`.
- * @param fn the grouping function
+ * @param args the grouping function
  * @signature
  *    P.groupBy(fn)(array)
  * @example
  *    P.pipe(['one', 'two', 'three'], P.groupBy(x => x.length)) // => {3: ['one', 'two'], 5: ['three']}
- * @data_last
+ * @dataLast
  * @indexed
  * @category Array
  */
-export function groupBy() {
-  return purry(_groupBy(false), arguments);
+export function groupBy(...args: any[]) {
+  return purry(_groupBy(false), args);
 }
 
 function _groupBy(indexed: boolean) {
@@ -118,8 +118,8 @@ export namespace groupBy {
   export function indexed<T>(
     fn: PredIndexed<T, PropertyKey | undefined>
   ): (array: ReadonlyArray<T>) => Record<string, NonEmptyArray<T>>;
-  export function indexed() {
-    return purry(_groupBy(true), arguments);
+  export function indexed(...args: any[]) {
+    return purry(_groupBy(true), args);
   }
 
   export const strict: Strict = groupBy;

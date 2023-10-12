@@ -1,4 +1,4 @@
-import { type LazyResult } from '../utils/reduce-lazy';
+import type { LazyResult } from '../utils/reduce-lazy';
 import { _reduceLazy } from '../utils/reduce-lazy';
 import { purry } from '../function';
 
@@ -7,7 +7,6 @@ type Flatten<T> = T extends ReadonlyArray<infer K> ? K : T;
 /**
  * Flattens `array` a single level deep.
  * Note: In `pipe`, use `flatten()` form instead of `flatten`. Otherwise, the inferred type is lost.
-
  * @param items the target array
  * @signature P.flatten(array)
  * @example
@@ -23,8 +22,8 @@ export function flatten<T>(items: ReadonlyArray<T>): Array<Flatten<T>>;
 
 export function flatten<T>(): (items: ReadonlyArray<T>) => Array<Flatten<T>>;
 
-export function flatten() {
-  return purry(_flatten, arguments, flatten.lazy);
+export function flatten(...args: any[]) {
+  return purry(_flatten, args, flatten.lazy);
 }
 
 function _flatten<T>(items: Array<T>): Array<Flatten<T>> {

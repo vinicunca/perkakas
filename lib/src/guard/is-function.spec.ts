@@ -1,8 +1,9 @@
+import { assertType, describe, expect, it } from 'vitest';
 import { typesDataProvider } from '../../test/types-data-provider';
 import { isFunction } from './is-function';
 
 describe('isFunction', () => {
-  test('isFunction: should work as type guard', () => {
+  it('isFunction: should work as type guard', () => {
     const data = typesDataProvider('null');
     if (isFunction(data)) {
       expect(data).toEqual(null);
@@ -15,7 +16,7 @@ describe('isFunction', () => {
       assertType<(a: number) => string>(maybeFunction);
     }
   });
-  test('isFunction: should work as type guard in filter', () => {
+  it('isFunction: should work as type guard in filter', () => {
     const data = [
       typesDataProvider('error'),
       typesDataProvider('array'),

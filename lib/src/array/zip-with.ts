@@ -8,7 +8,7 @@
  *   P.zipWith(first, second, fn)
  * @example
  *   P.zipWith(['1', '2', '3'], ['a', 'b', 'c'], (a, b) => a + b) // => ['1a', '2b', '3c']
- * @data_first
+ * @dataFirst
  * @category Array
  */
 export function zipWith<F, S, R>(
@@ -25,7 +25,7 @@ export function zipWith<F, S, R>(
  *   P.zipWith(fn)(first, second)
  * @example
  *   P.zipWith((a, b) => a + b)(['1', '2', '3'], ['a', 'b', 'c']) // => ['1a', '2b', '3c']
- * @data_last
+ * @dataLast
  * @category Array
  */
 export function zipWith<F, S, R>(
@@ -41,7 +41,7 @@ export function zipWith<F, S, R>(
  *   P.zipWith(fn)(first, second)
  * @example
  *   P.zipWith((a, b) => a + b, ['a', 'b', 'c'])(['1', '2', '3']) // => ['1a', '2b', '3c']
- * @data_last
+ * @dataLast
  * @category Array
  */
 export function zipWith<F, S, R>(
@@ -49,16 +49,15 @@ export function zipWith<F, S, R>(
   second: Array<S>
 ): (first: Array<F>) => Array<R>;
 
-export function zipWith() {
-  const args = Array.from(arguments);
+export function zipWith(...args: any[]) {
   if (typeof args[0] === 'function' && args.length === 1) {
-    return function (f: any, s: any) {
+    return function(f: any, s: any) {
       return _zipWith(f, s, args[0]);
     };
   }
 
   if (typeof args[0] === 'function' && args.length === 2) {
-    return function (f: any) {
+    return function(f: any) {
       return _zipWith(f, args[1], args[0]);
     };
   }

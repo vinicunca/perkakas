@@ -41,7 +41,7 @@ type StrictlyRequired<T> = { [K in keyof T]-?: NonNullable<T[K]> };
  * null or undefined.
  */
 type PathValue1<T, A extends keyof Pathable<T>> = StrictlyRequired<
-  Pathable<T>
+Pathable<T>
 >[A];
 /** All possible options after successfully reaching `T[A]` */
 type Pathable1<T, A extends keyof Pathable<T>> = Pathable<PathValue1<T, A>>;
@@ -76,7 +76,7 @@ type PathValue3<
  * @example
  *    P.pathOr({x: 10}, ['y'], 2) // 2
  *    P.pathOr({y: 10}, ['y'], 2) // 10
- * @data_first
+ * @dataFirst
  * @category Object
  */
 export function pathOr<T, A extends keyof Pathable<T>>(
@@ -108,14 +108,13 @@ export function pathOr<
 
 /**
  * Gets the value at `path` of `object`. If the resolved value is `undefined`, the `defaultValue` is returned in its place.
- * @param object the target object
  * @param path the path of the property to get
  * @param defaultValue the default value
  * @signature P.pathOr(array, defaultValue)(object)
  * @example
  *    P.pipe({x: 10}, P.pathOr(['y'], 2)) // 2
  *    P.pipe({y: 10}, P.pathOr(['y'], 2)) // 10
- * @data_last
+ * @dataLast
  * @category Object
  */
 export function pathOr<T, A extends keyof Pathable<T>>(
@@ -142,8 +141,8 @@ export function pathOr<
   defaultValue: PathValue3<T, A, B, C>
 ): (object: T) => PathValue3<T, A, B, C>;
 
-export function pathOr() {
-  return purry(_pathOr, arguments);
+export function pathOr(...args: any[]) {
+  return purry(_pathOr, args);
 }
 
 function _pathOr(object: any, path: Array<any>, defaultValue: any): any {

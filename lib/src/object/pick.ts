@@ -7,7 +7,7 @@ import { purry } from '../function';
  * @signature P.pick(object, [prop1, prop2])
  * @example
  *    P.pick({ a: 1, b: 2, c: 3, d: 4 }, ['a', 'd']) // => { a: 1, d: 4 }
- * @data_first
+ * @dataFirst
  * @category Object
  */
 export function pick<T extends object, K extends keyof T>(
@@ -21,15 +21,15 @@ export function pick<T extends object, K extends keyof T>(
  * @signature P.pick([prop1, prop2])(object)
  * @example
  *    P.pipe({ a: 1, b: 2, c: 3, d: 4 }, P.pick(['a', 'd'])) // => { a: 1, d: 4 }
- * @data_last
+ * @dataLast
  * @category Object
  */
 export function pick<K extends PropertyKey>(
   names: ReadonlyArray<K>
 ): <T extends Record<PropertyKey, any>>(object: T) => Pick<T, K>;
 
-export function pick() {
-  return purry(_pick, arguments);
+export function pick(...args: any[]) {
+  return purry(_pick, args);
 }
 
 function _pick(object: any, names: Array<string>) {

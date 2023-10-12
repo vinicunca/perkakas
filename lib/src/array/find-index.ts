@@ -1,4 +1,4 @@
-import { type Pred, type PredIndexed, type PredIndexedOptional } from '../utils/types';
+import type { Pred, PredIndexed, PredIndexedOptional } from '../utils/types';
 import { toLazyIndexed } from '../utils/to-lazy-indexed';
 import { toSingle } from '../utils/to-single';
 import { purry } from '../function';
@@ -13,19 +13,18 @@ import { purry } from '../function';
  * @example
  *    P.findIndex([1, 3, 4, 6], n => n % 2 === 0) // => 2
  *    P.findIndex.indexed([1, 3, 4, 6], (n, i) => n % 2 === 0) // => 2
- * @data_first
+ * @dataFirst
  * @indexed
  * @pipeable
  * @category Array
  */
 export function findIndex<T>(
-  array: ReadonlyArray<T>,
+  items: ReadonlyArray<T>,
   fn: Pred<T, boolean>
 ): number;
 
 /**
  * Returns the index of the first element in the array where predicate is true, and -1 otherwise.
- * @param items the array
  * @param fn the predicate
  * @signature
  *    P.findIndex(fn)(items)
@@ -39,17 +38,17 @@ export function findIndex<T>(
  *      [1, 3, 4, 6],
  *      P.findIndex.indexed((n, i) => n % 2 === 0)
  *    ) // => 2
- * @data_last
+ * @dataLast
  * @indexed
  * @pipeable
  * @category Array
  */
 export function findIndex<T>(
   fn: Pred<T, boolean>
-): (array: ReadonlyArray<T>) => number;
+): (items: ReadonlyArray<T>) => number;
 
-export function findIndex() {
-  return purry(_findIndex(false), arguments, findIndex.lazy);
+export function findIndex(...args: any[]) {
+  return purry(_findIndex(false), args, findIndex.lazy);
 }
 
 function _findIndex(indexed: boolean) {
@@ -91,8 +90,8 @@ export namespace findIndex {
   export function indexed<T>(
     fn: PredIndexed<T, boolean>
   ): (array: ReadonlyArray<T>) => number;
-  export function indexed() {
-    return purry(_findIndex(true), arguments, findIndex.lazyIndexed);
+  export function indexed(...args: any[]) {
+    return purry(_findIndex(true), args, findIndex.lazyIndexed);
   }
 
   export const lazy = toSingle(_lazy(false));

@@ -1,7 +1,8 @@
+import { describe, expect, it } from 'vitest';
 import { createLazyInvocationCounter } from '../../test/lazy-invocation-counter';
-import { intersectionWith } from './intersection-with';
 import { pipe } from '../function';
 import { equals } from '../object';
+import { intersectionWith } from './intersection-with';
 import { take } from './take';
 
 const source = [
@@ -18,7 +19,7 @@ const expected = [
 
 describe('intersectionWith', () => {
   describe('data first', () => {
-    test('returns the new array of intersecting values based on a custom comparator', () => {
+    it('returns the new array of intersecting values based on a custom comparator', () => {
       expect(intersectionWith(source, other, (a, b) => a.id === b)).toEqual(
         expected,
       );
@@ -37,7 +38,7 @@ describe('intersectionWith', () => {
         )(source),
       ).toEqual(expected);
     });
-    it('checks if items are equal based on remeda\'s imported util function as a comparator', () => {
+    it('checks if items are equal based on perkakas\'s imported util function as a comparator', () => {
       const source = [
         { x: 1, y: 2 },
         { x: 2, y: 1 },

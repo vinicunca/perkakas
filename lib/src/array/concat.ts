@@ -8,7 +8,7 @@ import { purry } from '../function';
  *    P.concat(arr1, arr2);
  * @example
  *    P.concat([1, 2, 3], ['a']) // [1, 2, 3, 'a']
- * @data_first
+ * @dataFirst
  * @category Array
  */
 export function concat<T, K>(
@@ -23,15 +23,15 @@ export function concat<T, K>(
  *    P.concat(arr2)(arr1);
  * @example
  *    P.concat(['a'])([1, 2, 3]) // [1, 2, 3, 'a']
- * @data_last
+ * @dataLast
  * @category Array
  */
 export function concat<T, K>(
   arr2: ReadonlyArray<K>
 ): (arr1: ReadonlyArray<T>) => Array<T | K>;
 
-export function concat() {
-  return purry(_concat, arguments);
+export function concat(...args: any[]) {
+  return purry(_concat, args);
 }
 
 function _concat(arr1: Array<any>, arr2: Array<any>) {

@@ -9,7 +9,7 @@ import { purry } from '../function';
  *    P.drop(array, n)
  * @example
  *    P.drop([1, 2, 3, 4, 5], 2) // => [3, 4, 5]
- * @data_first
+ * @dataFirst
  * @pipeable
  * @category Array
  */
@@ -17,20 +17,19 @@ export function drop<T>(array: ReadonlyArray<T>, n: number): Array<T>;
 
 /**
  * Removes first `n` elements from the `array`.
- * @param array the target array
  * @param n the number of elements to skip
  * @signature
  *    P.drop(n)(array)
  * @example
  *    P.drop(2)([1, 2, 3, 4, 5]) // => [3, 4, 5]
- * @data_last
+ * @dataLast
  * @pipeable
  * @category Array
  */
 export function drop<T>(n: number): (array: ReadonlyArray<T>) => Array<T>;
 
-export function drop() {
-  return purry(_drop, arguments, drop.lazy);
+export function drop(...args: any[]) {
+  return purry(_drop, args, drop.lazy);
 }
 
 function _drop<T>(array: Array<T>, n: number) {

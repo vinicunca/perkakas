@@ -1,12 +1,13 @@
-import { invert } from './invert';
+import { describe, expect, it } from 'vitest';
 import { pipe } from '../function';
+import { invert } from './invert';
 
 describe('data first', () => {
-  test('empty object', () => {
+  it('empty object', () => {
     expect(invert({})).toEqual({});
   });
 
-  test('no duplicate values', () => {
+  it('no duplicate values', () => {
     expect(invert({ a: 'd', b: 'e', c: 'f' })).toEqual({
       d: 'a',
       e: 'b',
@@ -14,21 +15,21 @@ describe('data first', () => {
     });
   });
 
-  test('duplicate values', () => {
+  it('duplicate values', () => {
     expect(invert({ a: 'd', b: 'e', c: 'd' })).toEqual({ e: 'b', d: 'c' });
   });
 
-  test('numeric values', () => {
+  it('numeric values', () => {
     expect(invert(['a', 'b', 'c'])).toEqual({ a: '0', b: '1', c: '2' });
   });
 });
 
 describe('data last', () => {
-  test('empty object', () => {
+  it('empty object', () => {
     expect(pipe({}, invert())).toEqual({});
   });
 
-  test('no duplicate values', () => {
+  it('no duplicate values', () => {
     expect(pipe({ a: 'd', b: 'e', c: 'f' }, invert())).toEqual({
       d: 'a',
       e: 'b',
@@ -36,14 +37,14 @@ describe('data last', () => {
     });
   });
 
-  test('duplicate values', () => {
+  it('duplicate values', () => {
     expect(pipe({ a: 'd', b: 'e', c: 'd' }, invert())).toEqual({
       e: 'b',
       d: 'c',
     });
   });
 
-  test('numeric values', () => {
+  it('numeric values', () => {
     expect(pipe(['a', 'b', 'c'], invert())).toEqual({
       a: '0',
       b: '1',

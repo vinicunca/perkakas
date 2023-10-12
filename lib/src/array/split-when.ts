@@ -1,5 +1,5 @@
-import { splitAt } from './split-at';
 import { purry } from '../function';
+import { splitAt } from './split-at';
 
 /**
  * Splits a given array at the first index where the given predicate returns true.
@@ -9,7 +9,7 @@ import { purry } from '../function';
  *    P.splitWhen(array, fn)
  * @example
  *    P.splitWhen([1, 2, 3], x => x === 2) // => [[1], [2, 3]]
- * @data_first
+ * @dataFirst
  * @category Array
  */
 export function splitWhen<T>(
@@ -24,15 +24,15 @@ export function splitWhen<T>(
  *    P.splitWhen(fn)(array)
  * @example
  *    P.splitWhen(x => x === 2)([1, 2, 3]) // => [[1], [2, 3]]
- * @data_last
+ * @dataLast
  * @category Array
  */
 export function splitWhen<T>(
   fn: (item: T) => boolean
 ): (array: ReadonlyArray<T>) => [Array<T>, Array<T>];
 
-export function splitWhen() {
-  return purry(_splitWhen, arguments);
+export function splitWhen(...args: any[]) {
+  return purry(_splitWhen, args);
 }
 
 function _splitWhen<T>(array: Array<T>, fn: (item: T) => boolean) {

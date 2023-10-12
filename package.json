@@ -6,33 +6,37 @@
   "packageManager": "pnpm@8.8.0",
   "author": "praburangki<https://github.com/praburangki>",
   "scripts": {
-    "lint": "eslint .",
+    "lint": "eslint lib",
     "test": "pnpm -r run test",
     "postinstall": "pnpm -r run stub",
     "build:lib": "pnpm -C lib build",
     "prepublish": "pnpm run build:lib",
-    "deploy:docs": "pnpm run gen:meta && pnpm -C docs generate",
+    "deploy:docs": "pnpm run typedoc && pnpm run transform && pnpm -C docs generate",
     "release": "pnpm -C lib release",
-    "gen:meta": "tsx scripts/gen-meta.ts",
+    "transform": "bun scripts/transform.ts",
+    "typedoc": "typedoc --json scripts/out.json",
     "registry": "pnpm publish --access public --no-git-checks"
   },
   "devDependencies": {
-    "@types/node": "^20.8.2",
-    "@vinicunca/eslint-config": "^2.0.0-beta.5",
-    "@vinicunca/perkakas": "^0.0.4",
+    "@types/node": "^20.8.4",
+    "@vinicunca/eslint-config": "2.0.0-beta.8",
+    "@vinicunca/perkakas": "workspace:*",
     "bumpp": "^9.2.0",
-    "eslint": "^8.50.0",
+    "bun": "^1.0.5",
+    "eslint": "^8.51.0",
+    "prettier": "^3.0.3",
     "rimraf": "^5.0.5",
-    "tsx": "^3.13.0",
+    "tiny-invariant": "^1.3.1",
+    "type-fest": "^4.4.0",
     "typescript": "^5.2.2",
     "vitest": "^0.34.6"
   },
-  "publishConfig": {
-    "directory": "lib"
-  },
   "pnpm": {
     "overrides": {
-      "eslint": "^8.50.0"
+      "eslint": "^8.51.0"
     }
+  },
+  "publishConfig": {
+    "directory": "lib"
   }
 }

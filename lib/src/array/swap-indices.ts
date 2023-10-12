@@ -1,6 +1,6 @@
-import { type IterableContainer } from '../utils/types';
-import { type Joined } from './join';
+import type { IterableContainer } from '../utils/types';
 import { purry } from '../function';
+import type { Joined } from './join';
 
 /**
  * @link https://github.com/sindresorhus/type-fest/blob/main/source/is-equal.d.ts
@@ -57,11 +57,11 @@ type SwapArrayInternal<
           ? Original[Index1]
           : AtPosition,
       ...SwapArrayInternal<
-        Rest,
-        Index1,
-        Index2,
-        [unknown, ...Position],
-        Original
+      Rest,
+      Index1,
+      Index2,
+      [unknown, ...Position],
+      Original
       >,
     ]
   : T;
@@ -77,12 +77,6 @@ type SwapArray<
   K1 extends number,
   K2 extends number,
 > =
-  // TODO [typescript@>4.6]: Because of limitations on the typescript version
-  // used in Remeda we can't build a proper Absolute number type so we can't
-  // implement proper typing for negative indices and have to opt for a less-
-  // strict type instead.
-  // Check out the history for the PR that introduced this TODO to see how it
-  // could be implemented.
   IsNonNegative<K1> extends false
     ? Array<T[number]>
     : IsNonNegative<K2> extends false
@@ -128,7 +122,7 @@ type SwappedIndices<
  *
  * @returns Returns the manipulated array or string.
  *
- * @data_first
+ * @dataFirst
  */
 export function swapIndices<
   T extends IterableContainer | string,
@@ -149,15 +143,15 @@ export function swapIndices<
  *
  * @category Array
  * @returns Returns the manipulated array or string.
- * @data_last
+ * @dataLast
  */
 export function swapIndices<K1 extends number, K2 extends number>(
   index1: K1,
   index2: K2
 ): <T extends IterableContainer | string>(data: T) => SwappedIndices<T, K1, K2>;
 
-export function swapIndices() {
-  return purry(_swapIndices, arguments);
+export function swapIndices(...args: any[]) {
+  return purry(_swapIndices, args);
 }
 
 function _swapIndices(

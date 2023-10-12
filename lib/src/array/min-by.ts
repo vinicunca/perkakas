@@ -1,4 +1,4 @@
-import { type PredIndexed, type PredIndexedOptional } from '../utils/types';
+import type { PredIndexed, PredIndexedOptional } from '../utils/types';
 import { purry } from '../function';
 
 function _minBy(indexed: boolean) {
@@ -28,7 +28,7 @@ function _minBy(indexed: boolean) {
  *      [{a: 5}, {a: 1}, {a: 3}],
  *      P.minBy(x => x.a)
  *    ) // { a: 1 }
- * @data_last
+ * @dataLast
  * @indexed
  * @category Array
  */
@@ -48,7 +48,7 @@ export function minBy<T>(
  *      [{a: 5}, {a: 1}, {a: 3}],
  *      x => x.a
  *    ) // { a: 1 }
- * @data_first
+ * @dataFirst
  * @indexed
  * @category Array
  */
@@ -57,8 +57,8 @@ export function minBy<T>(
   fn: (item: T) => number
 ): T | undefined;
 
-export function minBy() {
-  return purry(_minBy(false), arguments);
+export function minBy(...args: any[]) {
+  return purry(_minBy(false), args);
 }
 
 export namespace minBy {
@@ -69,7 +69,7 @@ export namespace minBy {
   export function indexed<T>(
     fn: PredIndexed<T, number>
   ): (array: ReadonlyArray<T>) => T | undefined;
-  export function indexed() {
-    return purry(_minBy(true), arguments);
+  export function indexed(...args: any[]) {
+    return purry(_minBy(true), args);
   }
 }

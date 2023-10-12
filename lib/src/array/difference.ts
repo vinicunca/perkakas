@@ -9,7 +9,7 @@ import { purry } from '../function';
  *    P.difference(array, other)
  * @example
  *    P.difference([1, 2, 3, 4], [2, 5, 3]) // => [1, 4]
- * @data_first
+ * @dataFirst
  * @category Array
  * @pipeable
  */
@@ -30,7 +30,7 @@ export function difference<T>(
  *      P.difference([2, 3]),
  *      P.take(2)
  *    ) // => [1, 4]
- * @data_last
+ * @dataLast
  * @category Array
  * @pipeable
  */
@@ -38,8 +38,8 @@ export function difference<T, K>(
   other: ReadonlyArray<T>
 ): (array: ReadonlyArray<K>) => Array<T>;
 
-export function difference() {
-  return purry(_difference, arguments, difference.lazy);
+export function difference(...args: any[]) {
+  return purry(_difference, args, difference.lazy);
 }
 
 function _difference<T>(array: Array<T>, other: Array<T>) {

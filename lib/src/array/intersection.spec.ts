@@ -1,17 +1,20 @@
+import { describe, expect, it } from 'vitest';
 import { intersection } from './intersection';
 
 describe('data_first', () => {
-  test('intersection', () => {
+  it('intersection', () => {
     expect(intersection([1, 2, 3] as const, [2, 3, 5] as const)).toEqual([
-      2, 3,
+      2,
+      3,
     ]);
   });
 });
 
 describe('data_last', () => {
-  test('intersection', () => {
+  it('intersection', () => {
     expect(intersection([2, 3, 5] as const)([1, 2, 3] as const)).toEqual([
-      2, 3,
+      2,
+      3,
     ]);
   });
 });

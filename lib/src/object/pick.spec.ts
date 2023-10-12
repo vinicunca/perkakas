@@ -1,17 +1,18 @@
-import { pick } from './pick';
+import { describe, expect, expectTypeOf, it } from 'vitest';
 import { pipe } from '../function';
 import { concat } from '../array';
+import { pick } from './pick';
 
 describe('data first', () => {
-  test('it should pick props', () => {
+  it('it should pick props', () => {
     const result = pick({ a: 1, b: 2, c: 3, d: 4 }, ['a', 'd']);
     expect(result).toStrictEqual({ a: 1, d: 4 });
   });
-  test('allow undefined or null', () => {
+  it('allow undefined or null', () => {
     expect(pick(undefined as any, ['foo'])).toEqual({});
     expect(pick(null as any, ['foo'])).toEqual({});
   });
-  test('support inherited properties', () => {
+  it('support inherited properties', () => {
     class BaseClass {
       testProp() {
         return 'abc';
@@ -26,13 +27,13 @@ describe('data first', () => {
 });
 
 describe('data last', () => {
-  test('it should pick props', () => {
+  it('it should pick props', () => {
     const result = pipe({ a: 1, b: 2, c: 3, d: 4 }, pick(['a', 'd']));
     expect(result).toEqual({ a: 1, d: 4 });
   });
 });
 
-test('read only', () => {
+it('read only', () => {
   concat([1, 2], [3, 4] as const);
   // or similar:
   // const props: ReadonlyArray<string> = ["prop1", "prop2"];
@@ -42,11 +43,11 @@ test('read only', () => {
   pick(someObject, props); // TS2345 compilation error
 });
 
-test('type for curried form', () => {
+it('type for curried form', () => {
   const pickFoo = pick(['foo']);
 
   expectTypeOf(true as any as ReturnType<typeof pickFoo>).toEqualTypeOf<
-    Record<'foo', any>
+  Record<'foo', any>
   >();
 
   const result = pickFoo({ foo: 1, bar: 'potato' });

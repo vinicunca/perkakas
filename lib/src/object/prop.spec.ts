@@ -1,13 +1,14 @@
+import { expect, expectTypeOf, it } from 'vitest';
 import { sortBy } from '../array';
 import { pipe } from '../function';
 import { prop } from './prop';
 
-test('prop', () => {
+it('prop', () => {
   const result = pipe({ foo: 'bar' }, prop('foo'));
   expect(result).toEqual('bar');
 });
 
-test('prop typing', () => {
+it('prop typing', () => {
   const input = [{ a: 1 }];
 
   const works = sortBy(input, prop('a'));

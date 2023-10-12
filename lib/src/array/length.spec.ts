@@ -1,12 +1,13 @@
-import { length } from './length';
+import { describe, expect, it } from 'vitest';
 import { pipe } from '../function';
+import { length } from './length';
 
 describe('data first', () => {
-  test('array', () => {
+  it('array', () => {
     expect(length([0, 1, 2, 3, 4])).toEqual(5);
   });
 
-  test('iterable', () => {
+  it('iterable', () => {
     expect(
       length({
         *[Symbol.iterator]() {
@@ -21,11 +22,11 @@ describe('data first', () => {
 });
 
 describe('curried', () => {
-  test('array', () => {
+  it('array', () => {
     expect(pipe([0, 1, 2, 3, 4], length())).toEqual(5);
   });
 
-  test('iterable', () => {
+  it('iterable', () => {
     expect(
       pipe(
         {

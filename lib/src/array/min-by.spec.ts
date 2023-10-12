@@ -1,20 +1,21 @@
-import { minBy } from './min-by';
+import { describe, expect, it } from 'vitest';
 import { pipe } from '../function';
+import { minBy } from './min-by';
 
 const array = [{ a: 2 }, { a: 5 }, { a: 1 }, { a: 3 }] as const;
 const expected = { a: 1 };
 
 describe('data first', () => {
-  test('minBy', () => {
+  it('minBy', () => {
     expect(minBy(array, (x) => x.a)).toEqual(expected);
   });
-  test('minBy.indexed', () => {
+  it('minBy.indexed', () => {
     expect(minBy.indexed(array, (x, idx) => x.a + idx)).toEqual({ a: 2 });
   });
 });
 
 describe('data last', () => {
-  test('minBy', () => {
+  it('minBy', () => {
     const actual = pipe(
       array,
       minBy((x) => x.a),
@@ -22,7 +23,7 @@ describe('data last', () => {
     expect(actual).toEqual(expected);
   });
 
-  test('minBy.indexed', () => {
+  it('minBy.indexed', () => {
     const actual = pipe(
       array,
       minBy.indexed((x, idx) => x.a + idx),

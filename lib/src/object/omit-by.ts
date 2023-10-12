@@ -7,7 +7,7 @@ import { purry } from '../function';
  * @signature P.omitBy(object, fn)
  * @example
  *    P.omitBy({a: 1, b: 2, A: 3, B: 4}, (val, key) => key.toUpperCase() === key) // => {a: 1, b: 2}
- * @data_first
+ * @dataFirst
  * @category Object
  */
 export function omitBy<T>(
@@ -21,15 +21,15 @@ export function omitBy<T>(
  * @signature P.omitBy(fn)(object)
  * @example
  *    P.omitBy((val, key) => key.toUpperCase() === key)({a: 1, b: 2, A: 3, B: 4}) // => {a: 1, b: 2}
- * @data_last
+ * @dataLast
  * @category Object
  */
 export function omitBy<T>(
   fn: <K extends keyof T>(value: T[K], key: K) => boolean
 ): (object: T) => T extends Record<keyof T, T[keyof T]> ? T : Partial<T>;
 
-export function omitBy() {
-  return purry(_omitBy, arguments);
+export function omitBy(...args: any[]) {
+  return purry(_omitBy, args);
 }
 
 function _omitBy(object: any, fn: (value: any, key: any) => boolean) {

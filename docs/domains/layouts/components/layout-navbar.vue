@@ -45,7 +45,7 @@ watch(y, (value) => {
           aria-label="Home"
           class="h-$vd-nav-height w-full flex items-center border-b border-transparent text-base font-600 lg:(border-$vd-c-divider)"
         >
-          ESLint Vinicunca
+          Perkakas
         </NuxtLink>
       </div>
 

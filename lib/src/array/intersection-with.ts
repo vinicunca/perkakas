@@ -1,4 +1,4 @@
-import { type LazyResult } from '../utils/reduce-lazy';
+import type { LazyResult } from '../utils/reduce-lazy';
 import { _reduceLazy } from '../utils/reduce-lazy';
 import { purry } from '../function';
 
@@ -21,7 +21,7 @@ type Comparator<TFirst, TSecond> = (a: TFirst, b: TSecond) => boolean;
  *      [3, 5],
  *      (a, b) => a.id === b,
  *    ) // => [{ id: 3, name: 'Emma' }]
- * @data_first
+ * @dataFirst
  * @category Array
  * @pipeable
  */
@@ -46,7 +46,7 @@ export function intersectionWith<TFirst, TSecond>(
  *        { id: 1, name: 'Ryan' },
  *        { id: 3, name: 'Emma' },
  *      ]); // => [{ id: 3, name: 'Emma' }]
- * @data_last
+ * @dataLast
  * @category Array
  * @pipeable
  */
@@ -59,8 +59,8 @@ export function intersectionWith<TFirst, TSecond>(
   comparator: Comparator<TFirst, TSecond>
 ): (array: ReadonlyArray<TFirst>) => Array<TFirst>;
 
-export function intersectionWith() {
-  return purry(_intersectionWith, arguments, intersectionWith.lazy);
+export function intersectionWith(...args: any[]) {
+  return purry(_intersectionWith, args, intersectionWith.lazy);
 }
 
 function _intersectionWith<TFirst, TSecond>(

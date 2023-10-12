@@ -1,5 +1,6 @@
-import { mapToObj } from './map-to-obj';
+import { describe, expect, it } from 'vitest';
 import { pipe } from '../function';
+import { mapToObj } from './map-to-obj';
 
 describe('data_first', () => {
   it('mapToObj', () => {

@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { swapIndices } from './swap-indices';
 
 describe('data_first', () => {

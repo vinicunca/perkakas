@@ -1,11 +1,10 @@
-import { flatMapToObj } from './flat-map-to-obj';
+import { describe, expect, it } from 'vitest';
 import { pipe } from '../function';
+import { flatMapToObj } from './flat-map-to-obj';
 
 describe('data_first', () => {
   it('flatMapToObj', () => {
-    const result = flatMapToObj([1, 2, 3] as const, (x) =>
-      x % 2 === 1 ? [[String(x), x]] : [],
-    );
+    const result = flatMapToObj([1, 2, 3] as const, (x) => x % 2 === 1 ? [[String(x), x]] : []);
     expect(result).toEqual({ 1: 1, 3: 3 });
   });
   it('flatMapToObj.indexed', () => {

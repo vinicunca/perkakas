@@ -1,4 +1,4 @@
-import { type PredIndexedOptional } from '../utils/types';
+import type { PredIndexedOptional } from '../utils/types';
 import { purry } from '../function';
 
 /**
@@ -17,7 +17,7 @@ import { purry } from '../function';
  *    [x, i],
  *    [x + x, i + i],
  *  ]) // => {a: 0, aa: 0, b: 1, bb: 2}
- * @data_first
+ * @dataFirst
  * @indexed
  * @category Array
  */
@@ -45,7 +45,7 @@ export function flatMapToObj<T, K extends keyof any, V>(
  *        [x + x, i + i],
  *      ])
  *    ) // => {a: 0, aa: 0, b: 1, bb: 2}
- * @data_last
+ * @dataLast
  * @indexed
  * @category Array
  */
@@ -53,8 +53,8 @@ export function flatMapToObj<T, K extends keyof any, V>(
   fn: (element: T) => Array<[K, V]>
 ): (array: ReadonlyArray<T>) => Record<K, V>;
 
-export function flatMapToObj() {
-  return purry(_flatMapToObj(false), arguments);
+export function flatMapToObj(...args: any[]) {
+  return purry(_flatMapToObj(false), args);
 }
 
 function _flatMapToObj(indexed: boolean) {
@@ -77,7 +77,7 @@ export namespace flatMapToObj {
   export function indexed<T, K extends keyof any, V>(
     fn: (element: T, index: number, array: ReadonlyArray<T>) => Array<[K, V]>
   ): (array: ReadonlyArray<T>) => Record<K, V>;
-  export function indexed() {
-    return purry(_flatMapToObj(true), arguments);
+  export function indexed(...args: any[]) {
+    return purry(_flatMapToObj(true), args);
   }
 }

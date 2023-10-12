@@ -23,7 +23,7 @@ type UnindexedIteratee<T extends Record<PropertyKey, any>> = (
  *    P.forEachObj.indexed({a: 1}, (val, key, obj) => {
  *      console.log(`${key}: ${val}`)
  *    }) // "a: 1"
- * @data_first
+ * @dataFirst
  * @category Object
  */
 export function forEachObj<T extends Record<PropertyKey, any>>(
@@ -45,15 +45,15 @@ export function forEachObj<T extends Record<PropertyKey, any>>(
  *      {a: 1},
  *      P.forEachObj.indexed((val, key) => console.log(`${key}: ${val}`))
  *    ) // "a: 1"
- * @data_last
+ * @dataLast
  * @category Object
  */
 export function forEachObj<T extends Record<PropertyKey, any>>(
   fn: UnindexedIteratee<T>
 ): (object: T) => T;
 
-export function forEachObj() {
-  return purry(_forEachObj(false), arguments);
+export function forEachObj(...args: any[]) {
+  return purry(_forEachObj(false), args);
 }
 
 function _forEachObj(indexed: boolean) {
@@ -81,7 +81,7 @@ export namespace forEachObj {
   export function indexed<T extends Record<PropertyKey, any>>(
     fn: IndexedIteratee<T, keyof T>
   ): (object: T) => T;
-  export function indexed() {
-    return purry(_forEachObj(true), arguments);
+  export function indexed(...args: any[]) {
+    return purry(_forEachObj(true), args);
   }
 }

@@ -1,9 +1,10 @@
-import { shuffle } from './shuffle';
+import { describe, expect, it } from 'vitest';
 import { pipe } from '../function';
+import { shuffle } from './shuffle';
 import { difference } from './difference';
 
 describe('data_first', () => {
-  test('shuffle', () => {
+  it('shuffle', () => {
     const input = [4, 2, 7, 5] as const;
 
     const shuffled = shuffle(input);
@@ -19,7 +20,7 @@ describe('data_first', () => {
 });
 
 describe('data_last', () => {
-  test('shuffle', () => {
+  it('shuffle', () => {
     const input = [4, 2, 7, 5] as const;
 
     const shuffled = pipe(input, shuffle());

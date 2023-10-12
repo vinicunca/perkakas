@@ -1,6 +1,7 @@
+import { describe, expect, it } from 'vitest';
 import { createLazyInvocationCounter } from '../../test/lazy-invocation-counter';
-import { find } from './find';
 import { pipe } from '../function';
+import { find } from './find';
 
 const array = [
   { a: 1, b: 1 },
@@ -11,10 +12,10 @@ const array = [
 const expected = { a: 1, b: 2 };
 
 describe('data first', () => {
-  test('find', () => {
+  it('find', () => {
     expect(find(array, (x) => x.b === 2)).toEqual(expected);
   });
-  test('find.indexed', () => {
+  it('find.indexed', () => {
     expect(find.indexed(array, (x, idx) => x.b === 2 && idx === 1)).toEqual(
       expected,
     );
@@ -22,7 +23,7 @@ describe('data first', () => {
 });
 
 describe('data last', () => {
-  test('find', () => {
+  it('find', () => {
     const counter = createLazyInvocationCounter();
     const actual = pipe(
       array,
@@ -33,7 +34,7 @@ describe('data last', () => {
     expect(actual).toEqual(expected);
   });
 
-  test('find.indexed', () => {
+  it('find.indexed', () => {
     const counter = createLazyInvocationCounter();
     const actual = pipe(
       array,

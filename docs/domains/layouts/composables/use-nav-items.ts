@@ -1,12 +1,12 @@
 export function useNavItems() {
   const navItems = [
     {
-      title: 'User Guide',
-      _path: '/user-guide',
+      title: 'Installation',
+      _path: '/installation',
     },
     {
-      title: 'Configs',
-      _path: '/configs',
+      title: 'Documentation',
+      _path: '/docs',
     },
   ];
 

@@ -1,4 +1,4 @@
-import { type LazyResult } from '../utils/reduce-lazy';
+import type { LazyResult } from '../utils/reduce-lazy';
 import { purry } from '../function';
 import { _reduceLazy } from '../utils/reduce-lazy';
 
@@ -10,7 +10,7 @@ import { _reduceLazy } from '../utils/reduce-lazy';
  *    P.take(array, n)
  * @example
  *    P.take([1, 2, 3, 4, 3, 2, 1], 3) // => [1, 2, 3]
- * @data_first
+ * @dataFirst
  * @pipeable
  * @category Array
  */
@@ -23,14 +23,14 @@ export function take<T>(array: ReadonlyArray<T>, n: number): Array<T>;
  *    P.take(n)(array)
  * @example
  *    P.pipe([1, 2, 3, 4, 3, 2, 1], P.take(n)) // => [1, 2, 3]
- * @data_last
+ * @dataLast
  * @pipeable
  * @category Array
  */
 export function take<T>(n: number): (array: ReadonlyArray<T>) => Array<T>;
 
-export function take() {
-  return purry(_take, arguments, take.lazy);
+export function take(...args: any[]) {
+  return purry(_take, args, take.lazy);
 }
 
 function _take<T>(array: Array<T>, n: number) {

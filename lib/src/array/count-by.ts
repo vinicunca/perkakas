@@ -1,4 +1,4 @@
-import { type Pred, type PredIndexed, type PredIndexedOptional } from '../utils/types';
+import type { Pred, PredIndexed, PredIndexedOptional } from '../utils/types';
 import { purry } from '../function';
 
 function _countBy(indexed: boolean) {
@@ -18,7 +18,7 @@ function _countBy(indexed: boolean) {
  *    P.countBy(array, fn)
  * @example
  *    P.countBy([1, 2, 3, 4, 5], x => x % 2 === 0) // => 2
- * @data_first
+ * @dataFirst
  * @indexed
  * @category Array
  */
@@ -33,17 +33,17 @@ export function countBy<T>(
 
 /**
  * Counts how many values of the collection pass the specified predicate.
- * @param fn The predicate.
+ * @param args The predicate.
  * @signature
- *    P.countBy(fn)(array)
+ *    P.countBy(args)(array)
  * @example
  *    P.pipe([1, 2, 3, 4, 5], P.countBy(x => x % 2 === 0)) // => 2
- * @data_last
+ * @dataLast
  * @indexed
  * @category Array
  */
-export function countBy() {
-  return purry(_countBy(false), arguments);
+export function countBy(...args: any[]) {
+  return purry(_countBy(false), args);
 }
 
 export namespace countBy {
@@ -54,7 +54,7 @@ export namespace countBy {
   export function indexed<T>(
     fn: PredIndexed<T, boolean>
   ): (array: ReadonlyArray<T>) => number;
-  export function indexed() {
-    return purry(_countBy(true), arguments);
+  export function indexed(...args: any[]) {
+    return purry(_countBy(true), args);
   }
 }

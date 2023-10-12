@@ -7,7 +7,7 @@ import { purry } from '../function';
  * @signature range(start, end)
  * @example
  *    P.range(1, 5) // => [1, 2, 3, 4]
- * @data_first
+ * @dataFirst
  * @category Array
  */
 export function range(start: number, end: number): Array<number>;
@@ -18,13 +18,13 @@ export function range(start: number, end: number): Array<number>;
  * @signature range(end)(start)
  * @example
  *    P.range(5)(1) // => [1, 2, 3, 4]
- * @data_first
+ * @dataFirst
  * @category Array
  */
 export function range(end: number): (start: number) => Array<number>;
 
-export function range() {
-  return purry(_range, arguments);
+export function range(...args: any[]) {
+  return purry(_range, args);
 }
 
 function _range(start: number, end: number) {

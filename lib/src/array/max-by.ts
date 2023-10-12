@@ -1,4 +1,4 @@
-import { type PredIndexed, type PredIndexedOptional } from '../utils/types';
+import type { PredIndexed, PredIndexedOptional } from '../utils/types';
 import { purry } from '../function';
 
 function _maxBy(indexed: boolean) {
@@ -28,7 +28,7 @@ function _maxBy(indexed: boolean) {
  *      [{a: 5}, {a: 1}, {a: 3}],
  *      P.maxBy(x => x.a)
  *    ) // { a: 5 }
- * @data_last
+ * @dataLast
  * @indexed
  * @category Array
  */
@@ -48,7 +48,7 @@ export function maxBy<T>(
  *      [{a: 5}, {a: 1}, {a: 3}],
  *      x => x.a
  *    ) // { a: 5 }
- * @data_first
+ * @dataFirst
  * @indexed
  * @category Array
  */
@@ -57,8 +57,8 @@ export function maxBy<T>(
   fn: (item: T) => number
 ): T | undefined;
 
-export function maxBy() {
-  return purry(_maxBy(false), arguments);
+export function maxBy(...args: any[]) {
+  return purry(_maxBy(false), args);
 }
 
 export namespace maxBy {
@@ -69,7 +69,7 @@ export namespace maxBy {
   export function indexed<T>(
     fn: PredIndexed<T, number>
   ): (array: ReadonlyArray<T>) => T | undefined;
-  export function indexed() {
-    return purry(_maxBy(true), arguments);
+  export function indexed(...args: any[]) {
+    return purry(_maxBy(true), args);
   }
 }

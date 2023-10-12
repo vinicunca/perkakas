@@ -15,7 +15,7 @@ const keyList = Object.keys;
  *    P.equals(1, 1) //=> true
  *    P.equals(1, '1') //=> false
  *    P.equals([1, 2, 3], [1, 2, 3]) //=> true
- * @data_first
+ * @dataFirst
  * @category Object
  */
 export function equals(a: any, b: any): boolean;
@@ -24,20 +24,19 @@ export function equals(a: any, b: any): boolean;
  * Returns true if its arguments are equivalent, false otherwise.
  * NOTE: Doesn't handle cyclical data structures.
  * @param a the first object to compare
- * @param b the second object to compare
  * @signature
  *    P.equals(b)(a)
  * @example
  *    P.equals(1)(1) //=> true
  *    P.equals('1')(1) //=> false
  *    P.equals([1, 2, 3])([1, 2, 3]) //=> true
- * @data_last
+ * @dataLast
  * @category Object
  */
 export function equals(a: any): (b: any) => boolean;
 
-export function equals() {
-  return purry(_equals, arguments);
+export function equals(...args: any[]) {
+  return purry(_equals, args);
 }
 
 function _equals(a: any, b: any) {
@@ -57,7 +56,7 @@ function _equals(a: any, b: any) {
       if (length !== b.length) {
         return false;
       }
-      for (i = length; i-- !== 0; ) {
+      for (i = length; i-- !== 0;) {
         if (!equals(a[i], b[i])) {
           return false;
         }
@@ -94,13 +93,13 @@ function _equals(a: any, b: any) {
       return false;
     }
 
-    for (i = length; i-- !== 0; ) {
+    for (i = length; i-- !== 0;) {
       if (!Object.prototype.hasOwnProperty.call(b, keys[i])) {
         return false;
       }
     }
 
-    for (i = length; i-- !== 0; ) {
+    for (i = length; i-- !== 0;) {
       key = keys[i];
       if (!equals(a[key], b[key])) {
         return false;
@@ -110,5 +109,6 @@ function _equals(a: any, b: any) {
     return true;
   }
 
+  // eslint-disable-next-line no-self-compare
   return a !== a && b !== b;
 }

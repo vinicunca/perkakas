@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { useContent, useRequestEvent, useSeoMeta } from '#imports';
-import { type ConfigItem } from '~~/domains/docs/types';
 
 const { page, layout } = useContent();
 
@@ -14,31 +13,22 @@ useSeoMeta({
   title: () => page.value?.title,
   description: () => page.value?.description,
 });
-
-const route = useRoute();
-
-const { data, pending } = useFetch<{ configs: ConfigItem[] }>('/api/meta', {
-  query: { config: route.params.all },
-});
 </script>
 
 <template>
   <div class="document-driven-page">
     <NuxtLayout :name="layout as string || 'default'">
       <ContentRenderer
-        v-if="page && data"
+        v-if="page"
         :key="(page as any)._id"
-        :value="{
-          ...page,
-          configs: data?.configs,
-        }"
+        :value="page"
       >
         <template #empty="{ value }">
           <DocumentDrivenEmpty :value="value" />
         </template>
       </ContentRenderer>
 
-      <DocumentDrivenNotFound v-else-if="!pending" />
+      <DocumentDrivenNotFound v-else />
     </NuxtLayout>
   </div>
 </template>

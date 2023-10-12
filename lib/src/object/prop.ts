@@ -4,10 +4,9 @@
  * @signature P.prop(prop)(object)
  * @example
  *    P.pipe({foo: 'bar'}, P.prop('foo')) // => 'bar'
- * @data_last
+ * @dataLast
  * @category Object
  */
 export function prop<T, K extends keyof T>(propName: K) {
-  return ({ [propName]: value }: T) =>
-    value;
+  return ({ [propName]: value }: T) => value;
 }

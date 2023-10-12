@@ -1,5 +1,5 @@
 import { isString } from '../guard';
-import { type CamelCase, type JoinByCase, type PascalCase, type SplitByCase } from './cases-types';
+import type { CamelCase, JoinByCase, PascalCase, SplitByCase } from './cases-types';
 
 const RE_NUMBER_CHAR = /\d/;
 const STR_SPLITTERS = ['-', '_', '/', '.'] as const;

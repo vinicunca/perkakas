@@ -6,7 +6,7 @@
  *    P.mapValues(object, fn)
  * @example
  *    P.mapValues({a: 1, b: 2}, (value, key) => value + key) // => {a: '1a', b: '2b'}
- * @data_first
+ * @dataFirst
  * @category Object
  */
 export function mapValues<T extends Record<PropertyKey, any>, S>(
@@ -21,7 +21,7 @@ export function mapValues<T extends Record<PropertyKey, any>, S>(
  *    P.mapValues(fn)(object)
  * @example
  *    P.pipe({a: 1, b: 2}, P.mapValues((value, key) => value + key)) // => {a: '1a', b: '2b'}
- * @data_last
+ * @dataLast
  * @category Object
  */
 export function mapValues<T extends Record<PropertyKey, any>, S>(

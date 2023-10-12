@@ -1,6 +1,7 @@
+import { describe, expect, expectTypeOf, it, vi } from 'vitest';
+import { identity, pipe } from '../function';
 import { filter } from './filter';
 import { map } from './map';
-import { identity, pipe } from '../function';
 import { take } from './take';
 
 describe('data_first', () => {
@@ -93,7 +94,7 @@ describe('pipe', () => {
   });
 });
 
-describe('Strict', () => {
+describe('strict', () => {
   it('number array', () => {
     const input: Array<number> = [1, 2, 3];
     const result = map.strict(input, (x) => x + 1);
@@ -130,7 +131,7 @@ describe('Strict', () => {
     // There's no way to test this, but notice that the names are copied to the
     // output here...
     expectTypeOf(result).toEqualTypeOf<
-      [item1: number, item2: number, item3: number]
+    [item1: number, item2: number, item3: number]
     >();
     expect(result).toEqual([2, 3, 4]);
   });
@@ -191,13 +192,13 @@ describe('Strict', () => {
     ] = ['hello', 'world', 1, 'testing', 'testing', 'testing', 123, true];
     const result = map.strict(input, identity);
     expectTypeOf(result).toEqualTypeOf<
-      [...Array<string | number | boolean>, string | number | boolean]
+    [...Array<string | number | boolean>, string | number | boolean]
     >();
     expect(result).toEqual(input);
   });
 });
 
-describe('Strict Indexed', () => {
+describe('strict Indexed', () => {
   it('number array', () => {
     const input: Array<number> = [1, 2, 3];
     const result = map.strict.indexed(input, (x, index) => x + index);
@@ -234,7 +235,7 @@ describe('Strict Indexed', () => {
     // There's no way to test this, but notice that the names are copied to the
     // output here...
     expectTypeOf(result).toEqualTypeOf<
-      [item1: number, item2: number, item3: number]
+    [item1: number, item2: number, item3: number]
     >();
     expect(result).toEqual([1, 3, 5]);
   });
@@ -295,7 +296,7 @@ describe('Strict Indexed', () => {
     ] = ['hello', 'world', 1, 'testing', 'testing', 'testing', 123, true];
     const result = map.strict.indexed(input, identity);
     expectTypeOf(result).toEqualTypeOf<
-      [...Array<string | number | boolean>, string | number | boolean]
+    [...Array<string | number | boolean>, string | number | boolean]
     >();
     expect(result).toEqual(input);
   });
