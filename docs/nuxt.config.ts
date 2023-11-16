@@ -1,48 +1,20 @@
-import process from 'node:process';
 import { createResolver } from '@nuxt/kit';
+import process from 'node:process';
 
 const { resolve } = createResolver(import.meta.url);
 
 export default defineNuxtConfig({
-  devServer: {
-    port: 3001,
-  },
-
-  components: [
-    {
-      path: '~~/domains/docs/components',
-      pathPrefix: false,
-      global: true,
-    },
-  ],
-
-  modules: [
-    '@nuxt/devtools',
-    '@nuxtjs/algolia',
-    '@nuxtjs/color-mode',
-    '@nuxt/content',
-    '@unocss/nuxt',
-    'nuxt-gtag',
-    resolve('./app/content-post-process'),
-  ],
-
-  css: [
-    '@unocss/reset/tailwind.css',
-    '~~/designs/styles/index.css',
-    '~~/designs/styles/docs.css',
-  ],
-
   algolia: {
     apiKey: process.env.ALGOLIA_SEARCH_API_KEY,
     applicationId: process.env.ALGOLIA_APPLICATION_ID,
-    // DocSearch key is used to configure DocSearch extension.
-    docSearch: {
+    crawler: {
+      apiKey: process.env.ALGOLIA_CRAWLER_API_KEY!,
       indexName: 'perkakas-vinicunca',
     },
 
-    crawler: {
+    // DocSearch key is used to configure DocSearch extension.
+    docSearch: {
       indexName: 'perkakas-vinicunca',
-      apiKey: process.env.ALGOLIA_CRAWLER_API_KEY,
     },
   },
 
@@ -50,6 +22,14 @@ export default defineNuxtConfig({
     classSuffix: '',
     dataValue: 'theme',
   },
+
+  components: [
+    {
+      global: true,
+      path: '~~/domains/docs/components',
+      pathPrefix: false,
+    },
+  ],
 
   content: {
     documentDriven: {
@@ -73,9 +53,29 @@ export default defineNuxtConfig({
     },
   },
 
-  // gtag: {
-  //   id: 'G-38W7J3MEER',
-  // },
+  css: [
+    '@unocss/reset/tailwind.css',
+    '~~/designs/styles/index.css',
+    '~~/designs/styles/docs.css',
+  ],
+
+  devServer: {
+    port: 3001,
+  },
+
+  gtag: {
+    id: 'G-TTL6ESKMD4',
+  },
+
+  modules: [
+    '@nuxt/devtools',
+    '@nuxtjs/algolia',
+    '@nuxtjs/color-mode',
+    '@nuxt/content',
+    '@unocss/nuxt',
+    'nuxt-gtag',
+    resolve('./app/content-post-process'),
+  ],
 
   postcss: {
     plugins: {

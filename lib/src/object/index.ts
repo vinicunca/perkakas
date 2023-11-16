@@ -9,6 +9,7 @@ export * from './keys';
 export * from './map-keys';
 export * from './map-values';
 export * from './merge';
+export * from './merge-deep';
 export * from './omit';
 export * from './omit-by';
 export * from './path-or';
