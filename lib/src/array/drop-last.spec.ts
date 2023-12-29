@@ -1,4 +1,5 @@
 import { expect, it } from 'vitest';
+
 import { dropLast } from './drop-last';
 
 const arr = [1, 2, 3, 4, 5] as const;

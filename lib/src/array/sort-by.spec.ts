@@ -1,4 +1,5 @@
 import { describe, expect, expectTypeOf, it } from 'vitest';
+
 import { identity, pipe } from '../function';
 import { sortBy } from './sort-by';
 
@@ -10,27 +11,27 @@ function assertType<T>(data: T): T {
 }
 
 const objects = [
-  { id: 1, color: 'red', weight: 2, active: true, date: new Date(2021, 1, 1) },
+  { active: true, color: 'red', date: new Date(2021, 1, 1), id: 1, weight: 2 },
   {
-    id: 2,
+    active: false,
     color: 'blue',
-    weight: 3,
-    active: false,
     date: new Date(2021, 1, 2),
+    id: 2,
+    weight: 3,
   },
   {
-    id: 3,
-    color: 'green',
-    weight: 1,
     active: false,
+    color: 'green',
     date: new Date(2021, 1, 3),
+    id: 3,
+    weight: 1,
   },
   {
-    id: 4,
-    color: 'purple',
-    weight: 1,
     active: true,
+    color: 'purple',
     date: new Date(2021, 1, 4),
+    id: 4,
+    weight: 1,
   },
 ];
 
@@ -100,7 +101,7 @@ describe('data last', () => {
     );
   });
   it('sort objects correctly', () => {
-    const sortFn = sortBy<{ weight: number; color: string }>(
+    const sortFn = sortBy<{ color: string; weight: number }>(
       (x) => x.weight,
       (x) => x.color,
     );
@@ -113,7 +114,7 @@ describe('data last', () => {
   });
   it('sort objects correctly by weight asc then color desc', () => {
     expect(
-      sortBy<{ weight: number; color: string }>(
+      sortBy<{ color: string; weight: number }>(
         [(x) => x.weight, 'asc'],
         [(x) => x.color, 'desc'],
       )(objects).map((x) => x.color),
@@ -230,9 +231,9 @@ describe('strict', () => {
     const result = sortBy.strict(array, identity);
     expectTypeOf(result).toEqualTypeOf<
     [
-      number | string | boolean,
-      number | string | boolean,
-      number | string | boolean,
+      boolean | number | string,
+      boolean | number | string,
+      boolean | number | string,
     ]
     >();
   });

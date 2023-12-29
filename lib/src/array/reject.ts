@@ -1,7 +1,8 @@
 import type { LazyResult } from '../utils/reduce-lazy';
+import type { Pred, PredIndexed, PredIndexedOptional } from '../utils/types';
+
 import { purry } from '../function';
 import { _reduceLazy } from '../utils/reduce-lazy';
-import type { Pred, PredIndexed, PredIndexedOptional } from '../utils/types';
 import { toLazyIndexed } from '../utils/to-lazy-indexed';
 
 /**

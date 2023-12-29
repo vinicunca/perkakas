@@ -1,4 +1,5 @@
 import { assertType, describe, expect, it } from 'vitest';
+
 import { zipWith } from './zip-with';
 
 function pred(a: string, b: string) {

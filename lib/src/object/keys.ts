@@ -21,7 +21,7 @@
 import type { IterableContainer } from '../utils/types';
 
 export function keys(
-  source: Record<PropertyKey, unknown> | ArrayLike<unknown>,
+  source: ArrayLike<unknown> | Record<PropertyKey, unknown>,
 ): Array<string> {
   return Object.keys(source);
 }
@@ -33,7 +33,7 @@ type Keys<T> = T extends IterableContainer ? ArrayKeys<T> : ObjectKeys<T>;
 // "mapping" each item "key" (which is actually an index) as its own value. This
 // would maintain the shape, even including labels.
 type ArrayKeys<T extends IterableContainer> = {
-  -readonly [Index in keyof T]: Index extends string | number
+  -readonly [Index in keyof T]: Index extends number | string
     ? // Notice that we coalesce the values as strings, this is because in JS,
       // Object.keys always returns strings, even for arrays.
       `${IsIndexAfterSpread<T, Index> extends true ? number : Index}`
@@ -44,7 +44,7 @@ type ArrayKeys<T extends IterableContainer> = {
 
 type IsIndexAfterSpread<
   T extends IterableContainer,
-  Index extends string | number,
+  Index extends number | string,
 > = IndicesAfterSpread<T> extends never
   ? false
   : Index extends `${IndicesAfterSpread<T>}`
@@ -57,7 +57,7 @@ type IsIndexAfterSpread<
 // return 0 (as expected), and if the tuple doesn't contain a spread element it
 // would return never.
 type IndicesAfterSpread<
-  T extends ReadonlyArray<unknown> | [],
+  T extends [] | ReadonlyArray<unknown>,
   // We use this type to count how many items we consumed, it's just a pseudo-
   // element that is used for its length.
   Iterations extends ReadonlyArray<unknown> = [],

@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
+
 import { pipe } from '../function';
-import { shuffle } from './shuffle';
 import { difference } from './difference';
+import { shuffle } from './shuffle';
 
 describe('data_first', () => {
   it('shuffle', () => {

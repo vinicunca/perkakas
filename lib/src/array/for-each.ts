@@ -1,8 +1,9 @@
 import type { LazyResult } from '../utils/reduce-lazy';
+import type { Pred, PredIndexed, PredIndexedOptional } from '../utils/types';
+
 import { purry } from '../function';
 import { _reduceLazy } from '../utils/reduce-lazy';
 import { toLazyIndexed } from '../utils/to-lazy-indexed';
-import type { Pred, PredIndexed, PredIndexedOptional } from '../utils/types';
 
 /**
  * Iterate an array using a defined callback function. The original array is returned instead of `void`.

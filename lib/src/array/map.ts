@@ -1,13 +1,14 @@
 import type { LazyResult } from '../utils/reduce-lazy';
-import { purry } from '../function';
-import { _reduceLazy } from '../utils/reduce-lazy';
-import { toLazyIndexed } from '../utils/to-lazy-indexed';
 import type {
   IterableContainer,
   Pred,
   PredIndexed,
   PredIndexedOptional,
 } from '../utils/types';
+
+import { purry } from '../function';
+import { _reduceLazy } from '../utils/reduce-lazy';
+import { toLazyIndexed } from '../utils/to-lazy-indexed';
 
 /**
  * Map each element of an array using a defined callback function. If the input

@@ -1,4 +1,5 @@
 import type { IterableContainer } from '../utils/types';
+
 import { purry } from '../function';
 
 type Sampled<T extends IterableContainer, N extends number> =
@@ -43,8 +44,8 @@ type SampledLiteral<
         : // If the input is an array, or a tuple's rest-element we need to split the
       // recursion in 2, one type adds an element to the output, and the other
       // skips it, just like the sample method itself.
-          | [T[number], ...SampledLiteral<T, N, [unknown, ...Iteration]>]
-          | SampledLiteral<T, N, [unknown, ...Iteration]>;
+        | [T[number], ...SampledLiteral<T, N, [unknown, ...Iteration]>]
+        | SampledLiteral<T, N, [unknown, ...Iteration]>;
 
 /**
  * Returns a random subset of size `sampleSize` from `array`.

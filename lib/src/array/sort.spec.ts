@@ -1,4 +1,5 @@
 import { describe, expect, expectTypeOf, it } from 'vitest';
+
 import { pipe } from '../function';
 import { sort } from './sort';
 
@@ -85,9 +86,9 @@ describe('strict', () => {
     const result = sort.strict(array, () => 1);
     expectTypeOf(result).toEqualTypeOf<
     [
-      number | string | boolean,
-      number | string | boolean,
-      number | string | boolean,
+      boolean | number | string,
+      boolean | number | string,
+      boolean | number | string,
     ]
     >();
   });

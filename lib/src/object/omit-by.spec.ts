@@ -1,14 +1,15 @@
 import { assertType, describe, expect, it } from 'vitest';
+
 import { pipe } from '../function';
 import { omitBy } from './omit-by';
 
 describe('data first', () => {
   it('it should omit props', () => {
     const result = omitBy(
-      { a: 1, b: 2, A: 3, B: 4 },
+      { A: 3, B: 4, a: 1, b: 2 },
       (val, key) => key.toUpperCase() === key,
     );
-    assertType<Record<'a' | 'b' | 'A' | 'B', number>>(result);
+    assertType<Record<'A' | 'B' | 'a' | 'b', number>>(result);
     expect(result).toStrictEqual({ a: 1, b: 2 });
   });
   it('allow partial type', () => {
@@ -24,10 +25,10 @@ describe('data first', () => {
 describe('data last', () => {
   it('it should omit props', () => {
     const result = pipe(
-      { a: 1, b: 2, A: 3, B: 4 },
+      { A: 3, B: 4, a: 1, b: 2 },
       omitBy((val, key) => key.toUpperCase() === key),
     );
-    assertType<Record<'a' | 'b' | 'A' | 'B', number>>(result);
+    assertType<Record<'A' | 'B' | 'a' | 'b', number>>(result);
     expect(result).toStrictEqual({ a: 1, b: 2 });
   });
   it('allow partial type', () => {

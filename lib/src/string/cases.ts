@@ -1,5 +1,6 @@
-import { isString } from '../guard';
 import type { CamelCase, JoinByCase, PascalCase, SplitByCase } from './cases-types';
+
+import { isString } from '../guard';
 
 const RE_NUMBER_CHAR = /\d/;
 const STR_SPLITTERS = ['-', '_', '/', '.'] as const;
@@ -85,10 +86,10 @@ export function toLowerFirst<S extends string>(string_: S): Uncapitalize<S> {
 }
 
 export function toPascalCase(): '';
-export function toPascalCase<T extends string | readonly string[]>(
+export function toPascalCase<T extends readonly string[] | string>(
   string_?: T
 ): PascalCase<T>;
-export function toPascalCase<T extends string | readonly string[]>(string_?: T) {
+export function toPascalCase<T extends readonly string[] | string>(string_?: T) {
   return !string_
     ? ''
     : ((Array.isArray(string_) ? string_ : splitByCase(string_ as string))
@@ -97,23 +98,23 @@ export function toPascalCase<T extends string | readonly string[]>(string_?: T) 
 }
 
 export function toCamelCase(): '';
-export function toCamelCase<T extends string | readonly string[]>(
+export function toCamelCase<T extends readonly string[] | string>(
   string_?: T
 ): CamelCase<T>;
-export function toCamelCase<T extends string | readonly string[]>(string_?: T) {
+export function toCamelCase<T extends readonly string[] | string>(string_?: T) {
   return toLowerFirst(toPascalCase(string_ || '')) as CamelCase<T>;
 }
 
 export function toKebabCase(): '';
-export function toKebabCase<T extends string | readonly string[]>(
+export function toKebabCase<T extends readonly string[] | string>(
   string_?: T
 ): JoinByCase<T, '-'>;
 export function toKebabCase<
-  T extends string | readonly string[],
+  T extends readonly string[] | string,
   Joiner extends string,
 >(string_: T, joiner: Joiner): JoinByCase<T, Joiner>;
 export function toKebabCase<
-  T extends string | readonly string[],
+  T extends readonly string[] | string,
   Joiner extends string,
 >(string_?: T, joiner?: Joiner) {
   return !string_
@@ -124,9 +125,9 @@ export function toKebabCase<
 }
 
 export function toSnakeCase(): '';
-export function toSnakeCase<T extends string | readonly string[]>(
+export function toSnakeCase<T extends readonly string[] | string>(
   string_?: T
 ): JoinByCase<T, '_'>;
-export function toSnakeCase<T extends string | readonly string[]>(string_?: T) {
+export function toSnakeCase<T extends readonly string[] | string>(string_?: T) {
   return toKebabCase(string_ || '', '_') as JoinByCase<T, '_'>;
 }

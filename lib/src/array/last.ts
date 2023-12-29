@@ -1,4 +1,5 @@
 import type { NonEmptyArray } from '../utils/types';
+
 import { purry } from '../function';
 
 /**

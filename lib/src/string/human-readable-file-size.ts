@@ -24,4 +24,3 @@ export function humanReadableFileSize(bytes: number, base: 1000 | 1024 = 1000): 
 
   return `${bytes.toFixed(1)} ${prefix[unit]}B`;
 }
-

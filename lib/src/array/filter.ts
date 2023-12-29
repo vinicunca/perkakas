@@ -1,7 +1,8 @@
-import { type LazyResult, _reduceLazy } from '../utils/reduce-lazy';
 import type { Pred, PredIndexed, PredIndexedOptional } from '../utils/types';
-import { toLazyIndexed } from '../utils/to-lazy-indexed';
+
 import { purry } from '../function';
+import { _reduceLazy, type LazyResult } from '../utils/reduce-lazy';
+import { toLazyIndexed } from '../utils/to-lazy-indexed';
 
 /**
  * Filter the elements of an array that meet the condition specified in a callback function.

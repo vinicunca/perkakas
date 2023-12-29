@@ -1,5 +1,5 @@
-import { type LazyResult, _reduceLazy } from '../utils/reduce-lazy';
 import { purry } from '../function';
+import { _reduceLazy, type LazyResult } from '../utils/reduce-lazy';
 
 /**
  * Excludes the values from `other` array.

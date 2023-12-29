@@ -1,4 +1,5 @@
 import type { IterableContainer } from '../utils/types';
+
 import { purry } from '../function';
 
 type FirstOut<T extends IterableContainer> = T extends []
@@ -6,7 +7,7 @@ type FirstOut<T extends IterableContainer> = T extends []
   : T extends readonly [unknown, ...Array<unknown>]
     ? T[0]
     : T extends readonly [...infer Pre, infer Last]
-      ? Pre[0] | Last
+      ? Last | Pre[0]
       : T[0] | undefined;
 
 /**

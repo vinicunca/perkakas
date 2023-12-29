@@ -1,4 +1,5 @@
 import { assertType, describe, expect, it } from 'vitest';
+
 import { typesDataProvider } from '../../test/types-data-provider';
 import { isFunction } from './is-function';
 
@@ -10,7 +11,7 @@ describe('isFunction', () => {
       assertType<() => void>(data);
     }
 
-    let maybeFunction: string | ((a: number) => string) | undefined;
+    let maybeFunction: ((a: number) => string) | string | undefined;
     if (isFunction(maybeFunction)) {
       maybeFunction(1);
       assertType<(a: number) => string>(maybeFunction);

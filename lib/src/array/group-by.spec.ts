@@ -1,5 +1,7 @@
 import { assertType, describe, expect, expectTypeOf, it } from 'vitest';
+
 import type { NonEmptyArray } from '../utils/types';
+
 import { pipe } from '../function';
 import { groupBy } from './group-by';
 
@@ -71,8 +73,8 @@ describe('result key types', () => {
     assertType<Record<number, NonEmptyArray<Array2Item>>>(data);
   });
   it('string | number', () => {
-    const data = groupBy.strict(array2, (x): string | number => x.b);
-    assertType<Record<string | number, NonEmptyArray<Array2Item>>>(data);
+    const data = groupBy.strict(array2, (x): number | string => x.b);
+    assertType<Record<number | string, NonEmptyArray<Array2Item>>>(data);
   });
 });
 

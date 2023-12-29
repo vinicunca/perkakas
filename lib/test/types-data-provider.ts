@@ -1,29 +1,29 @@
 type TestObj =
-  | boolean
-  | string
-  | { a: string }
   | (() => void)
+  | { a: string }
   | Array<number>
   | Date
-  | undefined
-  | null
   | Error
+  | Promise<number>
+  | boolean
+  | null
   | number
-  | Promise<number>;
+  | string
+  | undefined;
 
 export function typesDataProvider(
   t:
-  | 'string'
-  | 'boolean'
-  | 'object'
-  | 'function'
-  | 'array'
-  | 'date'
-  | 'undefined'
-  | 'null'
-  | 'error'
-  | 'number'
-  | 'promise',
+    | 'array'
+    | 'boolean'
+    | 'date'
+    | 'error'
+    | 'function'
+    | 'null'
+    | 'number'
+    | 'object'
+    | 'promise'
+    | 'string'
+    | 'undefined',
 ): TestObj {
   switch (t) {
     case 'number':

@@ -17,7 +17,7 @@ import { purry } from '../function';
  */
 export function clamp(
   value: number,
-  limits: { min?: number; max?: number }
+  limits: { max?: number; min?: number }
 ): number;
 
 /**
@@ -35,15 +35,15 @@ export function clamp(
  * @category Number
  */
 export function clamp(limits: {
-  min?: number;
   max?: number;
+  min?: number;
 }): (value: number) => number;
 
 export function clamp(...args: any[]) {
   return purry(_clamp, args);
 }
 
-function _clamp(value: number, limits: { min?: number; max?: number }) {
+function _clamp(value: number, limits: { max?: number; min?: number }) {
   if (limits.min != null && limits.min > value) {
     return limits.min;
   }

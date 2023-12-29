@@ -1,4 +1,5 @@
 import { assertType, describe, expect, it } from 'vitest';
+
 import { typesDataProvider } from '../../test/types-data-provider';
 import { isNil } from './is-nil';
 
@@ -7,7 +8,7 @@ describe('isNil', () => {
     const data = typesDataProvider('null');
     if (isNil(data)) {
       expect(data).toEqual(null);
-      assertType<undefined | null>(data);
+      assertType<null | undefined>(data);
     }
   });
   it('isNil: should work as type guard in filter', () => {
@@ -20,6 +21,6 @@ describe('isNil', () => {
       typesDataProvider('number'),
     ].filter(isNil);
     expect(data.every((c) => c == null)).toEqual(true);
-    assertType<Array<undefined | null>>(data);
+    assertType<Array<null | undefined>>(data);
   });
 });

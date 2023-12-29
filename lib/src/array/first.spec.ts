@@ -1,11 +1,12 @@
 import { describe, expect, expectTypeOf, it } from 'vitest';
+
 import { createLazyInvocationCounter } from '../../test/lazy-invocation-counter';
 import { pipe } from '../function';
 import { filter } from './filter';
 import { first } from './first';
 
 function defaultTo<T>(d: T) {
-  return function(v: T | undefined | null) {
+  return function (v: T | null | undefined) {
     return v == null ? d : v;
   };
 }
@@ -144,7 +145,7 @@ describe('strict typing', () => {
   it('tuple with last', () => {
     const arr: [...Array<string>, number] = ['a', 1];
     const result = first(arr);
-    expectTypeOf(result).toEqualTypeOf<string | number>();
+    expectTypeOf(result).toEqualTypeOf<number | string>();
     expect(result).toEqual('a');
   });
 
@@ -200,7 +201,7 @@ describe('strict typing', () => {
   it('readonly tuple with last', () => {
     const arr: readonly [...Array<string>, number] = ['a', 1];
     const result = first(arr);
-    expectTypeOf(result).toEqualTypeOf<string | number>();
+    expectTypeOf(result).toEqualTypeOf<number | string>();
     expect(result).toEqual('a');
   });
 });

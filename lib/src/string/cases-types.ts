@@ -1,4 +1,4 @@
-type Splitter = '-' | '_' | '/' | '.';
+type Splitter = '.' | '/' | '_' | '-';
 
 type LastOfArray<T extends any[]> = T extends [...any, infer R] ? R : never;
 

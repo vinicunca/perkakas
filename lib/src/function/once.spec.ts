@@ -1,4 +1,5 @@
 import { expect, it, vi } from 'vitest';
+
 import { once } from './once';
 
 it('should call only once', () => {

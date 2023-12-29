@@ -1,4 +1,5 @@
 import { expect, it } from 'vitest';
+
 import { randomString } from './random-string';
 
 it('randomString', () => {

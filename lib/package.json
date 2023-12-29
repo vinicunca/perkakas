@@ -41,18 +41,17 @@
   },
   "scripts": {
     "stub": "tsup src/index.ts --format esm",
-    "lint": "pnpm run stub && eslint .",
+    "lint": "pnpm run stub && eslint . --fix",
     "test:coverage": "vitest run --coverage",
     "test": "vitest",
     "build": "tsup src/index.ts --format esm,cjs --clean --dts",
     "release": "bumpp package.json --commit --push --tag --commit 'chore: release v'"
   },
   "devDependencies": {
-    "@tsconfig/recommended": "^1.0.3",
-    "@types/fs-extra": "^11.0.2",
-    "@vitest/coverage-v8": "^0.34.6",
-    "fs-extra": "^11.1.1",
-    "tsup": "^7.2.0",
-    "typedoc": "^0.25.2"
+    "@types/fs-extra": "^11.0.4",
+    "@vitest/coverage-v8": "^1.1.0",
+    "fs-extra": "^11.2.0",
+    "tsup": "^8.0.1",
+    "typedoc": "^0.25.4"
   }
 }

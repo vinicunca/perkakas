@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
+
 import { pipe } from '../function';
 import { difference } from './difference';
 import { map } from './map';

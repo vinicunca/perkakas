@@ -1,14 +1,15 @@
 import { describe, expect, it } from 'vitest';
+
 import { pipe } from '../function';
 import { indexBy } from './index-by';
 
 const array = [
-  { dir: 'left', code: 97 },
-  { dir: 'right', code: 100 },
+  { code: 97, dir: 'left' },
+  { code: 100, dir: 'right' },
 ] as const;
 const expected = {
-  left: { dir: 'left', code: 97 },
-  right: { dir: 'right', code: 100 },
+  left: { code: 97, dir: 'left' },
+  right: { code: 100, dir: 'right' },
 };
 
 describe('data first', () => {

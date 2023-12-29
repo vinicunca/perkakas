@@ -1,17 +1,18 @@
 import type { IterableContainer, NonEmptyArray } from '../utils/types';
+
 import { purry } from '../function';
 
 const ALL_DIRECTIONS = ['asc', 'desc'] as const;
 type Direction = (typeof ALL_DIRECTIONS)[number];
 
-type ComparablePrimitive = number | string | boolean;
-type Comparable = ComparablePrimitive | { valueOf(): ComparablePrimitive };
+type ComparablePrimitive = boolean | number | string;
+type Comparable = { valueOf(): ComparablePrimitive } | ComparablePrimitive;
 type SortProjection<T> = (x: T) => Comparable;
 type SortPair<T> = readonly [
   projector: SortProjection<T>,
   direction: Direction,
 ];
-type SortRule<T> = SortProjection<T> | SortPair<T>;
+type SortRule<T> = SortPair<T> | SortProjection<T>;
 
 const COMPARATOR = {
   asc: <T>(x: T, y: T) => x > y,
@@ -132,7 +133,7 @@ function isSortRule<T>(x: ReadonlyArray<T> | SortRule<T>): x is SortRule<T> {
   return (
     typeof maybeProjection === 'function'
 
-    && ALL_DIRECTIONS.includes(maybeDirection as Direction)
+      && ALL_DIRECTIONS.includes(maybeDirection as Direction)
   );
 }
 

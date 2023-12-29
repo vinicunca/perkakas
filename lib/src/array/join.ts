@@ -1,7 +1,8 @@
 import type { IterableContainer } from '../utils/types';
+
 import { purry } from '../function';
 
-type Joinable = bigint | boolean | number | string | null | undefined;
+type Joinable = bigint | boolean | null | number | string | undefined;
 
 export type Joined<T extends IterableContainer, Glue extends string> =
   // Empty tuple
@@ -24,8 +25,8 @@ export type Joined<T extends IterableContainer, Glue extends string> =
 // the builtin `join` method, they should result in an empty string!
 // @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/join#description
 type NullishCoalesce<T, Fallback> = T extends Joinable
-  ? T extends undefined | null
-    ? NonNullable<T> | Fallback
+  ? T extends null | undefined
+    ? Fallback | NonNullable<T>
     : T
   : never;
 
@@ -49,7 +50,7 @@ type NullishCoalesce<T, Fallback> = T extends Joinable
  * @category Array
  */
 export function join<
-  T extends ReadonlyArray<Joinable> | [],
+  T extends [] | ReadonlyArray<Joinable>,
   Glue extends string,
 >(data: T, glue: Glue): Joined<T, Glue>;
 
@@ -72,7 +73,7 @@ export function join<
  * @category Array
  */
 export function join<
-  T extends ReadonlyArray<Joinable> | [],
+  T extends [] | ReadonlyArray<Joinable>,
   Glue extends string,
 >(glue: Glue): (data: T) => Joined<T, Glue>;
 

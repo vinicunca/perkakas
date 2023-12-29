@@ -1,4 +1,5 @@
 import { expect, it } from 'vitest';
+
 import { clamp } from './clamp';
 
 it('min value', () => {

@@ -18,7 +18,7 @@ import { isString } from './is-string';
  * @category Function
  */
 export function isEmpty(data: string): data is '';
-export function isEmpty(data: ReadonlyArray<unknown> | []): data is [];
+export function isEmpty(data: [] | ReadonlyArray<unknown>): data is [];
 export function isEmpty<T extends Readonly<Record<PropertyKey, unknown>>>(
   data: T
 ): data is Record<keyof T, never>;

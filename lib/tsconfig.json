@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "target": "es2020",
+    "lib": ["ES6", "ES2017.Object", "DOM", "DOM.Iterable"],
     "baseUrl": ".",
     "module": "es2020",
     "moduleResolution": "Bundler",
@@ -10,8 +11,5 @@
   },
   "include": [
     "**/*.ts"
-  ],
-  "exclude": [
-    "./fixtures/**/*.*"
   ]
 }

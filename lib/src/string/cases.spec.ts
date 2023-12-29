@@ -18,13 +18,13 @@ const UNDEFINED_INPUT = 'undefined input';
 describe('split by case', () => {
   const tests: any = {
     '': [],
-    'foo': ['foo'],
-    'fooBar': ['foo', 'Bar'],
+    'ALink': ['A', 'Link'],
+    'FOOBar': ['FOO', 'Bar'],
     'FooBarBaz': ['Foo', 'Bar', 'Baz'],
+    'foo': ['foo'],
     'foo_bar-baz/qux': ['foo', 'bar', 'baz', 'qux'],
     'foo--bar-Baz': ['foo', '', 'bar', 'Baz'],
-    'FOOBar': ['FOO', 'Bar'],
-    'ALink': ['A', 'Link'],
+    'fooBar': ['foo', 'Bar'],
   };
 
   for (const input in tests) {
@@ -36,11 +36,11 @@ describe('split by case', () => {
 
 describe('pascal case', () => {
   const tests: any = {
-    'foo': 'Foo',
-    'foo-bAr': 'FooBAr',
     'FooBARb': 'FooBARb',
+    'foo': 'Foo',
     'foo_bar-baz/qux': 'FooBarBazQux',
     'foo--bar': 'FooBar',
+    'foo-bAr': 'FooBAr',
   };
 
   for (const input in tests) {
@@ -72,12 +72,12 @@ describe('camel case', () => {
 
 describe('kebab case', () => {
   const tests: any = {
+    'ALink': 'a-link',
+    'FooBAR': 'foo-bar',
     'foo': 'foo',
     'foo/Bar': 'foo-bar',
-    'foo-bAr': 'foo-b-ar',
     'foo--bar': 'foo--bar',
-    'FooBAR': 'foo-bar',
-    'ALink': 'a-link',
+    'foo-bAr': 'foo-b-ar',
   };
 
   for (const input in tests) {
@@ -110,8 +110,8 @@ describe('snake case', () => {
 describe('upper first', () => {
   const tests: any = {
     '': '',
-    'foo': 'Foo',
     'Foo': 'Foo',
+    'foo': 'Foo',
   };
 
   for (const input in tests) {
@@ -124,8 +124,8 @@ describe('upper first', () => {
 describe('lower first', () => {
   const tests: any = {
     '': '',
-    'foo': 'foo',
     'Foo': 'foo',
+    'foo': 'foo',
   };
 
   for (const input in tests) {

@@ -1,5 +1,7 @@
 import { describe, expect, expectTypeOf, it } from 'vitest';
+
 import type { NonEmptyArray } from '../utils/types';
+
 import { chunk } from './chunk';
 
 describe('data first', () => {

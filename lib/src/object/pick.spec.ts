@@ -1,6 +1,7 @@
 import { describe, expect, expectTypeOf, it } from 'vitest';
-import { pipe } from '../function';
+
 import { concat } from '../array';
+import { pipe } from '../function';
 import { pick } from './pick';
 
 describe('data first', () => {
@@ -38,19 +39,42 @@ it('read only', () => {
   // or similar:
   // const props: ReadonlyArray<string> = ["prop1", "prop2"];
   // const getProps = <T extends string>(props: readonly T[]) => props;
-  const someObject = { prop1: 'a', prop2: 2, a: 'b' };
+  const someObject = { a: 'b', prop1: 'a', prop2: 2 };
   const props = ['prop1', 'prop2'] as const;
   pick(someObject, props); // TS2345 compilation error
 });
 
-it('type for curried form', () => {
-  const pickFoo = pick(['foo']);
+describe('typing', () => {
+  describe('data first', () => {
+    it('non existing prop', () => {
+      // @ts-expect-error [ts2322] -- should not allow non existing props
+      pick({ a: 1, b: 2, c: 3, d: 4 }, ['not', 'in']);
+    });
 
-  expectTypeOf(true as any as ReturnType<typeof pickFoo>).toEqualTypeOf<
-  Record<'foo', any>
-  >();
+    it('complex type', () => {
+      const obj = { a: 1 } as { a: number } | { a?: number; b: string };
+      const result = pick(obj, ['a']);
+      expectTypeOf(result).toEqualTypeOf<
+        Pick<{ a: number } | { a?: number; b: string }, 'a'>
+      >();
+    });
+  });
 
-  const result = pickFoo({ foo: 1, bar: 'potato' });
+  describe('data last', () => {
+    it('non existing prop', () => {
+      pipe(
+        { a: 1, b: 2, c: 3, d: 4 },
+        // @ts-expect-error [ts2345] -- should not allow non existing props
+        pick(['not', 'in']),
+      );
+    });
 
-  expectTypeOf(result).toEqualTypeOf<{ foo: number }>();
+    it('complex type', () => {
+      const obj = { a: 1 } as { a: number } | { a?: number; b: string };
+      const result = pipe(obj, pick(['a']));
+      expectTypeOf(result).toEqualTypeOf<
+        Pick<{ a: number } | { a?: number; b: string }, 'a'>
+      >();
+    });
+  });
 });

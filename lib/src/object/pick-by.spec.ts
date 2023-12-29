@@ -1,14 +1,15 @@
 import { assertType, describe, expect, it } from 'vitest';
+
 import { pipe } from '../function';
 import { pickBy } from './pick-by';
 
 describe('data first', () => {
   it('it should pick props', () => {
     const result = pickBy(
-      { a: 1, b: 2, A: 3, B: 4 },
+      { A: 3, B: 4, a: 1, b: 2 },
       (val, key) => key.toUpperCase() === key,
     );
-    assertType<Record<'a' | 'b' | 'A' | 'B', number>>(result);
+    assertType<Record<'A' | 'B' | 'a' | 'b', number>>(result);
     expect(result).toStrictEqual({ A: 3, B: 4 });
   });
   it('allow undefined or null', () => {
@@ -28,10 +29,10 @@ describe('data first', () => {
 describe('data last', () => {
   it('it should pick props', () => {
     const result = pipe(
-      { a: 1, b: 2, A: 3, B: 4 },
+      { A: 3, B: 4, a: 1, b: 2 },
       pickBy((val, key) => key.toUpperCase() === key),
     );
-    assertType<Record<'a' | 'b' | 'A' | 'B', number>>(result);
+    assertType<Record<'A' | 'B' | 'a' | 'b', number>>(result);
     expect(result).toStrictEqual({ A: 3, B: 4 });
   });
   it('allow partial type', () => {

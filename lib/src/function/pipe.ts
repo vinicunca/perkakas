@@ -234,7 +234,7 @@ export function pipe(
     const acc: Array<any> = [];
 
     for (const item of ret) {
-      if (_processItem({ item, acc, lazySeq })) {
+      if (_processItem({ acc, item, lazySeq })) {
         break;
       }
     }
@@ -260,13 +260,13 @@ type LazyOp = ((input: any) => any) & {
 };
 
 function _processItem({
+  acc,
   item,
   lazySeq,
-  acc,
 }: {
+  acc: Array<any>;
   item: any;
   lazySeq: Array<any>;
-  acc: Array<any>;
 }): boolean {
   if (lazySeq.length === 0) {
     acc.push(item);
@@ -287,8 +287,8 @@ function _processItem({
         const nextValues: Array<any> = lazyResult.next;
         for (const subItem of nextValues) {
           const subResult = _processItem({
-            item: subItem,
             acc,
+            item: subItem,
             lazySeq: lazySeq.slice(i + 1),
           });
           if (subResult) {
@@ -312,8 +312,6 @@ function _processItem({
   if (lazyResult.hasNext) {
     acc.push(item);
   }
-  if (isDone) {
-    return true;
-  }
-  return false;
+
+  return !!isDone;
 }

@@ -1,4 +1,5 @@
 import { describe, expect, expectTypeOf, it } from 'vitest';
+
 import { join } from './join';
 
 describe('at runtime', () => {
@@ -96,16 +97,16 @@ describe('typing', () => {
     const array: ['a' | 'b', 'c' | 'd', 'e' | 'f'] = ['a', 'c', 'e'];
     const result = join(array, ',');
     expectTypeOf(result).toEqualTypeOf<`${'a' | 'b'},${'c' | 'd'},${
-      | 'e'
-      | 'f'}`>();
+    | 'e'
+    | 'f'}`>();
   });
 
   it('readonly tuple', () => {
     const array: readonly ['a' | 'b', 'c' | 'd', 'e' | 'f'] = ['a', 'c', 'e'];
     const result = join(array, ',');
     expectTypeOf(result).toEqualTypeOf<`${'a' | 'b'},${'c' | 'd'},${
-      | 'e'
-      | 'f'}`>();
+    | 'e'
+    | 'f'}`>();
   });
 
   it('tuple with rest tail', () => {
@@ -182,9 +183,9 @@ describe('typing', () => {
         'suffix' | undefined,
       ] = ['prefix', undefined, 'suffix'];
       const result = join(array, ',');
-      expectTypeOf(result).toEqualTypeOf<`${'prefix' | ''},${'midfix' | ''},${
-        | 'suffix'
-        | ''}`>();
+      expectTypeOf(result).toEqualTypeOf<`${'' | 'prefix'},${'' | 'midfix'},${
+      | ''
+      | 'suffix'}`>();
     });
   });
 });

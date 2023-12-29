@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+
 import { pipe } from '../function';
 import { invert } from './invert';
 
@@ -16,7 +17,7 @@ describe('data first', () => {
   });
 
   it('duplicate values', () => {
-    expect(invert({ a: 'd', b: 'e', c: 'd' })).toEqual({ e: 'b', d: 'c' });
+    expect(invert({ a: 'd', b: 'e', c: 'd' })).toEqual({ d: 'c', e: 'b' });
   });
 
   it('numeric values', () => {
@@ -39,8 +40,8 @@ describe('data last', () => {
 
   it('duplicate values', () => {
     expect(pipe({ a: 'd', b: 'e', c: 'd' }, invert())).toEqual({
-      e: 'b',
       d: 'c',
+      e: 'b',
     });
   });
 

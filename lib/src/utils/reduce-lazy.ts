@@ -1,23 +1,23 @@
-export type LazyResult<T> = LazyEmpty | LazyNext<T> | LazyMany<T>;
+export type LazyResult<T> = LazyEmpty | LazyMany<T> | LazyNext<T>;
 
 interface LazyEmpty {
   done: boolean;
-  hasNext: false;
   hasMany?: false | undefined;
+  hasNext: false;
   next?: undefined;
 }
 
 interface LazyNext<T> {
   done: boolean;
-  hasNext: true;
   hasMany?: false | undefined;
+  hasNext: true;
   next: T;
 }
 
 interface LazyMany<T> {
   done: boolean;
-  hasNext: true;
   hasMany: true;
+  hasNext: true;
   next: Array<T>;
 }
 

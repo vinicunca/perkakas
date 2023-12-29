@@ -1,4 +1,5 @@
 import { assertType, describe, expect, it } from 'vitest';
+
 import { typesDataProvider } from '../../test/types-data-provider';
 import { isPromise } from './is-promise';
 

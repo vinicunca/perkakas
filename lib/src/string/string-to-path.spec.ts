@@ -1,4 +1,5 @@
 import { expect, it } from 'vitest';
+
 import { stringToPath } from './string-to-path';
 
 it('should convert a string to a deeply nested path', () => {

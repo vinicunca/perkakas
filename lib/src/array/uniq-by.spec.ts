@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+
 import { createLazyInvocationCounter } from '../../test/lazy-invocation-counter';
 import { identity, pipe } from '../function';
 import { take } from './take';
@@ -6,13 +7,13 @@ import { uniqBy } from './uniq-by';
 
 describe('uniqBy', () => {
   const people = [
-    { name: 'John', age: 42 },
-    { name: 'Jörn', age: 30 },
-    { name: 'Sarah', age: 33 },
-    { name: 'Kim', age: 22 },
-    { name: 'Sarah', age: 38 },
-    { name: 'John', age: 33 },
-    { name: 'Emily', age: 42 },
+    { age: 42, name: 'John' },
+    { age: 30, name: 'Jörn' },
+    { age: 33, name: 'Sarah' },
+    { age: 22, name: 'Kim' },
+    { age: 38, name: 'Sarah' },
+    { age: 33, name: 'John' },
+    { age: 42, name: 'Emily' },
   ] as const;
 
   it('handles uniq by identity', () => {
@@ -21,30 +22,30 @@ describe('uniqBy', () => {
 
   it('returns people with uniq names', () => {
     expect(uniqBy(people, (p) => p.name)).toEqual([
-      { name: 'John', age: 42 },
-      { name: 'Jörn', age: 30 },
-      { name: 'Sarah', age: 33 },
-      { name: 'Kim', age: 22 },
-      { name: 'Emily', age: 42 },
+      { age: 42, name: 'John' },
+      { age: 30, name: 'Jörn' },
+      { age: 33, name: 'Sarah' },
+      { age: 22, name: 'Kim' },
+      { age: 42, name: 'Emily' },
     ]);
   });
 
   it('returns people with uniq ages', () => {
     expect(uniqBy(people, (p) => p.age)).toEqual([
-      { name: 'John', age: 42 },
-      { name: 'Jörn', age: 30 },
-      { name: 'Sarah', age: 33 },
-      { name: 'Kim', age: 22 },
-      { name: 'Sarah', age: 38 },
+      { age: 42, name: 'John' },
+      { age: 30, name: 'Jörn' },
+      { age: 33, name: 'Sarah' },
+      { age: 22, name: 'Kim' },
+      { age: 38, name: 'Sarah' },
     ]);
   });
 
   it('returns people with uniq first letter of name', () => {
     expect(uniqBy(people, (p) => p.name.substring(0, 1))).toEqual([
-      { name: 'John', age: 42 },
-      { name: 'Sarah', age: 33 },
-      { name: 'Kim', age: 22 },
-      { name: 'Emily', age: 42 },
+      { age: 42, name: 'John' },
+      { age: 33, name: 'Sarah' },
+      { age: 22, name: 'Kim' },
+      { age: 42, name: 'Emily' },
     ]);
   });
 

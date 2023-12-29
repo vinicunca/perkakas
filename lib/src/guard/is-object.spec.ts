@@ -1,4 +1,5 @@
 import { assertType, describe, expect, it } from 'vitest';
+
 import { typesDataProvider } from '../../test/types-data-provider';
 import { isObject } from './is-object';
 
@@ -8,36 +9,33 @@ describe('isObject', () => {
     if (isObject(data)) {
       expect(typeof data).toEqual('object');
       assertType<
-      | {
-        a: string;
-      }
-      | Date
-      | Error
-      | Promise<number>
-      >(data,
-      );
+        | {
+          a: string;
+        }
+        | Date
+        | Error
+        | Promise<number>
+      >(data);
     }
   });
 
   it('isObject: should work as type guard alt', () => {
-    const data = { data: 5 } as ReadonlyArray<number> | { data: 5 };
+    const data = { data: 5 } as { data: 5 } | ReadonlyArray<number>;
     if (isObject(data)) {
       expect(typeof data).toEqual('object');
       assertType<{
         data: 5;
-      }>(data,
-      );
+      }>(data);
     }
   });
 
   it('isObject: should work as type guard for more narrow types', () => {
-    const data = { data: 5 } as Array<number> | { data: number };
+    const data = { data: 5 } as { data: number } | Array<number>;
     if (isObject(data)) {
       expect(typeof data).toEqual('object');
       assertType<{
         data: number;
-      }>(data,
-      );
+      }>(data);
     }
   });
 
@@ -62,14 +60,13 @@ describe('isObject', () => {
     );
     assertType<
     Array<
-    | {
-      a: string;
-    }
-    | Date
-    | Error
-    | Promise<number>
+      | {
+        a: string;
+      }
+      | Date
+      | Error
+      | Promise<number>
     >
-    >(data,
-    );
+    >(data);
   });
 });

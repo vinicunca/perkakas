@@ -1,4 +1,5 @@
 import { assertType, describe, expect, it } from 'vitest';
+
 import { typesDataProvider } from '../../test/types-data-provider';
 import { isNonNull } from './is-non-null';
 
@@ -8,18 +9,17 @@ describe('isNonNull', () => {
     if (isNonNull(data)) {
       expect(data instanceof Date).toEqual(true);
       assertType<
-      | boolean
-      | string
-      | { a: string }
-      | (() => void)
-      | Array<number>
-      | Date
-      | Error
-      | number
-      | Promise<number>
-      | undefined
-        >(data,
-        );
+        | (() => void)
+        | { a: string }
+        | Array<number>
+        | Date
+        | Error
+        | Promise<number>
+        | boolean
+        | number
+        | string
+        | undefined
+          >(data);
     }
   });
   it('isNonNull: should work as type guard in filter', () => {
@@ -34,20 +34,19 @@ describe('isNonNull', () => {
     expect(data).toHaveLength(5);
     assertType<
     Array<
-    | string
-    | number
-    | boolean
-    | {
-      a: string;
-    }
-    | (() => void)
-    | Array<number>
-    | Date
-    | Error
-    | Promise<number>
-    | undefined
+      | (() => void)
+      | {
+        a: string;
+      }
+      | Array<number>
+      | Date
+      | Error
+      | Promise<number>
+      | boolean
+      | number
+      | string
+      | undefined
     >
-      >(data,
-      );
+        >(data);
   });
 });

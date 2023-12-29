@@ -1,4 +1,5 @@
 import { assertType, describe, expect, expectTypeOf, it } from 'vitest';
+
 import { pipe } from '../function';
 import { keys } from './keys';
 
@@ -20,14 +21,14 @@ describe('test for keys', () => {
     });
 
     it('should work with Partial in pipe', () => {
-      const data: Partial<{ foo: string; bar?: number }> = {
-        foo: '1',
+      const data: Partial<{ bar?: number; foo: string }> = {
         bar: 7,
+        foo: '1',
       };
       const actual = pipe(data, keys.strict);
       expect(actual).toEqual(['foo', 'bar']);
 
-      assertType<Array<'foo' | 'bar'>>(actual);
+      assertType<Array<'bar' | 'foo'>>(actual);
     });
   });
 });
@@ -147,8 +148,8 @@ describe('strict object types', () => {
 
   it('object with index signature', () => {
     const obj: { [keys: string]: string; a: string } = {
-      hello: 'world',
       a: 'goodbye',
+      hello: 'world',
     };
     const result = keys.strict(obj);
     expectTypeOf(result).toEqualTypeOf<Array<string>>();

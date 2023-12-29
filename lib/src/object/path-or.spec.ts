@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+
 import { pipe } from '../function';
 import { pathOr } from './path-or';
 

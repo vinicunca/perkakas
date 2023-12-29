@@ -1,4 +1,5 @@
 import { assertType, expect, it } from 'vitest';
+
 import { toPairs } from './to-pairs';
 
 it('should return pairs', () => {

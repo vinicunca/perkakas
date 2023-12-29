@@ -1,4 +1,5 @@
 import { expect, expectTypeOf, it } from 'vitest';
+
 import { sortBy } from '../array';
 import { pipe } from '../function';
 import { prop } from './prop';

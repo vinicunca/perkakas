@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
+
 import { filter, map, take } from '../array';
 import { prop } from '../object';
 import { identity } from './identity';

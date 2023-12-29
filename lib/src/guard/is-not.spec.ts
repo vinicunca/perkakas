@@ -1,8 +1,9 @@
 import { assertType, describe, expect, it } from 'vitest';
+
 import { typesDataProvider } from '../../test/types-data-provider';
-import { isString } from './is-string';
 import { isNot } from './is-not';
 import { isPromise } from './is-promise';
+import { isString } from './is-string';
 
 describe('isNot', () => {
   it('isNot: should work as type guard', () => {
@@ -10,21 +11,20 @@ describe('isNot', () => {
     if (isNot(isString)(data)) {
       expect(data instanceof Promise).toEqual(true);
       assertType<
-      | number
-      | boolean
-      | {
-        a: string;
-      }
-      | (() => void)
-      | Array<number>
-      | Date
-      | Error
-      | Promise<number>
-      | null
-      | undefined
-      // TODO: fix this weird whitespace in @vinicunca/eslint-config
-        >(data,
-        );
+        | (() => void)
+        | {
+            a: string;
+          }
+          | Array<number>
+          | Date
+          | Error
+          | Promise<number>
+          | boolean
+          | null
+          | number
+          | undefined
+          // TODO: fix this weird whitespace in @vinicunca/eslint-config
+          >(data);
     }
   });
   it('isNot: should work as type guard in filter', () => {
@@ -39,18 +39,17 @@ describe('isNot', () => {
 
     assertType<
     Array<
-    | boolean
-    | string
-    | { a: string }
-    | (() => void)
-    | Array<number>
-    | Date
-    | undefined
-    | null
-    | Error
-    | number
+      | (() => void)
+      | { a: string }
+      | Array<number>
+      | Date
+      | Error
+      | boolean
+      | null
+      | number
+      | string
+      | undefined
     >
-      >(result,
-      );
+        >(result);
   });
 });

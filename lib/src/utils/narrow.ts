@@ -24,19 +24,19 @@ export type Try<A1, A2, Catch = never> = A1 extends A2 ? A1 : Catch;
 /**
  * Describes types that can be narrowed
  */
-export type Narrowable = string | number | bigint | boolean;
+export type Narrowable = bigint | boolean | number | string;
 
 /**
  * @hidden
  */
 type NarrowRaw<A> =
-  | (A extends [] ? [] : never)
-  | (A extends Narrowable ? A : never)
   | {
     [K in keyof A]: A[K] extends (...args: Array<any>) => any
       ? A[K]
       : NarrowRaw<A[K]>;
-  };
+  }
+  | (A extends [] ? [] : never)
+  | (A extends Narrowable ? A : never);
 
 /**
  * Prevent type widening on generic function parameters

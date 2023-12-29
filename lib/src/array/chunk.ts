@@ -1,11 +1,12 @@
-import { purry } from '../function';
 import type { IterableContainer, NonEmptyArray } from '../utils/types';
+
+import { purry } from '../function';
 
 type Chunked<T extends IterableContainer> = T[number] extends never
   ? []
   : T extends
-  | readonly [unknown, ...Array<unknown>]
   | readonly [...Array<unknown>, unknown]
+  | readonly [unknown, ...Array<unknown>]
     ? NonEmptyArray<NonEmptyArray<T[number]>>
     : Array<NonEmptyArray<T[number]>>;
 

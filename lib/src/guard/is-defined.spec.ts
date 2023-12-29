@@ -1,4 +1,5 @@
 import { assertType, describe, expect, it } from 'vitest';
+
 import { typesDataProvider } from '../../test/types-data-provider';
 import { isDefined } from './is-defined';
 
@@ -8,17 +9,16 @@ describe('isDefined', () => {
     if (isDefined(data)) {
       expect(data instanceof Date).toEqual(true);
       assertType<
-      | boolean
-      | string
-      | { a: string }
-      | (() => void)
-      | Array<number>
-      | Date
-      | Error
-      | number
-      | Promise<number>
-        >(data,
-        );
+        | (() => void)
+        | { a: string }
+        | Array<number>
+        | Date
+        | Error
+        | Promise<number>
+        | boolean
+        | number
+        | string
+          >(data);
     }
   });
 
@@ -33,20 +33,19 @@ describe('isDefined', () => {
     expect(data).toHaveLength(4);
     assertType<
     Array<
-    | string
-    | number
-    | boolean
-    | {
-      a: string;
-    }
-    | (() => void)
-    | Array<number>
-    | Date
-    | Error
-    | Promise<number>
+      | (() => void)
+      | {
+        a: string;
+      }
+      | Array<number>
+      | Date
+      | Error
+      | Promise<number>
+      | boolean
+      | number
+      | string
     >
-      >(data,
-      );
+        >(data);
   });
 });
 
@@ -56,18 +55,17 @@ describe('strict', () => {
     if (isDefined.strict(data)) {
       expect(data instanceof Date).toEqual(true);
       assertType<
-      | boolean
-      | string
-      | { a: string }
-      | (() => void)
-      | Array<number>
-      | Date
-      | Error
-      | number
-      | Promise<number>
-      | null
-        >(data,
-        );
+        | (() => void)
+        | { a: string }
+        | Array<number>
+        | Date
+        | Error
+        | Promise<number>
+        | boolean
+        | null
+        | number
+        | string
+          >(data);
     }
   });
   it('isDefined: should work as type guard in filter', () => {
@@ -82,20 +80,19 @@ describe('strict', () => {
     expect(data).toHaveLength(5);
     assertType<
     Array<
-    | string
-    | number
-    | boolean
-    | {
-      a: string;
-    }
-    | (() => void)
-    | Array<number>
-    | Date
-    | Error
-    | Promise<number>
-    | null
+      | (() => void)
+      | {
+        a: string;
+      }
+      | Array<number>
+      | Date
+      | Error
+      | Promise<number>
+      | boolean
+      | null
+      | number
+      | string
     >
-      >(data,
-      );
+        >(data);
   });
 });

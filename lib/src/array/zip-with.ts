@@ -51,13 +51,13 @@ export function zipWith<F, S, R>(
 
 export function zipWith(...args: any[]) {
   if (typeof args[0] === 'function' && args.length === 1) {
-    return function(f: any, s: any) {
+    return function (f: any, s: any) {
       return _zipWith(f, s, args[0]);
     };
   }
 
   if (typeof args[0] === 'function' && args.length === 2) {
-    return function(f: any) {
+    return function (f: any) {
       return _zipWith(f, args[1], args[0]);
     };
   }

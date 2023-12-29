@@ -11,7 +11,7 @@ import { isTruthy } from '../guard';
  * @pipeable
  */
 export function compact<T>(
-  items: ReadonlyArray<T | null | undefined | false | '' | 0>,
+  items: ReadonlyArray<'' | 0 | T | false | null | undefined>,
 ): Array<T> {
   // TODO: Make lazy version
   return items.filter(isTruthy);

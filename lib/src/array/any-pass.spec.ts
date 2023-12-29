@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+
 import { anyPass } from './any-pass';
 
 const fns = [(x: number) => x === 3, (x: number) => x === 4] as const;

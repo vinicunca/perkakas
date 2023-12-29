@@ -1,4 +1,5 @@
 import type { PredIndexed, PredIndexedOptional } from '../utils/types';
+
 import { purry } from '../function';
 
 function _meanBy(indexed: boolean) {

@@ -1,4 +1,5 @@
 import type { PredIndexedOptional } from '../utils/types';
+
 import { purry } from '../function';
 
 /**

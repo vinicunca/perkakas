@@ -1,4 +1,5 @@
 import type { NonEmptyArray, PredIndexed, PredIndexedOptional } from '../utils/types';
+
 import { purry } from '../function';
 
 /**
@@ -77,16 +78,16 @@ interface Strict {
   ): (items: ReadonlyArray<Value>) => StrictOut<Value, Key>;
 
   readonly indexed: {
+    // Data-Last
+    <Value, Key extends PropertyKey = PropertyKey>(
+      fn: PredIndexed<Value, Key | undefined>
+    ): (items: ReadonlyArray<Value>) => StrictOut<Value, Key>;
+
     // Data-First
     <Value, Key extends PropertyKey = PropertyKey>(
       items: ReadonlyArray<Value>,
       fn: PredIndexed<Value, Key | undefined>
     ): StrictOut<Value, Key>;
-
-    // Data-Last
-    <Value, Key extends PropertyKey = PropertyKey>(
-      fn: PredIndexed<Value, Key | undefined>
-    ): (items: ReadonlyArray<Value>) => StrictOut<Value, Key>;
   };
 }
 

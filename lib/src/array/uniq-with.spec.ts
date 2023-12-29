@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
+
 import { createLazyInvocationCounter } from '../../test/lazy-invocation-counter';
-import { equals } from '../object';
 import { pipe } from '../function';
+import { equals } from '../object';
 import { take } from './take';
 import { uniqWith } from './uniq-with';
 

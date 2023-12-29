@@ -51,4 +51,3 @@ export function purry(
 
   throw new Error('Wrong number of arguments');
 }
-

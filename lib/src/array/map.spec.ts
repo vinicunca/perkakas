@@ -1,4 +1,5 @@
 import { describe, expect, expectTypeOf, it, vi } from 'vitest';
+
 import { identity, pipe } from '../function';
 import { filter } from './filter';
 import { map } from './map';
@@ -192,7 +193,7 @@ describe('strict', () => {
     ] = ['hello', 'world', 1, 'testing', 'testing', 'testing', 123, true];
     const result = map.strict(input, identity);
     expectTypeOf(result).toEqualTypeOf<
-    [...Array<string | number | boolean>, string | number | boolean]
+    [...Array<boolean | number | string>, boolean | number | string]
     >();
     expect(result).toEqual(input);
   });
@@ -296,7 +297,7 @@ describe('strict Indexed', () => {
     ] = ['hello', 'world', 1, 'testing', 'testing', 'testing', 123, true];
     const result = map.strict.indexed(input, identity);
     expectTypeOf(result).toEqualTypeOf<
-    [...Array<string | number | boolean>, string | number | boolean]
+    [...Array<boolean | number | string>, boolean | number | string]
     >();
     expect(result).toEqual(input);
   });

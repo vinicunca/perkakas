@@ -12,6 +12,6 @@ type DefinitelyError<T> = Extract<T, Error> extends never
  *    P.isError('somethingElse') //=> false
  * @category Guard
  */
-export function isError<T>(data: T | Error): data is DefinitelyError<T> {
+export function isError<T>(data: Error | T): data is DefinitelyError<T> {
   return data instanceof Error;
 }

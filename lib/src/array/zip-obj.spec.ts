@@ -1,4 +1,5 @@
 import { describe, expect, expectTypeOf, it } from 'vitest';
+
 import { zipObj } from './zip-obj';
 
 const first = ['a', 'b', 'c'];
@@ -42,7 +43,7 @@ describe('data first typings', () => {
     const secondVariadic: [string, ...Array<number>] = ['a', 2, 3];
     const actual = zipObj(firstVariadic, secondVariadic);
     expectTypeOf(actual).toEqualTypeOf<
-    Record<string | number, number | string>
+    Record<number | string, number | string>
     >();
   });
 });
@@ -83,7 +84,7 @@ describe('data last typings', () => {
     const secondVariadic: [string, ...Array<number>] = ['a', 2, 3];
     const actual = zipObj(secondVariadic)(firstVariadic);
     expectTypeOf(actual).toEqualTypeOf<
-    Record<string | number, string | number>
+    Record<number | string, number | string>
     >();
   });
 });
