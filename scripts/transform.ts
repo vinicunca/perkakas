@@ -2,16 +2,17 @@
  * This script takes the JSON output of typedoc and reformats and transforms it
  * to what our site needs in order to render the functions page.
  */
-import process from 'node:process';
+import type { SetRequired } from 'type-fest';
+
+import { groupBy, isDefined, isEmpty, toKebabCase } from '@vinicunca/perkakas';
 import fs from 'node:fs/promises';
+import process from 'node:process';
 import {
   type Options as PrettierOptions,
   format as prettierFormat,
 } from 'prettier';
 import invariant from 'tiny-invariant';
-import type { SetRequired } from 'type-fest';
 import { type JSONOutput, ReflectionKind } from 'typedoc';
-import { groupBy, isDefined, isEmpty, toKebabCase } from '@vinicunca/perkakas';
 
 const PRETTIER_OPTIONS = {
   parser: 'typescript',
@@ -81,7 +82,7 @@ async function transformFunction({
     signaturesWithComments.map(transformSignature),
   );
 
-  return { id, name, badges, description, methods };
+  return { badges, description, id, methods, name };
 }
 
 async function transformSignature({
@@ -90,14 +91,14 @@ async function transformSignature({
   type,
 }: SetRequired<JSONOutput.SignatureReflection, 'comment'>) {
   return {
-    tag: getFunctionCurriedVariant(comment),
-    signature: await getFunctionSignature(comment),
-    example: await getExample(comment),
     args: parameters.map(getParameter),
+    example: await getExample(comment),
     returns: {
-      name: getReturnType(type),
       description: tagContent(comment, 'returns'),
+      name: getReturnType(type),
     },
+    signature: await getFunctionSignature(comment),
+    tag: getFunctionCurriedVariant(comment),
   };
 }
 
@@ -172,14 +173,14 @@ async function getExample(
     .join('\n');
 }
 
-function getParameter({ name, comment }: JSONOutput.ParameterReflection) {
+function getParameter({ comment, name }: JSONOutput.ParameterReflection) {
   const summarySegments = comment?.summary ?? [];
   return {
-    name,
     description:
       summarySegments.length === 0
         ? undefined
         : summarySegments.map(({ text }) => text).join(''),
+    name,
   };
 }
 
@@ -299,11 +300,11 @@ async function generateNavItems(inputs: OutputResult) {
 
   for (const [name, value] of Object.entries(categories)) {
     navs.push({
-      title: name,
       children: value.map((item) => ({
-        title: item.name,
         _path: `/docs/${toKebabCase(item.name)}`,
+        title: item.name,
       })),
+      title: name,
     });
   }
 
