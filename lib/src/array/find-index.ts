@@ -1,6 +1,6 @@
 import type { Pred, PredIndexed, PredIndexedOptional } from '../utils/types';
 
-import { purry } from '../function';
+import { purry } from '../function/purry';
 import { toLazyIndexed } from '../utils/to-lazy-indexed';
 import { toSingle } from '../utils/to-single';
 

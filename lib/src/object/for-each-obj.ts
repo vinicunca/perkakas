@@ -1,4 +1,4 @@
-import { purry } from '../function';
+import { purry } from '../function/purry';
 
 type IndexedIteratee<T extends Record<PropertyKey, any>, K extends keyof T> = (
   value: T[K],

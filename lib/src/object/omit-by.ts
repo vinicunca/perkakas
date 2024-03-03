@@ -1,4 +1,5 @@
-import { purry } from '../function';
+import { purry } from '../function/purry';
+import { keys } from './keys';
 
 /**
  * Returns a partial copy of an object omitting the keys matching predicate.
@@ -32,8 +33,15 @@ export function omitBy(...args: any[]) {
   return purry(_omitBy, args);
 }
 
-function _omitBy(object: any, fn: (value: any, key: any) => boolean) {
-  return Object.keys(object).reduce<any>((acc, key) => {
+function _omitBy<T>(
+  object: T,
+  fn: <K extends keyof T>(value: T[K], key: K) => boolean,
+) {
+  if (object === undefined || object === null) {
+    return object;
+  }
+
+  return keys.strict(object).reduce<Partial<T>>((acc, key) => {
     if (!fn(object[key], key)) {
       acc[key] = object[key];
     }

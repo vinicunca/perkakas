@@ -1,4 +1,3 @@
-export function toLazyIndexed<T>(fn: T): T & { indexed: true } {
-  (fn as any).indexed = true;
-  return fn as any;
+export function toLazyIndexed<Func extends (...args: any) => unknown>(fn: Func): Func & { readonly indexed: true } {
+  return Object.assign(fn, { indexed: true as const });
 }

@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { pipe } from '../function';
+import { pipe } from '../function/pipe';
 import { forEach } from './for-each';
 import { take } from './take';
 

@@ -1,7 +1,7 @@
 import type { IterableContainer } from '../utils/types';
 import type { Joined } from './join';
 
-import { purry } from '../function';
+import { purry } from '../function/purry';
 
 /**
  * @link https://github.com/sindresorhus/type-fest/blob/main/source/is-equal.d.ts

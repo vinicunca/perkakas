@@ -12,4 +12,5 @@ export * from './is-number';
 export * from './is-object';
 export * from './is-promise';
 export * from './is-string';
+export * from './is-symbol';
 export * from './is-truthy';

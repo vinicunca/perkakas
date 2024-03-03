@@ -1,7 +1,7 @@
 import type { LazyResult } from '../utils/reduce-lazy';
 
-import { purry } from '../function';
-import { _reduceLazy } from '../utils/reduce-lazy';
+import { purry } from '../function/purry';
+import { reduceLazy } from '../utils/reduce-lazy';
 
 export function uniqBy<T, K>(
   array: ReadonlyArray<T>,
@@ -37,12 +37,12 @@ export function uniqBy(...args: any[]) {
 }
 
 function _uniqBy<T, K>(array: Array<T>, transformer: (item: T) => K) {
-  return _reduceLazy(array, lazyUniqBy(transformer));
+  return reduceLazy(array, lazyUniqBy(transformer));
 }
 
-function lazyUniqBy(transformer: (item: any) => any) {
-  const set = new Set<any>();
-  return (value: any): LazyResult<any> => {
+function lazyUniqBy<T, K>(transformer: (item: T) => K) {
+  const set = new Set<K>();
+  return (value: T): LazyResult<T> => {
     const appliedItem = transformer(value);
     if (set.has(appliedItem)) {
       return {

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { pipe } from '../function';
+import { pipe } from '../function/pipe';
 import { takeWhile } from './take-while';
 
 describe('data_first', () => {

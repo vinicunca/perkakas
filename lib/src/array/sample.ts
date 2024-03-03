@@ -1,6 +1,6 @@
 import type { IterableContainer } from '../utils/types';
 
-import { purry } from '../function';
+import { purry } from '../function/purry';
 
 type Sampled<T extends IterableContainer, N extends number> =
   // Check if N is generic (e.g. not '5' but 'number')
@@ -152,7 +152,7 @@ function sampleImplementation<T>(data: Array<T>, sampleSize: number): Array<T> {
   if (sampleSize === actualSampleSize) {
     return Array.from(sampleIndices)
       .sort((a, b) => a - b)
-      .map((index) => data[index]);
+      .map((index) => data[index]!);
   }
 
   return data.filter((_, index) => !sampleIndices.has(index));

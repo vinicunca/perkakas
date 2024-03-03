@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { pipe } from '../function';
+import { pipe } from '../function/pipe';
 import { reduce } from './reduce';
 
 const array = [1, 2, 3, 4, 5] as const;

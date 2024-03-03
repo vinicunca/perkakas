@@ -1,6 +1,6 @@
 import type { Pred, PredIndexed, PredIndexedOptional } from '../utils/types';
 
-import { purry } from '../function';
+import { purry } from '../function/purry';
 
 function _countBy(indexed: boolean) {
   return <T>(array: Array<T>, fn: PredIndexedOptional<T, boolean>) => {

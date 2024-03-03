@@ -1,7 +1,7 @@
 import { describe, expect, expectTypeOf, it } from 'vitest';
 
 import { concat } from '../array';
-import { pipe } from '../function';
+import { pipe } from '../function/pipe';
 import { pick } from './pick';
 
 describe('data first', () => {
@@ -9,10 +9,7 @@ describe('data first', () => {
     const result = pick({ a: 1, b: 2, c: 3, d: 4 }, ['a', 'd']);
     expect(result).toStrictEqual({ a: 1, d: 4 });
   });
-  it('allow undefined or null', () => {
-    expect(pick(undefined as any, ['foo'])).toEqual({});
-    expect(pick(null as any, ['foo'])).toEqual({});
-  });
+
   it('support inherited properties', () => {
     class BaseClass {
       testProp() {

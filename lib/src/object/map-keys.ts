@@ -1,6 +1,9 @@
+import { purry } from '../function/purry';
+import { toPairs } from './to-pairs';
+
 /**
  * Maps keys of `object` and keeps the same values.
- * @param object the object to map
+ * @param data the object to map
  * @param fn the mapping function
  * @signature
  *    P.mapKeys(object, fn)
@@ -9,9 +12,9 @@
  * @dataFirst
  * @category Object
  */
-export function mapKeys<T, S extends keyof any>(
-  object: T,
-  fn: (key: keyof T, value: T[keyof T]) => S
+export function mapKeys<T, S extends PropertyKey>(
+  data: T,
+  fn: (key: keyof T, value: Required<T>[keyof T]) => S
 ): Record<S, T[keyof T]>;
 
 /**
@@ -24,20 +27,21 @@ export function mapKeys<T, S extends keyof any>(
  * @dataLast
  * @category Object
  */
-export function mapKeys<T, S extends keyof any>(
-  fn: (key: keyof T, value: T[keyof T]) => S
-): (object: T) => Record<S, T[keyof T]>;
+export function mapKeys<T, S extends PropertyKey>(
+  fn: (key: keyof T, value: Required<T>[keyof T]) => S
+): (data: T) => Record<S, T[keyof T]>;
 
-export function mapKeys(arg1: any, arg2?: any): any {
-  if (arguments.length === 1) {
-    return (data: any) => _mapKeys(data, arg1);
-  }
-  return _mapKeys(arg1, arg2);
+export function mapKeys(...args: any[]) {
+  return purry(_mapKeys, args);
 }
 
-function _mapKeys(obj: any, fn: (key: string, value: any) => any) {
-  return Object.keys(obj).reduce<any>((acc, key) => {
-    acc[fn(key, obj[key])] = obj[key];
-    return acc;
-  }, {});
+function _mapKeys<T extends object>(
+  data: T,
+  fn: (key: keyof T, value: Required<T>[keyof T]) => PropertyKey,
+) {
+  const out: Partial<Record<PropertyKey, Required<T>[keyof T]>> = {};
+  for (const [key, value] of toPairs.strict(data)) {
+    out[fn(key, value)] = value;
+  }
+  return out;
 }

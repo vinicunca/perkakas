@@ -1,6 +1,6 @@
 import type { IterableContainer, NonEmptyArray } from '../utils/types';
 
-import { purry } from '../function';
+import { purry } from '../function/purry';
 
 const ALL_DIRECTIONS = ['asc', 'desc'] as const;
 type Direction = (typeof ALL_DIRECTIONS)[number];

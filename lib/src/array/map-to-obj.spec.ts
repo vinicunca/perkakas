@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { pipe } from '../function';
+import { pipe } from '../function/pipe';
 import { mapToObj } from './map-to-obj';
 
 describe('data_first', () => {
@@ -9,7 +9,7 @@ describe('data_first', () => {
     expect(result).toEqual({ 1: 2, 2: 4, 3: 6 });
   });
   it('mapToObj.indexed', () => {
-    const result = mapToObj.indexed([0, 0, 0] as const, (x, i) => [i, i]);
+    const result = mapToObj.indexed([0, 0, 0] as const, (_x, i) => [i, i]);
     expect(result).toEqual({ 0: 0, 1: 1, 2: 2 });
   });
 });
@@ -25,7 +25,7 @@ describe('data_last', () => {
   it('mapToObj.indexed', () => {
     const result = pipe(
       [0, 0, 0] as const,
-      mapToObj.indexed((x, i) => [i, i]),
+      mapToObj.indexed((_x, i) => [i, i]),
     );
     expect(result).toEqual({ 0: 0, 1: 1, 2: 2 });
   });

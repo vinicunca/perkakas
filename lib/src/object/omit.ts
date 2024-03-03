@@ -1,5 +1,20 @@
-import { purry } from '../function';
+import { hasAtLeast } from '../array/has-at-least';
+import { purry } from '../function/purry';
 import { fromPairs } from './from-pairs';
+
+/**
+ * Returns a partial copy of an object omitting the keys specified.
+ * @param propNames the property names
+ * @signature
+ *    P.omit(propNames)(obj);
+ * @example
+ *    P.pipe({ a: 1, b: 2, c: 3, d: 4 }, P.omit(['a', 'd'])) // => { b: 2, c: 3 }
+ * @dataLast
+ * @category Object
+ */
+export function omit<T extends object, K extends keyof T>(
+  propNames: ReadonlyArray<K>
+): (data: T) => Omit<T, K>;
 
 /**
  * Returns a partial copy of an object omitting the keys specified.
@@ -17,20 +32,6 @@ export function omit<T extends object, K extends keyof T>(
   propNames: ReadonlyArray<K>
 ): Omit<T, K>;
 
-/**
- * Returns a partial copy of an object omitting the keys specified.
- * @param propNames the property names
- * @signature
- *    P.omit(propNames)(obj);
- * @example
- *    P.pipe({ a: 1, b: 2, c: 3, d: 4 }, P.omit(['a', 'd'])) // => { b: 2, c: 3 }
- * @dataLast
- * @category Object
- */
-export function omit<T extends object, K extends keyof T>(
-  propNames: ReadonlyArray<K>
-): (data: T) => Omit<T, K>;
-
 export function omit(...args: any[]) {
   return purry(_omit, args);
 }
@@ -39,11 +40,11 @@ function _omit<T extends object, K extends keyof T>(
   data: T,
   propNames: ReadonlyArray<K>,
 ): Omit<T, K> {
-  if (propNames.length === 0) {
+  if (!hasAtLeast(propNames, 1)) {
     return { ...data };
   }
 
-  if (propNames.length === 1) {
+  if (!hasAtLeast(propNames, 2)) {
     const [propName] = propNames;
     const {
       [propName]: omitted,

@@ -2,8 +2,6 @@
 import CoreListChildren from './core-list-children.vue';
 import { useNested } from './use-nested';
 
-import { type INavItem } from '~/typings';
-
 const props = defineProps<{
   navItems: INavItem[];
   opened: unknown[];
@@ -25,7 +23,7 @@ function onFocusout() {
 function onFocus(event: FocusEvent) {
   if (
     !isFocused.value
-        && !(event.relatedTarget && contentRef.value?.contains(event.relatedTarget as Node))
+    && !(event.relatedTarget && contentRef.value?.contains(event.relatedTarget as Node))
   ) {
     focus();
   };
@@ -51,13 +49,13 @@ function onKeydown(event: KeyboardEvent) {
   event.preventDefault();
 }
 
-function focus(location?: 'next' | 'prev' | 'first' | 'last') {
+function focus(location?: 'first' | 'last' | 'next' | 'prev') {
   if (contentRef.value) {
     return focusChild(contentRef.value, location);
   }
 }
 
-function focusChild(el: Element, location?: 'next' | 'prev' | 'first' | 'last' | number) {
+function focusChild(el: Element, location?: 'first' | 'last' | 'next' | 'prev' | number) {
   const focusable = focusableChildren(el);
 
   if (!location) {

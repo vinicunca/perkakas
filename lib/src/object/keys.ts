@@ -1,3 +1,5 @@
+import type { IterableContainer } from '../utils/types';
+
 /**
  * Returns a new array containing the keys of the array or object.
  * @param source Either an array or an object
@@ -17,9 +19,6 @@
  * @strict
  * @category Object
  */
-
-import type { IterableContainer } from '../utils/types';
-
 export function keys(
   source: ArrayLike<unknown> | Record<PropertyKey, unknown>,
 ): Array<string> {
@@ -66,7 +65,9 @@ type IndicesAfterSpread<
   : T extends readonly [unknown, ...infer Tail]
     ? IndicesAfterSpread<Tail, [unknown, ...Iterations]>
     : T extends readonly [...infer Head, unknown]
-      ? IndicesAfterSpread<Head, [unknown, ...Iterations]> | Iterations['length']
+      ?
+    IndicesAfterSpread<Head, [unknown, ...Iterations]>
+    | Iterations['length']
       : Iterations['length'];
 
 type ObjectKeys<T> = T extends Record<PropertyKey, never>

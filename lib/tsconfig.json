@@ -1,12 +1,35 @@
 {
   "compilerOptions": {
+    // Type checking
+    "strict": true,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "exactOptionalPropertyTypes": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    // "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+
+    // Modules
+    "module": "es2020",
+
+    // Emit
+    "noEmit": true,
+
+    // JS support
+    "checkJs": true,
+
+    // Interop constraints
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+
     "target": "es2020",
     "lib": ["ES6", "ES2017.Object", "DOM", "DOM.Iterable"],
     "baseUrl": ".",
-    "module": "es2020",
     "moduleResolution": "Bundler",
-    "strict": true,
-    "esModuleInterop": true,
     "skipLibCheck": true
   },
   "include": [

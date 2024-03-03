@@ -1,7 +1,7 @@
 import type { LazyResult } from '../utils/reduce-lazy';
 
-import { purry } from '../function';
-import { _reduceLazy } from '../utils/reduce-lazy';
+import { purry } from '../function/purry';
+import { reduceLazy } from '../utils/reduce-lazy';
 
 type Comparator<TFirst, TSecond> = (a: TFirst, b: TSecond) => boolean;
 
@@ -70,7 +70,7 @@ function _intersectionWith<TFirst, TSecond>(
   comparator: Comparator<TFirst, TSecond>,
 ) {
   const lazy = intersectionWith.lazy(other, comparator);
-  return _reduceLazy(array, lazy);
+  return reduceLazy(array, lazy);
 }
 
 export namespace intersectionWith {

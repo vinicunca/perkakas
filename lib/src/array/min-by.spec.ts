@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { pipe } from '../function';
+import { pipe } from '../function/pipe';
 import { minBy } from './min-by';
 
 const array = [{ a: 2 }, { a: 5 }, { a: 1 }, { a: 3 }] as const;

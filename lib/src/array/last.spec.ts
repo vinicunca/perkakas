@@ -2,7 +2,7 @@ import { assertType, describe, expect, it } from 'vitest';
 
 import type { NonEmptyArray } from '../utils/types';
 
-import { pipe } from '../function';
+import { pipe } from '../function/pipe';
 import { last } from './last';
 
 describe('last', () => {

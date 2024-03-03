@@ -1,54 +1,32 @@
-type TestObj =
-  | (() => void)
-  | { a: string }
-  | Array<number>
-  | Date
-  | Error
-  | Promise<number>
-  | boolean
-  | null
-  | number
-  | string
-  | undefined;
-
-export function typesDataProvider(
-  t:
-    | 'array'
-    | 'boolean'
-    | 'date'
-    | 'error'
-    | 'function'
-    | 'null'
-    | 'number'
-    | 'object'
-    | 'promise'
-    | 'string'
-    | 'undefined',
-): TestObj {
-  switch (t) {
-    case 'number':
-      return 5;
-    case 'array':
-      return [1, 2, 3];
-    case 'boolean':
-      return false;
-    case 'date':
-      return new Date();
-    case 'function':
-      return () => {
-        /* (intentionally empty) */
-      };
-    case 'null':
-      return null;
-    case 'promise':
-      return Promise.resolve(5);
-    case 'string':
-      return 'text';
-    case 'object':
-      return { a: 'asd' };
-    case 'error':
-      return new Error('asd');
-    case 'undefined':
-      return undefined;
+export class TestClass {
+  get foo() {
+    return 'a';
   }
 }
+
+export const TYPES_DATA_PROVIDER = {
+  array: [1, 2, 3] as Array<number>,
+  boolean: false as boolean,
+  date: new Date('1985-07-24T07:40:00.000Z'),
+  error: new Error('asd'),
+  function: () => {
+    /* (intentionally empty) */
+  },
+  instance: new TestClass(),
+  map: new Map<string, string>(),
+  null: null,
+  number: 5 as number,
+  object: { a: 'asd' },
+  promise: Promise.resolve(5),
+  regex: /test/gu,
+  set: new Set<string>(),
+  string: 'text' as string,
+  symbol: Symbol('symbol'),
+  tuple: [1, 2, 3] as [number, number, number],
+  typedArray: new Uint8Array(1),
+  undefined,
+} as const;
+
+export const ALL_TYPES_DATA_PROVIDER = Object.values(TYPES_DATA_PROVIDER);
+export type AllTypesDataProviderTypes =
+  (typeof ALL_TYPES_DATA_PROVIDER)[number];

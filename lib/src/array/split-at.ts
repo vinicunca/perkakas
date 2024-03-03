@@ -1,4 +1,4 @@
-import { purry } from '../function';
+import { purry } from '../function/purry';
 
 /**
  * Splits a given array at a given index.

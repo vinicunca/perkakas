@@ -1,4 +1,4 @@
-import { purry } from '../function';
+import { purry } from '../function/purry';
 
 /**
  * Sets the `value` at `prop` of `object`.
@@ -31,7 +31,7 @@ export function set(...args: any[]) {
   return purry(_set, args);
 }
 
-function _set(obj: any, prop: string, value: any) {
+function _set<T, K extends keyof T>(obj: T, prop: K, value: T[K]): T {
   return {
     ...obj,
     [prop]: value,

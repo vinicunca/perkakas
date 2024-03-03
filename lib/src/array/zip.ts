@@ -1,6 +1,6 @@
 import type { IterableContainer } from '../utils/types';
 
-import { purry } from '../function';
+import { purry } from '../function/purry';
 
 /**
  * Creates a new list from two supplied lists by pairing up equally-positioned items.

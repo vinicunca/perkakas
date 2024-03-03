@@ -1,72 +1,85 @@
-import { assertType, describe, expect, it } from 'vitest';
+import { describe, expect, expectTypeOf, it } from 'vitest';
 
-import { typesDataProvider } from '../../test/types-data-provider';
+import type { AllTypesDataProviderTypes } from '../../test/types-data-provider';
+
+import { ALL_TYPES_DATA_PROVIDER, TYPES_DATA_PROVIDER, TestClass } from '../../test/types-data-provider';
 import { isObject } from './is-object';
 
-describe('isObject', () => {
-  it('isObject: should work as type guard', () => {
-    const data = typesDataProvider('object');
+describe('runtime', () => {
+  it('accepts simple objects', () => {
+    expect(isObject({ a: 123 })).toEqual(true);
+  });
+
+  it('accepts trivial empty objects', () => {
+    expect(isObject({})).toEqual(true);
+  });
+
+  it('rejects strings', () => {
+    expect(isObject('asd')).toEqual(false);
+  });
+
+  it('rejects arrays', () => {
+    expect(isObject([1, 2, 3])).toEqual(false);
+  });
+
+  it('rejects classes', () => {
+    expect(isObject(new TestClass())).toEqual(false);
+  });
+
+  it('accepts null prototypes', () => {
+    expect(isObject(Object.create(null))).toEqual(true);
+  });
+
+  it('aLL_TYPES_DATA_PROVIDER', () => {
+    expect(ALL_TYPES_DATA_PROVIDER.filter(isObject))
+      .toMatchInlineSnapshot(`
+        [
+          {
+            "a": "asd",
+          },
+        ]
+      `);
+  });
+});
+
+describe('typing', () => {
+  it('narrows readonly records', () => {
+    const data: { readonly a: 123 } = { a: 123 };
     if (isObject(data)) {
-      expect(typeof data).toEqual('object');
-      assertType<
-        | {
-          a: string;
-        }
-        | Date
-        | Error
-        | Promise<number>
-      >(data);
+      expectTypeOf(data).toEqualTypeOf<{ readonly a: 123 }>();
     }
   });
 
-  it('isObject: should work as type guard alt', () => {
-    const data = { data: 5 } as { data: 5 } | ReadonlyArray<number>;
+  it('narrows mixed records', () => {
+    const data: { readonly a: 123; b: boolean } = { a: 123, b: false };
     if (isObject(data)) {
-      expect(typeof data).toEqual('object');
-      assertType<{
-        data: 5;
-      }>(data);
+      expectTypeOf(data).toEqualTypeOf<{ readonly a: 123; b: boolean }>();
     }
   });
 
-  it('isObject: should work as type guard for more narrow types', () => {
-    const data = { data: 5 } as { data: number } | Array<number>;
+  it('should work as type guard', () => {
+    const data = TYPES_DATA_PROVIDER.object as AllTypesDataProviderTypes;
     if (isObject(data)) {
-      expect(typeof data).toEqual('object');
-      assertType<{
-        data: number;
-      }>(data);
+      expectTypeOf(data).toEqualTypeOf<{ readonly a: 'asd' }>();
     }
   });
 
   it('should work even if data type is unknown', () => {
-    const data: unknown = typesDataProvider('object');
+    const data = TYPES_DATA_PROVIDER.object as unknown;
     if (isObject(data)) {
-      expect(typeof data).toEqual('object');
-      assertType<Record<string, unknown>>(data);
+      expectTypeOf(data).toEqualTypeOf<Record<PropertyKey, unknown>>();
     }
   });
 
-  it('isObject: should work as type guard in filter', () => {
-    const data = [
-      typesDataProvider('promise'),
-      typesDataProvider('array'),
-      typesDataProvider('boolean'),
-      typesDataProvider('function'),
-      typesDataProvider('object'),
-    ].filter(isObject);
-    expect(data.every((c) => typeof c === 'object' && !Array.isArray(c))).toEqual(
-      true,
-    );
-    assertType<
-    Array<
-      | {
-        a: string;
-      }
-      | Date
-      | Error
-      | Promise<number>
-    >
-    >(data);
+  it('should work as type guard in filter', () => {
+    const data = ALL_TYPES_DATA_PROVIDER.filter(isObject);
+    expectTypeOf(data).toEqualTypeOf<Array<{ readonly a: 'asd' }>>();
+  });
+
+  it('can narrow down `any`', () => {
+    const data = { hello: 'world' } as any;
+    if (isObject(data)) {
+      expectTypeOf(data).toEqualTypeOf<Record<PropertyKey, unknown>>();
+    }
   });
 });

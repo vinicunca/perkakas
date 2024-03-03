@@ -1,7 +1,7 @@
 import type { LazyResult } from '../utils/reduce-lazy';
 
-import { purry } from '../function';
-import { _reduceLazy } from '../utils/reduce-lazy';
+import { purry } from '../function/purry';
+import { reduceLazy } from '../utils/reduce-lazy';
 
 type Flatten<T> = T extends ReadonlyArray<infer K> ? K : T;
 
@@ -28,7 +28,7 @@ export function flatten(...args: any[]) {
 }
 
 function _flatten<T>(items: Array<T>): Array<Flatten<T>> {
-  return _reduceLazy(items, flatten.lazy());
+  return reduceLazy(items, flatten.lazy());
 }
 
 export namespace flatten {

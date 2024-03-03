@@ -1,6 +1,6 @@
 import { assertType, describe, expect, expectTypeOf, it } from 'vitest';
 
-import { pipe } from '../function';
+import { pipe } from '../function/pipe';
 import { keys } from './keys';
 
 describe('test for keys', () => {
@@ -26,7 +26,7 @@ describe('test for keys', () => {
         foo: '1',
       };
       const actual = pipe(data, keys.strict);
-      expect(actual).toEqual(['foo', 'bar']);
+      expect(actual).toEqual(['bar', 'foo']);
 
       assertType<Array<'bar' | 'foo'>>(actual);
     });
@@ -98,7 +98,7 @@ describe('strict tuple types', () => {
     const array: ['a', ...Array<'b'>, 'c'] = ['a', 'c'];
     const result = keys.strict(array);
     expectTypeOf(result).toEqualTypeOf<
-    ['0', ...Array<`${number}`>, `${number}`]
+      ['0', ...Array<`${number}`>, `${number}`]
     >();
   });
 
@@ -106,7 +106,7 @@ describe('strict tuple types', () => {
     const array: readonly ['a', ...Array<'b'>, 'c'] = ['a', 'c'];
     const result = keys.strict(array);
     expectTypeOf(result).toEqualTypeOf<
-    ['0', ...Array<`${number}`>, `${number}`]
+      ['0', ...Array<`${number}`>, `${number}`]
     >();
   });
 });

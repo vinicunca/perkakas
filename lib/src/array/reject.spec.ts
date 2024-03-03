@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { createLazyInvocationCounter } from '../../test/lazy-invocation-counter';
-import { pipe } from '../function';
+import { pipe } from '../function/pipe';
 import { reject } from './reject';
 
 describe('data_first', () => {

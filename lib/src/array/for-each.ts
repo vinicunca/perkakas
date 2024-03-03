@@ -1,8 +1,8 @@
 import type { LazyResult } from '../utils/reduce-lazy';
 import type { Pred, PredIndexed, PredIndexedOptional } from '../utils/types';
 
-import { purry } from '../function';
-import { _reduceLazy } from '../utils/reduce-lazy';
+import { purry } from '../function/purry';
+import { reduceLazy } from '../utils/reduce-lazy';
 import { toLazyIndexed } from '../utils/to-lazy-indexed';
 
 /**
@@ -64,7 +64,7 @@ export function forEach(...args: any[]) {
 
 function _forEach(indexed: boolean) {
   return <T, K>(array: Array<T>, fn: PredIndexedOptional<T, K>) => {
-    return _reduceLazy(
+    return reduceLazy(
       array,
       indexed ? forEach.lazyIndexed(fn) : forEach.lazy(fn),
       indexed,
@@ -74,7 +74,11 @@ function _forEach(indexed: boolean) {
 
 function _lazy(indexed: boolean) {
   return <T>(fn: PredIndexedOptional<T, void>) => {
-    return (value: T, index?: number, array?: Array<T>): LazyResult<T> => {
+    return (
+      value: T,
+      index?: number,
+      array?: ReadonlyArray<T>,
+    ): LazyResult<T> => {
       if (indexed) {
         fn(value, index, array);
       } else {

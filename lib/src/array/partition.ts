@@ -1,6 +1,6 @@
 import type { PredIndexed, PredIndexedOptional } from '../utils/types';
 
-import { purry } from '../function';
+import { purry } from '../function/purry';
 
 /**
  * Splits a collection into two groups, the first of which contains elements the `predicate` type guard passes, and the second one containing the rest.
@@ -75,7 +75,7 @@ export function partition(...args: any[]) {
 }
 
 function _partition(indexed: boolean) {
-  return <T>(array: Array<T>, fn: PredIndexedOptional<T, any>) => {
+  return <T>(array: ReadonlyArray<T>, fn: PredIndexedOptional<T, boolean>) => {
     const ret: [Array<T>, Array<T>] = [[], []];
     array.forEach((item, index) => {
       const matches = indexed ? fn(item, index, array) : fn(item);

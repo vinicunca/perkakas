@@ -1,4 +1,4 @@
-import { isTruthy } from '../guard';
+import { isTruthy } from '../guard/is-truthy';
 
 /**
  * Filter out all falsey values. The values `false`, `null`, `0`, `""`, `undefined`, and `NaN` are falsey.

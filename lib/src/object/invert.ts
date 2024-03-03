@@ -1,4 +1,4 @@
-import { purry } from '../function';
+import { purry } from '../function/purry';
 
 type Inverted<T extends object> = T[keyof T] extends PropertyKey
   ? Record<T[keyof T], keyof T>
@@ -41,7 +41,7 @@ function _invert(
   const result: Record<PropertyKey, PropertyKey> = {};
   // eslint-disable-next-line no-restricted-syntax
   for (const key in object) {
-    result[object[key]] = key;
+    result[object[key]!] = key;
   }
 
   return result;

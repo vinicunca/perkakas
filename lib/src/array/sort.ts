@@ -1,6 +1,6 @@
 import type { IterableContainer } from '../utils/types';
 
-import { purry } from '../function';
+import { purry } from '../function/purry';
 
 /**
  * Sorts an array. The comparator function should accept two values at a time and return a negative number if the first value is smaller, a positive number if it's larger, and zero if they are equal.

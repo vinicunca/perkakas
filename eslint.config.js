@@ -16,4 +16,11 @@ export default vinicuncaESLint(
       'vinicunca/no-duplicate-string': 'off',
     },
   },
+
+  {
+    files: ['**/tsconfig.json'],
+    rules: {
+      'jsonc/sort-keys': 'off',
+    },
+  },
 );

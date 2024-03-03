@@ -1,6 +1,6 @@
 import type { PredIndexed, PredIndexedOptional } from '../utils/types';
 
-import { purry } from '../function';
+import { purry } from '../function/purry';
 
 function _sumBy(indexed: boolean) {
   return <T>(array: Array<T>, fn: PredIndexedOptional<T, number>) => {

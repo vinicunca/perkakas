@@ -1,7 +1,7 @@
 import type { LazyResult } from '../utils/reduce-lazy';
 
-import { purry } from '../function';
-import { _reduceLazy } from '../utils/reduce-lazy';
+import { purry } from '../function/purry';
+import { reduceLazy } from '../utils/reduce-lazy';
 
 type FlattenDeep<T> = T extends ReadonlyArray<infer K> ? FlattenDeep2<K> : T;
 type FlattenDeep2<T> = T extends ReadonlyArray<infer K> ? FlattenDeep3<K> : T;
@@ -33,7 +33,7 @@ export function flattenDeep(...args: any[]) {
 }
 
 function _flattenDeep<T>(items: Array<T>): Array<FlattenDeep<T>> {
-  return _reduceLazy(items, flattenDeep.lazy());
+  return reduceLazy(items, flattenDeep.lazy());
 }
 
 function _flattenDeepValue<T>(value: Array<T> | T): Array<FlattenDeep<T>> | T {

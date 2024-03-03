@@ -1,7 +1,7 @@
 import type { LazyResult } from '../utils/reduce-lazy';
 
-import { purry } from '../function';
-import { _reduceLazy } from '../utils/reduce-lazy';
+import { purry } from '../function/purry';
+import { reduceLazy } from '../utils/reduce-lazy';
 import { toLazyIndexed } from '../utils/to-lazy-indexed';
 
 type IsEquals<T> = (a: T, b: T) => boolean;
@@ -51,13 +51,17 @@ export function uniqWith(...args: any[]) {
   return purry(_uniqWith, args, uniqWith.lazy);
 }
 
-function _uniqWith<T>(array: Array<T>, isEquals: IsEquals<T>) {
+function _uniqWith<T>(array: ReadonlyArray<T>, isEquals: IsEquals<T>) {
   const lazy = uniqWith.lazy(isEquals);
-  return _reduceLazy(array, lazy, true);
+  return reduceLazy(array, lazy, true);
 }
 
 function _lazy<T>(isEquals: IsEquals<T>) {
-  return (value: T, index?: number, array?: Array<T>): LazyResult<T> => {
+  return (
+    value: T,
+    index?: number,
+    array?: ReadonlyArray<T>,
+  ): LazyResult<T> => {
     if (
       array
       && array.findIndex((otherValue) => isEquals(value, otherValue)) === index

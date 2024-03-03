@@ -195,24 +195,16 @@ export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P>(
 
 export function pipe(
   value: any,
-  ...operations: Array<(value: any) => any>
+  ...operations: ReadonlyArray<((value: any) => unknown) | LazyOp>
 ): any {
   let ret = value;
-  const lazyOps = operations.map((op) => {
-    const { lazy, lazyArgs } = op as LazyOp;
-    if (lazy) {
-      const fn: any = lazy(...(lazyArgs || []));
-      fn.indexed = lazy.indexed;
-      fn.single = lazy.single;
-      fn.index = 0;
-      fn.items = [];
-      return fn;
-    }
-    return null;
-  });
+  const lazyOps = operations.map(
+    (op) => 'lazy' in op ? toPipedLazy(op) : undefined,
+  );
+
   let opIdx = 0;
   while (opIdx < operations.length) {
-    const op = operations[opIdx];
+    const op = operations[opIdx]!;
     const lazyOp = lazyOps[opIdx];
     if (!lazyOp) {
       ret = op(ret);

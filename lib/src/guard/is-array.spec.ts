@@ -1,32 +1,67 @@
-import { assertType, describe, expect, it } from 'vitest';
+import { describe, expect, expectTypeOf, it } from 'vitest';
 
-import { typesDataProvider } from '../../test/types-data-provider';
+import type { AllTypesDataProviderTypes } from '../../test/types-data-provider';
+
+import { ALL_TYPES_DATA_PROVIDER, TYPES_DATA_PROVIDER } from '../../test/types-data-provider';
 import { isArray } from './is-array';
 
 describe('isArray', () => {
-  it('isArray: should work as type guard', () => {
-    const data = typesDataProvider('array');
+  it('should infer ReadonlyArray<unknown> when given any', () => {
+    const data = [] as any;
     if (isArray(data)) {
-      expect(Array.isArray(data)).toEqual(true);
-      assertType<Array<number>>(data);
-    }
-
-    const data1: unknown = typesDataProvider('array');
-    if (isArray(data1)) {
-      assertType<ReadonlyArray<unknown>>(data1);
+      expectTypeOf(data).not.toBeAny();
+      expectTypeOf(data[0]).toBeUnknown();
     }
   });
 
-  it('isArray: should work as type guard in filter', () => {
-    const data = [
-      typesDataProvider('error'),
-      typesDataProvider('array'),
-      typesDataProvider('function'),
-      typesDataProvider('null'),
-      typesDataProvider('array'),
-      typesDataProvider('date'),
-    ].filter(isArray);
+  it('should work as type guard', () => {
+    const data = TYPES_DATA_PROVIDER.array as AllTypesDataProviderTypes;
+    if (isArray(data)) {
+      expect(Array.isArray(data)).toEqual(true);
+      expectTypeOf(data).toEqualTypeOf<
+        [number, number, number] | Array<number>
+      >();
+    }
+  });
+
+  it('should infer ReadonlyArray<unknown> when given `unknown`', () => {
+    const data = TYPES_DATA_PROVIDER.array as unknown;
+    if (isArray(data)) {
+      expectTypeOf(data).toEqualTypeOf<ReadonlyArray<unknown>>();
+    }
+  });
+
+  it('should work as type guard in filter', () => {
+    const data = ALL_TYPES_DATA_PROVIDER.filter(isArray);
     expect(data.every((c) => Array.isArray(c))).toEqual(true);
-    assertType<Array<Array<number>>>(data);
+    expectTypeOf(data).toEqualTypeOf<
+      Array<[number, number, number] | Array<number>>
+    >();
+  });
+});
+
+describe('typing', () => {
+  it('mutable arrays work', () => {
+    const data = [] as Array<number> | string;
+
+    if (isArray(data)) {
+      expectTypeOf(data).toEqualTypeOf<Array<number>>();
+    }
+
+    // We check the type when it's inferred from within an array due to https://github.com/remeda/remeda/issues/459 surfacing the issue. I don't know why it works differently than when checking data directly.
+    expectTypeOf([data].filter(isArray)).toEqualTypeOf<Array<Array<number>>>();
+  });
+
+  it('readonly arrays work', () => {
+    const data = [] as ReadonlyArray<number> | string;
+
+    if (isArray(data)) {
+      expectTypeOf(data).toEqualTypeOf<ReadonlyArray<number>>();
+    }
+
+    // We check the type when it's inferred from within an array due to https://github.com/remeda/remeda/issues/459 surfacing the issue. I don't know why it works differently than when checking data directly.
+    expectTypeOf([data].filter(isArray)).toEqualTypeOf<
+      Array<ReadonlyArray<number>>
+    >();
   });
 });

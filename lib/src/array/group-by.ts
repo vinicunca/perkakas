@@ -1,6 +1,6 @@
 import type { NonEmptyArray, PredIndexed, PredIndexedOptional } from '../utils/types';
 
-import { purry } from '../function';
+import { purry } from '../function/purry';
 
 /**
  * Splits a collection into sets, grouped by the result of running each value through `fn`.
@@ -53,10 +53,12 @@ function _groupBy(indexed: boolean) {
       const key = indexed ? fn(item, index, array) : fn(item);
       if (key !== undefined) {
         const actualKey = String(key);
-        if (!ret[actualKey]) {
-          ret[actualKey] = [];
+        let items = ret[actualKey];
+        if (items === undefined) {
+          items = [];
+          ret[actualKey] = items;
         }
-        ret[actualKey].push(item);
+        items.push(item);
       }
     });
     return ret;

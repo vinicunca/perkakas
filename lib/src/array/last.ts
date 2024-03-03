@@ -1,6 +1,6 @@
 import type { NonEmptyArray } from '../utils/types';
 
-import { purry } from '../function';
+import { purry } from '../function/purry';
 
 /**
  * Gets the last element of `array`.

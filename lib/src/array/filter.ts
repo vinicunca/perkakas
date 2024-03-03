@@ -1,7 +1,7 @@
 import type { Pred, PredIndexed, PredIndexedOptional } from '../utils/types';
 
-import { purry } from '../function';
-import { _reduceLazy, type LazyResult } from '../utils/reduce-lazy';
+import { purry } from '../function/purry';
+import { reduceLazy, type LazyResult } from '../utils/reduce-lazy';
 import { toLazyIndexed } from '../utils/to-lazy-indexed';
 
 /**
@@ -55,7 +55,7 @@ export function filter(...args: any[]) {
 
 function _filter(indexed: boolean) {
   return <T>(array: Array<T>, fn: PredIndexedOptional<T, boolean>) => {
-    return _reduceLazy(
+    return reduceLazy(
       array,
       indexed ? filter.lazyIndexed(fn) : filter.lazy(fn),
       indexed,

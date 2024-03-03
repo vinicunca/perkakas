@@ -6,8 +6,8 @@ import type {
   PredIndexedOptional,
 } from '../utils/types';
 
-import { purry } from '../function';
-import { _reduceLazy } from '../utils/reduce-lazy';
+import { purry } from '../function/purry';
+import { reduceLazy } from '../utils/reduce-lazy';
 import { toLazyIndexed } from '../utils/to-lazy-indexed';
 
 /**
@@ -57,8 +57,8 @@ export function map(...args: any[]) {
 }
 
 function _map(indexed: boolean) {
-  return <T, K>(array: Array<T>, fn: PredIndexedOptional<T, K>) => {
-    return _reduceLazy(
+  return <T, K>(array: ReadonlyArray<T>, fn: PredIndexedOptional<T, K>) => {
+    return reduceLazy(
       array,
       indexed ? map.lazyIndexed(fn) : map.lazy(fn),
       indexed,
@@ -68,7 +68,11 @@ function _map(indexed: boolean) {
 
 function _lazy(indexed: boolean) {
   return <T, K>(fn: PredIndexedOptional<T, K>) => {
-    return (value: T, index?: number, array?: Array<T>): LazyResult<K> => {
+    return (
+      value: T,
+      index?: number,
+      array?: ReadonlyArray<T>,
+    ): LazyResult<K> => {
       return {
         done: false,
         hasNext: true,

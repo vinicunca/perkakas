@@ -1,4 +1,4 @@
-import { purry } from '../function';
+import { purry } from '../function/purry';
 import { splitAt } from './split-at';
 
 /**
@@ -37,7 +37,7 @@ export function splitWhen(...args: any[]) {
 
 function _splitWhen<T>(array: Array<T>, fn: (item: T) => boolean) {
   for (let i = 0; i < array.length; i++) {
-    if (fn(array[i])) {
+    if (fn(array[i]!)) {
       return splitAt(array, i);
     }
   }

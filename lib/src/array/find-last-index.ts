@@ -1,6 +1,6 @@
 import type { Pred, PredIndexed, PredIndexedOptional } from '../utils/types';
 
-import { purry } from '../function';
+import { purry } from '../function/purry';
 
 /**
  * Returns the index of the last element in the array where predicate is true, and -1 otherwise.
@@ -53,7 +53,7 @@ export function findLastIndex(...args: any[]) {
 function _findLastIndex(indexed: boolean) {
   return <T>(array: Array<T>, fn: PredIndexedOptional<T, boolean>) => {
     for (let i = array.length - 1; i >= 0; i--) {
-      if (indexed ? fn(array[i], i, array) : fn(array[i])) {
+      if (indexed ? fn(array[i]!, i, array) : fn(array[i]!)) {
         return i;
       }
     }

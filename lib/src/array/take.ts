@@ -1,7 +1,7 @@
 import type { LazyResult } from '../utils/reduce-lazy';
 
-import { purry } from '../function';
-import { _reduceLazy } from '../utils/reduce-lazy';
+import { purry } from '../function/purry';
+import { reduceLazy } from '../utils/reduce-lazy';
 
 /**
  * Returns the first `n` elements of `array`.
@@ -35,7 +35,7 @@ export function take(...args: any[]) {
 }
 
 function _take<T>(array: Array<T>, n: number) {
-  return _reduceLazy(array, take.lazy(n));
+  return reduceLazy(array, take.lazy(n));
 }
 
 export namespace take {

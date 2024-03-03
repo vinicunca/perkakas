@@ -1,4 +1,4 @@
-import { purry } from '../function';
+import { purry } from '../function/purry';
 
 /**
  * Creates a new object from two supplied lists by pairing up equally-positioned items.
@@ -46,7 +46,7 @@ function _zipObj(
     = first.length > second.length ? second.length : first.length;
   const result: Record<number | string | symbol, unknown> = {};
   for (let i = 0; i < resultLength; i++) {
-    result[first[i]] = second[i];
+    result[first[i]!] = second[i];
   }
 
   return result;

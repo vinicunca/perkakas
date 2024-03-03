@@ -1,7 +1,7 @@
 import type { LazyResult } from '../utils/reduce-lazy';
 
-import { purry } from '../function';
-import { _reduceLazy } from '../utils/reduce-lazy';
+import { purry } from '../function/purry';
+import { reduceLazy } from '../utils/reduce-lazy';
 
 type IsEquals<TFirst, TSecond> = (a: TFirst, b: TSecond) => boolean;
 
@@ -65,7 +65,7 @@ function _differenceWith<TFirst, TSecond>(
   isEquals: IsEquals<TFirst, TSecond>,
 ) {
   const lazy = differenceWith.lazy(other, isEquals);
-  return _reduceLazy(array, lazy);
+  return reduceLazy(array, lazy);
 }
 
 export namespace differenceWith {

@@ -1,8 +1,8 @@
 import type { LazyResult } from '../utils/reduce-lazy';
 import type { Pred, PredIndexed, PredIndexedOptional } from '../utils/types';
 
-import { purry } from '../function';
-import { _reduceLazy } from '../utils/reduce-lazy';
+import { purry } from '../function/purry';
+import { reduceLazy } from '../utils/reduce-lazy';
 import { toLazyIndexed } from '../utils/to-lazy-indexed';
 
 /**
@@ -48,8 +48,8 @@ export function reject(...args: any[]) {
 }
 
 function _reject(indexed: boolean) {
-  return <T>(array: Array<T>, fn: PredIndexedOptional<T, boolean>) => {
-    return _reduceLazy(
+  return <T>(array: ReadonlyArray<T>, fn: PredIndexedOptional<T, boolean>) => {
+    return reduceLazy(
       array,
       indexed ? reject.lazyIndexed(fn) : reject.lazy(fn),
       indexed,
@@ -59,7 +59,11 @@ function _reject(indexed: boolean) {
 
 function _lazy(indexed: boolean) {
   return <T>(fn: PredIndexedOptional<T, boolean>) => {
-    return (value: T, index?: number, array?: Array<T>): LazyResult<T> => {
+    return (
+      value: T,
+      index?: number,
+      array?: ReadonlyArray<T>,
+    ): LazyResult<T> => {
       const valid = indexed ? fn(value, index, array) : fn(value);
       if (!valid) {
         return {

@@ -1,5 +1,5 @@
-import { purry } from '../function';
-import { _reduceLazy, type LazyResult } from '../utils/reduce-lazy';
+import { purry } from '../function/purry';
+import { reduceLazy, type LazyResult } from '../utils/reduce-lazy';
 
 /**
  * Excludes the values from `other` array.
@@ -44,7 +44,7 @@ export function difference(...args: any[]) {
 
 function _difference<T>(array: Array<T>, other: Array<T>) {
   const lazy = difference.lazy(other);
-  return _reduceLazy(array, lazy);
+  return reduceLazy(array, lazy);
 }
 
 export namespace difference {

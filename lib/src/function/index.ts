@@ -1,3 +1,4 @@
+export * from './conditional';
 export * from './create-pipe';
 export * from './identity';
 export * from './noop';

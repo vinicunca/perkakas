@@ -1,52 +1,59 @@
-import { assertType, describe, expect, it } from 'vitest';
+import { describe, expect, expectTypeOf, it } from 'vitest';
 
-import { typesDataProvider } from '../../test/types-data-provider';
+import type { AllTypesDataProviderTypes } from '../../test/types-data-provider';
+
+import { ALL_TYPES_DATA_PROVIDER, TYPES_DATA_PROVIDER } from '../../test/types-data-provider';
 import { isNonNull } from './is-non-null';
 
 describe('isNonNull', () => {
-  it('isNonNull": should work as type guard', () => {
-    const data = typesDataProvider('date');
+  it('should work as type guard', () => {
+    const data = TYPES_DATA_PROVIDER.date as AllTypesDataProviderTypes;
     if (isNonNull(data)) {
       expect(data instanceof Date).toEqual(true);
-      assertType<
+      expectTypeOf(data).toEqualTypeOf<
         | (() => void)
-        | { a: string }
+        | [number, number, number]
+        | { readonly a: 'asd' }
         | Array<number>
         | Date
         | Error
+        | Map<string, string>
         | Promise<number>
+        | RegExp
+        | Set<string>
+        | TestClass
+        | Uint8Array
         | boolean
         | number
         | string
+        | symbol
         | undefined
-          >(data);
+      >();
     }
   });
-  it('isNonNull: should work as type guard in filter', () => {
-    const data = [
-      typesDataProvider('error'),
-      typesDataProvider('array'),
-      typesDataProvider('function'),
-      typesDataProvider('null'),
-      typesDataProvider('number'),
-      typesDataProvider('undefined'),
-    ].filter(isNonNull);
-    expect(data).toHaveLength(5);
-    assertType<
-    Array<
-      | (() => void)
-      | {
-        a: string;
-      }
-      | Array<number>
-      | Date
-      | Error
-      | Promise<number>
-      | boolean
-      | number
-      | string
-      | undefined
-    >
-        >(data);
+  it('should work as type guard in filter', () => {
+    const data = ALL_TYPES_DATA_PROVIDER.filter(isNonNull);
+    expect(data).toHaveLength(17);
+    expectTypeOf(data).toEqualTypeOf<
+      Array<
+        | (() => void)
+        | [number, number, number]
+        | { readonly a: 'asd' }
+        | Array<number>
+        | Date
+        | Error
+        | Map<string, string>
+        | Promise<number>
+        | RegExp
+        | Set<string>
+        | TestClass
+        | Uint8Array
+        | boolean
+        | number
+        | string
+        | symbol
+        | undefined
+      >
+          >(data);
   });
 });

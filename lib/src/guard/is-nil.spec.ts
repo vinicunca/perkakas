@@ -1,26 +1,22 @@
-import { assertType, describe, expect, it } from 'vitest';
+import { describe, expect, expectTypeOf, it } from 'vitest';
 
-import { typesDataProvider } from '../../test/types-data-provider';
+import type { AllTypesDataProviderTypes } from '../../test/types-data-provider';
+
+import { ALL_TYPES_DATA_PROVIDER, TYPES_DATA_PROVIDER } from '../../test/types-data-provider';
 import { isNil } from './is-nil';
 
 describe('isNil', () => {
-  it('isNil: should work as type guard', () => {
-    const data = typesDataProvider('null');
+  it('should work as type guard', () => {
+    const data = TYPES_DATA_PROVIDER.null as AllTypesDataProviderTypes;
     if (isNil(data)) {
       expect(data).toEqual(null);
-      assertType<null | undefined>(data);
+      expectTypeOf(data).toEqualTypeOf<null | undefined>();
     }
   });
-  it('isNil: should work as type guard in filter', () => {
-    const data = [
-      typesDataProvider('error'),
-      typesDataProvider('array'),
-      typesDataProvider('function'),
-      typesDataProvider('function'),
-      typesDataProvider('null'),
-      typesDataProvider('number'),
-    ].filter(isNil);
+
+  it('should work as type guard in filter', () => {
+    const data = ALL_TYPES_DATA_PROVIDER.filter(isNil);
     expect(data.every((c) => c == null)).toEqual(true);
-    assertType<Array<null | undefined>>(data);
+    expectTypeOf(data).toEqualTypeOf<Array<null | undefined>>();
   });
 });

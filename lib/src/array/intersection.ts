@@ -1,7 +1,7 @@
 import type { LazyResult } from '../utils/reduce-lazy';
 
-import { purry } from '../function';
-import { _reduceLazy } from '../utils/reduce-lazy';
+import { purry } from '../function/purry';
+import { reduceLazy } from '../utils/reduce-lazy';
 
 /**
  * Returns a list of elements that exist in both array.
@@ -41,7 +41,7 @@ export function intersection(...args: any[]) {
 
 function _intersection<T>(array: Array<T>, other: Array<T>) {
   const lazy = intersection.lazy(other);
-  return _reduceLazy(array, lazy);
+  return reduceLazy(array, lazy);
 }
 
 export namespace intersection {
