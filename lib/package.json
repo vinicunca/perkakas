@@ -1,7 +1,7 @@
 {
   "name": "@vinicunca/perkakas",
   "type": "module",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Utility for JavaScript and Typescript.",
   "author": {
     "name": "praburangki",
