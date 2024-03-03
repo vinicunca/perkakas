@@ -1,7 +1,7 @@
 import type { Pred, PredIndexed, PredIndexedOptional } from '../utils/types';
 
 import { purry } from '../function/purry';
-import { reduceLazy, type LazyResult } from '../utils/reduce-lazy';
+import { type LazyResult, reduceLazy } from '../utils/reduce-lazy';
 import { toLazyIndexed } from '../utils/to-lazy-indexed';
 
 /**
@@ -50,11 +50,11 @@ export function filter<T>(
 ): (array: ReadonlyArray<T>) => Array<T>;
 
 export function filter(...args: any[]) {
-  return purry(_filter(false), args, filter.lazy);
+  return purry(filter_(false), args, filter.lazy);
 }
 
-function _filter(indexed: boolean) {
-  return <T>(array: Array<T>, fn: PredIndexedOptional<T, boolean>) => {
+function filter_(indexed: boolean) {
+  return <T>(array: ReadonlyArray<T>, fn: PredIndexedOptional<T, boolean>) => {
     return reduceLazy(
       array,
       indexed ? filter.lazyIndexed(fn) : filter.lazy(fn),
@@ -63,9 +63,9 @@ function _filter(indexed: boolean) {
   };
 }
 
-function _lazy(indexed: boolean) {
+function lazy_(indexed: boolean) {
   return <T>(fn: PredIndexedOptional<T, boolean>) => {
-    return (value: T, index?: number, array?: Array<T>): LazyResult<T> => {
+    return (value: T, index?: number, array?: ReadonlyArray<T>): LazyResult<T> => {
       const valid = indexed ? fn(value, index, array) : fn(value);
       if (valid) {
         return {
@@ -101,9 +101,9 @@ export namespace filter {
     fn: PredIndexed<T, boolean>
   ): (array: ReadonlyArray<T>) => Array<T>;
   export function indexed(...args: any[]) {
-    return purry(_filter(true), args, filter.lazyIndexed);
+    return purry(filter_(true), args, filter.lazyIndexed);
   }
 
-  export const lazy = _lazy(false);
-  export const lazyIndexed = toLazyIndexed(_lazy(true));
+  export const lazy = lazy_(false);
+  export const lazyIndexed = toLazyIndexed(lazy_(true));
 }

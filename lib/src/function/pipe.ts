@@ -194,51 +194,68 @@ export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P>(
 ): P;
 
 export function pipe(
-  value: any,
+  input: unknown,
   ...operations: ReadonlyArray<((value: any) => unknown) | LazyOp>
 ): any {
-  let ret = value;
-  const lazyOps = operations.map(
+  let output = input;
+
+  const lazyOperations = operations.map(
     (op) => 'lazy' in op ? toPipedLazy(op) : undefined,
   );
 
-  let opIdx = 0;
-  while (opIdx < operations.length) {
-    const op = operations[opIdx]!;
-    const lazyOp = lazyOps[opIdx];
-    if (!lazyOp) {
-      ret = op(ret);
-      opIdx++;
+  let operationIndex = 0;
+  while (operationIndex < operations.length) {
+    const lazyOperation = lazyOperations[operationIndex];
+    if (lazyOperation === undefined || !isIterable(output)) {
+      const operation = operations[operationIndex]!;
+      output = operation(output);
+      operationIndex++;
       continue;
     }
-    const lazySeq: Array<LazyFn> = [];
-    for (let j = opIdx; j < operations.length; j++) {
-      if (lazyOps[j]) {
-        lazySeq.push(lazyOps[j]);
-        if (lazyOps[j].single) {
-          break;
-        }
-      } else {
+
+    const lazySequence: Array<ReturnType<typeof toPipedLazy>> = [];
+    for (let j = operationIndex; j < operations.length; j++) {
+      const lazyOp = lazyOperations[j];
+      if (lazyOp === undefined) {
+        break;
+      }
+
+      lazySequence.push(lazyOp);
+      if (lazyOp.isSingle) {
         break;
       }
     }
 
-    const acc: Array<any> = [];
+    const accumulator: Array<unknown> = [];
 
-    for (const item of ret) {
-      if (_processItem({ acc, item, lazySeq })) {
+    const iterator = output[Symbol.iterator]();
+
+    while (true) {
+      const result = iterator.next();
+      if (result.done ?? false) {
+        break;
+      }
+
+      const shouldExitEarly = processItem_(
+        result.value,
+        accumulator,
+        lazySequence,
+      );
+      if (shouldExitEarly) {
         break;
       }
     }
-    const lastLazySeq = lazySeq[lazySeq.length - 1];
-    if ((lastLazySeq as any).single) {
-      ret = acc[0];
+
+    const { isSingle } = lazySequence[lazySequence.length - 1]!;
+    if (isSingle) {
+      output = accumulator[0];
     } else {
-      ret = acc;
+      output = accumulator;
     }
-    opIdx += lazySeq.length;
+    operationIndex += lazySequence.length;
   }
-  return ret;
+
+  return output;
 }
 
 type LazyFn = (value: any, index?: number, items?: any) => LazyResult<any>;
@@ -248,41 +265,35 @@ type LazyOp = ((input: any) => any) & {
     indexed: boolean;
     single: boolean;
   };
-  lazyArgs: Array<any>;
+  lazyArgs?: ReadonlyArray<unknown>;
 };
 
-function _processItem({
-  acc,
-  item,
-  lazySeq,
-}: {
-  acc: Array<any>;
-  item: any;
-  lazySeq: Array<any>;
-}): boolean {
-  if (lazySeq.length === 0) {
-    acc.push(item);
+function processItem_(
+  item: unknown,
+  accumulator: Array<unknown>,
+  lazySequence: ReadonlyArray<ReturnType<typeof toPipedLazy>>,
+): boolean {
+  if (lazySequence.length === 0) {
+    accumulator.push(item);
     return false;
   }
   let lazyResult: LazyResult<any> = { done: false, hasNext: false };
   let isDone = false;
-  for (let i = 0; i < lazySeq.length; i++) {
-    const lazyFn = lazySeq[i];
-    const indexed = lazyFn.indexed;
-    const index = lazyFn.index;
-    const items = lazyFn.items;
+  for (let i = 0; i < lazySequence.length; i++) {
+    const lazyFn = lazySequence[i]!;
+    const { index, isIndexed, items } = lazyFn;
     items.push(item);
-    lazyResult = indexed ? lazyFn(item, index, items) : lazyFn(item);
+    lazyResult = isIndexed ? lazyFn(item, index, items) : lazyFn(item);
     lazyFn.index++;
     if (lazyResult.hasNext) {
       if (lazyResult.hasMany) {
         const nextValues: Array<any> = lazyResult.next;
         for (const subItem of nextValues) {
-          const subResult = _processItem({
-            acc,
-            item: subItem,
-            lazySeq: lazySeq.slice(i + 1),
-          });
+          const subResult = processItem_(
+            subItem,
+            accumulator,
+            lazySequence.slice(i + 1),
+          );
           if (subResult) {
             return true;
           }
@@ -302,8 +313,29 @@ function _processItem({
     }
   }
   if (lazyResult.hasNext) {
-    acc.push(item);
+    accumulator.push(item);
   }
 
-  return !!isDone;
+  return isDone;
+}
+
+function toPipedLazy(op: LazyOp) {
+  const { lazy, lazyArgs } = op;
+  const fn = lazy(...(lazyArgs ?? []));
+  return Object.assign(fn, {
+    index: 0,
+    isIndexed: lazy.indexed,
+    isSingle: lazy.single,
+    items: [] as Array<unknown>,
+  });
+}
+
+function isIterable(something: unknown): something is Iterable<unknown> {
+  // Check for null and undefined to avoid errors when accessing Symbol.iterator
+  return (
+    typeof something === 'string'
+    || (typeof something === 'object'
+    && something !== null
+    && Symbol.iterator in something)
+  );
 }

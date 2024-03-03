@@ -1,3 +1,5 @@
+import { purry } from '../function/purry';
+
 /**
  * Returns an array of key/values of the enumerable properties of an object.
  * @param object
@@ -7,33 +9,56 @@
  * @example
  *    P.toPairs({ a: 1, b: 2, c: 3 }) // => [['a', 1], ['b', 2], ['c', 3]]
  *    P.toPairs.strict({ a: 1 } as const) // => [['a', 1]] typed Array<['a', 1]>
+ *    P.pipe(
+ *      { a: 1, b: 2, c: 3 },
+ *      toPairs,
+ *    ); // => [['a', 1], ['b', 2], ['c', 3]]
+ *    P.pipe(
+ *      { a: 1 } as const,
+ *      toPairs.strict,
+ *    ); // => [['a', 1]] typed Array<['a', 1]>
  * @strict
  * @category Object
+ * @dataFirst
  */
-export function toPairs<T>(object: Record<string, T>): Array<[string, T]> {
-  return Object.entries(object);
+export function toPairs<T>(object: Record<string, T>): Array<[string, T]>;
+
+/**
+ * Returns an array of key/values of the enumerable properties of an object.
+ * @param object
+ * @signature
+ *    P.toPairs()(object)
+ *    P.toPairs.strict()(object)
+ * @example
+ *    P.pipe(
+ *      { a: 1, b: 2, c: 3 },
+ *      toPairs(),
+ *    ); // => [['a', 1], ['b', 2], ['c', 3]]
+ *    P.pipe(
+ *      { a: 1 } as const,
+ *      toPairs.strict(),
+ *    ); // => [['a', 1]] typed Array<['a', 1]>
+ * @strict
+ * @category Object
+ * @dataLast
+ */
+// TODO: Currently the typings are broken
+// export function toPairs(): <T>(object: Record<string, T>) => Array<[string, T]>;
+
+export function toPairs(...args: any[]) {
+  return purry(Object.entries, args);
 }
 
-// Inspired and largely copied from `sindresorhus/ts-extras`:
-// @see https://github.com/sindresorhus/ts-extras/blob/44f57392c5f027268330771996c4fdf9260b22d6/source/object-keys.ts
-// @see https://github.com/sindresorhus/ts-extras/blob/44f57392c5f027268330771996c4fdf9260b22d6/source/object-entries.ts
-type ObjectKeys<T extends object> = `${Exclude<keyof T, symbol>}`;
-type ObjectValues<T extends Record<PropertyKey, unknown>> =
-  Required<T>[ObjectKeys<T>];
-type ObjectEntry<T extends Record<PropertyKey, unknown>> = [
-  ObjectKeys<T>,
-  ObjectValues<T>,
-];
-type ObjectEntries<T extends Record<PropertyKey, unknown>> = Array<
-ObjectEntry<T>
+type Pairs<T> = Array<
+  { [K in keyof T]-?: [key: K, value: Required<T>[K]] }[keyof T]
 >;
 
+interface Strict {
+  <T extends NonNullable<unknown>>(object: T): Pairs<T>;
+  // TODO: Currently the typings are broken
+  // (): <T extends NonNullable<unknown>>(object: T) => Pairs<T>;
+}
+
 export namespace toPairs {
-  export function strict<T extends Record<PropertyKey, unknown>>(
-    object: T,
-  ): ObjectEntries<T> {
-    // @ts-expect-error [ts2322] - This is deliberately stricter than what TS
-    // provides out of the box.
-    return Object.entries(object);
-  }
+  export const strict = toPairs as Strict;
 }

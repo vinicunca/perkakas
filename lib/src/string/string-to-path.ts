@@ -21,7 +21,6 @@ function _stringToPath(path: string): Array<string> {
     = path.match(/^\[(.+?)\](.*)$/) ?? path.match(/^\.?([^.[\]]+)(.*)$/);
   if (match) {
     const [, key, rest] = match;
-    // @ts-expect-error [ts2322] - Can we improve typing here to assure that `key` and `rest` are defined when the regex matches?
     return [key, ..._stringToPath(rest)];
   }
   return [path];
