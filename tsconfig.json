@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    // Type checking
     "strict": true,
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
@@ -8,31 +7,32 @@
     "noFallthroughCasesInSwitch": true,
     "noImplicitOverride": true,
     "noImplicitReturns": true,
-    // "noUncheckedIndexedAccess": true,
+    // "noPropertyAccessFromIndexSignature": true,
+    "noUncheckedIndexedAccess": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
 
-    // Modules
-    "module": "es2020",
+    // MODULES
+    "module": "ESNext",
+    "types": ["vitest/globals"],
 
-    // Emit
+    // EMIT
     "noEmit": true,
 
-    // JS support
+    // JAVASCRIPT SUPPORT
     "checkJs": true,
 
-    // Interop constraints
+    // INTEROP CONSTRAINTS
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
 
-    "target": "es2020",
+    "target": "ES2020",
     "lib": ["ES6", "ES2017.Object", "DOM", "DOM.Iterable"],
     "baseUrl": ".",
-    "moduleResolution": "Bundler",
+    "moduleResolution": "Node",
     "skipLibCheck": true
   },
-  "include": [
-    "**/*.ts"
-  ]
+
+  "include": ["src", "test", "*.config.js", "*.config.ts"]
 }

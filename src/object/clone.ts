@@ -57,7 +57,8 @@ function _clone(
  * @param value the object to clone
  * @category Object
  * @signature P.clone(value)
- * @example P.clone({foo: 'bar'}) // {foo: 'bar'}
+ * @example
+ *    P.clone({foo: 'bar'}) // {foo: 'bar'}
  */
 export function clone<T>(value: T): T {
   return value != null && typeof (value as any).clone === 'function'

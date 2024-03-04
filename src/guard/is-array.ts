@@ -13,7 +13,7 @@ import type { NarrowedTo } from '../utils/types';
  * @category Guard
  */
 export function isArray<T>(
-  data: ReadonlyArray<unknown> | T,
+  data: ArrayLike<unknown> | T,
 ): data is NarrowedTo<T, ReadonlyArray<unknown>> {
   return Array.isArray(data);
 }

@@ -1,6 +1,6 @@
 import { expect, it } from 'vitest';
 
-import { purry } from '../function/purry';
+import { purry } from './purry';
 
 function sub(a: number, b: number) {
   return a - b;

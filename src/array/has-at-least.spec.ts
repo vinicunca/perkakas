@@ -1,4 +1,4 @@
-import { assertType, describe, expect, expectTypeOf, it } from 'vitest';
+import { describe, expect, expectTypeOf, it } from 'vitest';
 
 import { hasAtLeast } from './has-at-least';
 

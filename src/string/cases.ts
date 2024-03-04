@@ -75,13 +75,13 @@ export function splitByCase<
 
 export function toUpperFirst<S extends string>(str: S): Capitalize<S> {
   return (
-    str ? str[0].toUpperCase() + str.slice(1) : ''
+    str ? str[0]?.toUpperCase() + str.slice(1) : ''
   ) as Capitalize<S>;
 }
 
 export function toLowerFirst<S extends string>(str: S): Uncapitalize<S> {
   return (
-    str ? str[0].toLowerCase() + str.slice(1) : ''
+    str ? str[0]?.toLowerCase() + str.slice(1) : ''
   ) as Uncapitalize<S>;
 }
 
@@ -169,15 +169,15 @@ export function toTrainCase<
 const titleCaseExceptions
   = /^(a|an|and|as|at|but|by|for|if|in|is|nor|of|on|or|the|to|with)$/i;
 
-export function titleCase(): '';
-export function titleCase<
+export function toTitleCase(): '';
+export function toTitleCase<
   T extends readonly string[] | string,
   UserCaseOptions extends CaseOptions = CaseOptions,
 >(
   str: T,
   opts?: UserCaseOptions,
 ): TrainCase<T, UserCaseOptions['normalize'], ' '>;
-export function titleCase<
+export function toTitleCase<
   T extends readonly string[] | string,
   UserCaseOptions extends CaseOptions = CaseOptions,
 >(str?: T, opts?: UserCaseOptions) {

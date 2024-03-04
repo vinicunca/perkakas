@@ -1,13 +1,14 @@
 {
   "$schema": "https://typedoc.org/schema.json",
 
-  "tsconfig": "./lib/tsconfig.json",
-  "entryPoints": ["./lib/src/index.ts"],
+  "tsconfig": "./tsconfig.json",
+  "entryPoints": ["./src/index.ts"],
   "exclude": ["**/*.spec.ts"],
 
   "jsDocCompatibility": {
     "exampleTag": false
   },
 
-  "excludeNotDocumented": true
+  "excludeNotDocumented": true,
+  "sourceLinkTemplate": "https://github.com/vinicunca/perkakas/blob/main/{path}"
 }

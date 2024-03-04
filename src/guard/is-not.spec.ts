@@ -1,6 +1,6 @@
 import { describe, expect, expectTypeOf, it } from 'vitest';
 
-import type { AllTypesDataProviderTypes } from '../../test/types-data-provider';
+import type { AllTypesDataProviderTypes, TestClass } from '../../test/types-data-provider';
 
 import { ALL_TYPES_DATA_PROVIDER, TYPES_DATA_PROVIDER } from '../../test/types-data-provider';
 import { isNot } from './is-not';
@@ -14,22 +14,22 @@ describe('isNot', () => {
       expect(data instanceof Promise).toEqual(true);
       expectTypeOf(data).toEqualTypeOf<
         | (() => void)
-          | [number, number, number]
-          | { readonly a: 'asd' }
-          | Array<number>
-          | Date
-          | Error
-          | Map<string, string>
-          | Promise<number>
-          | RegExp
-          | Set<string>
-          | TestClass
-          | Uint8Array
-          | boolean
-          | null
-          | number
-          | symbol
-          | undefined
+        | [number, number, number]
+        | { readonly a: 'asd' }
+        | Array<number>
+        | Date
+        | Error
+        | Map<string, string>
+        | Promise<number>
+        | RegExp
+        | Set<string>
+        | TestClass
+        | Uint8Array
+        | boolean
+        | null
+        | number
+        | symbol
+        | undefined
           >(data);
     }
   });

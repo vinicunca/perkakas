@@ -4,7 +4,6 @@
  */
 import type { SetRequired } from 'type-fest';
 
-import { groupBy, isDefined, isEmpty, toKebabCase } from '@vinicunca/perkakas';
 import fs from 'node:fs/promises';
 import process from 'node:process';
 import {
@@ -13,6 +12,8 @@ import {
 } from 'prettier';
 import invariant from 'tiny-invariant';
 import { type JSONOutput, ReflectionKind } from 'typedoc';
+
+import { groupBy, isDefined, isEmpty, toKebabCase } from '../src';
 
 const PRETTIER_OPTIONS = {
   parser: 'typescript',
@@ -31,7 +32,7 @@ main()
   });
 
 async function main(): Promise<void> {
-  const jsonData = await fs.readFile('scripts/out.json', 'utf8');
+  const jsonData = await fs.readFile('scripts/typedoc.json', 'utf8');
   const data = JSON.parse(jsonData) as unknown as JSONOutput.ProjectReflection;
 
   const output = await transformProject(data);
@@ -41,7 +42,7 @@ async function main(): Promise<void> {
 }
 
 async function transformProject(project: JSONOutput.ProjectReflection) {
-  const { children } = project;
+  const { children = [] } = project;
   invariant(isDefined(children), 'The typedoc output is empty!');
 
   const functions = await Promise.all(
