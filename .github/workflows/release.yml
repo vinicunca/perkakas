@@ -9,11 +9,11 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Set node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 20.8.0
           registry-url: 'https://registry.npmjs.org'
@@ -34,15 +34,3 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.VINICUNCA_NPM_TOKEN }}
 
-      # - run: pnpm run deploy:docs
-      #   env:
-      #     ALGOLIA_APPLICATION_ID: ${{ secrets.ALGOLIA_APPLICATION_ID }}
-      #     ALGOLIA_SEARCH_API_KEY: ${{ secrets.ALGOLIA_SEARCH_API_KEY }}
-      #     ALGOLIA_CRAWLER_API_KEY: ${{ secrets.ALGOLIA_CRAWLER_API_KEY }}
-
-      # - uses: FirebaseExtended/action-hosting-deploy@v0
-      #   with:
-      #     repoToken: '${{ secrets.GITHUB_TOKEN }}'
-      #     firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_VINICUNCA_PERKAKAS }}'
-      #     projectId: vinicunca-perkakas
-      #     channelId: live
