@@ -2,16 +2,17 @@ import type { PredIndexed, PredIndexedOptional } from '../utils/types';
 
 import { purry } from '../function/purry';
 
-function _meanBy(indexed: boolean) {
-  return <T>(array: Array<T>, fn: PredIndexedOptional<T, number>) => {
+function meanBy_(indexed: boolean) {
+  return <T>(array: ReadonlyArray<T>, fn: PredIndexedOptional<T, number>) => {
     if (array.length === 0) {
       return Number.NaN;
     }
 
     let sum = 0;
-    array.forEach((item, i) => {
-      sum += indexed ? fn(item, i, array) : fn(item);
-    });
+
+    for (const [index, item] of array.entries()) {
+      sum += indexed ? fn(item, index, array) : fn(item);
+    }
 
     return sum / array.length;
   };
@@ -59,8 +60,8 @@ export function meanBy<T>(
   fn: (item: T) => number
 ): number;
 
-export function meanBy(...args: any[]) {
-  return purry(_meanBy(false), args);
+export function meanBy(...args: any[]): unknown {
+  return purry(meanBy_(false), args);
 }
 
 export namespace meanBy {
@@ -73,7 +74,7 @@ export namespace meanBy {
     fn: PredIndexed<T, number>
   ): (array: ReadonlyArray<T>) => number;
 
-  export function indexed(...args: any[]) {
-    return purry(_meanBy(true), args);
+  export function indexed(...args: any[]): unknown {
+    return purry(meanBy_(true), args);
   }
 }

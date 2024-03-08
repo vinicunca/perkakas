@@ -22,10 +22,10 @@ export function length<T>(): (items: Enumerable<T>) => number;
  *    P.pipe([1, 2, 3], P.length()) // => 3
  * @category Array
  */
-export function length(...args: any[]) {
-  return purry(_length, args);
+export function length(...args: any[]): unknown {
+  return purry(length_, args);
 }
 
-function _length<T>(items: Enumerable<T>) {
+function length_<T>(items: Enumerable<T>): number {
   return 'length' in items ? items.length : Array.from(items).length;
 }

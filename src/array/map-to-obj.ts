@@ -46,23 +46,23 @@ export function mapToObj<T, K extends PropertyKey, V>(
   fn: (element: T) => [K, V]
 ): (array: ReadonlyArray<T>) => Record<K, V>;
 
-export function mapToObj(...args: any[]) {
-  return purry(_mapToObj(false), args);
+export function mapToObj(...args: any[]): unknown {
+  return purry(mapToObj_(false), args);
 }
 
-function _mapToObj(indexed: boolean) {
+function mapToObj_(indexed: boolean) {
   return (
     array: ReadonlyArray<unknown>,
     fn: PredIndexedOptional<unknown, [PropertyKey, unknown]>,
   ) => {
-    return array.reduce<Record<PropertyKey, unknown>>(
-      (result, element, index) => {
-        const [key, value] = indexed ? fn(element, index, array) : fn(element);
-        result[key] = value;
-        return result;
-      },
-      {},
-    );
+    const out: Record<PropertyKey, unknown> = {};
+
+    for (const [index, element] of array.entries()) {
+      const [key, value] = indexed ? fn(element, index, array) : fn(element);
+      out[key] = value;
+    }
+
+    return out;
   };
 }
 
@@ -75,7 +75,7 @@ export namespace mapToObj {
   export function indexed<T, K extends PropertyKey, V>(
     fn: (element: T, index: number, array: ReadonlyArray<T>) => [K, V]
   ): (array: ReadonlyArray<T>) => Record<K, V>;
-  export function indexed(...args: any[]) {
-    return purry(_mapToObj(true), args);
+  export function indexed(...args: any[]): unknown {
+    return purry(mapToObj_(true), args);
   }
 }

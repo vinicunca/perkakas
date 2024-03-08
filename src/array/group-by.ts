@@ -39,17 +39,17 @@ export function groupBy<T>(
  * @indexed
  * @category Array
  */
-export function groupBy(...args: any[]) {
-  return purry(_groupBy(false), args);
+export function groupBy(...args: any[]): unknown {
+  return purry(groupBy_(false), args);
 }
 
-function _groupBy(indexed: boolean) {
+function groupBy_(indexed: boolean) {
   return <T, Key extends PropertyKey = PropertyKey>(
-    array: Array<T>,
+    array: ReadonlyArray<T>,
     fn: PredIndexedOptional<T, Key>,
   ) => {
     const ret: Record<string, Array<T>> = {};
-    array.forEach((item, index) => {
+    for (const [index, item] of array.entries()) {
       const key = indexed ? fn(item, index, array) : fn(item);
       if (key !== undefined) {
         const actualKey = String(key);
@@ -60,7 +60,8 @@ function _groupBy(indexed: boolean) {
         }
         items.push(item);
       }
-    });
+    }
+
     return ret;
   };
 }
@@ -121,8 +122,8 @@ export namespace groupBy {
   export function indexed<T>(
     fn: PredIndexed<T, PropertyKey | undefined>
   ): (array: ReadonlyArray<T>) => Record<string, NonEmptyArray<T>>;
-  export function indexed(...args: any[]) {
-    return purry(_groupBy(true), args);
+  export function indexed(...args: any[]): unknown {
+    return purry(groupBy_(true), args);
   }
 
   export const strict: Strict = groupBy;

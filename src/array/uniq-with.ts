@@ -1,4 +1,4 @@
-import type { LazyResult } from '../utils/reduce-lazy';
+import type { LazyEvaluator } from '../function/pipe';
 
 import { purry } from '../function/purry';
 import { reduceLazy } from '../utils/reduce-lazy';
@@ -47,38 +47,26 @@ export function uniqWith<T>(
   isEquals: IsEquals<T>
 ): (array: ReadonlyArray<T>) => Array<T>;
 
-export function uniqWith(...args: any[]) {
-  return purry(_uniqWith, args, uniqWith.lazy);
+export function uniqWith(...args: any[]): unknown {
+  return purry(uniqWith_, args, uniqWith.lazy);
 }
 
-function _uniqWith<T>(array: ReadonlyArray<T>, isEquals: IsEquals<T>) {
+function uniqWith_<T>(
+  array: ReadonlyArray<T>,
+  isEquals: IsEquals<T>,
+): Array<T> {
   const lazy = uniqWith.lazy(isEquals);
   return reduceLazy(array, lazy, true);
 }
 
-function _lazy<T>(isEquals: IsEquals<T>) {
-  return (
-    value: T,
-    index?: number,
-    array?: ReadonlyArray<T>,
-  ): LazyResult<T> => {
-    if (
-      array
-      && array.findIndex((otherValue) => isEquals(value, otherValue)) === index
-    ) {
-      return {
-        done: false,
-        hasNext: true,
-        next: value,
-      };
-    }
-    return {
-      done: false,
-      hasNext: false,
-    };
-  };
+function lazy_<T>(isEquals: IsEquals<T>): LazyEvaluator<T> {
+  return (value, index, array) =>
+    array !== undefined
+    && array.findIndex((otherValue) => isEquals(value, otherValue)) === index
+      ? { done: false, hasNext: true, next: value }
+      : { done: false, hasNext: false };
 }
 
 export namespace uniqWith {
-  export const lazy = toLazyIndexed(_lazy);
+  export const lazy = toLazyIndexed(lazy_);
 }

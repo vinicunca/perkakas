@@ -7,3 +7,4 @@ export * from './debounce';
 export * from './pipe';
 export * from './purry';
 export * from './sleep';
+export * from './times';

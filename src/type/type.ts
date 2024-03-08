@@ -15,7 +15,7 @@
  *    P.type(undefined); //=> "Undefined"
  * @category Type
  */
-export function type(val: unknown) {
+export function type(val: unknown): string {
   if (val === null) {
     return 'Null';
   }

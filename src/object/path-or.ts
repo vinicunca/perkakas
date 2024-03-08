@@ -141,17 +141,22 @@ export function pathOr<
   defaultValue: PathValue3<T, A, B, C>
 ): (object: T) => PathValue3<T, A, B, C>;
 
-export function pathOr(...args: any[]) {
-  return purry(_pathOr, args);
+export function pathOr(...args: any[]): unknown {
+  return purry(pathOr_, args);
 }
 
-function _pathOr(object: any, path: Array<any>, defaultValue: any): any {
-  let current = object;
+function pathOr_(
+  data: unknown,
+  path: ReadonlyArray<PropertyKey>,
+  defaultValue: unknown,
+): unknown {
+  let current = data;
   for (const prop of path) {
-    if (current == null || current[prop] == null) {
-      return defaultValue;
+    if (current === null || current === undefined) {
+      break;
     }
-    current = current[prop];
+    current = (current as Record<PropertyKey, unknown>)[prop];
   }
-  return current;
+
+  return current ?? defaultValue;
 }

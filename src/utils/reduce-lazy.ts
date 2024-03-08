@@ -1,41 +1,26 @@
-export type LazyResult<T> = LazyEmpty | LazyMany<T> | LazyNext<T>;
-
-interface LazyEmpty {
-  done: boolean;
-  hasMany?: false | undefined;
-  hasNext: false;
-  next?: undefined;
-}
-
-interface LazyNext<T> {
-  done: boolean;
-  hasMany?: false | undefined;
-  hasNext: true;
-  next: T;
-}
-
-interface LazyMany<T> {
-  done: boolean;
-  hasMany: true;
-  hasNext: true;
-  next: Array<T>;
-}
+import type { LazyEvaluator } from '../function/pipe';
 
 export function reduceLazy<T, K>(
   array: ReadonlyArray<T>,
-  lazy: (item: T, index?: number, array?: ReadonlyArray<T>) => LazyResult<K>,
-  indexed?: boolean,
+  lazy: LazyEvaluator<T, K>,
+  isIndexed = false,
 ): Array<K> {
-  const newArray: Array<K> = [];
+  const out: Array<K> = [];
+
   // Use for loop here instead of reduce for performance reasons. See https://leanylabs.com/blog/js-forEach-map-reduce-vs-for-for_of/ for more info
   for (let index = 0; index < array.length; index++) {
     const item = array[index]!;
-    const result = indexed ? lazy(item, index, array) : lazy(item);
+    const result = isIndexed ? lazy(item, index, array) : lazy(item);
     if (result.hasMany === true) {
-      newArray.push(...result.next);
+      out.push(...result.next);
     } else if (result.hasNext) {
-      newArray.push(result.next);
+      out.push(result.next);
+    }
+
+    if (result.done) {
+      break;
     }
   }
-  return newArray;
+
+  return out;
 }

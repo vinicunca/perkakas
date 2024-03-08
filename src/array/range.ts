@@ -23,11 +23,11 @@ export function range(start: number, end: number): Array<number>;
  */
 export function range(end: number): (start: number) => Array<number>;
 
-export function range(...args: any[]) {
-  return purry(_range, args);
+export function range(...args: any[]): unknown {
+  return purry(range_, args);
 }
 
-function _range(start: number, end: number) {
+function range_(start: number, end: number): Array<number> {
   const ret: Array<number> = [];
   for (let i = start; i < end; i++) {
     ret.push(i);

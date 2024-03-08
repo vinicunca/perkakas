@@ -27,11 +27,11 @@ export function set<T, K extends keyof T>(obj: T, prop: K, value: T[K]): T;
  */
 export function set<T, K extends keyof T>(prop: K, value: T[K]): (obj: T) => T;
 
-export function set(...args: any[]) {
-  return purry(_set, args);
+export function set(...args: any[]): unknown {
+  return purry(set_, args);
 }
 
-function _set<T, K extends keyof T>(obj: T, prop: K, value: T[K]): T {
+function set_<T, K extends keyof T>(obj: T, prop: K, value: T[K]): T {
   return {
     ...obj,
     [prop]: value,

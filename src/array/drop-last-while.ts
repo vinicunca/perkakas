@@ -36,11 +36,11 @@ export function dropLastWhile<T>(
   predicate: (item: T) => boolean
 ): (data: ReadonlyArray<T>) => Array<T>;
 
-export function dropLastWhile(...args: any[]) {
-  return purry(_dropLastWhile, args);
+export function dropLastWhile(...args: any[]): unknown {
+  return purry(dropLastWhile_, args);
 }
 
-function _dropLastWhile<T>(
+function dropLastWhile_<T>(
   data: ReadonlyArray<T>,
   predicate: (item: T) => boolean,
 ): Array<T> {

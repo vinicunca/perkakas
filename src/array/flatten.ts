@@ -1,4 +1,4 @@
-import type { LazyResult } from '../utils/reduce-lazy';
+import type { LazyEvaluator } from '../function/pipe';
 
 import { purry } from '../function/purry';
 import { reduceLazy } from '../utils/reduce-lazy';
@@ -21,32 +21,37 @@ type Flatten<T> = T extends ReadonlyArray<infer K> ? K : T;
  */
 export function flatten<T>(items: ReadonlyArray<T>): Array<Flatten<T>>;
 
+/**
+ * Flattens `array` a single level deep.
+ *
+ * @param items the target array
+ * @signature
+ *   P.flatten()(array)
+ * @example
+ *    P.pipe(
+ *      [[1, 2], [3], [4, 5]],
+ *      P.flatten(),
+ *    ); // => [1, 2, 3, 4, 5]
+ * @category Array
+ * @pipeable
+ * @dataLast
+ */
 export function flatten<T>(): (items: ReadonlyArray<T>) => Array<Flatten<T>>;
 
-export function flatten(...args: any[]) {
-  return purry(_flatten, args, flatten.lazy);
+export function flatten(...args: any[]): unknown {
+  return purry(flatten_, args, flatten.lazy);
 }
 
-function _flatten<T>(items: Array<T>): Array<Flatten<T>> {
+function flatten_<T>(items: ReadonlyArray<T>): Array<Flatten<T>> {
   return reduceLazy(items, flatten.lazy());
 }
 
 export namespace flatten {
-  export function lazy<T>() {
-    return (next: T): LazyResult<any> => {
-      if (Array.isArray(next)) {
-        return {
-          done: false,
-          hasMany: true,
-          hasNext: true,
-          next,
-        };
-      }
-      return {
-        done: false,
-        hasNext: true,
-        next,
-      };
-    };
+  export function lazy<T>(): LazyEvaluator<T, Flatten<T>> {
+    return (item) =>
+      // @ts-expect-error [ts2322] - We need to make LazyMany better so it accommodate the typing here...
+      Array.isArray(item)
+        ? { done: false, hasMany: true, hasNext: true, next: item }
+        : { done: false, hasNext: true, next: item };
   }
 }

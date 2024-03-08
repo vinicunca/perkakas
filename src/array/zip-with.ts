@@ -59,22 +59,22 @@ export function zipWith(
   if (typeof arg0 === 'function') {
     return arg1 === undefined
       ? (f: ReadonlyArray<unknown>, s: ReadonlyArray<unknown>) =>
-          _zipWith(f, s, arg0)
-      : (f: ReadonlyArray<unknown>) => _zipWith(f, arg1, arg0);
+          zipWith_(f, s, arg0)
+      : (f: ReadonlyArray<unknown>) => zipWith_(f, arg1, arg0);
   }
 
   if (arg1 === undefined || arg2 === undefined) {
     throw new Error('zipWith: Missing arguments in dataFirst function call');
   }
 
-  return _zipWith(arg0, arg1, arg2);
+  return zipWith_(arg0, arg1, arg2);
 }
 
-function _zipWith<F, S, R>(
+function zipWith_<F, S, R>(
   first: ReadonlyArray<F>,
   second: ReadonlyArray<S>,
   fn: ZippingFunction<F, S, R>,
-) {
+): Array<R> {
   const resultLength
     = first.length > second.length ? second.length : first.length;
   const result = [];

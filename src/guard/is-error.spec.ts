@@ -5,6 +5,13 @@ import type { AllTypesDataProviderTypes } from '../../test/types-data-provider';
 import { ALL_TYPES_DATA_PROVIDER, TYPES_DATA_PROVIDER } from '../../test/types-data-provider';
 import { isError } from './is-error';
 
+class MyError extends Error {
+  constructor() {
+    super();
+    this.name = 'MyError';
+  }
+}
+
 describe('isError', () => {
   it('should work as type guard', () => {
     const data = TYPES_DATA_PROVIDER.error as AllTypesDataProviderTypes;
@@ -12,8 +19,6 @@ describe('isError', () => {
       expect(data instanceof Error).toEqual(true);
       expectTypeOf(data).toEqualTypeOf<Error>();
     }
-
-    class MyError extends Error {}
 
     let maybeError: MyError | undefined;
     if (isError(maybeError)) {

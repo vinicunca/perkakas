@@ -21,7 +21,9 @@ import { purry } from '../function/purry';
  * @category Object
  * @dataFirst
  */
-export function toPairs<T>(object: Record<string, T>): Array<[string, T]>;
+export function toPairs<T>(
+  object: Readonly<Record<string, T>>,
+): Array<[string, T]>;
 
 /**
  * Returns an array of key/values of the enumerable properties of an object.
@@ -45,7 +47,7 @@ export function toPairs<T>(object: Record<string, T>): Array<[string, T]>;
 // TODO: Currently the typings are broken
 // export function toPairs(): <T>(object: Record<string, T>) => Array<[string, T]>;
 
-export function toPairs(...args: any[]) {
+export function toPairs(...args: any[]): unknown {
   return purry(Object.entries, args);
 }
 

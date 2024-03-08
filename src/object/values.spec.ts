@@ -20,9 +20,11 @@ describe('typing', () => {
   });
 
   it('should correctly type functions', () => {
-    expectTypeOf(values(() => {})).toEqualTypeOf<
-      Array<never>
-    >();
+    expectTypeOf(
+      values(() => {
+        /* (intentionally empty) */
+      }),
+    ).toEqualTypeOf<Array<never>>();
   });
 
   it('should correctly type arrays', () => {

@@ -26,7 +26,7 @@ export function quickSelect<T>(data: ReadonlyArray<T>,
     ? undefined
     : quickSelectImplementation(
       // We need to clone the array because quickSelect mutates it in-place.
-      [...data],
+      data.slice(),
       0 /* left */,
       data.length - 1 /* right */,
       index,
@@ -75,7 +75,7 @@ function partition<T>(
     if (compareFn(data[j]!, pivot) < 0) {
       // Move items smaller then the pivot to the start of the array.
       swapInPlace(data, i, j);
-      i++;
+      i += 1;
     }
   }
 

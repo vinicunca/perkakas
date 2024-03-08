@@ -2,7 +2,7 @@
 
 import { type } from '../type';
 
-function _cloneRegExp(pattern: RegExp) {
+function cloneRegExp_(pattern: RegExp): RegExp {
   return new RegExp(
     pattern.source,
     (pattern.global ? 'g' : '')
@@ -13,13 +13,13 @@ function _cloneRegExp(pattern: RegExp) {
   );
 }
 
-function _clone(
+function clone_(
   value: any,
   refFrom: Array<any>,
   refTo: Array<any>,
   deep: boolean,
-) {
-  function copy(copiedValue: any) {
+): unknown {
+  function copy(copiedValue: any): unknown {
     const len = refFrom.length;
     let idx = 0;
     while (idx < len) {
@@ -33,7 +33,7 @@ function _clone(
     // eslint-disable-next-line no-restricted-syntax
     for (const key in value) {
       copiedValue[key] = deep
-        ? _clone(value[key], refFrom, refTo, true)
+        ? clone_(value[key], refFrom, refTo, true)
         : value[key];
     }
     return copiedValue;
@@ -46,7 +46,7 @@ function _clone(
     case 'Date':
       return new Date(value.valueOf());
     case 'RegExp':
-      return _cloneRegExp(value);
+      return cloneRegExp_(value);
     default:
       return value;
   }
@@ -63,5 +63,5 @@ function _clone(
 export function clone<T>(value: T): T {
   return value != null && typeof (value as any).clone === 'function'
     ? (value as any).clone()
-    : _clone(value, [], [], true);
+    : clone_(value, [], [], true);
 }

@@ -5,8 +5,12 @@
  */
 export function purryOn<T>(
   isArg: (firstArg: unknown) => firstArg is T,
-  implementation: (firstArg: T, ...args: Array<any>) => unknown,
-  args: any,
+  implementation: (
+    data: unknown,
+    firstArg: T,
+    ...args: any
+  ) => unknown,
+  args: IArguments,
 ): unknown {
   const callArgs = Array.from(args) as ReadonlyArray<unknown>;
   return isArg(args[0])

@@ -31,17 +31,21 @@ export function invert<T extends object>(object: T): Inverted<T>;
  */
 export function invert<T extends object>(): (object: T) => Inverted<T>;
 
-export function invert(...args: any[]) {
-  return purry(_invert, args);
+export function invert(...args: any[]): unknown {
+  return purry(invert_, args);
 }
 
-function _invert(
+function invert_(
   object: Readonly<Record<PropertyKey, PropertyKey>>,
 ): Record<PropertyKey, PropertyKey> {
   const result: Record<PropertyKey, PropertyKey> = {};
+
   // eslint-disable-next-line no-restricted-syntax
   for (const key in object) {
-    result[object[key]!] = key;
+    // @see https://eslint.org/docs/latest/rules/guard-for-in
+    if (Object.prototype.hasOwnProperty.call(object, key)) {
+      result[object[key]!] = key;
+    }
   }
 
   return result;

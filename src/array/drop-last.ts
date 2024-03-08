@@ -26,12 +26,12 @@ export function dropLast<T>(array: ReadonlyArray<T>, n: number): Array<T>;
  */
 export function dropLast<T>(n: number): (array: ReadonlyArray<T>) => Array<T>;
 
-export function dropLast(...args: any[]) {
-  return purry(_dropLast, args);
+export function dropLast(...args: any[]): unknown {
+  return purry(dropLast_, args);
 }
 
-function _dropLast<T>(array: Array<T>, n: number) {
-  const copy = [...array];
+function dropLast_<T>(array: ReadonlyArray<T>, n: number): Array<T> {
+  const copy = array.slice();
   if (n > 0) {
     copy.splice(-n);
   }

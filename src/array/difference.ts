@@ -1,5 +1,7 @@
+import type { LazyEvaluator } from '../function/pipe';
+
 import { purry } from '../function/purry';
-import { reduceLazy, type LazyResult } from '../utils/reduce-lazy';
+import { reduceLazy } from '../utils/reduce-lazy';
 
 /**
  * Excludes the values from `other` array.
@@ -38,30 +40,24 @@ export function difference<T, K>(
   other: ReadonlyArray<T>
 ): (array: ReadonlyArray<K>) => Array<T>;
 
-export function difference(...args: any[]) {
-  return purry(_difference, args, difference.lazy);
+export function difference(...args: any[]): unknown {
+  return purry(difference_, args, difference.lazy);
 }
 
-function _difference<T>(array: Array<T>, other: Array<T>) {
+function difference_<T>(
+  array: ReadonlyArray<T>,
+  other: ReadonlyArray<T>,
+): Array<T> {
   const lazy = difference.lazy(other);
   return reduceLazy(array, lazy);
 }
 
 export namespace difference {
-  export function lazy<T>(other: Array<T>) {
+  export function lazy<T>(other: ReadonlyArray<T>): LazyEvaluator<T> {
     const set = new Set(other);
-    return (value: T): LazyResult<T> => {
-      if (!set.has(value)) {
-        return {
-          done: false,
-          hasNext: true,
-          next: value,
-        };
-      }
-      return {
-        done: false,
-        hasNext: false,
-      };
-    };
+    return (value) =>
+      set.has(value)
+        ? { done: false, hasNext: false }
+        : { done: false, hasNext: true, next: value };
   }
 }

@@ -1,4 +1,4 @@
-import type { LazyResult } from '../utils/reduce-lazy';
+import type { LazyEvaluator } from '../function/pipe';
 
 import { purry } from '../function/purry';
 import { reduceLazy } from '../utils/reduce-lazy';
@@ -30,36 +30,24 @@ export function take<T>(array: ReadonlyArray<T>, n: number): Array<T>;
  */
 export function take<T>(n: number): (array: ReadonlyArray<T>) => Array<T>;
 
-export function take(...args: any[]) {
-  return purry(_take, args, take.lazy);
+export function take(...args: any[]): unknown {
+  return purry(take_, args, take.lazy);
 }
 
-function _take<T>(array: Array<T>, n: number) {
+function take_<T>(array: ReadonlyArray<T>, n: number): Array<T> {
   return reduceLazy(array, take.lazy(n));
 }
 
 export namespace take {
-  export function lazy<T>(n: number) {
-    return (value: T): LazyResult<T> => {
-      if (n === 0) {
-        return {
-          done: true,
-          hasNext: false,
-        };
-      }
-      n--;
-      if (n === 0) {
-        return {
-          done: true,
-          hasNext: true,
-          next: value,
-        };
-      }
-      return {
-        done: false,
-        hasNext: true,
-        next: value,
-      };
+  export function lazy<T>(n: number): LazyEvaluator<T> {
+    if (n <= 0) {
+      return () => ({ done: true, hasNext: false });
+    }
+
+    let remaining = n;
+    return (value) => {
+      remaining -= 1;
+      return { done: remaining <= 0, hasNext: true, next: value };
     };
   }
 }

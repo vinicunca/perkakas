@@ -29,21 +29,25 @@ export function pickBy<T>(
   fn: <K extends keyof T>(value: T[K], key: K) => boolean
 ): (object: T) => T extends Record<keyof T, T[keyof T]> ? T : Partial<T>;
 
-export function pickBy(...args: any[]) {
-  return purry(_pickBy, args);
+export function pickBy(...args: any[]): unknown {
+  return purry(pickBy_, args);
 }
 
-function _pickBy<T>(
-  object: T,
+function pickBy_<T>(
+  data: T,
   fn: <K extends keyof T>(value: T[K], key: K) => boolean,
 ): Partial<T> {
-  if (object == null) {
+  if (data === null || data === undefined) {
     return {};
   }
-  return keys.strict(object).reduce<Partial<T>>((acc, key) => {
-    if (fn(object[key], key)) {
-      acc[key] = object[key];
+
+  const out: Partial<T> = {};
+
+  for (const key of keys.strict(data)) {
+    if (fn(data[key], key)) {
+      out[key] = data[key];
     }
-    return acc;
-  }, {});
+  }
+
+  return out;
 }

@@ -28,10 +28,10 @@ export function divide(value: number, divisor: number): number;
  */
 export function divide(divisor: number): (value: number) => number;
 
-export function divide(...args: any[]) {
-  return purry(_divide, args);
+export function divide(...args: any[]): unknown {
+  return purry(divide_, args);
 }
 
-function _divide(value: number, divisor: number) {
+function divide_(value: number, divisor: number): number {
   return value / divisor;
 }

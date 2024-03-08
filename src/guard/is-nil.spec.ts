@@ -16,7 +16,7 @@ describe('isNil', () => {
 
   it('should work as type guard in filter', () => {
     const data = ALL_TYPES_DATA_PROVIDER.filter(isNil);
-    expect(data.every((c) => c == null)).toEqual(true);
+    expect(data.every((c) => c === null || c === undefined)).toEqual(true);
     expectTypeOf(data).toEqualTypeOf<Array<null | undefined>>();
   });
 });

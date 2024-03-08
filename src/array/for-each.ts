@@ -1,4 +1,4 @@
-import type { LazyResult } from '../utils/reduce-lazy';
+import type { LazyEvaluator } from '../function/pipe';
 import type { Pred, PredIndexed, PredIndexedOptional } from '../utils/types';
 
 import { purry } from '../function/purry';
@@ -58,27 +58,22 @@ export function forEach<T>(
   fn: Pred<T, void>
 ): (array: ReadonlyArray<T>) => Array<T>;
 
-export function forEach(...args: any[]) {
-  return purry(_forEach(false), args, forEach.lazy);
+export function forEach(...args: any[]): unknown {
+  return purry(forEach_(false), args, forEach.lazy);
 }
 
-function _forEach(indexed: boolean) {
-  return <T, K>(array: Array<T>, fn: PredIndexedOptional<T, K>) => {
-    return reduceLazy(
+function forEach_(indexed: boolean) {
+  return <T, K>(array: ReadonlyArray<T>, fn: PredIndexedOptional<T, K>) =>
+    reduceLazy(
       array,
       indexed ? forEach.lazyIndexed(fn) : forEach.lazy(fn),
       indexed,
     );
-  };
 }
 
-function _lazy(indexed: boolean) {
-  return <T>(fn: PredIndexedOptional<T, void>) => {
-    return (
-      value: T,
-      index?: number,
-      array?: ReadonlyArray<T>,
-    ): LazyResult<T> => {
+function lazy_(indexed: boolean) {
+  return <T>(fn: PredIndexedOptional<T, void>): LazyEvaluator<T> =>
+    (value, index, array) => {
       if (indexed) {
         fn(value, index, array);
       } else {
@@ -90,20 +85,19 @@ function _lazy(indexed: boolean) {
         next: value,
       };
     };
-  };
 }
 
 export namespace forEach {
   export function indexed<T>(
     array: ReadonlyArray<T>,
-    fn: PredIndexed<T, void>
+    fn: PredIndexed<T, void>,
   ): Array<T>;
   export function indexed<T>(
-    fn: PredIndexed<T, void>
+    fn: PredIndexed<T, void>,
   ): (array: ReadonlyArray<T>) => Array<T>;
-  export function indexed(...args: any[]) {
-    return purry(_forEach(true), args, forEach.lazyIndexed);
+  export function indexed(...args: any[]): unknown {
+    return purry(forEach_(true), args, forEach.lazyIndexed);
   }
-  export const lazy = _lazy(false);
-  export const lazyIndexed = toLazyIndexed(_lazy(true));
+  export const lazy = lazy_(false);
+  export const lazyIndexed = toLazyIndexed(lazy_(true));
 }

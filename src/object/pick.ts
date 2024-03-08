@@ -2,6 +2,19 @@ import { purry } from '../function/purry';
 
 /**
  * Creates an object composed of the picked `object` properties.
+ * @param names the properties names
+ * @signature P.pick([prop1, prop2])(object)
+ * @example
+ *    P.pipe({ a: 1, b: 2, c: 3, d: 4 }, P.pick(['a', 'd'])) // => { a: 1, d: 4 }
+ * @dataLast
+ * @category Object
+ */
+export function pick<T extends object, K extends keyof T>(
+  names: ReadonlyArray<K>,
+): (object: T) => Pick<T, K>;
+
+/**
+ * Creates an object composed of the picked `object` properties.
  * @param object the target object
  * @param names the properties names
  * @signature P.pick(object, [prop1, prop2])
@@ -12,38 +25,25 @@ import { purry } from '../function/purry';
  */
 export function pick<T extends object, K extends keyof T>(
   object: T,
-  names: ReadonlyArray<K>
+  names: ReadonlyArray<K>,
 ): Pick<T, K>;
 
-/**
- * Creates an object composed of the picked `object` properties.
- * @param names the properties names
- * @signature P.pick([prop1, prop2])(object)
- * @example
- *    P.pipe({ a: 1, b: 2, c: 3, d: 4 }, P.pick(['a', 'd'])) // => { a: 1, d: 4 }
- * @dataLast
- * @category Object
- */
-export function pick<T extends object, K extends keyof T>(
-  names: ReadonlyArray<K>
-): (object: T) => Pick<T, K>;
-
-export function pick(...args: any[]) {
-  return purry(_pick, args);
+export function pick(...args: any[]): unknown {
+  return purry(pick_, args);
 }
 
-function _pick<T extends object, K extends keyof T>(
+function pick_<T extends object, K extends keyof T>(
   object: T,
   names: ReadonlyArray<K>,
-) {
-  if (object == null) {
-    return {};
+): Pick<T, K> {
+  const out: Partial<Pick<T, K>> = {};
+
+  for (const name of names) {
+    if (name in object) {
+      out[name] = object[name];
+    }
   }
 
-  return names.reduce<Record<PropertyKey, unknown>>((acc, name) => {
-    if (name in object) {
-      acc[name] = object[name];
-    }
-    return acc;
-  }, {});
+  // @ts-expect-error [ts2322] - We build the type incrementally, there's no way to make typescript infer that we "finished" building the object and to treat it as such.
+  return out;
 }

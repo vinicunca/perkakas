@@ -1,4 +1,5 @@
-export function toSingle<T>(fn: T): T & { single: true } {
-  (fn as any).single = true;
-  return fn as any;
+type Single<Func> = Func & { readonly single: true };
+
+export function toSingle<Func extends (...args: any) => unknown>(fn: Func): Single<Func> {
+  return Object.assign(fn, { single: true as const });
 }

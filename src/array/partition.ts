@@ -70,17 +70,17 @@ export function partition<T>(
   predicate: (item: T) => boolean
 ): (array: ReadonlyArray<T>) => [Array<T>, Array<T>];
 
-export function partition(...args: any[]) {
-  return purry(_partition(false), args);
+export function partition(...args: any[]): unknown {
+  return purry(partition_(false), args);
 }
 
-function _partition(indexed: boolean) {
+function partition_(indexed: boolean) {
   return <T>(array: ReadonlyArray<T>, fn: PredIndexedOptional<T, boolean>) => {
     const ret: [Array<T>, Array<T>] = [[], []];
-    array.forEach((item, index) => {
+    for (const [index, item] of array.entries()) {
       const matches = indexed ? fn(item, index, array) : fn(item);
       ret[matches ? 0 : 1].push(item);
-    });
+    }
     return ret;
   };
 }
@@ -93,7 +93,7 @@ export namespace partition {
   export function indexed<T>(
     predicate: PredIndexed<T, boolean>
   ): (array: ReadonlyArray<T>) => [Array<T>, Array<T>];
-  export function indexed(...args: any[]) {
-    return purry(_partition(true), args);
+  export function indexed(...args: any[]): unknown {
+    return purry(partition_(true), args);
   }
 }

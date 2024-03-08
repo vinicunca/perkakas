@@ -32,12 +32,15 @@ export function splitAt<T>(
   index: number
 ): (array: ReadonlyArray<T>) => [Array<T>, Array<T>];
 
-export function splitAt(...args: any[]) {
-  return purry(_splitAt, args);
+export function splitAt(...args: any[]): unknown {
+  return purry(splitAt_, args);
 }
 
-function _splitAt<T>(array: Array<T>, index: number) {
-  const copy = [...array];
+function splitAt_<T>(
+  array: ReadonlyArray<T>,
+  index: number,
+): [Array<T>, Array<T>] {
+  const copy = array.slice();
   const tail = copy.splice(index);
   return [copy, tail];
 }

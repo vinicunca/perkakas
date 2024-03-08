@@ -38,10 +38,13 @@ export function allPass<T>(
   fns: ReadonlyArray<(data: T) => boolean>
 ): (data: T) => boolean;
 
-export function allPass(...args: any[]) {
-  return purry(_allPass, args);
+export function allPass(...args: any[]): unknown {
+  return purry(allPass_, args);
 }
 
-function _allPass(data: any, fns: Array<(data: any) => boolean>) {
+function allPass_<T>(
+  data: T,
+  fns: ReadonlyArray<(data: T) => boolean>,
+): boolean {
   return fns.every((fn) => fn(data));
 }

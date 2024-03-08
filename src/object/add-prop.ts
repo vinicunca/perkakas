@@ -13,7 +13,7 @@ import { purry } from '../function/purry';
  * @category Object
  */
 export function addProp<
-  T extends Record<PropertyKey, any>,
+  T extends Record<PropertyKey, unknown>,
   K extends string,
   V,
 >(obj: T, prop: K, value: V): T & { [x in K]: V };
@@ -30,16 +30,20 @@ export function addProp<
  * @category Object
  */
 export function addProp<
-  T extends Record<PropertyKey, any>,
+  T extends Record<PropertyKey, unknown>,
   K extends string,
   V,
 >(prop: K, value: V): (obj: T) => T & { [x in K]: V };
 
-export function addProp(...args: any[]): any {
-  return purry(_addProp, args);
+export function addProp(...args: any[]): unknown {
+  return purry(addProp_, args);
 }
 
-function _addProp(obj: any, prop: string, value: any) {
+function addProp_<T extends Record<PropertyKey, unknown>, K extends string, V>(
+  obj: T,
+  prop: K,
+  value: V,
+): T & { [x in K]: V } {
   return {
     ...obj,
     [prop]: value,

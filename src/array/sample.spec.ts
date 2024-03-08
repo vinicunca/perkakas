@@ -48,13 +48,15 @@ describe('at runtime', () => {
     it.each(allIndices(array))('doesn\'t reorder items', (sampleSize) => {
       const result = sample(array, sampleSize);
 
-      // Scan the result array and make sure each item is after the previous one
-      // in the input array.
-      result.reduce((lastInputIndex, item) => {
+      let lastInputIndex = -1; // outside of the array
+      for (const item of result) {
+        // Scan the result array and make sure each item is after the previous one
+        // in the input array.
+
         const currentInputIndex = array.indexOf(item);
         expect(currentInputIndex).toBeGreaterThan(lastInputIndex);
-        return currentInputIndex;
-      }, -1 /* outside of the array */);
+        lastInputIndex = currentInputIndex;
+      }
     });
   });
 
@@ -62,25 +64,29 @@ describe('at runtime', () => {
     it('for full (=== n) sample size', () => {
       const array = [1, 2, 3];
       const result = sample(array, 3);
-      expect(result).toBe(array);
+      expect(result).toStrictEqual(array);
+      expect(result).not.toBe(array);
     });
 
     it('for large (> n) sample sizes', () => {
       const array = [1, 2, 3];
       const result = sample(array, 10);
-      expect(result).toBe(array);
+      expect(result).toStrictEqual(array);
+      expect(result).not.toBe(array);
     });
 
     it('on empty arrays', () => {
       const array: Array<number> = [];
       const result = sample(array, 1);
-      expect(result).toBe(array);
+      expect(result).toStrictEqual(array);
+      expect(result).not.toBe(array);
     });
 
     it('on empty arrays and sample size 0', () => {
       const array: Array<number> = [];
       const result = sample(array, 0);
-      expect(result).toBe(array);
+      expect(result).toStrictEqual(array);
+      expect(result).not.toBe(array);
     });
   });
 
@@ -180,7 +186,7 @@ describe('typing', () => {
       const array: [1, 2, 3, 4, 5] = [1, 2, 3, 4, 5];
       const result = sample(array, 4);
       expectTypeOf(result).toEqualTypeOf<
-      [1 | 2 | 3 | 4 | 5, 2 | 3 | 4 | 5, 3 | 4 | 5, 4 | 5]
+        [1 | 2 | 3 | 4 | 5, 2 | 3 | 4 | 5, 3 | 4 | 5, 4 | 5]
       >();
     });
 
@@ -188,7 +194,7 @@ describe('typing', () => {
       const array = [1, 2, 3, 4, 5] as const;
       const result = sample(array, 4);
       expectTypeOf(result).toEqualTypeOf<
-      [1 | 2 | 3 | 4 | 5, 2 | 3 | 4 | 5, 3 | 4 | 5, 4 | 5]
+        [1 | 2 | 3 | 4 | 5, 2 | 3 | 4 | 5, 3 | 4 | 5, 4 | 5]
       >();
     });
 
@@ -202,12 +208,12 @@ describe('typing', () => {
       ];
       const result = sample(array, 4);
       expectTypeOf(result).toEqualTypeOf<
-      // TODO: This type is OK (it doesn't type things incorrectly) but it's
-      // not as narrow as it could be. If the tuple has only 2 elements, the
-      // result should be: `[number, boolean]` and similarly for 3 elements.
-      // Only when the tuple has 4 elements then the type of the first and
-      // second item should be loosened because we don't know how many items
-      // are in the input.
+        // TODO: This type is OK (it doesn't type things incorrectly) but it's
+        // not as narrow as it could be. If the tuple has only 2 elements, the
+        // result should be: `[number, boolean]` and similarly for 3 elements.
+        // Only when the tuple has 4 elements then the type of the first and
+        // second item should be loosened because we don't know how many items
+        // are in the input.
         | [boolean | number | string, boolean | string, string, string]
         | [boolean | number | string, boolean | string, string]
         | [boolean | number | string, boolean | string]
@@ -224,12 +230,12 @@ describe('typing', () => {
       ];
       const result = sample(array, 4);
       expectTypeOf(result).toEqualTypeOf<
-      // TODO: This type is OK (it doesn't type things incorrectly) but it's
-      // not as narrow as it could be. If the tuple has only 2 elements, the
-      // result should be: `[number, boolean]` and similarly for 3 elements.
-      // Only when the tuple has 4 elements then the type of the first and
-      // second item should be loosened because we don't know how many items
-      // are in the input.
+        // TODO: This type is OK (it doesn't type things incorrectly) but it's
+        // not as narrow as it could be. If the tuple has only 2 elements, the
+        // result should be: `[number, boolean]` and similarly for 3 elements.
+        // Only when the tuple has 4 elements then the type of the first and
+        // second item should be loosened because we don't know how many items
+        // are in the input.
         | [boolean | number | string, boolean | string, string, string]
         | [boolean | number | string, boolean | string, string]
         | [boolean | number | string, boolean | string]
@@ -332,12 +338,12 @@ describe('typing', () => {
       ];
       const result = sample(array, 5);
       expectTypeOf(result).toEqualTypeOf<
-      // TODO: This type is OK (it doesn't type things incorrectly) but it's
-      // not as narrow as it could be. If the tuple has only 2 elements, the
-      // result should be: `[number, boolean]` and similarly for 3 and 4
-      // elements. Only when the return tuple has 5 elements then the type of
-      // the first and second item should be loosened because we don't know
-      // how many items are in the input.
+        // TODO: This type is OK (it doesn't type things incorrectly) but it's
+        // not as narrow as it could be. If the tuple has only 2 elements, the
+        // result should be: `[number, boolean]` and similarly for 3 and 4
+        // elements. Only when the return tuple has 5 elements then the type of
+        // the first and second item should be loosened because we don't know
+        // how many items are in the input.
         | [boolean | number | string, boolean | string, string, string, string]
         | [boolean | number | string, boolean | string, string, string]
         | [boolean | number | string, boolean | string, string]
@@ -355,12 +361,12 @@ describe('typing', () => {
       ];
       const result = sample(array, 5);
       expectTypeOf(result).toEqualTypeOf<
-      // TODO: This type is OK (it doesn't type things incorrectly) but it's
-      // not as narrow as it could be. If the tuple has only 2 elements, the
-      // result should be: `[number, boolean]` and similarly for 3 and 4
-      // elements. Only when the return tuple has 5 elements then the type of
-      // the first and second item should be loosened because we don't know
-      // how many items are in the input.
+        // TODO: This type is OK (it doesn't type things incorrectly) but it's
+        // not as narrow as it could be. If the tuple has only 2 elements, the
+        // result should be: `[number, boolean]` and similarly for 3 and 4
+        // elements. Only when the return tuple has 5 elements then the type of
+        // the first and second item should be loosened because we don't know
+        // how many items are in the input.
         | [boolean | number | string, boolean | string, string, string, string]
         | [boolean | number | string, boolean | string, string, string]
         | [boolean | number | string, boolean | string, string]
@@ -518,61 +524,61 @@ describe('typing', () => {
       ];
       const result = sample(array, 10);
       expectTypeOf(result).toEqualTypeOf<
-      // TODO: This type is OK (it doesn't type things incorrectly) but it's
-      // not as narrow as it could be. If the tuple has only 2 elements, the
-      // result should be: `[number, boolean]` and similarly for 3-9 elements.
-      // Only when the return tuple has 10 elements then the type of the first
-      // and second item should be loosened because we don't know how many
-      // items are in the input.
+        // TODO: This type is OK (it doesn't type things incorrectly) but it's
+        // not as narrow as it could be. If the tuple has only 2 elements, the
+        // result should be: `[number, boolean]` and similarly for 3-9 elements.
+        // Only when the return tuple has 10 elements then the type of the first
+        // and second item should be loosened because we don't know how many
+        // items are in the input.
         | [
-        boolean | number | string,
-        boolean | string,
-        string,
-        string,
-        string,
-        string,
+            boolean | number | string,
+            boolean | string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
         ]
         | [
-        boolean | number | string,
-        boolean | string,
-        string,
-        string,
-        string,
-        string,
-        string,
+            boolean | number | string,
+            boolean | string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
         ]
         | [
-        boolean | number | string,
-        boolean | string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
+            boolean | number | string,
+            boolean | string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
         ]
         | [
-        boolean | number | string,
-        boolean | string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
+            boolean | number | string,
+            boolean | string,
+            string,
+            string,
+            string,
+            string,
+            string,
         ]
         | [
-        boolean | number | string,
-        boolean | string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
+            boolean | number | string,
+            boolean | string,
+            string,
+            string,
+            string,
+            string,
         ]
         | [boolean | number | string, boolean | string, string, string, string]
         | [boolean | number | string, boolean | string, string, string]
@@ -591,61 +597,61 @@ describe('typing', () => {
       ];
       const result = sample(array, 10);
       expectTypeOf(result).toEqualTypeOf<
-      // TODO: This type is OK (it doesn't type things incorrectly) but it's
-      // not as narrow as it could be. If the tuple has only 2 elements, the
-      // result should be: `[number, boolean]` and similarly for 3-9 elements.
-      // Only when the return tuple has 10 elements then the type of the first
-      // and second item should be loosened because we don't know how many
-      // items are in the input.
+        // TODO: This type is OK (it doesn't type things incorrectly) but it's
+        // not as narrow as it could be. If the tuple has only 2 elements, the
+        // result should be: `[number, boolean]` and similarly for 3-9 elements.
+        // Only when the return tuple has 10 elements then the type of the first
+        // and second item should be loosened because we don't know how many
+        // items are in the input.
         | [
-        boolean | number | string,
-        boolean | string,
-        string,
-        string,
-        string,
-        string,
+            boolean | number | string,
+            boolean | string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
         ]
         | [
-        boolean | number | string,
-        boolean | string,
-        string,
-        string,
-        string,
-        string,
-        string,
+            boolean | number | string,
+            boolean | string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
         ]
         | [
-        boolean | number | string,
-        boolean | string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
+            boolean | number | string,
+            boolean | string,
+            string,
+            string,
+            string,
+            string,
+            string,
+            string,
         ]
         | [
-        boolean | number | string,
-        boolean | string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
+            boolean | number | string,
+            boolean | string,
+            string,
+            string,
+            string,
+            string,
+            string,
         ]
         | [
-        boolean | number | string,
-        boolean | string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
-        string,
+            boolean | number | string,
+            boolean | string,
+            string,
+            string,
+            string,
+            string,
         ]
         | [boolean | number | string, boolean | string, string, string, string]
         | [boolean | number | string, boolean | string, string, string]
@@ -890,9 +896,9 @@ describe('typing', () => {
       ];
       const result = sample(array, 5 as number);
       expectTypeOf(result).toEqualTypeOf<
-      // TODO: the typing isn't ideal here. I'm not even sure what the type
-      // here should be...
-      Array<boolean | number | string>
+        // TODO: the typing isn't ideal here. I'm not even sure what the type
+        // here should be...
+        Array<boolean | number | string>
       >();
     });
 
@@ -906,20 +912,19 @@ describe('typing', () => {
       ];
       const result = sample(array, 5 as number);
       expectTypeOf(result).toEqualTypeOf<
-      // TODO: the typing isn't ideal here. I'm not even sure what the type
-      // here should be...
-      Array<boolean | number | string>
+        // TODO: the typing isn't ideal here. I'm not even sure what the type
+        // here should be...
+        Array<boolean | number | string>
       >();
     });
   });
 });
 
 function generateRandomArray(): NonEmptyArray<number> {
-  // We use a set to remove duplicates, as it allows us to simplify our tests
   // @ts-expect-error [ts2322]: we know this array isn't empty!
-  return Array.from(new Set(Array.from({ length: 100 }).map(Math.random)));
+  return Array.from(new Set(Array.from({ length: 100 }).map(() => Math.random())));
 }
 
-function allIndices(array: Array<unknown>): Array<number> {
+function allIndices(array: ReadonlyArray<unknown>): Array<number> {
   return array.map((_, index) => index);
 }

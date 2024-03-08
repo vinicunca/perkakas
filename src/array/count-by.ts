@@ -2,12 +2,16 @@ import type { Pred, PredIndexed, PredIndexedOptional } from '../utils/types';
 
 import { purry } from '../function/purry';
 
-function _countBy(indexed: boolean) {
-  return <T>(array: Array<T>, fn: PredIndexedOptional<T, boolean>) => {
-    return array.reduce((ret, item, index) => {
+function countBy_(indexed: boolean) {
+  return <T>(array: ReadonlyArray<T>, fn: PredIndexedOptional<T, boolean>) => {
+    let out = 0;
+
+    for (const [index, item] of array.entries()) {
       const value = indexed ? fn(item, index, array) : fn(item);
-      return ret + (value ? 1 : 0);
-    }, 0);
+      out += value ? 1 : 0;
+    }
+
+    return out;
   };
 }
 
@@ -43,8 +47,8 @@ export function countBy<T>(
  * @indexed
  * @category Array
  */
-export function countBy(...args: any[]) {
-  return purry(_countBy(false), args);
+export function countBy(...args: any[]): unknown {
+  return purry(countBy_(false), args);
 }
 
 export namespace countBy {
@@ -55,7 +59,7 @@ export namespace countBy {
   export function indexed<T>(
     fn: PredIndexed<T, boolean>
   ): (array: ReadonlyArray<T>) => number;
-  export function indexed(...args: any[]) {
-    return purry(_countBy(true), args);
+  export function indexed(...args: any[]): unknown {
+    return purry(countBy_(true), args);
   }
 }

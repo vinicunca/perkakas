@@ -147,7 +147,7 @@ describe('strict dataFirst typings', () => {
     const result = zip.strict(firstVariadic, secondVariadic);
     expectTypeOf(result).toEqualTypeOf<
       [[number, string], ...Array<[string, number]>]
-    >;
+    >();
   });
 });
 
@@ -212,6 +212,6 @@ describe('strict dataLast typings', () => {
     const result = pipe(firstVariadic, zip.strict(secondVariadic));
     expectTypeOf(result).toEqualTypeOf<
       [[number, string], ...Array<[string, number]>]
-    >;
+    >();
   });
 });

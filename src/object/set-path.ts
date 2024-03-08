@@ -37,30 +37,35 @@ export function setPath<TPath extends Array<PropertyKey>, Value>(
   value: Value
 ): <Obj>(object: SupportsValueAtPath<Obj, TPath, Value>) => Obj;
 
-export function setPath(...args: any[]) {
-  return purry(_setPath, args);
+export function setPath(...args: any[]): unknown {
+  return purry(setPath_, args);
 }
 
-export function _setPath(
-  object: any,
-  path: Array<any>,
-  defaultValue: any,
-): any {
-  if (path.length === 0) {
-    return defaultValue;
+export function setPath_(
+  data: unknown,
+  path: ReadonlyArray<PropertyKey>,
+  value: unknown,
+): unknown {
+  const [current, ...rest] = path;
+  if (current === undefined) {
+    return value;
   }
 
-  if (Array.isArray(object)) {
-    return object.map((item, index) => {
-      if (index === path[0]) {
-        return _setPath(item, path.slice(1), defaultValue);
-      }
-      return item;
-    });
+  if (Array.isArray(data)) {
+    return data.map((item: unknown, index) =>
+      index === current ? setPath_(item, rest, value) : item);
+  }
+
+  if (data === null || data === undefined) {
+    throw new Error('Path doesn\'t exist in object!');
   }
 
   return {
-    ...object,
-    [path[0]]: _setPath(object[path[0]], path.slice(1), defaultValue),
+    ...data,
+    [current]: setPath_(
+      (data as Record<PropertyKey, unknown>)[current],
+      rest,
+      value,
+    ),
   };
 }

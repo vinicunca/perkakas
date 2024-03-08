@@ -26,7 +26,7 @@ import type { NarrowedTo } from '../utils/types';
  * @category Guard
  */
 export function isObject<T>(
-  data: Record<PropertyKey, unknown> | T,
+  data: Readonly<Record<PropertyKey, unknown>> | T,
 ): data is NarrowedTo<T, Record<PropertyKey, unknown>> {
   if (typeof data !== 'object' || data === null) {
     return false;

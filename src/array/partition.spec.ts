@@ -1,6 +1,7 @@
 import { assertType, describe, expect, it } from 'vitest';
 
 import { pipe } from '../function/pipe';
+import { isNumber } from '../guard/is-number';
 import { partition } from './partition';
 
 const array = [
@@ -23,9 +24,6 @@ describe('data first', () => {
     expect(partition(array, (x) => x.a === 1)).toEqual(expected);
   });
   it('partition with type guard', () => {
-    const isNumber = function (value: unknown): value is number {
-      return typeof value === 'number';
-    };
     const actual = partition([1, 'a', 2, 'b'], isNumber);
     expect(actual).toEqual([
       [1, 2],

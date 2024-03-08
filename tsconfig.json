@@ -14,7 +14,6 @@
 
     // MODULES
     "module": "ESNext",
-    "types": ["vitest/globals"],
 
     // EMIT
     "noEmit": true,

@@ -39,14 +39,14 @@ export function reduce<T, K>(
   initialValue: K
 ): (items: ReadonlyArray<T>) => K;
 
-export function reduce(...args: any[]) {
-  return purry(_reduce(false), args);
+export function reduce(...args: any[]): unknown {
+  return purry(reduce_(false), args);
 }
 
-function _reduce(indexed: boolean) {
+function reduce_(indexed: boolean) {
   return <T, K>(
-    items: Array<T>,
-    fn: (acc: K, item: T, index?: number, items?: Array<T>) => K,
+    items: ReadonlyArray<T>,
+    fn: (acc: K, item: T, index?: number, items?: ReadonlyArray<T>) => K,
     initialValue: K,
   ): K => {
     return items.reduce(
@@ -59,14 +59,14 @@ function _reduce(indexed: boolean) {
 export namespace reduce {
   export function indexed<T, K>(
     array: ReadonlyArray<T>,
-    fn: (acc: K, item: T, index: number, items: Array<T>) => K,
+    fn: (acc: K, item: T, index: number, items: ReadonlyArray<T>) => K,
     initialValue: K
   ): K;
   export function indexed<T, K>(
-    fn: (acc: K, item: T, index: number, items: Array<T>) => K,
+    fn: (acc: K, item: T, index: number, items: ReadonlyArray<T>) => K,
     initialValue: K
   ): (array: ReadonlyArray<T>) => K;
-  export function indexed(...args: any[]) {
-    return purry(_reduce(true), args);
+  export function indexed(...args: any[]): unknown {
+    return purry(reduce_(true), args);
   }
 }

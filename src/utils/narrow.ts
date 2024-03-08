@@ -31,7 +31,7 @@ export type Narrowable = bigint | boolean | number | string;
  */
 type NarrowRaw<A> =
   | {
-    [K in keyof A]: A[K] extends (...args: Array<any>) => any
+    [K in keyof A]: A[K] extends (...args: ReadonlyArray<unknown>) => unknown
       ? A[K]
       : NarrowRaw<A[K]>;
   }

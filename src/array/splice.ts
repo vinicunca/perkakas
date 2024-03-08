@@ -41,17 +41,17 @@ export function splice<T>(
   replacement: ReadonlyArray<T>
 ): (items: ReadonlyArray<T>) => Array<T>;
 
-export function splice(...args: any[]) {
-  return purry(_splice, args);
+export function splice(...args: any[]): unknown {
+  return purry(splice_, args);
 }
 
-function _splice<T>(
+function splice_<T>(
   items: ReadonlyArray<T>,
   start: number,
   deleteCount: number,
   replacement: ReadonlyArray<T>,
 ): Array<T> {
-  const result = [...items];
+  const result = items.slice();
   result.splice(start, deleteCount, ...replacement);
   return result;
 }

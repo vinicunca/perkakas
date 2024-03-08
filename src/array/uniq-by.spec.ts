@@ -41,7 +41,7 @@ describe('uniqBy', () => {
   });
 
   it('returns people with uniq first letter of name', () => {
-    expect(uniqBy(people, (p) => p.name.substring(0, 1))).toEqual([
+    expect(uniqBy(people, (p) => p.name.slice(0, 1))).toEqual([
       { age: 42, name: 'John' },
       { age: 33, name: 'Sarah' },
       { age: 22, name: 'Kim' },

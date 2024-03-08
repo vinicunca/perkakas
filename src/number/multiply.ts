@@ -28,10 +28,10 @@ export function multiply(value: number, multiplicand: number): number;
  */
 export function multiply(multiplicand: number): (value: number) => number;
 
-export function multiply(...args: any[]) {
-  return purry(_multiply, args);
+export function multiply(...args: any[]): unknown {
+  return purry(multiply_, args);
 }
 
-function _multiply(value: number, multiplicand: number) {
+function multiply_(value: number, multiplicand: number): number {
   return value * multiplicand;
 }

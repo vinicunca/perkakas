@@ -100,7 +100,7 @@ describe('at runtime', () => {
       { deleteCount: 0, expected: [3], items: [], replacement: [3], start: 1 },
       { deleteCount: 1, expected: [], items: [], replacement: [], start: 1 },
       { deleteCount: 1, expected: [3], items: [], replacement: [3], start: 1 },
-    ];
+    ] as const;
 
     it.each(testCases)(
       'splice($items, $start, $deleteCount, $replacement) -> $expected',

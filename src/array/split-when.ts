@@ -31,15 +31,19 @@ export function splitWhen<T>(
   fn: (item: T) => boolean
 ): (array: ReadonlyArray<T>) => [Array<T>, Array<T>];
 
-export function splitWhen(...args: any[]) {
-  return purry(_splitWhen, args);
+export function splitWhen(...args: any[]): unknown {
+  return purry(splitWhen_, args);
 }
 
-function _splitWhen<T>(array: Array<T>, fn: (item: T) => boolean) {
-  for (let i = 0; i < array.length; i++) {
-    if (fn(array[i]!)) {
-      return splitAt(array, i);
+function splitWhen_<T>(
+  array: ReadonlyArray<T>,
+  fn: (item: T) => boolean,
+): [Array<T>, Array<T>] {
+  for (const [index, item] of array.entries()) {
+    if (fn(item)) {
+      return splitAt(array, index);
     }
   }
-  return [array, []];
+
+  return [array.slice(), []];
 }

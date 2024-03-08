@@ -23,13 +23,13 @@ export function shuffle<T>(items: ReadonlyArray<T>): Array<T>;
  */
 export function shuffle<T>(): (items: ReadonlyArray<T>) => Array<T>;
 
-export function shuffle(...args: any[]) {
-  return purry(_shuffle, args);
+export function shuffle(...args: any[]): unknown {
+  return purry(shuffle_, args);
 }
 
-function _shuffle<T>(items: ReadonlyArray<T>): Array<T> {
+function shuffle_<T>(items: ReadonlyArray<T>): Array<T> {
   const result = items.slice();
-  for (let index = 0; index < items.length; index += 1) {
+  for (let index = 0; index < items.length; index++) {
     const rand = index + Math.floor(Math.random() * (items.length - index));
     const value = result[rand]!;
     result[rand] = result[index]!;

@@ -8,5 +8,5 @@
  * @category Object
  */
 export function prop<T, K extends keyof T>(propName: K) {
-  return ({ [propName]: value }: T) => value;
+  return ({ [propName]: value }: T): T[K] => value;
 }

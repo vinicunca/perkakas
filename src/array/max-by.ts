@@ -2,17 +2,18 @@ import type { PredIndexed, PredIndexedOptional } from '../utils/types';
 
 import { purry } from '../function/purry';
 
-function _maxBy(indexed: boolean) {
-  return <T>(array: Array<T>, fn: PredIndexedOptional<T, number>) => {
+function maxBy_(indexed: boolean) {
+  return <T>(array: ReadonlyArray<T>, fn: PredIndexedOptional<T, number>) => {
     let ret: T | undefined;
     let retMax: number | undefined;
-    array.forEach((item, i) => {
-      const max = indexed ? fn(item, i, array) : fn(item);
+
+    for (const [index, item] of array.entries()) {
+      const max = indexed ? fn(item, index, array) : fn(item);
       if (retMax === undefined || max > retMax) {
         ret = item;
         retMax = max;
       }
-    });
+    }
 
     return ret;
   };
@@ -58,8 +59,8 @@ export function maxBy<T>(
   fn: (item: T) => number
 ): T | undefined;
 
-export function maxBy(...args: any[]) {
-  return purry(_maxBy(false), args);
+export function maxBy(...args: any[]): unknown {
+  return purry(maxBy_(false), args);
 }
 
 export namespace maxBy {
@@ -70,7 +71,7 @@ export namespace maxBy {
   export function indexed<T>(
     fn: PredIndexed<T, number>
   ): (array: ReadonlyArray<T>) => T | undefined;
-  export function indexed(...args: any[]) {
-    return purry(_maxBy(true), args);
+  export function indexed(...args: any[]): unknown {
+    return purry(maxBy_(true), args);
   }
 }

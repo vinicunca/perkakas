@@ -1,9 +1,5 @@
 import { purry } from '../function/purry';
 
-// from https://github.com/epoberezkin/fast-deep-equal/blob/master/index.js
-const isArray = Array.isArray;
-const keyList = Object.keys;
-
 /**
  * Returns true if its arguments are equivalent, false otherwise.
  * NOTE: Doesn't handle cyclical data structures.
@@ -18,7 +14,7 @@ const keyList = Object.keys;
  * @dataFirst
  * @category Object
  */
-export function equals(a: any, b: any): boolean;
+export function equals(a: unknown, b: unknown): boolean;
 
 /**
  * Returns true if its arguments are equivalent, false otherwise.
@@ -33,82 +29,82 @@ export function equals(a: any, b: any): boolean;
  * @dataLast
  * @category Object
  */
-export function equals(a: any): (b: any) => boolean;
+export function equals(a: unknown): (b: unknown) => boolean;
 
-export function equals(...args: any[]) {
-  return purry(_equals, args);
+export function equals(...args: any[]): unknown {
+  return purry(equals_, args);
 }
 
-function _equals(a: any, b: any) {
+function equals_(a: unknown, b: unknown): boolean {
   if (a === b) {
     return true;
   }
 
-  if (a && b && typeof a === 'object' && typeof b === 'object') {
-    const arrA = isArray(a);
-    const arrB = isArray(b);
-    let i;
-    let length;
-    let key;
+  if (typeof a === 'number' && typeof b === 'number') {
+    return Number.isNaN(a) && Number.isNaN(b);
+  }
 
-    if (arrA && arrB) {
-      length = a.length;
-      if (length !== b.length) {
-        return false;
-      }
-      for (i = length; i-- !== 0;) {
-        if (!equals(a[i], b[i])) {
-          return false;
-        }
-      }
-      return true;
-    }
+  if (typeof a !== 'object' || typeof b !== 'object') {
+    return false;
+  }
 
-    if (arrA !== arrB) {
+  if (a === null || b === null) {
+    return false;
+  }
+
+  const isArrayA = Array.isArray(a);
+  const isArrayB = Array.isArray(b);
+
+  if (isArrayA && isArrayB) {
+    if (a.length !== b.length) {
       return false;
     }
-
-    const dateA = a instanceof Date;
-    const dateB = b instanceof Date;
-    if (dateA !== dateB) {
-      return false;
-    }
-    if (dateA && dateB) {
-      return a.getTime() === b.getTime();
-    }
-
-    const regexpA = a instanceof RegExp;
-    const regexpB = b instanceof RegExp;
-    if (regexpA !== regexpB) {
-      return false;
-    }
-    if (regexpA && regexpB) {
-      return a.toString() === b.toString();
-    }
-
-    const keys = keyList(a);
-    length = keys.length;
-
-    if (length !== keyList(b).length) {
-      return false;
-    }
-
-    for (i = length; i-- !== 0;) {
-      if (!Object.prototype.hasOwnProperty.call(b, keys[i]!)) {
+    for (let i = 0; i < a.length; i++) {
+      if (!equals_(a[i], b[i])) {
         return false;
       }
     }
-
-    for (i = length; i-- !== 0;) {
-      key = keys[i]!;
-      if (!equals(a[key], b[key])) {
-        return false;
-      }
-    }
-
     return true;
   }
 
-  // eslint-disable-next-line no-self-compare
-  return a !== a && b !== b;
+  if (isArrayA !== isArrayB) {
+    return false;
+  }
+
+  const isDateA = a instanceof Date;
+  const isDateB = b instanceof Date;
+  if (isDateA && isDateB) {
+    return a.getTime() === b.getTime();
+  }
+  if (isDateA !== isDateB) {
+    return false;
+  }
+
+  const isRegExpA = a instanceof RegExp;
+  const isRegExpB = b instanceof RegExp;
+  if (isRegExpA && isRegExpB) {
+    return a.toString() === b.toString();
+  }
+  if (isRegExpA !== isRegExpB) {
+    return false;
+  }
+
+  const keys = Object.keys(a);
+
+  if (keys.length !== Object.keys(b).length) {
+    return false;
+  }
+
+  for (const key of keys) {
+    if (!Object.prototype.hasOwnProperty.call(b, key)) {
+      return false;
+    }
+
+    // @ts-expect-error [ts7053] - There's no easy way to tell typescript these keys are safe.
+    if (!equals_(a[key], b[key])) {
+      return false;
+    }
+  }
+
+  return true;
 }

@@ -5,6 +5,8 @@ import type { AllTypesDataProviderTypes } from '../../test/types-data-provider';
 import { ALL_TYPES_DATA_PROVIDER, TYPES_DATA_PROVIDER } from '../../test/types-data-provider';
 import { isNumber } from './is-number';
 
+const dataFunction = (): 1 | 2 | 3 | string => 1;
+
 describe('isNumber', () => {
   it('should work as type guard', () => {
     const data = TYPES_DATA_PROVIDER.number as AllTypesDataProviderTypes;
@@ -29,10 +31,7 @@ describe('isNumber', () => {
   });
 
   it('should work with literal types', () => {
-    const data = (): 1 | 2 | 3 | string => {
-      return 1;
-    };
-    const x = data();
+    const x = dataFunction();
     if (isNumber(x)) {
       expect(typeof x).toEqual('number');
       expectTypeOf(x).toEqualTypeOf<1 | 2 | 3>(x);

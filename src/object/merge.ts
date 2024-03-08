@@ -26,10 +26,10 @@ export function merge<A, B>(a: A, b: B): A & B;
  */
 export function merge<A, B>(b: B): (a: A) => A & B;
 
-export function merge(...args: any[]) {
-  return purry(_merge, args);
+export function merge(...args: any[]): unknown {
+  return purry(merge_, args);
 }
 
-function _merge<A, B>(a: A, b: B) {
+function merge_<A, B>(a: A, b: B): A & B {
   return Object.assign({}, a, b);
 }

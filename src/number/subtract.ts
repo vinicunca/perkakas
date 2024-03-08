@@ -30,10 +30,10 @@ export function subtract(value: number, subtrahend: number): number;
  */
 export function subtract(subtrahend: number): (value: number) => number;
 
-export function subtract(...args: any[]) {
-  return purry(_subtract, args);
+export function subtract(...args: any[]): unknown {
+  return purry(subtract_, args);
 }
 
-function _subtract(value: number, subtrahend: number) {
+function subtract_(value: number, subtrahend: number): number {
   return value - subtrahend;
 }

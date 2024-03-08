@@ -1,5 +1,7 @@
+import type { LazyEvaluator } from '../function/pipe';
+
 import { purry } from '../function/purry';
-import { reduceLazy, type LazyResult } from '../utils/reduce-lazy';
+import { reduceLazy } from '../utils/reduce-lazy';
 
 /**
  * Removes first `n` elements from the `array`.
@@ -29,30 +31,24 @@ export function drop<T>(array: ReadonlyArray<T>, n: number): Array<T>;
  */
 export function drop<T>(n: number): (array: ReadonlyArray<T>) => Array<T>;
 
-export function drop(...args: any[]) {
-  return purry(_drop, args, drop.lazy);
+export function drop(...args: any[]): unknown {
+  return purry(drop_, args, drop.lazy);
 }
 
-function _drop<T>(array: Array<T>, n: number) {
+function drop_<T>(array: Array<T>, n: number) {
   return reduceLazy(array, drop.lazy(n));
 }
 
 export namespace drop {
-  export function lazy<T>(n: number) {
+  export function lazy<T>(n: number): LazyEvaluator<T> {
     let left = n;
-    return (value: T): LazyResult<T> => {
+    return (value) => {
       if (left > 0) {
-        left--;
-        return {
-          done: false,
-          hasNext: false,
-        };
+        left -= 1;
+        return { done: false, hasNext: false };
       }
-      return {
-        done: false,
-        hasNext: true,
-        next: value,
-      };
+
+      return { done: false, hasNext: true, next: value };
     };
   }
 }

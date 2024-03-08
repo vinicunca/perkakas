@@ -1,5 +1,7 @@
 import type { IterableContainer } from '../utils/types';
 
+import { purry } from '../function/purry';
+
 type Entry<Key extends PropertyKey = PropertyKey, Value = unknown> = readonly [
   key: Key,
   value: Value,
@@ -19,17 +21,60 @@ type Entry<Key extends PropertyKey = PropertyKey, Value = unknown> = readonly [
  * @example
  *   P.fromPairs([['a', 'b'], ['c', 'd']]) // => {a: 'b', c: 'd'} (type: Record<string, string>)
  *   P.fromPairs.strict(['a', 1] as const) // => {a: 1} (type: {a: 1})
+ *   P.pipe(
+ *     [['a', 'b'], ['c', 'd']],
+ *     P.fromPairs,
+ *   ); // => {a: 'b', c: 'd'} (type: Record<string, string>)
+ *   P.pipe(
+ *     ['a', 1] as const,
+ *     P.fromPairs.strict,
+ *   ); // => {a: 1} (type: {a: 1})
  * @category Object
  * @strict
+ * @dataFirst
  */
 export function fromPairs<V>(
-  pairs: ReadonlyArray<Entry<number, V>>
+  pairs: ReadonlyArray<Entry<number, V>>,
 ): Record<number, V>;
 export function fromPairs<V>(
-  pairs: ReadonlyArray<Entry<string, V>>
+  pairs: ReadonlyArray<Entry<string, V>>,
 ): Record<string, V>;
 
-export function fromPairs(
+/**
+ * Creates a new object from an array of tuples by pairing up first and second elements as {[key]: value}.
+ * If a tuple is not supplied for any element in the array, the element will be ignored
+ * If duplicate keys exist, the tuple with the greatest index in the input array will be preferred.
+ *
+ * The strict option supports more sophisticated use-cases like those that would
+ * result when calling the strict `toPairs` function.
+ * @param pairs the list of input tuples
+ * @signature
+ *   P.fromPairs()(tuples)
+ *   P.fromPairs.strict()(tuples)
+ * @example
+ *   P.pipe(
+ *     [['a', 'b'], ['c', 'd']],
+ *     P.fromPairs(),
+ *   ); // => {a: 'b', c: 'd'} (type: Record<string, string>)
+ *   P.pipe(
+ *     ['a', 1] as const,
+ *     P.fromPairs.strict(),
+ *   ); // => {a: 1} (type: {a: 1})
+ * @category Object
+ * @strict
+ * @dataLast
+ */
+// TODO: Add this back when we deprecate headless calls in V2 of Remeda. Currently the dataLast overload breaks the typing for the headless version of the function, which is used widely in the wild.
+// export function fromPairs(): <K extends PropertyKey, V>(
+//   pairs: ReadonlyArray<Entry<K, V>>,
+// ) => Record<K extends string ? string : K extends number ? number : never, V>;
+
+export function fromPairs(...args: any[]): unknown {
+  // TODO: When we bump the typescript target beyond ES2019 we can use Object.fromEntries directly here instead of our user-space implementation.
+  return purry(fromPairsImplementation, args);
+}
+
+function fromPairsImplementation(
   entries: ReadonlyArray<Entry>,
 ): Record<string, unknown> {
   const out: Record<PropertyKey, unknown> = {};
@@ -41,9 +86,13 @@ export function fromPairs(
 
 // Redefining the fromPairs function to allow stricter pairs arrays and fine-
 // grained handling of partiality of the output.
-type Strict = <Entries extends IterableContainer<Entry>>(
-  entries: Entries
-) => StrictOut<Entries>;
+type Strict = // ) => StrictOut<Entries>;
+  //   entries: Entries,
+  // (): <Entries extends IterableContainer<Entry>>(
+  // TODO: Add this back when we deprecate headless calls in V2 of Remeda. Currently the dataLast overload breaks the typing for the headless version of the function, which is used widely in the wild.
+  <Entries extends IterableContainer<Entry>>(
+    entries: Entries,
+  ) => StrictOut<Entries>;
 
 // The 2 kinds of arrays we accept result in different kinds of outputs:
 // 1. If the input is a *tuple*, we know exactly what pairs it would hold,
@@ -116,5 +165,5 @@ type ValueForKey<
 
 export namespace fromPairs {
   // Strict is simply a retyping of fromPairs, it runs the same runtime logic.
-  export const strict: Strict = fromPairs;
+  export const strict = fromPairs as Strict;
 }

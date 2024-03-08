@@ -1,5 +1,5 @@
 export class TestClass {
-  get foo() {
+  get foo(): string {
     return 'a';
   }
 }

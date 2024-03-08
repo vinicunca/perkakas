@@ -30,10 +30,10 @@ export function add(value: number, addend: number): number;
  */
 export function add(addend: number): (value: number) => number;
 
-export function add(...args: any[]) {
-  return purry(_add, args);
+export function add(...args: any[]): unknown {
+  return purry(add_, args);
 }
 
-function _add(value: number, addend: number) {
+function add_(value: number, addend: number) {
   return value + addend;
 }

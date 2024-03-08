@@ -1,4 +1,4 @@
-import type { LazyResult } from '../utils/reduce-lazy';
+import type { LazyEvaluator } from '../function/pipe';
 
 import { purry } from '../function/purry';
 import { reduceLazy } from '../utils/reduce-lazy';
@@ -60,11 +60,11 @@ export function intersectionWith<TFirst, TSecond>(
   comparator: Comparator<TFirst, TSecond>
 ): (array: ReadonlyArray<TFirst>) => Array<TFirst>;
 
-export function intersectionWith(...args: any[]) {
-  return purry(_intersectionWith, args, intersectionWith.lazy);
+export function intersectionWith(...args: any[]): unknown {
+  return purry(intersectionWith_, args, intersectionWith.lazy);
 }
 
-function _intersectionWith<TFirst, TSecond>(
+function intersectionWith_<TFirst, TSecond>(
   array: Array<TFirst>,
   other: Array<TSecond>,
   comparator: Comparator<TFirst, TSecond>,
@@ -74,22 +74,11 @@ function _intersectionWith<TFirst, TSecond>(
 }
 
 export namespace intersectionWith {
-  export function lazy<TFirst, TSecond>(
-    other: Array<TSecond>,
-    comparator: Comparator<TFirst, TSecond>,
-  ) {
-    return (value: TFirst): LazyResult<TFirst> => {
-      if (other.some((otherValue) => comparator(value, otherValue))) {
-        return {
-          done: false,
-          hasNext: true,
-          next: value,
-        };
-      }
-      return {
-        done: false,
-        hasNext: false,
-      };
-    };
+  export function lazy<TFirst, TSecond>(other: ReadonlyArray<TSecond>,
+    comparator: Comparator<TFirst, TSecond>): LazyEvaluator<TFirst> {
+    return (value) =>
+      other.some((otherValue) => comparator(value, otherValue))
+        ? { done: false, hasNext: true, next: value }
+        : { done: false, hasNext: false };
   }
 }

@@ -1,5 +1,7 @@
 import type { IterableContainer } from '../utils/types';
 
+import { purry } from '../function/purry';
+
 /**
  * Returns a new array containing the keys of the array or object.
  * @param source Either an array or an object
@@ -9,23 +11,56 @@ import type { IterableContainer } from '../utils/types';
  * @example
  *    P.keys(['x', 'y', 'z']) // => ['0', '1', '2']
  *    P.keys({ a: 'x', b: 'y', c: 'z' }) // => ['a', 'b', 'c']
+ *    P.keys.strict({ a: 'x', b: 'y', 5: 'z' } as const ) // => ['a', 'b', '5'], typed Array<'a' | 'b' | '5'>
+ *    P.pipe(['x', 'y', 'z'], P.keys) // => ['0', '1', '2']
+ *    P.pipe({ a: 'x', b: 'y', c: 'z' }, P.keys) // => ['a', 'b', 'c']
  *    P.pipe(
  *      { a: 'x', b: 'y', c: 'z' },
  *      P.keys,
- *      P.first
+ *      P.first(),
  *    ) // => 'a'
- *    P.keys.strict({ a: 'x', b: 'y', 5: 'z' } as const ) // => ['a', 'b', '5'], typed Array<'a' | 'b' | '5'>
+ *    P.pipe({ a: 'x', b: 'y', 5: 'z' } as const, P.keys.strict) // => ['a', 'b', '5'], typed Array<'a' | 'b' | '5'>
  * @pipeable
  * @strict
  * @category Object
+ * @dataFirst
  */
 export function keys(
-  source: ArrayLike<unknown> | Record<PropertyKey, unknown>,
-): Array<string> {
-  return Object.keys(source);
+  source: ArrayLike<unknown> | Readonly<Record<PropertyKey, unknown>>,
+): Array<string>;
+
+/**
+ * Returns a new array containing the keys of the array or object.
+ * @param source Either an array or an object
+ * @signature
+ *    P.keys()(source)
+ *    P.keys.strict()(source)
+ * @example
+ *    P.pipe(['x', 'y', 'z'], P.keys()) // => ['0', '1', '2']
+ *    P.pipe({ a: 'x', b: 'y', c: 'z' }, P.keys()) // => ['a', 'b', 'c']
+ *    P.pipe(
+ *      { a: 'x', b: 'y', c: 'z' },
+ *      P.keys(),
+ *      P.first(),
+ *    ) // => 'a'
+ *    P.pipe({ a: 'x', b: 'y', 5: 'z' } as const, P.keys.strict()) // => ['a', 'b', '5'], typed Array<'a' | 'b' | '5'>
+ * @pipeable
+ * @strict
+ * @category Object
+ * @dataLast
+ */
+// TODO: Add this back when we deprecate headless calls in the future. Currently the dataLast overload breaks the typing for the headless version of the function, which is used widely in the wild.
+// export function keys(): (
+//   source: Record<PropertyKey, unknown> | ArrayLike<unknown>,
+// ) => Array<string>;
+
+export function keys(...args: any[]): unknown {
+  return purry(Object.keys, args);
 }
 
-type Strict = <T extends object>(source: T) => Keys<T>;
+type Strict = // (): <T extends object>(data: T) => Keys<T>;
+  // TODO: Add this back when we deprecate headless calls in the future. Currently the dataLast overload breaks the typing for the headless version of the function, which is used widely in the wild.
+  <T extends object>(data: T) => Keys<T>;
 type Keys<T> = T extends IterableContainer ? ArrayKeys<T> : ObjectKeys<T>;
 
 // The keys output can mirror the input when it is an array/tuple. We do this by
@@ -44,11 +79,12 @@ type ArrayKeys<T extends IterableContainer> = {
 type IsIndexAfterSpread<
   T extends IterableContainer,
   Index extends number | string,
-> = IndicesAfterSpread<T> extends never
-  ? false
-  : Index extends `${IndicesAfterSpread<T>}`
-    ? true
-    : false;
+> =
+  IndicesAfterSpread<T> extends never
+    ? false
+    : Index extends `${IndicesAfterSpread<T>}`
+      ? true
+      : false;
 
 // Find the index of the tuple where a spread item is located, and return all
 // indices in the tuple which are located after it. The tuple could be prefixed
@@ -66,15 +102,14 @@ type IndicesAfterSpread<
     ? IndicesAfterSpread<Tail, [unknown, ...Iterations]>
     : T extends readonly [...infer Head, unknown]
       ?
-    IndicesAfterSpread<Head, [unknown, ...Iterations]>
-    | Iterations['length']
+      | IndicesAfterSpread<Head, [unknown, ...Iterations]>
+      | Iterations['length']
       : Iterations['length'];
 
-type ObjectKeys<T> = T extends Record<PropertyKey, never>
-  ? []
-  : Array<`${Exclude<keyof T, symbol>}`>;
+type ObjectKeys<T> =
+  T extends Record<PropertyKey, never>
+    ? []
+    : Array<`${Exclude<keyof T, symbol>}`>;
 export namespace keys {
-  // @ts-expect-error [ts2322] - I don't know why i'm getting this, the typing
-  // should be fine here because Key<T> returns a narrower type of string...
-  export const strict: Strict = keys;
+  export const strict = keys as Strict;
 }

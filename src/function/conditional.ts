@@ -211,15 +211,15 @@ function isCase(maybeCase: unknown): maybeCase is Case<unknown, unknown> {
   const [when, then, ...rest] = maybeCase;
   return (
     typeof when === 'function'
-      && when.length <= 1
-      && typeof then === 'function'
-      && then.length <= 1
-      && rest.length === 0
+    && when.length <= 1
+    && typeof then === 'function'
+    && then.length <= 1
+    && rest.length === 0
   );
 }
 
 // Lodash and Ramda return `undefined` as the default case.
-const trivialDefaultCase = () => undefined;
+const trivialDefaultCase = (): undefined => undefined;
 
 export namespace conditional {
   /**

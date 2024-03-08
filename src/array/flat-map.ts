@@ -1,3 +1,5 @@
+import type { LazyEvaluator } from '../function/pipe';
+
 import { purry } from '../function/purry';
 import { flatten } from './flatten';
 
@@ -33,34 +35,25 @@ export function flatMap<T, K>(
   fn: (input: T) => K | ReadonlyArray<K>
 ): (array: ReadonlyArray<T>) => Array<K>;
 
-export function flatMap(...args: any[]) {
-  return purry(_flatMap, args, flatMap.lazy);
+export function flatMap(...args: any[]): unknown {
+  return purry(flatMap_, args, flatMap.lazy);
 }
 
-function _flatMap<T, K>(
-  array: Array<T>,
+function flatMap_<T, K>(
+  array: ReadonlyArray<T>,
   fn: (input: T) => ReadonlyArray<K>,
 ): Array<K> {
   return flatten(array.map((item) => fn(item)));
 }
 
 export namespace flatMap {
-  export function lazy<T, K>(fn: (input: T) => K | ReadonlyArray<K>) {
-    return (value: T) => {
+  export function lazy<T, K>(fn: (input: T) => K | ReadonlyArray<K>): LazyEvaluator<T, K> {
+    // @ts-expect-error [ts2322] - We need to make LazyMany better so it accommodate the typing here...
+    return (value) => {
       const next = fn(value);
-      if (Array.isArray(next)) {
-        return {
-          done: false,
-          hasMany: true,
-          hasNext: true,
-          next,
-        };
-      }
-      return {
-        done: false,
-        hasNext: true,
-        next,
-      };
+      return Array.isArray(next)
+        ? { done: false, hasMany: true, hasNext: true, next }
+        : { done: false, hasNext: true, next };
     };
   }
 }

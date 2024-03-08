@@ -13,6 +13,7 @@ export default vinicuncaESLint(
   {
     files: ['**/*.spec.ts'],
     rules: {
+      'perfectionist/sort-union-types': 'off',
       'vinicunca/no-duplicate-string': 'off',
     },
   },

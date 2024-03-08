@@ -7,7 +7,7 @@ import { first } from './first';
 
 function defaultTo<T>(d: T) {
   return function (v: T | null | undefined) {
-    return v == null ? d : v;
+    return v ?? d;
   };
 }
 

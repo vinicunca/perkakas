@@ -2,13 +2,14 @@ import type { PredIndexed, PredIndexedOptional } from '../utils/types';
 
 import { purry } from '../function/purry';
 
-function _sumBy(indexed: boolean) {
-  return <T>(array: Array<T>, fn: PredIndexedOptional<T, number>) => {
+function sumBy_(indexed: boolean) {
+  return <T>(array: ReadonlyArray<T>, fn: PredIndexedOptional<T, number>) => {
     let sum = 0;
-    array.forEach((item, i) => {
-      const summand = indexed ? fn(item, i, array) : fn(item);
+
+    for (const [index, item] of array.entries()) {
+      const summand = indexed ? fn(item, index, array) : fn(item);
       sum += summand;
-    });
+    }
     return sum;
   };
 }
@@ -55,8 +56,8 @@ export function sumBy<T>(
   fn: (item: T) => number
 ): number;
 
-export function sumBy(...args: any[]) {
-  return purry(_sumBy(false), args);
+export function sumBy(...args: any[]): unknown {
+  return purry(sumBy_(false), args);
 }
 
 export namespace sumBy {
@@ -69,7 +70,7 @@ export namespace sumBy {
     fn: PredIndexed<T, number>
   ): (array: ReadonlyArray<T>) => number;
 
-  export function indexed(...args: any[]) {
-    return purry(_sumBy(true), args);
+  export function indexed(...args: any[]): unknown {
+    return purry(sumBy_(true), args);
   }
 }

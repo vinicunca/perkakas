@@ -31,17 +31,18 @@ export function mapKeys<T, S extends PropertyKey>(
   fn: (key: keyof T, value: Required<T>[keyof T]) => S
 ): (data: T) => Record<S, T[keyof T]>;
 
-export function mapKeys(...args: any[]) {
-  return purry(_mapKeys, args);
+export function mapKeys(...args: any[]): unknown {
+  return purry(mapKeys_, args);
 }
 
-function _mapKeys<T extends object>(
+function mapKeys_<T extends object, S extends PropertyKey>(
   data: T,
-  fn: (key: keyof T, value: Required<T>[keyof T]) => PropertyKey,
+  fn: (key: keyof T, value: Required<T>[keyof T]) => S,
 ) {
-  const out: Partial<Record<PropertyKey, Required<T>[keyof T]>> = {};
+  const out: Partial<Record<S, T[keyof T]>> = {};
   for (const [key, value] of toPairs.strict(data)) {
     out[fn(key, value)] = value;
   }
+
   return out;
 }

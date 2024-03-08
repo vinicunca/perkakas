@@ -4,8 +4,6 @@ import { debounce } from './debounce';
 import { identity } from './identity';
 import { sleep } from './sleep';
 
-const helloWorld = 'Hello, World!';
-
 describe('main functionality', () => {
   it('should debounce a function', async () => {
     const mockFn = vi.fn(identity);
@@ -217,7 +215,9 @@ describe('optional param maxWaitMs', () => {
 describe('additional functionality', () => {
   it('can cancel before the timer starts', async () => {
     const debouncer = debounce(identity, { waitMs: 32 });
-    expect(() => debouncer.cancel()).not.toThrow();
+    expect(() => {
+      debouncer.cancel();
+    }).not.toThrow();
 
     expect(debouncer.call('hello')).toBeUndefined();
     await sleep(32);
@@ -226,7 +226,7 @@ describe('additional functionality', () => {
   });
 
   it('can cancel the timer', async () => {
-    const data = helloWorld;
+    const data = 'Hello, World!';
     const mockFn = vi.fn(() => data);
     const debouncer = debounce(mockFn, { waitMs: 32 });
 
@@ -253,7 +253,9 @@ describe('additional functionality', () => {
     await sleep(32);
 
     expect(debouncer.call('world')).toEqual('hello');
-    expect(() => debouncer.cancel()).not.toThrow();
+    expect(() => {
+      debouncer.cancel();
+    }).not.toThrow();
   });
 
   it('can cancel maxWait timer', async () => {
@@ -340,7 +342,7 @@ describe('errors', () => {
 
 describe('typing', () => {
   it('returns undefined on \'trailing\' timing', () => {
-    const debouncer = debounce(() => helloWorld, {
+    const debouncer = debounce(() => 'Hello, World!', {
       timing: 'trailing',
       waitMs: 32,
     });
@@ -349,7 +351,7 @@ describe('typing', () => {
   });
 
   it('doesn\'t return undefined on \'leading\' timing', () => {
-    const debouncer = debounce(() => helloWorld, {
+    const debouncer = debounce(() => 'Hello, World!', {
       timing: 'leading',
       waitMs: 32,
     });
@@ -358,7 +360,7 @@ describe('typing', () => {
   });
 
   it('doesn\'t return undefined on \'both\' timing', () => {
-    const debouncer = debounce(() => helloWorld, {
+    const debouncer = debounce(() => 'Hello, World!', {
       timing: 'both',
       waitMs: 32,
     });
@@ -404,7 +406,7 @@ describe('typing', () => {
 
   it('argument typing to be good (with defaults)', () => {
     const debouncer = debounce(
-      (a: string, b: number = 2, c: boolean = true) => `${a}${b}${c}`,
+      (a: string, b = 2, c = true) => `${a}${b}${c}`,
       {},
     );
     // @ts-expect-error [ts2554]: Expected 3 arguments, but got 1.
@@ -422,7 +424,7 @@ describe('typing', () => {
   it('argument typing to be good (with rest param)', async () => {
     const debouncer = debounce(
       (a: string, ...flags: ReadonlyArray<boolean>) =>
-        `${a}${flags.map((flag) => (flag ? 'y' : 'n')).join()}`,
+        `${a}${flags.map((flag) => (flag ? 'y' : 'n')).join(',')}`,
       { timing: 'leading' },
     );
     // @ts-expect-error [ts2554]: Expected 3 arguments, but got 1.

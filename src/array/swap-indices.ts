@@ -151,21 +151,21 @@ export function swapIndices<K1 extends number, K2 extends number>(
   index2: K2
 ): <T extends IterableContainer | string>(data: T) => SwappedIndices<T, K1, K2>;
 
-export function swapIndices(...args: any[]) {
-  return purry(_swapIndices, args);
+export function swapIndices(...args: any[]): unknown {
+  return purry(swapIndices_, args);
 }
 
-function _swapIndices(
+function swapIndices_(
   item: IterableContainer | string,
   index1: number,
   index2: number,
 ): unknown {
   return typeof item === 'string'
-    ? _swapString(item, index1, index2)
-    : _swapArray(item, index1, index2);
+    ? swapString_(item, index1, index2)
+    : swapArray_(item, index1, index2);
 }
 
-function _swapArray(
+function swapArray_(
   item: ReadonlyArray<unknown>,
   index1: number,
   index2: number,
@@ -193,7 +193,7 @@ function _swapArray(
   return result;
 }
 
-function _swapString(item: string, index1: number, index2: number): string {
-  const result = _swapArray(item.split(''), index1, index2);
+function swapString_(item: string, index1: number, index2: number): string {
+  const result = swapArray_(item.split(''), index1, index2);
   return result.join('');
 }

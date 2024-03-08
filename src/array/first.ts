@@ -1,3 +1,4 @@
+import type { LazyEvaluator } from '../function/pipe';
 import type { IterableContainer } from '../utils/types';
 
 import { purry } from '../function/purry';
@@ -36,24 +37,19 @@ export function first<T extends IterableContainer>(): (
   array: Readonly<T>
 ) => FirstOut<T>;
 
-export function first(...args: any[]) {
-  return purry(_first, args, first.lazy);
+export function first(...args: any[]): unknown {
+  return purry(first_, args, first.lazy);
 }
 
-function _first<T>([first]: ReadonlyArray<T>) {
-  return first;
+function first_<T>([item]: ReadonlyArray<T>): T | undefined {
+  return item;
 }
 
 export namespace first {
-  export function lazy<T>() {
-    return (value: T) => {
-      return {
-        done: true,
-        hasNext: true,
-        next: value,
-      };
-    };
+  export function lazy<T>(): LazyEvaluator<T> {
+    return (value) => ({ done: true, hasNext: true, next: value });
   }
+
   export namespace lazy {
     export const single = true;
   }

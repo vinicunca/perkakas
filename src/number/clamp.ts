@@ -1,5 +1,10 @@
 import { purry } from '../function/purry';
 
+interface Limits {
+  readonly max?: number;
+  readonly min?: number;
+}
+
 /**
  * Clamp the given value within the inclusive min and max bounds.
  * @param value the number
@@ -15,10 +20,7 @@ import { purry } from '../function/purry';
  * @dataFirst
  * @category Number
  */
-export function clamp(
-  value: number,
-  limits: { max?: number; min?: number }
-): number;
+export function clamp(value: number, limits: Limits): number;
 
 /**
  * Clamp the given value within the inclusive min and max bounds.
@@ -34,22 +36,19 @@ export function clamp(
  * @dataLast
  * @category Number
  */
-export function clamp(limits: {
-  max?: number;
-  min?: number;
-}): (value: number) => number;
+export function clamp(limits: Limits): (value: number) => number;
 
-export function clamp(...args: any[]) {
-  return purry(_clamp, args);
+export function clamp(...args: any[]): unknown {
+  return purry(clamp_, args);
 }
 
-function _clamp(value: number, limits: { max?: number; min?: number }) {
-  if (limits.min != null && limits.min > value) {
-    return limits.min;
+function clamp_(value: number, { max, min }: Limits): number {
+  if (min !== undefined && value < min) {
+    return min;
   }
 
-  if (limits.max != null && limits.max < value) {
-    return limits.max;
+  if (max !== undefined && value > max) {
+    return max;
   }
 
   return value;

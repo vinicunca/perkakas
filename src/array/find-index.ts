@@ -1,3 +1,4 @@
+import type { LazyEvaluator } from '../function/pipe';
 import type { Pred, PredIndexed, PredIndexedOptional } from '../utils/types';
 
 import { purry } from '../function/purry';
@@ -48,37 +49,26 @@ export function findIndex<T>(
   fn: Pred<T, boolean>
 ): (items: ReadonlyArray<T>) => number;
 
-export function findIndex(...args: any[]) {
-  return purry(_findIndex(false), args, findIndex.lazy);
+export function findIndex(...args: any[]): unknown {
+  return purry(findIndex_(false), args, findIndex.lazy);
 }
 
-function _findIndex(indexed: boolean) {
-  return <T>(array: Array<T>, fn: PredIndexedOptional<T, boolean>) => {
-    if (indexed) {
-      return array.findIndex(fn);
-    }
-
-    return array.findIndex((x) => fn(x));
-  };
+function findIndex_(indexed: boolean) {
+  return <T>(array: ReadonlyArray<T>, fn: PredIndexedOptional<T, boolean>) =>
+    array.findIndex((item, index, input) =>
+      indexed ? fn(item, index, input) : fn(item));
 }
 
-function _lazy(indexed: boolean) {
-  return <T>(fn: PredIndexedOptional<T, boolean>) => {
-    let i = 0;
-    return (value: T, index?: number, array?: Array<T>) => {
-      const valid = indexed ? fn(value, index, array) : fn(value);
-      if (valid) {
-        return {
-          done: true,
-          hasNext: true,
-          next: i,
-        };
+function lazy_(indexed: boolean) {
+  return <T>(fn: PredIndexedOptional<T, boolean>): LazyEvaluator<T, number> => {
+    // TODO: We use the `actualIndex` here because we can't trust the index coming from pipe. This is due to the fact that the `indexed` abstraction might turn off incrementing the index or not send it at all. Once we simplify the code base by removing the non-indexed versions, we can remove this.
+    let actualIndex = 0;
+    return (value, index, array) => {
+      if (indexed ? fn(value, index, array) : fn(value)) {
+        return { done: true, hasNext: true, next: actualIndex };
       }
-      i++;
-      return {
-        done: false,
-        hasNext: false,
-      };
+      actualIndex += 1;
+      return { done: false, hasNext: false };
     };
   };
 }
@@ -91,11 +81,11 @@ export namespace findIndex {
   export function indexed<T>(
     fn: PredIndexed<T, boolean>
   ): (array: ReadonlyArray<T>) => number;
-  export function indexed(...args: any[]) {
-    return purry(_findIndex(true), args, findIndex.lazyIndexed);
+  export function indexed(...args: any[]): unknown {
+    return purry(findIndex_(true), args, findIndex.lazyIndexed);
   }
 
-  export const lazy = toSingle(_lazy(false));
+  export const lazy = toSingle(lazy_(false));
 
-  export const lazyIndexed = toSingle(toLazyIndexed(_lazy(true)));
+  export const lazyIndexed = toSingle(toLazyIndexed(lazy_(true)));
 }

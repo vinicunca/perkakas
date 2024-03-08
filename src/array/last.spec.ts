@@ -40,7 +40,7 @@ describe('last', () => {
     });
 
     it('should infer type in pipes', () => {
-      const data = pipe('this is a text', (data) => data.split(''), last());
+      const data = pipe('this is a text', (text) => text.split(''), last());
       assertType<string | undefined>(data);
     });
   });

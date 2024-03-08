@@ -5,7 +5,7 @@ import { floor } from './floor';
 describe('data-first', () => {
   it('should work with positive precision', () => {
     expect(floor(8123.4317, 3)).toEqual(8123.431);
-    expect(floor(483.22243, 1)).toEqual(483.2);
+    expect(floor(483.222_43, 1)).toEqual(483.2);
     expect(floor(123.4317, 5)).toEqual(123.4317);
   });
 
@@ -18,11 +18,14 @@ describe('data-first', () => {
     expect(floor(8123.4317, 0)).toEqual(8123);
   });
 
-  it.each([Number.NaN, Number.POSITIVE_INFINITY])('should throw for %d precision', (val) => {
-    expect(() => floor(1, val)).toThrowError(
-      `precision must be an integer: ${val}`,
-    );
-  });
+  it.each([Number.NaN, Number.POSITIVE_INFINITY])(
+    'should throw for %d precision',
+    (val) => {
+      expect(() => floor(1, val)).toThrowError(
+        `precision must be an integer: ${val}`,
+      );
+    },
+  );
 
   it('should throw for non integer precision', () => {
     expect(() => floor(1, 21.37)).toThrowError(
@@ -52,7 +55,7 @@ describe('data-first', () => {
 describe('data-last', () => {
   it('should work with positive precision', () => {
     expect(floor(3)(8123.4317)).toEqual(8123.431);
-    expect(floor(1)(483.22243)).toEqual(483.2);
+    expect(floor(1)(483.222_43)).toEqual(483.2);
     expect(floor(5)(123.4317)).toEqual(123.4317);
   });
 
@@ -65,11 +68,14 @@ describe('data-last', () => {
     expect(floor(0)(8123.4317)).toEqual(8123);
   });
 
-  it.each([Number.NaN, Number.POSITIVE_INFINITY])('should throw for %d precision', (val) => {
-    expect(() => floor(val)(1)).toThrowError(
-      `precision must be an integer: ${val}`,
-    );
-  });
+  it.each([Number.NaN, Number.POSITIVE_INFINITY])(
+    'should throw for %d precision',
+    (val) => {
+      expect(() => floor(val)(1)).toThrowError(
+        `precision must be an integer: ${val}`,
+      );
+    },
+  );
 
   it('should throw for non integer precision', () => {
     expect(() => floor(21.37)(1)).toThrowError(

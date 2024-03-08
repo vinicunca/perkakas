@@ -11,7 +11,7 @@ it('"Object" if given an object literal', () => {
 });
 
 it('"RegExp" if given a RegExp literal', () => {
-  expect(type(/[A-z]/)).toEqual('RegExp');
+  expect(type(/[A-z]/u)).toEqual('RegExp');
 });
 
 it('"Number" if given a numeric value', () => {
@@ -27,7 +27,7 @@ it('"String" if given a String literal', () => {
 });
 
 it('"String" if given a String object', () => {
-  // eslint-disable-next-line no-new-wrappers
+  // eslint-disable-next-line no-new-wrappers -- Intentional
   expect(type(new String('I am a String object'))).toEqual('String');
 });
 
