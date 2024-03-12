@@ -186,7 +186,8 @@ export function conditional<
   | Return8
   | Return9;
 
-export function conditional(...args: any[]): unknown {
+// TODO: replace any with proper argument typings
+export function conditional(...args: any): unknown {
   return purryOn(isCase, conditionalImplementation, args);
 }
 
