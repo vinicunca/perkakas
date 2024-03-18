@@ -39,7 +39,7 @@ describe('intersectionWith', () => {
         )(source),
       ).toEqual(expected);
     });
-    it('checks if items are equal based on remeda\'s imported util function as a comparator', () => {
+    it('checks if items are equal based on imported util function as a comparator', () => {
       expect(
         pipe(
           [

@@ -14,9 +14,9 @@ interface Limits {
  * @signature
  *    P.clamp(value, { min, max });
  * @example
- *    clamp(10, { min: 20 }) // => 20
- *    clamp(10, { max: 5 }) // => 5
- *    clamp(10, { max: 20, min: 5 }) // => 10
+ *    P.clamp(10, { min: 20 }) // => 20
+ *    P.clamp(10, { max: 5 }) // => 5
+ *    P.clamp(10, { max: 20, min: 5 }) // => 10
  * @dataFirst
  * @category Number
  */
@@ -30,9 +30,9 @@ export function clamp(value: number, limits: Limits): number;
  * @signature
  *    P.clamp({ min, max })(value);
  * @example
- *    clamp({ min: 20 })(10) // => 20
- *    clamp({ max: 5 })(10) // => 5
- *    clamp({ max: 20, min: 5 })(10) // => 10
+ *    P.clamp({ min: 20 })(10) // => 20
+ *    P.clamp({ max: 5 })(10) // => 5
+ *    P.clamp({ max: 20, min: 5 })(10) // => 10
  * @dataLast
  * @category Number
  */

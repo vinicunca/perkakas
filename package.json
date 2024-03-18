@@ -1,5 +1,6 @@
 {
   "name": "@vinicunca/perkakas",
+  "type": "module",
   "version": "0.3.6",
   "packageManager": "pnpm@8.10.5",
   "description": "Utility for JavaScript and Typescript.",
@@ -36,7 +37,7 @@
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
     "prepublish": "pnpm run build",
-    "release": "bumpp package.json --commit --push --tag --commit 'chore: release v'",
+    "release": "bumpp package.json",
     "typedoc": "typedoc --json dist/metadata.json",
     "build": "pnpm run clean && pnpm run build:es && pnpm run build:cjs && npm run build:types && pnpm run typedoc",
     "build:cjs": "tsc --project tsconfig.build.json --module commonjs --outDir \"./dist/commonjs\"",
@@ -44,23 +45,23 @@
     "build:types": "tsc --project tsconfig.build.types.json --outDir \"./dist/types\"",
     "clean": "rm -rf ./dist && mkdir dist",
     "lint": "eslint . --fix",
-    "registry": "pnpm publish --access public --no-git-checks"
+    "publish:ci": "pnpm publish --access public --no-git-checks"
   },
   "devDependencies": {
     "@tsconfig/recommended": "^1.0.3",
     "@types/fs-extra": "^11.0.4",
-    "@vinicunca/eslint-config": "^2.1.5",
-    "@vitest/coverage-v8": "^1.3.1",
-    "bumpp": "^9.3.1",
+    "@vinicunca/eslint-config": "^2.1.7",
+    "@vitest/coverage-v8": "^1.4.0",
+    "bumpp": "^9.4.0",
     "eslint": "^8.57.0",
     "fs-extra": "^11.2.0",
     "prettier": "^3.2.5",
     "rimraf": "^5.0.5",
     "tiny-invariant": "^1.3.3",
-    "type-fest": "^4.10.3",
-    "typedoc": "^0.25.10",
-    "typescript": "^5.3.3",
-    "vitest": "^1.3.1"
+    "type-fest": "^4.12.0",
+    "typedoc": "^0.25.12",
+    "typescript": "^5.4.2",
+    "vitest": "^1.4.0"
   },
   "pnpm": {
     "overrides": {

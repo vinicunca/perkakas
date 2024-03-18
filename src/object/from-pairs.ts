@@ -8,7 +8,7 @@ type Entry<Key extends PropertyKey = PropertyKey, Value = unknown> = readonly [
 ];
 
 /**
- * Creates a new object from an array of tuples by pairing up first and second elements as {[key]: value}.
+ * Creates a new object from an array of tuples by pairing up first and second elements as `{[key]: value}`.
  * If a tuple is not supplied for any element in the array, the element will be ignored
  * If duplicate keys exist, the tuple with the greatest index in the input array will be preferred.
  *
@@ -64,7 +64,7 @@ export function fromPairs<V>(
  * @strict
  * @dataLast
  */
-// TODO: Add this back when we deprecate headless calls in V2 of Remeda. Currently the dataLast overload breaks the typing for the headless version of the function, which is used widely in the wild.
+// TODO: Currently the dataLast overload breaks the typing for the headless version of the function, which is used widely in the wild.
 // export function fromPairs(): <K extends PropertyKey, V>(
 //   pairs: ReadonlyArray<Entry<K, V>>,
 // ) => Record<K extends string ? string : K extends number ? number : never, V>;
@@ -89,7 +89,7 @@ function fromPairsImplementation(
 type Strict = // ) => StrictOut<Entries>;
   //   entries: Entries,
   // (): <Entries extends IterableContainer<Entry>>(
-  // TODO: Add this back when we deprecate headless calls in V2 of Remeda. Currently the dataLast overload breaks the typing for the headless version of the function, which is used widely in the wild.
+  // TODO: Currently the dataLast overload breaks the typing for the headless version of the function, which is used widely in the wild.
   <Entries extends IterableContainer<Entry>>(
     entries: Entries,
   ) => StrictOut<Entries>;
