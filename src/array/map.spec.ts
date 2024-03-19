@@ -186,6 +186,7 @@ describe('strict', () => {
     const input: [
       ...Array<'hello'>,
       'world',
+      // @ts-expect-error maybe caused by new TS version
       ...Array<number>,
       string,
       ...Array<number>,
@@ -290,6 +291,7 @@ describe('strict Indexed', () => {
     const input: [
       ...Array<'hello'>,
       'world',
+      // @ts-expect-error maybe caused by new TS version
       ...Array<number>,
       string,
       ...Array<number>,
