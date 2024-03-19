@@ -25,11 +25,9 @@ export function add(value: number, addend: number): number;
  * @signature
  *    P.add(addend)(value);
  * @example
- *    import { add, map } from '@vinicunca/perkakas';
- *
- *    add(5)(10) // => 15
- *    add(-5)(10) // => 5
- *    map([1, 2, 3, 4], add(1)) // => [2, 3, 4, 5]
+ *    P.add(5)(10) // => 15
+ *    P.add(-5)(10) // => 5
+ *    P.map([1, 2, 3, 4], P.add(1)) // => [2, 3, 4, 5]
  * @dataLast
  * @category Number
  */
