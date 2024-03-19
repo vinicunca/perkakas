@@ -47,7 +47,7 @@ export function toPairs<T>(
 // TODO: Currently the typings are broken
 // export function toPairs(): <T>(object: Record<string, T>) => Array<[string, T]>;
 
-export function toPairs(...args: any[]): unknown {
+export function toPairs(...args: Array<any>): unknown {
   return purry(Object.entries, args);
 }
 

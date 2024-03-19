@@ -4,6 +4,7 @@ import { purry } from '../function/purry';
 
 /**
  * Gets the last element of `array`.
+ *
  * @param array the array
  * @signature
  *    P.last(array)
@@ -19,7 +20,7 @@ export function last<T>(array: ReadonlyArray<T>): T | undefined;
 
 /**
  * Gets the last element of `array`.
- * @param array the array
+ *
  * @signature
  *    P.last()(array)
  * @example
@@ -35,7 +36,7 @@ export function last<T>(array: ReadonlyArray<T>): T | undefined;
  */
 export function last<T>(): (array: ReadonlyArray<T>) => T | undefined;
 
-export function last(...args: any[]): unknown {
+export function last(...args: Array<any>): unknown {
   return purry(last_, args);
 }
 

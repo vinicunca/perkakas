@@ -3,6 +3,7 @@ import { keys } from './keys';
 
 /**
  * Creates an object composed of the picked `object` properties.
+ *
  * @param object the target object
  * @param fn the predicate
  * @signature P.pickBy(object, fn)
@@ -18,6 +19,7 @@ export function pickBy<T>(
 
 /**
  * Creates an object composed of the picked `object` properties.
+ *
  * @param fn the predicate
  * @signature P.pickBy(fn)(object)
  * @example
@@ -29,7 +31,7 @@ export function pickBy<T>(
   fn: <K extends keyof T>(value: T[K], key: K) => boolean
 ): (object: T) => T extends Record<keyof T, T[keyof T]> ? T : Partial<T>;
 
-export function pickBy(...args: any[]): unknown {
+export function pickBy(...args: Array<any>): unknown {
   return purry(pickBy_, args);
 }
 
@@ -44,8 +46,9 @@ function pickBy_<T>(
   const out: Partial<T> = {};
 
   for (const key of keys.strict(data)) {
-    if (fn(data[key], key)) {
-      out[key] = data[key];
+    const k = key as keyof T;
+    if (fn(data[k], k)) {
+      out[k] = data[k];
     }
   }
 

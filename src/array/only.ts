@@ -16,6 +16,7 @@ type Only<T extends IterableContainer> = T extends
  * Returns the first and only element of `array`, or undefined otherwise.
  * Note: In `pipe`, use `only()` form instead of `only`. Otherwise, the
  * inferred type is lost.
+ *
  * @param array the target array
  * @signature
  *    P.only(array)
@@ -33,7 +34,7 @@ export function only<T extends IterableContainer>(array: Readonly<T>): Only<T>;
  * Returns the first and only element of `array`, or undefined otherwise.
  * Note: In `pipe`, use `only()` form instead of `only`. Otherwise, the
  * inferred type is lost.
- * @param array the target array
+ *
  * @signature
  *    P.only(array)
  * @example
@@ -48,7 +49,7 @@ export function only<T extends IterableContainer>(): (
   array: Readonly<T>
 ) => Only<T>;
 
-export function only(...args: any[]): unknown {
+export function only(...args: Array<any>): unknown {
   return purry(only_, args);
 }
 

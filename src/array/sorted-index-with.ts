@@ -50,7 +50,6 @@ export function sortedIndexWith<T>(
  * for a specific item in a sorted array, and it could be used to perform
  * similar efficient searches.
  *
- * @param data - Array, "sorted" by `predicate`
  * @param predicate - A predicate which also defines the array's order
  * @return - Index (In the range 0..data.length)
  *
@@ -68,7 +67,7 @@ export function sortedIndexWith<T>(
   predicate: (item: T) => boolean,
 ): (data: ReadonlyArray<T>) => number;
 
-export function sortedIndexWith(...args: any[]): unknown {
+export function sortedIndexWith(...args: Array<any>): unknown {
   return purry(binarySearchCutoffIndex, args);
 }
 
@@ -80,7 +79,7 @@ export namespace sortedIndexWith {
   export function indexed<T>(
     predicate: (item: T, index: number) => NonNullable<unknown>,
   ): (data: ReadonlyArray<T>) => number;
-  export function indexed(...args: any[]): unknown {
+  export function indexed(...args: Array<any>): unknown {
     return purry(binarySearchCutoffIndex, args);
   }
 }

@@ -16,7 +16,6 @@ export function divide(value: number, divisor: number): number;
 
 /**
  * Divides two numbers.
- * @param value The number.
  * @param divisor The number to divide the value by.
  * @signature
  *    P.divide(divisor)(value);
@@ -28,7 +27,7 @@ export function divide(value: number, divisor: number): number;
  */
 export function divide(divisor: number): (value: number) => number;
 
-export function divide(...args: any[]): unknown {
+export function divide(...args: Array<any>): unknown {
   return purry(divide_, args);
 }
 

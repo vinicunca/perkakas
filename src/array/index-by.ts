@@ -29,7 +29,6 @@ export function indexBy<T>(
  * (casted to a string). Use the strict version to maintain the given key's type, so
  * long as it is a valid `PropertyKey`.
  *
- * @param array the array
  * @param fn the indexing function
  * @signature
  *    P.indexBy(fn)(array)
@@ -52,7 +51,7 @@ export function indexBy<T>(
   fn: (item: T) => unknown,
 ): (array: ReadonlyArray<T>) => Record<string, T>;
 
-export function indexBy(...args: any[]): unknown {
+export function indexBy(...args: Array<any>): unknown {
   return purry(indexBy_(false), args);
 }
 
@@ -77,7 +76,7 @@ function indexByStrict<K extends PropertyKey, T>(
   fn: (item: T) => K,
 ): (array: ReadonlyArray<T>) => Partial<Record<K, T>>;
 
-function indexByStrict(...args: any[]): unknown {
+function indexByStrict(...args: Array<any>): unknown {
   return purry(indexByStrict_, args);
 }
 
@@ -103,7 +102,7 @@ export namespace indexBy {
   export function indexed<T>(
     fn: PredIndexed<T, unknown>,
   ): (array: ReadonlyArray<T>) => Record<string, T>;
-  export function indexed(...args: any[]): unknown {
+  export function indexed(...args: Array<any>): unknown {
     return purry(indexBy_(true), args);
   }
   export const strict = indexByStrict;

@@ -40,9 +40,9 @@ type Projection<T> = (x: T) => Comparable;
 // used with the `<` and `>` operators.
 // @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#type_coercion
 type Comparable =
-  | { [Symbol.toPrimitive](hint: string): ComparablePrimitive }
-  | { toString(): string }
-  | { valueOf(): ComparablePrimitive }
+  | { [Symbol.toPrimitive]: (hint: string) => ComparablePrimitive }
+  | { toString: () => string }
+  | { valueOf: () => ComparablePrimitive }
   | ComparablePrimitive;
 
 //  Notice that `boolean` is special in that it is coerced as a number (0 for
@@ -98,7 +98,7 @@ export function purryOrderRulesWithArgument(
     compareFn: CompareFunction<T>,
     arg: any
   ) => unknown,
-  inputArgs: any[],
+  inputArgs: Array<any>,
 ): unknown {
   const [first, second, ...rest] = Array.from(inputArgs);
 

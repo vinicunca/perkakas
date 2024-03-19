@@ -37,7 +37,7 @@ export function first<T extends IterableContainer>(): (
   array: Readonly<T>
 ) => FirstOut<T>;
 
-export function first(...args: any[]): unknown {
+export function first(...args: Array<any>): unknown {
   return purry(first_, args, first.lazy);
 }
 

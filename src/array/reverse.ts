@@ -14,7 +14,8 @@ T extends IsNoTuple<T>
 type IsNoTuple<T> = T extends readonly [unknown, ...Array<unknown>] ? never : T;
 
 /**
- * Reverses array.
+ * Reverses an array.
+ *
  * @param array the array
  * @signature
  *    P.reverse(arr);
@@ -26,7 +27,8 @@ type IsNoTuple<T> = T extends readonly [unknown, ...Array<unknown>] ? never : T;
 export function reverse<T extends ReadonlyArray<unknown>>(array: T): Reverse<T>;
 
 /**
- * Reverses array.
+ * Reverses an array.
+ *
  * @signature
  *    P.reverse()(array);
  * @example
@@ -38,7 +40,7 @@ export function reverse<T extends ReadonlyArray<unknown>>(): (
   array: T
 ) => Reverse<T>;
 
-export function reverse(...args: any[]): unknown {
+export function reverse(...args: Array<any>): unknown {
   return purry(reverse_, args);
 }
 

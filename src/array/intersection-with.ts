@@ -60,7 +60,7 @@ export function intersectionWith<TFirst, TSecond>(
   comparator: Comparator<TFirst, TSecond>
 ): (array: ReadonlyArray<TFirst>) => Array<TFirst>;
 
-export function intersectionWith(...args: any[]): unknown {
+export function intersectionWith(...args: Array<any>): unknown {
   return purry(intersectionWith_, args, intersectionWith.lazy);
 }
 

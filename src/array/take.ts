@@ -30,7 +30,7 @@ export function take<T>(array: ReadonlyArray<T>, n: number): Array<T>;
  */
 export function take<T>(n: number): (array: ReadonlyArray<T>) => Array<T>;
 
-export function take(...args: any[]): unknown {
+export function take(...args: Array<any>): unknown {
   return purry(take_, args, take.lazy);
 }
 

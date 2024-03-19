@@ -35,7 +35,7 @@ export function uniq<T>(array: ReadonlyArray<T>): Array<T>;
  */
 export function uniq<T>(): (array: ReadonlyArray<T>) => Array<T>;
 
-export function uniq(...args: any[]): unknown {
+export function uniq(...args: Array<any>): unknown {
   return purry(uniq_, args, uniq.lazy);
 }
 

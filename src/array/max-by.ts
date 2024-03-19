@@ -59,7 +59,7 @@ export function maxBy<T>(
   fn: (item: T) => number
 ): T | undefined;
 
-export function maxBy(...args: any[]): unknown {
+export function maxBy(...args: Array<any>): unknown {
   return purry(maxBy_(false), args);
 }
 
@@ -71,7 +71,7 @@ export namespace maxBy {
   export function indexed<T>(
     fn: PredIndexed<T, number>
   ): (array: ReadonlyArray<T>) => T | undefined;
-  export function indexed(...args: any[]): unknown {
+  export function indexed(...args: Array<any>): unknown {
     return purry(maxBy_(true), args);
   }
 }

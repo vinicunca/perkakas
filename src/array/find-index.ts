@@ -7,6 +7,7 @@ import { toSingle } from '../utils/to-single';
 
 /**
  * Returns the index of the first element in the array where predicate is true, and -1 otherwise.
+ *
  * @param items the array
  * @param fn the predicate
  * @signature
@@ -27,6 +28,7 @@ export function findIndex<T>(
 
 /**
  * Returns the index of the first element in the array where predicate is true, and -1 otherwise.
+ *
  * @param fn the predicate
  * @signature
  *    P.findIndex(fn)(items)
@@ -49,7 +51,7 @@ export function findIndex<T>(
   fn: Pred<T, boolean>
 ): (items: ReadonlyArray<T>) => number;
 
-export function findIndex(...args: any[]): unknown {
+export function findIndex(...args: Array<any>): unknown {
   return purry(findIndex_(false), args, findIndex.lazy);
 }
 
@@ -81,7 +83,7 @@ export namespace findIndex {
   export function indexed<T>(
     fn: PredIndexed<T, boolean>
   ): (array: ReadonlyArray<T>) => number;
-  export function indexed(...args: any[]): unknown {
+  export function indexed(...args: Array<any>): unknown {
     return purry(findIndex_(true), args, findIndex.lazyIndexed);
   }
 

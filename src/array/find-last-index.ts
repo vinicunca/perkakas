@@ -4,6 +4,7 @@ import { purry } from '../function/purry';
 
 /**
  * Returns the index of the last element in the array where predicate is true, and -1 otherwise.
+ *
  * @param array the array
  * @param fn the predicate
  * @signature
@@ -24,6 +25,7 @@ export function findLastIndex<T>(
 
 /**
  * Returns the index of the last element in the array where predicate is true, and -1 otherwise.
+ *
  * @param fn the predicate
  * @signature
  *    P.findLastIndex(fn)(items)
@@ -46,7 +48,7 @@ export function findLastIndex<T>(
   fn: Pred<T, boolean>
 ): (array: ReadonlyArray<T>) => number;
 
-export function findLastIndex(...args: any[]): unknown {
+export function findLastIndex(...args: Array<any>): unknown {
   return purry(findLastIndex_(false), args);
 }
 
@@ -71,7 +73,7 @@ export namespace findLastIndex {
     fn: PredIndexed<T, boolean>
   ): (array: ReadonlyArray<T>) => number;
 
-  export function indexed(...args: any[]): unknown {
+  export function indexed(...args: Array<any>): unknown {
     return purry(findLastIndex_(true), args);
   }
 }

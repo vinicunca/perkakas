@@ -33,7 +33,7 @@ export function mapValues<T extends Record<PropertyKey, unknown>, S>(
   fn: (value: T[keyof T], key: keyof T) => S
 ): (data: T) => Record<ObjectKeys<T>, S>;
 
-export function mapValues(...args: any[]): unknown {
+export function mapValues(...args: Array<any>): unknown {
   return purry(mapValues_, args);
 }
 

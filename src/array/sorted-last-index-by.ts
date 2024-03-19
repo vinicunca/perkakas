@@ -45,7 +45,6 @@ export function sortedLastIndexBy<T>(
  *
  * Runs in O(logN) time.
  *
- * @param data - The (ascending) sorted array.
  * @param item - The item to insert.
  * @param valueFunction - All comparisons would be performed on the result of
  * calling this function on each compared item. Preferably this function should
@@ -68,7 +67,7 @@ export function sortedLastIndexBy<T>(
   valueFunction: (item: T) => NonNullable<unknown>,
 ): (data: ReadonlyArray<T>) => number;
 
-export function sortedLastIndexBy(...args: any[]): unknown {
+export function sortedLastIndexBy(...args: Array<any>): unknown {
   return purry(sortedLastIndexByImplementation, args);
 }
 
@@ -82,7 +81,7 @@ export namespace sortedLastIndexBy {
     item: T,
     valueFunction: (item: T, index?: number) => NonNullable<unknown>,
   ): (data: ReadonlyArray<T>) => number;
-  export function indexed(...args: any[]): unknown {
+  export function indexed(...args: Array<any>): unknown {
     return purry(sortedLastIndexByImplementation, args);
   }
 }

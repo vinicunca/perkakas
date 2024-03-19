@@ -58,7 +58,7 @@ export function forEach<T>(
   fn: Pred<T, void>
 ): (array: ReadonlyArray<T>) => Array<T>;
 
-export function forEach(...args: any[]): unknown {
+export function forEach(...args: Array<any>): unknown {
   return purry(forEach_(false), args, forEach.lazy);
 }
 
@@ -95,7 +95,7 @@ export namespace forEach {
   export function indexed<T>(
     fn: PredIndexed<T, void>,
   ): (array: ReadonlyArray<T>) => Array<T>;
-  export function indexed(...args: any[]): unknown {
+  export function indexed(...args: Array<any>): unknown {
     return purry(forEach_(true), args, forEach.lazyIndexed);
   }
   export const lazy = lazy_(false);

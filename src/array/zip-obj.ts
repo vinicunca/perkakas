@@ -32,7 +32,7 @@ export function zipObj<S>(
   second: ReadonlyArray<S>
 ): <F extends PropertyKey>(first: ReadonlyArray<F>) => Record<F, S>;
 
-export function zipObj(...args: any[]): unknown {
+export function zipObj(...args: Array<any>): unknown {
   return purry(zipObj_, args);
 }
 

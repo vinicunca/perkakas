@@ -33,4 +33,3 @@ jobs:
         run: pnpm run publish:ci
         env:
           NODE_AUTH_TOKEN: ${{ secrets.VINICUNCA_NPM_TOKEN }}
-

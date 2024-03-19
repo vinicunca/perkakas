@@ -31,7 +31,7 @@ export function splitWhen<T>(
   fn: (item: T) => boolean
 ): (array: ReadonlyArray<T>) => [Array<T>, Array<T>];
 
-export function splitWhen(...args: any[]): unknown {
+export function splitWhen(...args: Array<any>): unknown {
   return purry(splitWhen_, args);
 }
 

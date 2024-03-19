@@ -42,7 +42,7 @@ export function chunk<T extends IterableContainer>(
   size: number
 ): (array: T) => Chunked<T>;
 
-export function chunk(...args: any[]): unknown {
+export function chunk(...args: Array<any>): unknown {
   return purry(chunk_, args);
 }
 

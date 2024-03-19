@@ -44,7 +44,7 @@ export function zip<S>(
   second: ReadonlyArray<S>
 ): <F>(first: ReadonlyArray<F>) => Array<[F, S]>;
 
-export function zip(...args: any[]): unknown {
+export function zip(...args: Array<any>): unknown {
   return purry(zip_, args);
 }
 

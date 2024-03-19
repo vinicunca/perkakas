@@ -15,14 +15,14 @@ export function isUppercase(char = ''): boolean | undefined {
 export function splitByCase<T extends string>(str: T): SplitByCase<T>;
 export function splitByCase<
   T extends string,
-  Separator extends readonly string[],
+  Separator extends ReadonlyArray<string>,
 >(str: T, separators: Separator): SplitByCase<T, Separator[number]>;
 export function splitByCase<
   T extends string,
-  Separator extends readonly string[],
+  Separator extends ReadonlyArray<string>,
 >(str: T, separators?: Separator) {
   const splitters = separators ?? STR_SPLITTERS;
-  const parts: string[] = [];
+  const parts: Array<string> = [];
 
   if (!str || !isString(str)) {
     return parts as SplitByCase<T, Separator[number]>;
@@ -87,11 +87,11 @@ export function toLowerFirst<S extends string>(str: S): Uncapitalize<S> {
 
 export function toPascalCase(): '';
 export function toPascalCase<
-  T extends readonly string[] | string,
+  T extends ReadonlyArray<string> | string,
   UserCaseOptions extends CaseOptions = CaseOptions,
 >(str: T, opts?: CaseOptions): PascalCase<T, UserCaseOptions['normalize']>;
 export function toPascalCase<
-  T extends readonly string[] | string,
+  T extends ReadonlyArray<string> | string,
   UserCaseOptions extends CaseOptions = CaseOptions,
 >(str?: T, opts?: UserCaseOptions) {
   return str
@@ -103,11 +103,11 @@ export function toPascalCase<
 
 export function toCamelCase(): '';
 export function toCamelCase<
-  T extends readonly string[] | string,
+  T extends ReadonlyArray<string> | string,
   UserCaseOptions extends CaseOptions = CaseOptions,
 >(str: T, opts?: UserCaseOptions): CamelCase<T, UserCaseOptions['normalize']>;
 export function toCamelCase<
-  T extends readonly string[] | string,
+  T extends ReadonlyArray<string> | string,
   UserCaseOptions extends CaseOptions = CaseOptions,
 >(str?: T, opts?: UserCaseOptions) {
   return toLowerFirst(toPascalCase(str || '', opts)) as CamelCase<
@@ -117,15 +117,15 @@ export function toCamelCase<
 }
 
 export function toKebabCase(): '';
-export function toKebabCase<T extends readonly string[] | string>(
+export function toKebabCase<T extends ReadonlyArray<string> | string>(
   str: T,
 ): KebabCase<T>;
 export function toKebabCase<
-  T extends readonly string[] | string,
+  T extends ReadonlyArray<string> | string,
   Joiner extends string,
 >(str: T, joiner: Joiner): KebabCase<T, Joiner>;
 export function toKebabCase<
-  T extends readonly string[] | string,
+  T extends ReadonlyArray<string> | string,
   Joiner extends string,
 >(str?: T, joiner?: Joiner) {
   return str
@@ -136,28 +136,28 @@ export function toKebabCase<
 }
 
 export function toSnakeCase(): '';
-export function toSnakeCase<T extends readonly string[] | string>(
+export function toSnakeCase<T extends ReadonlyArray<string> | string>(
   str: T,
 ): SnakeCase<T>;
-export function toSnakeCase<T extends readonly string[] | string>(str?: T) {
+export function toSnakeCase<T extends ReadonlyArray<string> | string>(str?: T) {
   return toKebabCase(str || '', '_') as SnakeCase<T>;
 }
 
 export function toFlatCase(): '';
-export function toFlatCase<T extends readonly string[] | string>(
+export function toFlatCase<T extends ReadonlyArray<string> | string>(
   str: T,
 ): FlatCase<T>;
-export function toFlatCase<T extends readonly string[] | string>(str?: T) {
+export function toFlatCase<T extends ReadonlyArray<string> | string>(str?: T) {
   return toKebabCase(str || '', '') as FlatCase<T>;
 }
 
 export function toTrainCase(): '';
 export function toTrainCase<
-  T extends readonly string[] | string,
+  T extends ReadonlyArray<string> | string,
   UserCaseOptions extends CaseOptions = CaseOptions,
 >(str: T, opts?: UserCaseOptions): TrainCase<T, UserCaseOptions['normalize']>;
 export function toTrainCase<
-  T extends readonly string[] | string,
+  T extends ReadonlyArray<string> | string,
   UserCaseOptions extends CaseOptions = CaseOptions,
 >(str?: T, opts?: UserCaseOptions) {
   return (Array.isArray(str) ? str : splitByCase(str as string))
@@ -171,14 +171,14 @@ const titleCaseExceptions
 
 export function toTitleCase(): '';
 export function toTitleCase<
-  T extends readonly string[] | string,
+  T extends ReadonlyArray<string> | string,
   UserCaseOptions extends CaseOptions = CaseOptions,
 >(
   str: T,
   opts?: UserCaseOptions,
 ): TrainCase<T, UserCaseOptions['normalize'], ' '>;
 export function toTitleCase<
-  T extends readonly string[] | string,
+  T extends ReadonlyArray<string> | string,
   UserCaseOptions extends CaseOptions = CaseOptions,
 >(str?: T, opts?: UserCaseOptions) {
   return (Array.isArray(str) ? str : splitByCase(str as string))

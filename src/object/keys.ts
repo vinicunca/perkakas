@@ -4,6 +4,7 @@ import { purry } from '../function/purry';
 
 /**
  * Returns a new array containing the keys of the array or object.
+ *
  * @param source Either an array or an object
  * @signature
  *    P.keys(source)
@@ -31,7 +32,7 @@ export function keys(
 
 /**
  * Returns a new array containing the keys of the array or object.
- * @param source Either an array or an object
+ *
  * @signature
  *    P.keys()(source)
  *    P.keys.strict()(source)
@@ -54,7 +55,7 @@ export function keys(
 //   source: Record<PropertyKey, unknown> | ArrayLike<unknown>,
 // ) => Array<string>;
 
-export function keys(...args: any[]): unknown {
+export function keys(...args: Array<any>): unknown {
   return purry(Object.keys, args);
 }
 

@@ -31,7 +31,7 @@ export function equals(a: unknown, b: unknown): boolean;
  */
 export function equals(a: unknown): (b: unknown) => boolean;
 
-export function equals(...args: any[]): unknown {
+export function equals(...args: Array<any>): unknown {
   return purry(equals_, args);
 }
 

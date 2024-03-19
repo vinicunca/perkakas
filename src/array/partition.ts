@@ -70,7 +70,7 @@ export function partition<T>(
   predicate: (item: T) => boolean
 ): (array: ReadonlyArray<T>) => [Array<T>, Array<T>];
 
-export function partition(...args: any[]): unknown {
+export function partition(...args: Array<any>): unknown {
   return purry(partition_(false), args);
 }
 
@@ -93,7 +93,7 @@ export namespace partition {
   export function indexed<T>(
     predicate: PredIndexed<T, boolean>
   ): (array: ReadonlyArray<T>) => [Array<T>, Array<T>];
-  export function indexed(...args: any[]): unknown {
+  export function indexed(...args: Array<any>): unknown {
     return purry(partition_(true), args);
   }
 }

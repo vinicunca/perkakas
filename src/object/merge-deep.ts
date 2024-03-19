@@ -40,7 +40,7 @@ export function mergeDeep<
   Source extends Record<string, unknown>,
 >(source: Source): (target: Destination) => MergeDeep<Destination, Source>;
 
-export function mergeDeep(...args: any[]): unknown {
+export function mergeDeep(...args: Array<any>): unknown {
   return purry(mergeDeepImplementation, args);
 }
 

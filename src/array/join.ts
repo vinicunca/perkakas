@@ -77,7 +77,7 @@ export function join<
   Glue extends string,
 >(glue: Glue): (data: T) => Joined<T, Glue>;
 
-export function join(...args: any[]): unknown {
+export function join(...args: Array<any>): unknown {
   return purry(joinImplementation, args);
 }
 

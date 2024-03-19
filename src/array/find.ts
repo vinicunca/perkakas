@@ -49,7 +49,7 @@ export function find<T = never>(
   fn: Pred<T, boolean>
 ): (array: ReadonlyArray<T>) => T | undefined;
 
-export function find(...args: any[]): unknown {
+export function find(...args: Array<any>): unknown {
   return purry(find_(false), args, find.lazy);
 }
 
@@ -75,7 +75,7 @@ export namespace find {
   export function indexed<T>(
     fn: PredIndexed<T, boolean>
   ): (array: ReadonlyArray<T>) => T | undefined;
-  export function indexed(...args: any[]): unknown {
+  export function indexed(...args: Array<any>): unknown {
     return purry(find_(true), args, find.lazyIndexed);
   }
 

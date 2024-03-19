@@ -6,6 +6,7 @@ const ALPHABET
 
 /**
  * Random a non-cryptographic random string from characters a-zA-Z0-9.
+ *
  * @param length the length of the random string
  * @returns the random string
  * @signature
@@ -20,7 +21,7 @@ export function randomString(length: number): string;
 
 /**
  * Random a non-cryptographic random string from characters a-zA-Z0-9.
- * @param length the length of the random string
+ *
  * @returns the random string
  * @signature
  *   P.randomString()(length)
@@ -31,7 +32,7 @@ export function randomString(length: number): string;
  */
 // export function randomString(): (length: number) => string;
 
-export function randomString(...args: any[]): unknown {
+export function randomString(...args: Array<any>): unknown {
   return purry(randomStringImplementation, args);
 }
 

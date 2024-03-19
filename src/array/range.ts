@@ -23,7 +23,7 @@ export function range(start: number, end: number): Array<number>;
  */
 export function range(end: number): (start: number) => Array<number>;
 
-export function range(...args: any[]): unknown {
+export function range(...args: Array<any>): unknown {
   return purry(range_, args);
 }
 

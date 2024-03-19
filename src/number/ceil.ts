@@ -5,6 +5,7 @@ import { withPrecision } from '../utils/with-precision';
  * Rounds up a given number to a specific precision.
  * If you'd like to round up to an integer (i.e. use this function with constant `precision === 0`),
  * use `Math.ceil` instead, as it won't incur the additional library overhead.
+ *
  * @param value The number to round up.
  * @param precision The precision to round up to. Must be an integer between -15 and 15.
  * @signature
@@ -23,7 +24,7 @@ export function ceil(value: number, precision: number): number;
  * Rounds up a given number to a specific precision.
  * If you'd like to round up to an integer (i.e. use this function with constant `precision === 0`),
  * use `Math.ceil` instead, as it won't incur the additional library overhead.
- * @param value The number to round up.
+ *
  * @param precision The precision to round up to. Must be an integer between -15 and 15.
  * @signature
  *    P.ceil(precision)(value);
@@ -37,6 +38,6 @@ export function ceil(value: number, precision: number): number;
  */
 export function ceil(precision: number): (value: number) => number;
 
-export function ceil(...args: any[]): unknown {
+export function ceil(...args: Array<any>): unknown {
   return purry(withPrecision(Math.ceil), args);
 }

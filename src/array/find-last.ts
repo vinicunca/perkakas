@@ -48,7 +48,7 @@ export function findLast<T = never>(
   fn: Pred<T, boolean>
 ): (array: ReadonlyArray<T>) => T | undefined;
 
-export function findLast(...args: any[]): unknown {
+export function findLast(...args: Array<any>): unknown {
   return purry(findLast_(false), args);
 }
 
@@ -73,7 +73,7 @@ export namespace findLast {
     fn: PredIndexed<T, boolean>
   ): (array: ReadonlyArray<T>) => T | undefined;
 
-  export function indexed(...args: any[]): unknown {
+  export function indexed(...args: Array<any>): unknown {
     return purry(findLast_(true), args);
   }
 }

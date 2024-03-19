@@ -2,6 +2,7 @@ export * from './add-prop';
 export * from './clone';
 export * from './equals';
 export * from './for-each-obj';
+export * from './from-keys';
 export * from './from-pairs';
 export * from './index';
 export * from './invert';

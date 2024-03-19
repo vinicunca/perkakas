@@ -2,6 +2,7 @@ import { purry } from '../function/purry';
 
 /**
  * Removes last `n` elements from the `array`.
+ *
  * @param array the target array
  * @param n the number of elements to skip
  * @signature
@@ -15,7 +16,7 @@ export function dropLast<T>(array: ReadonlyArray<T>, n: number): Array<T>;
 
 /**
  * Removes last `n` elements from the `array`.
- * @param array the target array
+ *
  * @param n the number of elements to skip
  * @signature
  *    P.dropLast(n)(array)
@@ -26,7 +27,7 @@ export function dropLast<T>(array: ReadonlyArray<T>, n: number): Array<T>;
  */
 export function dropLast<T>(n: number): (array: ReadonlyArray<T>) => Array<T>;
 
-export function dropLast(...args: any[]): unknown {
+export function dropLast(...args: Array<any>): unknown {
   return purry(dropLast_, args);
 }
 

@@ -34,7 +34,6 @@ export function sortedLastIndex<T>(data: ReadonlyArray<T>, item: T): number;
  *
  * Runs in O(logN) time.
  *
- * @param data - The (ascending) sorted array.
  * @param item - The item to insert.
  * @return - Insertion index (In the range 0..data.length)
  *
@@ -49,7 +48,7 @@ export function sortedLastIndex<T>(data: ReadonlyArray<T>, item: T): number;
  */
 export function sortedLastIndex<T>(item: T): (data: ReadonlyArray<T>) => number;
 
-export function sortedLastIndex(...args: any[]): unknown {
+export function sortedLastIndex(...args: Array<any>): unknown {
   return purry(sortedLastIndexImplementation, args);
 }
 

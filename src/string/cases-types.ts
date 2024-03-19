@@ -14,10 +14,10 @@ type SameLetterCase<X extends string, Y extends string> =
       ? true
       : false;
 type CapitalizedWords<
-  T extends readonly string[],
+  T extends ReadonlyArray<string>,
   Accumulator extends string = '',
   Normalize extends boolean | undefined = false,
-> = T extends readonly [infer F extends string, ...infer R extends string[]]
+> = T extends readonly [infer F extends string, ...infer R extends Array<string>]
   ? CapitalizedWords<
       R,
       `${Accumulator}${Capitalize<Normalize extends true ? Lowercase<F> : F>}`,
@@ -25,17 +25,17 @@ type CapitalizedWords<
     >
   : Accumulator;
 type JoinLowercaseWords<
-  T extends readonly string[],
+  T extends ReadonlyArray<string>,
   Joiner extends string,
   Accumulator extends string = '',
-> = T extends readonly [infer F extends string, ...infer R extends string[]]
+> = T extends readonly [infer F extends string, ...infer R extends Array<string>]
   ? Accumulator extends ''
     ? JoinLowercaseWords<R, Joiner, `${Accumulator}${Lowercase<F>}`>
     : JoinLowercaseWords<R, Joiner, `${Accumulator}${Joiner}${Lowercase<F>}`>
   : Accumulator;
 
-type LastOfArray<T extends any[]> = T extends [...any, infer R] ? R : never;
-type RemoveLastOfArray<T extends any[]> = T extends [...infer F, any]
+type LastOfArray<T extends Array<any>> = T extends [...any, infer R] ? R : never;
+type RemoveLastOfArray<T extends Array<any>> = T extends [...infer F, any]
   ? F
   : never;
 
@@ -46,9 +46,9 @@ export interface CaseOptions {
 export type SplitByCase<
   T,
   Separator extends string = Splitter,
-  Accumulator extends unknown[] = [],
+  Accumulator extends Array<unknown> = [],
 > = string extends Separator
-  ? string[]
+  ? Array<string>
   : T extends `${infer F}${infer R}`
     ? [LastOfArray<Accumulator>] extends [never]
         ? SplitByCase<R, Separator, [F]>
@@ -96,18 +96,18 @@ export type SplitByCase<
     : Accumulator extends []
       ? T extends ''
         ? []
-        : string[]
+        : Array<string>
       : Accumulator;
 
 export type JoinByCase<T, Joiner extends string> = string extends T
   ? string
-  : string[] extends T
+  : Array<string> extends T
     ? string
     : T extends string
-      ? SplitByCase<T> extends readonly string[]
+      ? SplitByCase<T> extends ReadonlyArray<string>
         ? JoinLowercaseWords<SplitByCase<T>, Joiner>
         : never
-      : T extends readonly string[]
+      : T extends ReadonlyArray<string>
         ? JoinLowercaseWords<T, Joiner>
         : never;
 
@@ -116,13 +116,13 @@ export type PascalCase<
   Normalize extends boolean | undefined = false,
 > = string extends T
   ? string
-  : string[] extends T
+  : Array<string> extends T
     ? string
     : T extends string
-      ? SplitByCase<T> extends readonly string[]
+      ? SplitByCase<T> extends ReadonlyArray<string>
         ? CapitalizedWords<SplitByCase<T>, '', Normalize>
         : never
-      : T extends readonly string[]
+      : T extends ReadonlyArray<string>
         ? CapitalizedWords<T, '', Normalize>
         : never;
 
@@ -131,16 +131,16 @@ export type CamelCase<
   Normalize extends boolean | undefined = false,
 > = string extends T
   ? string
-  : string[] extends T
+  : Array<string> extends T
     ? string
     : Uncapitalize<PascalCase<T, Normalize>>;
 
 export type KebabCase<
-  T extends readonly string[] | string,
+  T extends ReadonlyArray<string> | string,
   Joiner extends string = '-',
 > = JoinByCase<T, Joiner>;
 
-export type SnakeCase<T extends readonly string[] | string> = JoinByCase<
+export type SnakeCase<T extends ReadonlyArray<string> | string> = JoinByCase<
   T,
   '_'
 >;
@@ -151,17 +151,17 @@ export type TrainCase<
   Joiner extends string = '-',
 > = string extends T
   ? string
-  : string[] extends T
+  : Array<string> extends T
     ? string
     : T extends string
-      ? SplitByCase<T> extends readonly string[]
+      ? SplitByCase<T> extends ReadonlyArray<string>
         ? CapitalizedWords<SplitByCase<T>, Joiner>
         : never
-      : T extends readonly string[]
+      : T extends ReadonlyArray<string>
         ? CapitalizedWords<T, Joiner, Normalize>
         : never;
 
 export type FlatCase<
-  T extends readonly string[] | string,
+  T extends ReadonlyArray<string> | string,
   Joiner extends string = '',
 > = JoinByCase<T, Joiner>;

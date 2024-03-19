@@ -2,6 +2,7 @@ import { purry } from '../function/purry';
 
 /**
  * Removes elements from an array and, inserts new elements in their place.
+ *
  * @param items the array to splice.
  * @param start the index from which to start removing elements.
  * @param deleteCount the number of elements to remove.
@@ -23,7 +24,7 @@ export function splice<T>(
 
 /**
  * Removes elements from an array and, inserts new elements in their place.
- * @param items the array to splice.
+ *
  * @param start the index from which to start removing elements.
  * @param deleteCount the number of elements to remove.
  * @param replacement the elements to insert into the array in place of the deleted elements.
@@ -41,7 +42,7 @@ export function splice<T>(
   replacement: ReadonlyArray<T>
 ): (items: ReadonlyArray<T>) => Array<T>;
 
-export function splice(...args: any[]): unknown {
+export function splice(...args: Array<any>): unknown {
   return purry(splice_, args);
 }
 

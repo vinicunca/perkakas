@@ -46,7 +46,7 @@ export function mapToObj<T, K extends PropertyKey, V>(
   fn: (element: T) => [K, V]
 ): (array: ReadonlyArray<T>) => Record<K, V>;
 
-export function mapToObj(...args: any[]): unknown {
+export function mapToObj(...args: Array<any>): unknown {
   return purry(mapToObj_(false), args);
 }
 
@@ -75,7 +75,7 @@ export namespace mapToObj {
   export function indexed<T, K extends PropertyKey, V>(
     fn: (element: T, index: number, array: ReadonlyArray<T>) => [K, V]
   ): (array: ReadonlyArray<T>) => Record<K, V>;
-  export function indexed(...args: any[]): unknown {
+  export function indexed(...args: Array<any>): unknown {
     return purry(mapToObj_(true), args);
   }
 }

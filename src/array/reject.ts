@@ -43,7 +43,7 @@ export function reject<T>(
   fn: Pred<T, boolean>
 ): (items: ReadonlyArray<T>) => Array<T>;
 
-export function reject(...args: any[]): unknown {
+export function reject(...args: Array<any>): unknown {
   return purry(reject_(false), args, reject.lazy);
 }
 
@@ -73,7 +73,7 @@ export namespace reject {
   export function indexed<T, K>(
     fn: PredIndexed<T, boolean>
   ): (array: ReadonlyArray<T>) => Array<K>;
-  export function indexed(...args: any[]): unknown {
+  export function indexed(...args: Array<any>): unknown {
     return purry(reject_(true), args, reject.lazyIndexed);
   }
 

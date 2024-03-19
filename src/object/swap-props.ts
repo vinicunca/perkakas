@@ -53,7 +53,7 @@ export function swapProps<
   K2 extends keyof T,
 >(key1: K1, key2: K2): (data: T) => SwappedProps<T, K1, K2>;
 
-export function swapProps(...args: any[]): unknown {
+export function swapProps(...args: Array<any>): unknown {
   return purry(swapProps_, args);
 }
 

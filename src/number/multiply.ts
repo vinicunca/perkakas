@@ -2,6 +2,7 @@ import { purry } from '../function/purry';
 
 /**
  * Multiplies two numbers.
+ *
  * @param value The number.
  * @param multiplicand The number to multiply the value by.
  * @signature
@@ -16,7 +17,7 @@ export function multiply(value: number, multiplicand: number): number;
 
 /**
  * Multiplies two numbers.
- * @param value The number.
+ *
  * @param multiplicand The number to multiply the value by.
  * @signature
  *    P.multiply(multiplicand)(value);
@@ -28,7 +29,7 @@ export function multiply(value: number, multiplicand: number): number;
  */
 export function multiply(multiplicand: number): (value: number) => number;
 
-export function multiply(...args: any[]): unknown {
+export function multiply(...args: Array<any>): unknown {
   return purry(multiply_, args);
 }
 

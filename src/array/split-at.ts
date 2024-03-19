@@ -2,6 +2,7 @@ import { purry } from '../function/purry';
 
 /**
  * Splits a given array at a given index.
+ *
  * @param array the array to split
  * @param index the index to split at
  * @signature
@@ -19,6 +20,7 @@ export function splitAt<T>(
 
 /**
  * Splits a given array at a given index.
+ *
  * @param index the index to split at
  * @signature
  *    P.splitAt(index)(array)
@@ -32,7 +34,7 @@ export function splitAt<T>(
   index: number
 ): (array: ReadonlyArray<T>) => [Array<T>, Array<T>];
 
-export function splitAt(...args: any[]): unknown {
+export function splitAt(...args: Array<any>): unknown {
   return purry(splitAt_, args);
 }
 

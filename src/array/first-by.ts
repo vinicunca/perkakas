@@ -16,7 +16,6 @@ type FirstBy<T extends IterableContainer> =
  *
  * Use `nthBy` if you need an element other that the first, or `takeFirstBy` if you more than just the first element.
  *
- * @param data an array of items
  * @param rules - A variadic array of order rules defining the sorting criteria. Each order rule is a projection function that extracts a comparable value from the data. Sorting is based on these extracted values using the native `<` and `>` operators. Earlier rules take precedence over later ones. Use the syntax `[projection, "desc"]` for descending ordeP.
  * @returns the first element by the order criteria, or `undefined` if the array
  * is empty. (The function provides strong typing if the input type assures the
@@ -70,7 +69,7 @@ export function firstBy<T extends IterableContainer>(
   ...rules: Readonly<NonEmptyArray<OrderRule<T[number]>>>
 ): FirstBy<T>;
 
-export function firstBy(...args: any[]): unknown {
+export function firstBy(...args: Array<any>): unknown {
   return purryOrderRules(firstByImplementation, args);
 }
 

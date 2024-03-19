@@ -54,7 +54,7 @@ export function flatMapToObj<T, K extends PropertyKey, V>(
   fn: (element: T) => Array<[K, V]>
 ): (array: ReadonlyArray<T>) => Record<K, V>;
 
-export function flatMapToObj(...args: any[]): unknown {
+export function flatMapToObj(...args: Array<any>): unknown {
   return purry(flatMapToObj_(false), args);
 }
 
@@ -87,7 +87,7 @@ export namespace flatMapToObj {
   export function indexed<T, K extends PropertyKey, V>(
     fn: (element: T, index: number, array: ReadonlyArray<T>) => Array<[K, V]>
   ): (array: ReadonlyArray<T>) => Record<K, V>;
-  export function indexed(...args: any[]): unknown {
+  export function indexed(...args: Array<any>): unknown {
     return purry(flatMapToObj_(true), args);
   }
 }

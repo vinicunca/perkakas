@@ -30,7 +30,7 @@ export function takeWhile<T>(
   fn: (item: T) => boolean
 ): (array: ReadonlyArray<T>) => Array<T>;
 
-export function takeWhile(...args: any[]): unknown {
+export function takeWhile(...args: Array<any>): unknown {
   return purry(takeWhile_, args);
 }
 

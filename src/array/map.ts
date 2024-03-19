@@ -52,7 +52,7 @@ export function map<T, K>(
   fn: Pred<T, K>
 ): (array: ReadonlyArray<T>) => Array<K>;
 
-export function map(...args: any[]): unknown {
+export function map(...args: Array<any>): unknown {
   return purry(map_(false), args, map.lazy);
 }
 
@@ -111,7 +111,7 @@ export namespace map {
   export function indexed<T, K>(
     fn: PredIndexed<T, K>,
   ): (array: ReadonlyArray<T>) => Array<K>;
-  export function indexed(...args: any[]): unknown {
+  export function indexed(...args: Array<any>): unknown {
     return purry(map_(true), args, map.lazyIndexed);
   }
 

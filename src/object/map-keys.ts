@@ -31,7 +31,7 @@ export function mapKeys<T, S extends PropertyKey>(
   fn: (key: keyof T, value: Required<T>[keyof T]) => S
 ): (data: T) => Record<S, T[keyof T]>;
 
-export function mapKeys(...args: any[]): unknown {
+export function mapKeys(...args: Array<any>): unknown {
   return purry(mapKeys_, args);
 }
 

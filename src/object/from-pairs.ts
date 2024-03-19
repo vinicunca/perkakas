@@ -69,7 +69,7 @@ export function fromPairs<V>(
 //   pairs: ReadonlyArray<Entry<K, V>>,
 // ) => Record<K extends string ? string : K extends number ? number : never, V>;
 
-export function fromPairs(...args: any[]): unknown {
+export function fromPairs(...args: Array<any>): unknown {
   // TODO: When we bump the typescript target beyond ES2019 we can use Object.fromEntries directly here instead of our user-space implementation.
   return purry(fromPairsImplementation, args);
 }

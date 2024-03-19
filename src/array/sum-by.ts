@@ -56,7 +56,7 @@ export function sumBy<T>(
   fn: (item: T) => number
 ): number;
 
-export function sumBy(...args: any[]): unknown {
+export function sumBy(...args: Array<any>): unknown {
   return purry(sumBy_(false), args);
 }
 
@@ -70,7 +70,7 @@ export namespace sumBy {
     fn: PredIndexed<T, number>
   ): (array: ReadonlyArray<T>) => number;
 
-  export function indexed(...args: any[]): unknown {
+  export function indexed(...args: Array<any>): unknown {
     return purry(sumBy_(true), args);
   }
 }

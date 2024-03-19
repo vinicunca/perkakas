@@ -28,7 +28,7 @@ export function pick<T extends object, K extends keyof T>(
   names: ReadonlyArray<K>,
 ): Pick<T, K>;
 
-export function pick(...args: any[]): unknown {
+export function pick(...args: Array<any>): unknown {
   return purry(pick_, args);
 }
 

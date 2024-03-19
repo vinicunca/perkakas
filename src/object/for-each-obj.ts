@@ -50,7 +50,7 @@ export function forEachObj<T extends Record<PropertyKey, unknown>>(
   fn: UnindexedIteratee<T>,
 ): (object: T) => T;
 
-export function forEachObj(...args: any[]): unknown {
+export function forEachObj(...args: Array<any>): unknown {
   return purry(forEachObj_(false), args);
 }
 
@@ -86,7 +86,7 @@ export namespace forEachObj {
   export function indexed<T extends Record<PropertyKey, unknown>>(
     fn: IndexedIteratee<T, keyof T>,
   ): (object: T) => T;
-  export function indexed(...args: any[]): unknown {
+  export function indexed(...args: Array<any>): unknown {
     return purry(forEachObj_(true), args);
   }
 }

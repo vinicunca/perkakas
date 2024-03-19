@@ -23,6 +23,7 @@ interface MaybeLazyFunction {
  *
  * @param fn the function to purry.
  * @param args the arguments
+ * @param lazyFactory - A lazy version of the function to purry.
  * @signature P.purry(fn, arguments);
  * @exampleRaw
  *    function findIndex_(array, fn) {

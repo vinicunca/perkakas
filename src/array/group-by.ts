@@ -4,6 +4,7 @@ import { purry } from '../function/purry';
 
 /**
  * Splits a collection into sets, grouped by the result of running each value through `fn`.
+ *
  * @param items the items to group
  * @param fn the grouping function. When `undefined` is returned the item would
  * be skipped and not grouped under any key.
@@ -30,6 +31,7 @@ export function groupBy<T>(
 
 /**
  * Splits a collection into sets, grouped by the result of running each value through `fn`.
+ *
  * @param args the grouping function
  * @signature
  *    P.groupBy(fn)(array)
@@ -39,7 +41,7 @@ export function groupBy<T>(
  * @indexed
  * @category Array
  */
-export function groupBy(...args: any[]): unknown {
+export function groupBy(...args: Array<any>): unknown {
   return purry(groupBy_(false), args);
 }
 
@@ -122,7 +124,7 @@ export namespace groupBy {
   export function indexed<T>(
     fn: PredIndexed<T, PropertyKey | undefined>
   ): (array: ReadonlyArray<T>) => Record<string, NonEmptyArray<T>>;
-  export function indexed(...args: any[]): unknown {
+  export function indexed(...args: Array<any>): unknown {
     return purry(groupBy_(true), args);
   }
 

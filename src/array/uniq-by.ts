@@ -32,7 +32,7 @@ export function uniqBy<T, K>(
   transformer: (item: T) => K
 ): (array: ReadonlyArray<T>) => Array<T>;
 
-export function uniqBy(...args: any[]): unknown {
+export function uniqBy(...args: Array<any>): unknown {
   return purry(uniqBy_, args, lazyUniqBy);
 }
 

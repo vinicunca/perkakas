@@ -59,7 +59,7 @@ export function minBy<T>(
   fn: (item: T) => number
 ): T | undefined;
 
-export function minBy(...args: any[]): unknown {
+export function minBy(...args: Array<any>): unknown {
   return purry(minBy_(false), args);
 }
 
@@ -71,7 +71,7 @@ export namespace minBy {
   export function indexed<T>(
     fn: PredIndexed<T, number>,
   ): (array: ReadonlyArray<T>) => T | undefined;
-  export function indexed(...args: any[]): unknown {
+  export function indexed(...args: Array<any>): unknown {
     return purry(minBy_(true), args);
   }
 }

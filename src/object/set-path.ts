@@ -5,6 +5,7 @@ import { purry } from '../function/purry';
 
 /**
  * Sets the value at `path` of `object`. `path` can be an array or a path string.
+ *
  * @param object the target method
  * @param path the property name
  * @param value the value to set
@@ -23,6 +24,7 @@ export function setPath<T, TPath extends Array<PropertyKey> & Path<T>>(
 
 /**
  * Sets the value at `path` of `object`. `path` can be an array or a path string.
+ *
  * @param path the property name
  * @param value the value to set
  * @signature
@@ -37,7 +39,7 @@ export function setPath<TPath extends Array<PropertyKey>, Value>(
   value: Value
 ): <Obj>(object: SupportsValueAtPath<Obj, TPath, Value>) => Obj;
 
-export function setPath(...args: any[]): unknown {
+export function setPath(...args: Array<any>): unknown {
   return purry(setPath_, args);
 }
 

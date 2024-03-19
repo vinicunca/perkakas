@@ -1,5 +1,6 @@
 /**
  * Returns a new array containing the values of the array or object.
+ *
  * @param source Either an array or an object
  * @signature
  *    P.values(source)

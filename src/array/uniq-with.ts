@@ -47,7 +47,7 @@ export function uniqWith<T>(
   isEquals: IsEquals<T>
 ): (array: ReadonlyArray<T>) => Array<T>;
 
-export function uniqWith(...args: any[]): unknown {
+export function uniqWith(...args: Array<any>): unknown {
   return purry(uniqWith_, args, uniqWith.lazy);
 }
 

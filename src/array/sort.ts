@@ -48,7 +48,7 @@ export function sort<T>(
   cmp: (a: T, b: T) => number
 ): (items: ReadonlyArray<T>) => Array<T>;
 
-export function sort(...args: any[]): unknown {
+export function sort(...args: Array<any>): unknown {
   return purry(sort_, args);
 }
 

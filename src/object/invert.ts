@@ -7,6 +7,7 @@ type Inverted<T extends object> = T[keyof T] extends PropertyKey
 /**
  * Returns an object whose keys are values are swapped. If the object contains duplicate values,
  * subsequent values will overwrite previous values.
+ *
  * @param object the object
  * @signature
  *    P.invert(object)
@@ -21,6 +22,7 @@ export function invert<T extends object>(object: T): Inverted<T>;
 /**
  * Returns an object whose keys are values are swapped. If the object contains duplicate values,
  * subsequent values will overwrite previous values.
+ *
  * @signature
  *    P.invert()(object)
  * @example
@@ -31,7 +33,7 @@ export function invert<T extends object>(object: T): Inverted<T>;
  */
 export function invert<T extends object>(): (object: T) => Inverted<T>;
 
-export function invert(...args: any[]): unknown {
+export function invert(...args: Array<any>): unknown {
   return purry(invert_, args);
 }
 

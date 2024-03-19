@@ -32,7 +32,6 @@ export function dropFirstBy<T>(
  *
  * For the opposite operation (to keep `n` elements) see `takeFirstBy`.
  *
- * @params data - the input array
  * @params n - the number of items to drop. If `n` is non-positive no items would be dropped and a *clone* of the input would be returned, if `n` is bigger then data.length no items would be returned.
  * @param rules - A variadic array of order rules defining the sorting criteria. Each order rule is a projection function that extracts a comparable value from the data. Sorting is based on these extracted values using the native `<` and `>` operators. Earlier rules take precedence over later ones. Use the syntax `[projection, "desc"]` for descending order.
  * @returns a subset of the input array.
@@ -48,7 +47,7 @@ export function dropFirstBy<T>(
   ...rules: Readonly<NonEmptyArray<OrderRule<T>>>
 ): (data: ReadonlyArray<T>) => Array<T>;
 
-export function dropFirstBy(...args: any[]): unknown {
+export function dropFirstBy(...args: Array<any>): unknown {
   return purryOrderRulesWithArgument(dropFirstByImplementation, args);
 }
 

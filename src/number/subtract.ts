@@ -2,6 +2,7 @@ import { purry } from '../function/purry';
 
 /**
  * Subtracts two numbers.
+ *
  * @param value The number.
  * @param subtrahend The number to subtract from the value.
  * @signature
@@ -17,7 +18,7 @@ export function subtract(value: number, subtrahend: number): number;
 
 /**
  * Subtracts two numbers.
- * @param value The number.
+ *
  * @param subtrahend The number to subtract from the value.
  * @signature
  *    P.subtract(subtrahend)(value);
@@ -30,7 +31,7 @@ export function subtract(value: number, subtrahend: number): number;
  */
 export function subtract(subtrahend: number): (value: number) => number;
 
-export function subtract(...args: any[]): unknown {
+export function subtract(...args: Array<any>): unknown {
   return purry(subtract_, args);
 }
 

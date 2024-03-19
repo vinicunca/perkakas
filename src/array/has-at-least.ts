@@ -2,8 +2,6 @@ import type { ReadonlyTuple } from 'type-fest';
 
 import { purry } from '../function/purry';
 
-// import { purry } from './purry';
-
 type ArrayMinN<T, N extends number> = number extends N
   ? // We can only compute the type for a literal number!
   Array<T>
@@ -35,6 +33,7 @@ type ArrayMinN<T, N extends number> = number extends N
 export function hasAtLeast<T, N extends number>(
   data: ReadonlyArray<T>,
   minimum: N
+  // @ts-expect-error recursive error after upgrading TS to 5.4.2
 ): data is ArrayMinN<T, N>;
 
 /**
@@ -42,7 +41,6 @@ export function hasAtLeast<T, N extends number>(
  * refines the output type accordingly so that those indices are defined when
  * accessing the array even when using typescript's 'noUncheckedIndexAccess'.
  *
- * @param data the input array
  * @param minimum the minimum number of elements the array must have
  * @return true if the array's length is *at least* `minimum`.
  * @signature
@@ -61,6 +59,7 @@ export function hasAtLeast<T, N extends number>(
  */
 export function hasAtLeast<N extends number>(
   minimum: N
+  // @ts-expect-error recursive error after upgrading TS to 5.4.2
 ): <T>(data: ReadonlyArray<T>) => data is ArrayMinN<T, N>;
 
 export function hasAtLeast(...args: ReadonlyArray<unknown>): unknown {
@@ -68,6 +67,7 @@ export function hasAtLeast(...args: ReadonlyArray<unknown>): unknown {
 }
 
 function hasAtLeastImplementation<T, N extends number>(data: ReadonlyArray<T>,
+  // @ts-expect-error recursive error after upgrading TS to 5.4.2
   minimum: N): data is ArrayMinN<T, N> {
   return data.length >= minimum;
 }

@@ -5,6 +5,7 @@ import { reduceLazy } from '../utils/reduce-lazy';
 
 /**
  * Removes first `n` elements from the `array`.
+ *
  * @param array the target array
  * @param n the number of elements to skip
  * @signature
@@ -19,7 +20,7 @@ export function drop<T>(array: ReadonlyArray<T>, n: number): Array<T>;
 
 /**
  * Removes first `n` elements from the `array`.
- * @param array the target array
+ *
  * @param n the number of elements to skip
  * @signature
  *    P.drop(n)(array)
@@ -31,7 +32,7 @@ export function drop<T>(array: ReadonlyArray<T>, n: number): Array<T>;
  */
 export function drop<T>(n: number): (array: ReadonlyArray<T>) => Array<T>;
 
-export function drop(...args: any[]): unknown {
+export function drop(...args: Array<any>): unknown {
   return purry(drop_, args, drop.lazy);
 }
 
