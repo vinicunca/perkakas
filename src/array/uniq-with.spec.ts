@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { createLazyInvocationCounter } from '../../test/lazy-invocation-counter';
 import { pipe } from '../function/pipe';
-import { equals } from '../object';
+import { isDeepEqual } from '../guard/is-deep-equal';
 import { take } from './take';
 import { uniqWith } from './uniq-with';
 
@@ -19,13 +19,13 @@ const expected = [{ a: 1 }, { a: 2 }, { a: 5 }, { a: 6 }, { a: 7 }];
 
 describe('data_first', () => {
   it('should return uniq', () => {
-    expect(uniqWith(source, equals)).toEqual(expected);
+    expect(uniqWith(source, isDeepEqual)).toEqual(expected);
   });
 });
 
 describe('data_last', () => {
   it('should return uniq', () => {
-    expect(uniqWith(equals)(source)).toEqual(expected);
+    expect(uniqWith(isDeepEqual)(source)).toEqual(expected);
   });
 
   it('lazy', () => {
@@ -33,7 +33,7 @@ describe('data_last', () => {
     const result = pipe(
       [{ a: 1 }, { a: 2 }, { a: 2 }, { a: 5 }, { a: 1 }, { a: 6 }, { a: 7 }],
       counter.fn(),
-      uniqWith(equals),
+      uniqWith(isDeepEqual),
       take(3),
     );
     expect(counter.count).toHaveBeenCalledTimes(4);
@@ -46,7 +46,7 @@ describe('data_last', () => {
       [{ a: 1 }, { a: 2 }, { a: 2 }, { a: 5 }, { a: 1 }, { a: 6 }, { a: 7 }],
       counter.fn(),
       take(3),
-      uniqWith(equals),
+      uniqWith(isDeepEqual),
     );
     expect(counter.count).toHaveBeenCalledTimes(3);
     expect(result).toEqual([{ a: 1 }, { a: 2 }]);

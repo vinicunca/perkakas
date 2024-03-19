@@ -17,7 +17,7 @@ type IsEquals<TFirst, TSecond> = (a: TFirst, b: TSecond) => boolean;
  *    P.differenceWith(
  *      [{a: 1}, {a: 2}, {a: 3}, {a: 4}],
  *      [{a: 2}, {a: 5}, {a: 3}],
- *      P.equals,
+ *      P.isDeepEqual,
  *    ) // => [{a: 1}, {a: 4}]
  * @dataFirst
  * @category Array
@@ -39,11 +39,11 @@ export function differenceWith<TFirst, TSecond>(
  * @example
  *    P.differenceWith(
  *      [{a: 2}, {a: 5}, {a: 3}],
- *      P.equals,
+ *      P.isDeepEqual,
  *    )([{a: 1}, {a: 2}, {a: 3}, {a: 4}]) // => [{a: 1}, {a: 4}]
  *    P.pipe(
  *      [{a: 1}, {a: 2}, {a: 3}, {a: 4}, {a: 5}, {a: 6}], // only 4 iterations
- *      P.differenceWith([{a: 2}, {a: 3}], P.equals),
+ *      P.differenceWith([{a: 2}, {a: 3}], P.isDeepEqual),
  *      P.take(2),
  *    ) // => [{a: 1}, {a: 4}]
  * @dataLast

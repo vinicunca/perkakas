@@ -1,7 +1,7 @@
 import { describe, expect, expectTypeOf, it } from 'vitest';
 
 import { isNumber, isString } from '../guard';
-import { equals } from '../object';
+import { isDeepEqual } from '../guard/is-deep-equal';
 import { conditional } from './conditional';
 import { pipe } from './pipe';
 
@@ -20,7 +20,7 @@ describe('runtime (dataFirst)', () => {
   });
 
   it('works with a single case', () => {
-    expect(conditional('Jokic', [equals('Jokic'), () => 'center'])).toBe(
+    expect(conditional('Jokic', [isDeepEqual('Jokic'), () => 'center'])).toBe(
       'center',
     );
   });
@@ -29,8 +29,8 @@ describe('runtime (dataFirst)', () => {
     expect(
       conditional(
         'Jokic',
-        [equals('Murray'), () => 'point guard'],
-        [equals('Jokic'), () => 'center'],
+        [isDeepEqual('Murray'), () => 'point guard'],
+        [isDeepEqual('Jokic'), () => 'center'],
       ),
     ).toBe('center');
   });
@@ -39,8 +39,8 @@ describe('runtime (dataFirst)', () => {
     expect(
       conditional(
         'Jokic',
-        [equals('Jokic'), () => 'center'],
-        [equals('Jokic'), () => 'mvp'],
+        [isDeepEqual('Jokic'), () => 'center'],
+        [isDeepEqual('Jokic'), () => 'mvp'],
       ),
     ).toBe('center');
   });
@@ -58,9 +58,9 @@ describe('runtime (dataLast)', () => {
     const value = pipe(
       'Jokic',
       conditional(
-        [equals('Murray'), () => 'point guard'],
-        [equals('Jokic'), () => 'center'],
-        [equals('Jokic'), () => 'mvp'],
+        [isDeepEqual('Murray'), () => 'point guard'],
+        [isDeepEqual('Jokic'), () => 'center'],
+        [isDeepEqual('Jokic'), () => 'mvp'],
       ),
     );
     expect(value).toBe('center');

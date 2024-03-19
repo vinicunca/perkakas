@@ -16,7 +16,7 @@ type IsEquals<T> = (a: T, b: T) => boolean;
  * @example
  *    P.uniqWith(
  *      [{a: 1}, {a: 2}, {a: 2}, {a: 5}, {a: 1}, {a: 6}, {a: 7}],
- *      P.equals,
+ *      P.isDeepEqual,
  *    ) // => [{a: 1}, {a: 2}, {a: 5}, {a: 6}, {a: 7}]
  * @dataFirst
  * @category Array
@@ -32,12 +32,12 @@ export function uniqWith<T>(
  * @param isEquals the comparator
  * @signature P.uniqWith(isEquals)(array)
  * @example
- *    P.uniqWith(P.equals)(
+ *    P.uniqWith(P.isDeepEqual)(
  *      [{a: 1}, {a: 2}, {a: 2}, {a: 5}, {a: 1}, {a: 6}, {a: 7}],
  *    ) // => [{a: 1}, {a: 2}, {a: 5}, {a: 6}, {a: 7}]
  *    P.pipe(
  *      [{a: 1}, {a: 2}, {a: 2}, {a: 5}, {a: 1}, {a: 6}, {a: 7}], // only 4 iterations
- *      P.uniqWith(P.equals),
+ *      P.uniqWith(P.isDeepEqual),
  *      P.take(3)
  *    ) // => [{a: 1}, {a: 2}, {a: 5}]
  * @dataLast

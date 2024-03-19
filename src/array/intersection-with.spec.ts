@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { createLazyInvocationCounter } from '../../test/lazy-invocation-counter';
 import { pipe } from '../function/pipe';
-import { equals } from '../object';
+import { isDeepEqual } from '../guard/is-deep-equal';
 import { intersectionWith } from './intersection-with';
 import { take } from './take';
 
@@ -51,7 +51,7 @@ describe('intersectionWith', () => {
               { x: 1, y: 1 },
               { x: 1, y: 2 },
             ],
-            equals,
+            isDeepEqual,
           ),
         ),
       ).toEqual([{ x: 1, y: 2 }]);
@@ -62,7 +62,7 @@ describe('intersectionWith', () => {
       const result = pipe(
         [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 4 }, { a: 5 }, { a: 6 }],
         counter.fn(),
-        intersectionWith([{ a: 2 }, { a: 3 }, { a: 4 }], equals),
+        intersectionWith([{ a: 2 }, { a: 3 }, { a: 4 }], isDeepEqual),
         take(2),
       );
       expect(counter.count).toHaveBeenCalledTimes(3);
