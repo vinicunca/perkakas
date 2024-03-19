@@ -1,14 +1,9 @@
-import type { NonEmptyArray } from 'src/utils/types';
-
 import { describe, expect, expectTypeOf, it } from 'vitest';
+
+import type { NonEmptyArray } from '../utils/types';
 
 import { identity, pipe } from '../function';
 import { firstBy } from './first-by';
-// import type { NonEmptyArray } from './_types';
-
-// import { firstBy } from './firstBy';
-// import { identity } from './identity';
-// import { pipe } from './pipe';
 
 describe('runtime (dataFirst)', () => {
   it('returns undefined on empty', () => {

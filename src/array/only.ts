@@ -1,4 +1,4 @@
-import type { IterableContainer } from 'src/utils/types';
+import type { IterableContainer } from '../utils/types';
 
 import { purry } from '../function/purry';
 

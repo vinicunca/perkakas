@@ -1,6 +1,7 @@
 import type { Simplify } from 'type-fest';
 
 import { purry } from '../function/purry';
+import { isDeepEqual } from './is-deep-equal';
 
 /**
  * Checks if `subObject` is a sub-object of `object`, which means for every
