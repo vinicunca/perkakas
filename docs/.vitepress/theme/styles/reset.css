@@ -1,0 +1,11 @@
+/*
+1. Allow adding a border to an element by just adding a border-width.
+*/
+
+*,
+::before,
+::after {
+  border-width: 0; /* 1 */
+  border-style: solid; /* 1 */
+  border-color: var(--un-default-border-color, #e5e7eb); /* 1 */
+}

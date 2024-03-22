@@ -1,0 +1,34 @@
+{
+  "name": "@vinicunca/docs",
+  "type": "module",
+  "version": "0.0.1",
+  "packageManager": "pnpm@8.15.4",
+  "author": "praburangki<https://github.com/praburangki>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "vitepress dev --open",
+    "build": "vitepress build",
+    "gen:perkakas": "tsx .vitepress/scripts/generate-perkakas.ts",
+    "preview": "vitepress preview"
+  },
+  "devDependencies": {
+    "@eslint-stylistic/metadata": "^1.7.0",
+    "@iconify/json": "^2.2.194",
+    "@shikijs/vitepress-twoslash": "^1.2.0",
+    "@types/node": "^20.11.30",
+    "@vinicunca/eslint-metadata": "^2.2.0",
+    "@vinicunca/perkakas": "workspace:*",
+    "fuse.js": "^7.0.0",
+    "postcss-nested": "^6.0.1",
+    "prettier": "^3.2.5",
+    "radix-vue": "^1.5.3",
+    "tiny-invariant": "^1.3.3",
+    "tsx": "^4.7.1",
+    "type-fest": "^4.13.1",
+    "typedoc": "^0.25.12",
+    "unocss": "^0.58.6",
+    "unplugin-vue-components": "^0.26.0",
+    "vitepress": "^1.0.1",
+    "vue": "^3.4.21"
+  }
+}
