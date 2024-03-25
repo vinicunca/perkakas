@@ -3,15 +3,15 @@
  * To test specifically for `undefined` (and not `null`) use the strict variant of this function.
  * @param data the variable to check
  * @signature
- *    P.isDefined(data)
- *    P.isDefined.strict(data)
+ *  isDefined(data)
+ *  isDefined.strict(data)
  * @returns true if the passed input is defined, false otherwise
  * @example
- *    P.isDefined('string') //=> true
- *    P.isDefined(null) //=> false
- *    P.isDefined(undefined) //=> false
- *    P.isDefined.strict(null) //=> true
- *    P.isDefined.strict(undefined) //=> false
+ *  isDefined('string'); //=> true
+ *  isDefined(null); //=> false
+ *  isDefined(undefined); //=> false
+ *  isDefined.strict(null); //=> true
+ *  isDefined.strict(undefined); //=> false
  * @category Guard
  * @strict
  */

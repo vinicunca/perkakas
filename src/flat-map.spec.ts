@@ -1,0 +1,49 @@
+import { describe, expect, it } from 'vitest';
+
+import { createLazyInvocationCounter } from '../../test/lazy-invocation-counter';
+import { pipe } from '../pipe';
+import { find } from './find';
+import { flatMap } from './flat-map';
+
+describe('data_first', () => {
+  it('flatMap', () => {
+    const result = flatMap([1, 2] as const, (x) => [x * 2, x * 3]);
+    expect(result).toEqual([2, 3, 4, 6]);
+  });
+
+  it('should accept fn returning a readonly array', () => {
+    const result = flatMap([1, 2] as const, (x) => [x * 2, x * 3] as const);
+    expect(result).toEqual([2, 3, 4, 6]);
+  });
+});
+
+describe('data_last', () => {
+  it('flatMap', () => {
+    const result = flatMap((x: number) => [x * 2, x * 3])([1, 2]);
+    expect(result).toEqual([2, 3, 4, 6]);
+  });
+
+  it('should accept fn returning a readonly array', () => {
+    const result = flatMap((x: number) => [x * 2, x * 3] as const)([
+      1, 2,
+    ] as const);
+    expect(result).toEqual([2, 3, 4, 6]);
+  });
+
+  describe('pipe', () => {
+    it('with find', () => {
+      const counter1 = createLazyInvocationCounter();
+      const counter2 = createLazyInvocationCounter();
+      const result = pipe(
+        [10, 20, 30, 40] as const,
+        counter1.fn(),
+        flatMap((x) => [x, x + 1, x + 2, x + 3]),
+        counter2.fn(),
+        find((x) => x === 22),
+      );
+      expect(counter1.count).toHaveBeenCalledTimes(2);
+      expect(counter2.count).toHaveBeenCalledTimes(7);
+      expect(result).toEqual(22);
+    });
+  });
+});

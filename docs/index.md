@@ -7,7 +7,7 @@ hero:
   text: Enhanced your productivity
   tagline: Collection of developer experience utilities
   image:
-    src: /favicon.svg
+    src: /logo.svg
     alt: Vinicunca
   actions:
     - theme: alt

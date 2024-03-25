@@ -7,11 +7,11 @@ import { purry } from './purry';
  * @param fn the callback function
  * @param initialValue the initial value to use as an accumulator value in the callback function
  * @signature
- *    P.reduce(items, fn, initialValue)
- *    P.reduce.indexed(items, fn, initialValue)
+ *  reduce(items, fn, initialValue)
+ *  reduce.indexed(items, fn, initialValue)
  * @example
- *    P.reduce([1, 2, 3, 4, 5], (acc, x) => acc + x, 100) // => 115
- *    P.reduce.indexed([1, 2, 3, 4, 5], (acc, x, i, array) => acc + x, 100) // => 115
+ *  reduce([1, 2, 3, 4, 5], (acc, x) => acc + x, 100); // => 115
+ *  reduce.indexed([1, 2, 3, 4, 5], (acc, x, i, array) => acc + x, 100); // => 115
  * @dataFirst
  * @indexed
  * @category Array
@@ -28,10 +28,10 @@ export function reduce<T, K>(
  * @param fn the callback function
  * @param initialValue the initial value to use as an accumulator value in the callback function
  * @signature
- *    P.reduce(fn, initialValue)(array)
+ *  reduce(fn, initialValue)(array)
  * @example
- *    P.pipe([1, 2, 3, 4, 5], P.reduce((acc, x) => acc + x, 100)) // => 115
- *    P.pipe([1, 2, 3, 4, 5], P.reduce.indexed((acc, x, i, array) => acc + x, 100)) // => 115
+ *  pipe([1, 2, 3, 4, 5], reduce((acc, x) => acc + x, 100)); // => 115
+ *  pipe([1, 2, 3, 4, 5], reduce.indexed((acc, x, i, array) => acc + x, 100)); // => 115
  * @dataLast
  * @indexed
  * @category Array

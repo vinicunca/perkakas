@@ -3,15 +3,15 @@
  *
  * @param source Either an array or an object
  * @signature
- *    P.values(source)
+ *  values(source)
  * @example
- *    P.values(['x', 'y', 'z']) // => ['x', 'y', 'z']
- *    P.values({ a: 'x', b: 'y', c: 'z' }) // => ['x', 'y', 'z']
- *    P.pipe(
- *      { a: 'x', b: 'y', c: 'z' },
- *      P.values,
- *      P.first
- *    ) // => 'x'
+ *  values(['x', 'y', 'z']); // => ['x', 'y', 'z']
+ *  values({ a: 'x', b: 'y', c: 'z' }); // => ['x', 'y', 'z']
+ *  pipe(
+ *    { a: 'x', b: 'y', c: 'z' },
+ *  values,
+ *  first
+ *  ); // => 'x'
  * @pipeable
  * @category Object
  */

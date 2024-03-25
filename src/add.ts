@@ -6,13 +6,13 @@ import { purry } from './purry';
  * @param value The number.
  * @param addend The number to add to the value.
  * @signature
- *    P.add(value, addend);
+ *  add(value, addend);
  * @example
- *    import { add, reduce } from '@vinicunca/perkakas';
+ *  import { add, reduce } from '@vinicunca/perkakas';
  *
- *    add(10, 5) // => 15
- *    add(10, -5) // => 5
- *    reduce([1, 2, 3, 4], add, 0) // => 10
+ *  add(10, 5); // => 15
+ *  add(10, -5); // => 5
+ *  reduce([1, 2, 3, 4], add, 0); // => 10
  * @dataFirst
  * @category Number
  */
@@ -23,13 +23,13 @@ export function add(value: number, addend: number): number;
  *
  * @param addend The number to add to the value.
  * @signature
- *    P.add(addend)(value);
+ *  add(addend)(value);
  * @example
- *    import { add, map } from '@vinicunca/perkakas';
+ *  import { add, map } from '@vinicunca/perkakas';
  *
- *    add(5)(10) // => 15
- *    add(-5)(10) // => 5
- *    map([1, 2, 3, 4], add(1)) // => [2, 3, 4, 5]
+ *  add(5)(10); // => 15
+ *  add(-5)(10); // => 5
+ *  map([1, 2, 3, 4], add(1)); // => [2, 3, 4, 5]
  * @dataLast
  * @category Number
  */

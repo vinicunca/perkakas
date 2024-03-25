@@ -17,15 +17,15 @@ import { purry } from './purry';
  * @param fn The function mapper.
  * @returns The new mapped array.
  * @signature
- *    P.map(array, fn)
- *    P.map.indexed(array, fn)
- *    P.map.strict(array, fn)
- *    P.map.strict.indexed(array, fn)
+ *  map(array, fn)
+ *  map.indexed(array, fn)
+ *  map.strict(array, fn)
+ *  map.strict.indexed(array, fn)
  * @example
- *    P.map([1, 2, 3], x => x * 2) // => [2, 4, 6], typed number[]
- *    P.map.indexed([0, 0, 0], (x, i) => i) // => [0, 1, 2], typed number[]
- *    P.map.strict([0, 0] as const, x => x + 1) // => [1, 1], typed [number, number]
- *    P.map.strict.indexed([0, 0] as const, (x, i) => x + i) // => [0, 1], typed [number, number]
+ *  map([1, 2, 3], x => x * 2); // => [2, 4, 6], typed number[]
+ *  map.indexed([0, 0, 0], (x, i) => i); // => [0, 1, 2], typed number[]
+ *  map.strict([0, 0] as const, x => x + 1); // => [1, 1], typed [number, number]
+ *  map.strict.indexed([0, 0] as const, (x, i) => x + i); // => [0, 1], typed [number, number]
  * @dataFirst
  * @indexed
  * @pipeable
@@ -38,11 +38,11 @@ export function map<T, K>(array: ReadonlyArray<T>, fn: Pred<T, K>): Array<K>;
  * Map each value of an object using a defined callback function.
  * @param fn the function mapper
  * @signature
- *    P.map(fn)(array)
- *    P.map.indexed(fn)(array)
+ *  map(fn)(array)
+ *  map.indexed(fn)(array)
  * @example
- *    P.pipe([0, 1, 2], P.map(x => x * 2)) // => [0, 2, 4]
- *    P.pipe([0, 0, 0], P.map.indexed((x, i) => i)) // => [0, 1, 2]
+ *  pipe([0, 1, 2], map(x => x * 2)); // => [0, 2, 4]
+ *  pipe([0, 0, 0], map.indexed((x, i) => i)); // => [0, 1, 2]
  * @dataLast
  * @indexed
  * @pipeable

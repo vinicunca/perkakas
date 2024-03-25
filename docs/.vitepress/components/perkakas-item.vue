@@ -9,7 +9,7 @@ const { page } = useData();
 <template>
   <div class="flex flex-col gap-y-1.5">
     <!-- Header -->
-    <div class="flex items-center gap-2">
+    <div class="flex items-center gap-2 mb-4">
       <!-- Badge -->
       <PerkakasBadge class="bg-$vp-c-badge-primary text-white ">
         {{ page.func.category }}
@@ -33,6 +33,7 @@ const { page } = useData();
       </a>
     </div>
 
+    <!-- Methods -->
     <div
       v-for="(method, idx) in page.func.methods"
       :key="`method-${page.func.name}-${idx}`"

@@ -24,26 +24,26 @@ interface MaybeLazyFunction {
  * @param fn the function to purry.
  * @param args the arguments
  * @param lazyFactory - A lazy version of the function to purry.
- * @signature P.purry(fn, arguments);
+ * @signature purry(fn, arguments);
  * @exampleRaw
- *    function findIndex_(array, fn) {
- *      for (let i = 0; i < array.length; i++) {
- *        if (fn(array[i])) {
- *          return i;
- *        }
+ *  function findIndex_(array, fn) {
+ *    for (let i = 0; i < array.length; i++) {
+ *      if (fn(array[i])) {
+ *        return i;
  *      }
- *      return -1;
  *    }
+ *    return -1;
+ *  }
  *
- *    // data-first
- *    function findIndex<T>(array: T[], fn: (item: T) => boolean): number;
+ * ; // data-first
+ *  function findIndex<T>(array: T[], fn: (item: T) => boolean): number;
  *
- *    // data-last
- *    function findIndex<T>(fn: (item: T) => boolean): (array: T[]) => number;
+ * ; // data-last
+ *  function findIndex<T>(fn: (item: T) => boolean): (array: T[]) => number;
  *
- *    function findIndex() {
- *      return P.purry(findIndex_, arguments);
- *    }
+ *  function findIndex() {
+ *    return purry(findIndex_, arguments);
+ *  }
  * @category Function
  */
 export function purry(
