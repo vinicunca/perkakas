@@ -1,7 +1,7 @@
-import type { LazyEvaluator } from '../pipe';
+import type { LazyEvaluator } from './pipe';
 
-import { purry } from '../purry';
-import { reduceLazy } from '../utils/reduce-lazy';
+import { _reduceLazy } from './_reduce-lazy';
+import { purry } from './purry';
 
 type Comparator<TFirst, TSecond> = (a: TFirst, b: TSecond) => boolean;
 
@@ -12,16 +12,18 @@ type Comparator<TFirst, TSecond> = (a: TFirst, b: TSecond) => boolean;
  * @param other the second array
  * @param comparator the custom comparator
  * @signature
- *    intersectionWith(array, other, comparator)
+ *  intersectionWith(array, other, comparator)
  * @example
- *    intersectionWith(
- *      [
- *        { id: 1, name: 'Ryan' },
- *        { id: 3, name: 'Emma' },
- *      ],
- *      [3, 5],
- *      (a, b) => a.id === b,
- *    ) // => [{ id: 3, name: 'Emma' }]
+ *  import { intersectionWith } from '@vinicunca/perkakas';
+ *
+ *  intersectionWith(
+ *    [
+ *      { id: 1, name: 'Ryan' },
+ *      { id: 3, name: 'Emma' },
+ *    ],
+ *    [3, 5],
+ *    (a, b) => a.id === b,
+ *  ); // => [{ id: 3, name: 'Emma' }]
  * @dataFirst
  * @category Array
  * @pipeable
@@ -38,15 +40,17 @@ export function intersectionWith<TFirst, TSecond>(
  * @param other the second array
  * @param comparator the custom comparator
  * @signature
- *    intersectionWith(other, comparator)(array)
+ *  intersectionWith(other, comparator)(array)
  * @example
- *    intersectionWith(
- *      [3, 5],
- *      (a, b) => a.id === b
- *      )([
- *        { id: 1, name: 'Ryan' },
- *        { id: 3, name: 'Emma' },
- *      ]); // => [{ id: 3, name: 'Emma' }]
+ *  import { intersectionWith } from '@vinicunca/perkakas';
+ *
+ *  intersectionWith(
+ *    [3, 5],
+ *    (a, b) => a.id === b
+ *  )([
+ *    { id: 1, name: 'Ryan' },
+ *    { id: 3, name: 'Emma' },
+ *  ]); // => [{ id: 3, name: 'Emma' }]
  * @dataLast
  * @category Array
  * @pipeable
@@ -70,7 +74,7 @@ function intersectionWith_<TFirst, TSecond>(
   comparator: Comparator<TFirst, TSecond>,
 ) {
   const lazy = intersectionWith.lazy(other, comparator);
-  return reduceLazy(array, lazy);
+  return _reduceLazy(array, lazy);
 }
 
 export namespace intersectionWith {

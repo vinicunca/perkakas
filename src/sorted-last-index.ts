@@ -1,5 +1,5 @@
-import { purry } from '../purry';
-import { binarySearchCutoffIndex } from '../utils/binary-search-cutoff-index';
+import { _binarySearchCutoffIndex } from './_binary-search-cutoff-index';
+import { purry } from './purry';
 
 /**
  * Find the insertion position (index) of an item in an array with items sorted
@@ -15,9 +15,11 @@ import { binarySearchCutoffIndex } from '../utils/binary-search-cutoff-index';
  * @return - Insertion index (In the range 0..data.length)
  *
  * @signature
- *    sortedLastIndex(data, item)
+ *  sortedLastIndex(data, item)
  * @example
- *    sortedLastIndex(['a','a','b','c','c'], 'c') // => 5
+ *  import { sortedLastIndex } from '@vinicunca/perkakas';
+ *
+ *  sortedLastIndex(['a','a','b','c','c'], 'c') // => 5
  * @dataFirst
  * @category Array
  *
@@ -38,9 +40,11 @@ export function sortedLastIndex<T>(data: ReadonlyArray<T>, item: T): number;
  * @return - Insertion index (In the range 0..data.length)
  *
  * @signature
- *    sortedLastIndex(item)(data)
+ *  sortedLastIndex(item)(data)
  * @example
- *    pipe(['a','a','b','c','c'], sortedLastIndex('c')) // => 5
+ *  import { sortedLastIndex, pipe } from '@vinicunca/perkakas';
+ *
+ *  pipe(['a','a','b','c','c'], sortedLastIndex('c')) // => 5
  * @dataLast
  * @category Array
  *
@@ -54,7 +58,7 @@ export function sortedLastIndex(...args: Array<any>): unknown {
 
 function sortedLastIndexImplementation<T>(array: ReadonlyArray<T>,
   item: T): number {
-  return binarySearchCutoffIndex(
+  return _binarySearchCutoffIndex(
     array,
     // The only difference between the regular implementation and the "last"
     // variation is that we consider the pivot with equality too, so that we

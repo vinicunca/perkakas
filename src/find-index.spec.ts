@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
-import { createLazyInvocationCounter } from '../../test/lazy-invocation-counter';
-import { pipe } from '../pipe';
+import { createLazyInvocationCounter } from './../test/lazy-invocation-counter';
 import { findIndex } from './find-index';
+import { pipe } from './pipe';
 
 describe('data first', () => {
   it('findIndex', () => {

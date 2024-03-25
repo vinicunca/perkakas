@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { pipe } from '../pipe';
 import { dropWhile } from './drop-while';
+import { pipe } from './pipe';
 
 describe('data first', () => {
   it('should return items starting from the first predicate failure', () => {

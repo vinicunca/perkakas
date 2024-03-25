@@ -1,6 +1,6 @@
 import type { PredIndexed, PredIndexedOptional } from './_types';
 
-import { purry } from '../purry';
+import { purry } from './purry';
 
 /**
  * Converts a list of objects into an object indexing the objects by the given key (casted to a string).
@@ -9,11 +9,13 @@ import { purry } from '../purry';
  * @param array the array
  * @param fn the indexing function
  * @signature
- *    indexBy(array, fn)
- *    indexBy.strict(array, fn)
+ *  indexBy(array, fn)
+ *  indexBy.strict(array, fn)
  * @example
- *    indexBy(['one', 'two', 'three'], x => x.length) // => {"3": 'two', "5": 'three'}
- *    indexBy.strict(['one', 'two', 'three'], x => x.length) // => {3: 'two', 5: 'three'}
+ *  import { indexBy } from '@vinicunca/perkakas';
+ *
+ *  indexBy(['one', 'two', 'three'], x => x.length); // => {"3": 'two', "5": 'three'}
+ *  indexBy.strict(['one', 'two', 'three'], x => x.length); // => {3: 'two', 5: 'three'}
  * @dataFirst
  * @indexed
  * @category Array
@@ -31,17 +33,19 @@ export function indexBy<T>(
  *
  * @param fn the indexing function
  * @signature
- *    indexBy(fn)(array)
- *    indexBy.strict(fn)(array)
+ *  indexBy(fn)(array)
+ *  indexBy.strict(fn)(array)
  * @example
- *    pipe(
- *      ['one', 'two', 'three'],
- *      indexBy(x => x.length)
- *    ) // => {"3": 'two', "5": 'three'}
- *    pipe(
- *      ['one', 'two', 'three'],
- *      indexBy.strict(x => x.length)
- *    ) // => {3: 'two', 5: 'three'}
+ *  import { indexBy, pipe } from '@vinicunca/perkakas';
+ *
+ *  pipe(
+ *    ['one', 'two', 'three'],
+ *    indexBy(x => x.length)
+ *  ); // => { "3": 'two', "5": 'three'}
+ *  pipe(
+ *    ['one', 'two', 'three'],
+ *    indexBy.strict(x => x.length)
+ *  ); // => { 3: 'two', 5: 'three'}
  * @dataLast
  * @indexed
  * @category Array

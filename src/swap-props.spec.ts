@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { pipe } from '../pipe';
+import { pipe } from './pipe';
 import { swapProps } from './swap-props';
 
 describe('runtime', () => {

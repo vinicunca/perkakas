@@ -16,11 +16,13 @@ import { purry } from './purry';
  * @param data - The first value to compare.
  * @param other - The second value to compare.
  * @signature
- *    isDeepEqual(data, other)
+ *  isDeepEqual(data, other)
  * @example
- *    isDeepEqual(1, 1) //=> true
- *    isDeepEqual(1, '1') //=> false
- *    isDeepEqual([1, 2, 3], [1, 2, 3]) //=> true
+ *  import { isDeepEqual } from '@vinicunca/perkakas';
+ *
+ *  isDeepEqual(1, 1); // => true
+ *  isDeepEqual(1, '1'); // => false
+ *  isDeepEqual([1, 2, 3], [1, 2, 3]); // => true
  * @dataFirst
  * @category Guard
  */
@@ -41,11 +43,13 @@ export function isDeepEqual<T, S extends T = T>(data: T, other: S): data is S;
  *
  * @param other - The second value to compare.
  * @signature
- *    isDeepEqual(other)(data)
+ *  isDeepEqual(other)(data)
  * @example
- *    pipe(1, isDeepEqual(1)); //=> true
- *    pipe(1, isDeepEqual('1')); //=> false
- *    pipe([1, 2, 3], isDeepEqual([1, 2, 3])); //=> true
+ *  import { isDeepEqual, pipe } from '@vinicunca/perkakas';
+ *
+ *  pipe(1, isDeepEqual(1)); // => true
+ *  pipe(1, isDeepEqual('1')); // => false
+ *  pipe([1, 2, 3], isDeepEqual([1, 2, 3])); // => true
  * @dataLast
  * @category Guard
  */

@@ -1,9 +1,11 @@
 import { describe, expect, it, vi } from 'vitest';
 
-// import { filter, map, take } from '../ayo/array';
-// import { identity } from '../ayo/function/identity';
-// import { prop } from '../ayo/object';
+import { filter } from './filter';
+import { identity } from './identity';
+import { map } from './map';
 import { pipe } from './pipe';
+import { prop } from './prop';
+import { take } from './take';
 
 it('should pipe a single operation', () => {
   const result = pipe(1, (x) => x * 2);

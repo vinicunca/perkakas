@@ -1,7 +1,7 @@
 import { describe, expect, expectTypeOf, it } from 'vitest';
 
-import { pipe } from '../pipe';
 import { only } from './only';
+import { pipe } from './pipe';
 
 describe('data first', () => {
   it('empty array', () => {

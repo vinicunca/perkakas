@@ -1,6 +1,6 @@
 import type { IterableContainer } from './_types';
 
-import { purry } from '../purry';
+import { purry } from './purry';
 
 type Only<T extends IterableContainer> = T extends
   | readonly [...Array<unknown>, unknown, unknown]
@@ -19,11 +19,13 @@ type Only<T extends IterableContainer> = T extends
  *
  * @param array the target array
  * @signature
- *    only(array)
+ *  only(array)
  * @example
- *    only([]) // => undefined
- *    only([1]) // => 1
- *    only([1, 2]) // => undefined
+ *  import { only } from '@vinicunca/perkakas';
+ *
+ *  only([]); // => undefined
+ *  only([1]); // => 1
+ *  only([1, 2]); // => undefined
  * @pipeable
  * @category Array
  * @dataFirst
@@ -36,11 +38,13 @@ export function only<T extends IterableContainer>(array: Readonly<T>): Only<T>;
  * inferred type is lost.
  *
  * @signature
- *    only(array)
+ *  only(array)
  * @example
- *    only([]) // => undefined
- *    only([1]) // => 1
- *    only([1, 2]) // => undefined
+ *  import { only } from '@vinicunca/perkakas';
+ *
+ *  only([]); // => undefined
+ *  only([1]); // => 1
+ *  only([1, 2]); // => undefined
  * @pipeable
  * @category Array
  * @dataLast

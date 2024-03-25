@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { pipe } from '../pipe';
 import { indexBy } from './index-by';
+import { pipe } from './pipe';
 
 const array = [
   { code: 97, dir: 'left' },

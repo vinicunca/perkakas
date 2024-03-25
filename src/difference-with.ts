@@ -1,6 +1,6 @@
 import type { LazyEvaluator } from './pipe';
 
-import { reduceLazy } from './_reduce-lazy';
+import { _reduceLazy } from './_reduce-lazy';
 import { purry } from './purry';
 
 type IsEquals<TFirst, TSecond> = (a: TFirst, b: TSecond) => boolean;
@@ -48,7 +48,7 @@ export function differenceWith<TFirst, TSecond>(
  *    isDeepEqual,
  *  )([{a: 1}, {a: 2}, {a: 3}, {a: 4}]); // => [{a: 1}, {a: 4}]
  *  pipe(
- *    [{a: 1}, {a: 2}, {a: 3}, {a: 4}, {a: 5}, {a: 6}],; // only 4 iterations
+ *    [{a: 1}, {a: 2}, {a: 3}, {a: 4}, {a: 5}, {a: 6}], // only 4 iterations
  *    differenceWith([{a: 2}, {a: 3}], isDeepEqual),
  *    take(2),
  *  ); // => [{a: 1}, {a: 4}]
@@ -71,7 +71,7 @@ function differenceWith_<TFirst, TSecond>(
   isEquals: IsEquals<TFirst, TSecond>,
 ): Array<TFirst> {
   const lazy = differenceWith.lazy(other, isEquals);
-  return reduceLazy(array, lazy);
+  return _reduceLazy(array, lazy);
 }
 
 export namespace differenceWith {

@@ -5,11 +5,13 @@ type DefinitelyError<T> =
  * A function that checks if the passed parameter is an Error and narrows its type accordingly
  * @param data the variable to check
  * @signature
- *    isError(data)
+ *  isError(data)
  * @returns true if the passed input is an Error, false otherwise
  * @example
- *    isError(new Error('message')) //=> true
- *    isError('somethingElse') //=> false
+ *  import { isError } from '@vinicunca/perkakas';
+ *
+ *  isError(new Error('message')); // => true
+ *  isError('somethingElse'); // => false
  * @category Guard
  */
 export function isError<T>(data: Error | T): data is DefinitelyError<T> {

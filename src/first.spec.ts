@@ -1,9 +1,9 @@
 import { describe, expect, expectTypeOf, it } from 'vitest';
 
-import { createLazyInvocationCounter } from '../../test/lazy-invocation-counter';
-import { pipe } from '../pipe';
+import { createLazyInvocationCounter } from './../test/lazy-invocation-counter';
 import { filter } from './filter';
 import { first } from './first';
+import { pipe } from './pipe';
 
 function defaultTo<T>(d: T) {
   return function (v: T | null | undefined) {

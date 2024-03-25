@@ -1,7 +1,7 @@
 import type { Simplify } from 'type-fest';
 
-import { purry } from '../purry';
 import { isDeepEqual } from './is-deep-equal';
+import { purry } from './purry';
 
 /**
  * Checks if `subObject` is a sub-object of `object`, which means for every
@@ -11,11 +11,13 @@ import { isDeepEqual } from './is-deep-equal';
  * @param data - The object to test.
  * @param subObject - The sub-object to test against.
  * @signature
- *    hasSubObject(data, subObject)
+ *  hasSubObject(data, subObject)
  * @example
- *    hasSubObject({ a: 1, b: 2, c: 3 }, { a: 1, c: 3 }) //=> true
- *    hasSubObject({ a: 1, b: 2, c: 3 }, { b: 4 }) //=> false
- *    hasSubObject({ a: 1, b: 2, c: 3 }, {}) //=> true
+ *  import { hasSubObject } from '@vinicunca/perkakas';
+ *
+ *  hasSubObject({ a: 1, b: 2, c: 3 }, { a: 1, c: 3 }); // => true
+ *  hasSubObject({ a: 1, b: 2, c: 3 }, { b: 4 }); // => false
+ *  hasSubObject({ a: 1, b: 2, c: 3 }, {}); // => true
  * @dataFirst
  * @category Guard
  */
@@ -32,11 +34,13 @@ data is Simplify<S & T>;
  *
  * @param subObject - The sub-object to test against.
  * @signature
- *    hasSubObject(subObject)(data)
+ *  hasSubObject(subObject)(data)
  * @example
- *    hasSubObject({ a: 1, c: 3 })({ a: 1, b: 2, c: 3 }) //=> true
- *    hasSubObject({ b: 4 })({ a: 1, b: 2, c: 3 }) //=> false
- *    hasSubObject({})({ a: 1, b: 2, c: 3 }) //=> true
+ *  import { hasSubObject } from '@vinicunca/perkakas';
+ *
+ *  hasSubObject({ a: 1, c: 3 })({ a: 1, b: 2, c: 3 }); // => true
+ *  hasSubObject({ b: 4 })({ a: 1, b: 2, c: 3 }); // => false
+ *  hasSubObject({})({ a: 1, b: 2, c: 3 }); // => true
  * @dataLast
  * @category Guard
  */

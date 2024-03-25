@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 
-import { createLazyInvocationCounter } from '../../test/lazy-invocation-counter';
-import { pipe } from '../pipe';
+import { createLazyInvocationCounter } from './../test/lazy-invocation-counter';
 import { find } from './find';
 import { flatMap } from './flat-map';
+import { pipe } from './pipe';
 
 describe('data_first', () => {
   it('flatMap', () => {

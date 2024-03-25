@@ -1,8 +1,8 @@
 import { describe, expect, expectTypeOf, it } from 'vitest';
 
-import { identity } from '../function/identity';
-import { pipe } from '../pipe';
+import { identity } from './identity';
 import { nthBy } from './nth-by';
+import { pipe } from './pipe';
 
 describe('runtime (dataFirst)', () => {
   it('works', () => {

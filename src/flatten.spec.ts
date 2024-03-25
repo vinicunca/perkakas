@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 
-import { createLazyInvocationCounter } from '../../test/lazy-invocation-counter';
-import { pipe } from '../pipe';
+import { createLazyInvocationCounter } from './../test/lazy-invocation-counter';
 import { find } from './find';
 import { flatten } from './flatten';
+import { pipe } from './pipe';
 
 it('flatten', () => {
   expect(flatten([[1, 2], 3, [4, 5]] as const)).toEqual([1, 2, 3, 4, 5]);

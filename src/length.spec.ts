@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { pipe } from '../pipe';
 import { length } from './length';
+import { pipe } from './pipe';
 
 describe('data first', () => {
   it('array', () => {

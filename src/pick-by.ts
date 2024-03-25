@@ -1,5 +1,5 @@
-import { purry } from '../purry';
 import { keys } from './keys';
+import { purry } from './purry';
 
 /**
  * Creates an object composed of the picked `object` properties.
@@ -8,7 +8,9 @@ import { keys } from './keys';
  * @param fn the predicate
  * @signature pickBy(object, fn)
  * @example
- *    pickBy({a: 1, b: 2, A: 3, B: 4}, (val, key) => key.toUpperCase() === key) // => {A: 3, B: 4}
+ *  import { pickBy } from '@vinicunca/perkakas';
+ *
+ *  pickBy({a: 1, b: 2, A: 3, B: 4}, (val, key) => key.toUpperCase() === key); // => {A: 3, B: 4}
  * @dataFirst
  * @category Object
  */
@@ -23,7 +25,9 @@ export function pickBy<T>(
  * @param fn the predicate
  * @signature pickBy(fn)(object)
  * @example
- *    pickBy((val, key) => key.toUpperCase() === key)({a: 1, b: 2, A: 3, B: 4}) // => {A: 3, B: 4}
+ *  import { pickBy } from '@vinicunca/perkakas';
+ *
+ *  pickBy((val, key) => key.toUpperCase() === key)({a: 1, b: 2, A: 3, B: 4}); // => {A: 3, B: 4}
  * @dataLast
  * @category Object
  */

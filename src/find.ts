@@ -1,20 +1,22 @@
-import type { LazyEvaluator } from '../pipe';
 import type { Pred, PredIndexed, PredIndexedOptional } from './_types';
+import type { LazyEvaluator } from './pipe';
 
-import { purry } from '../purry';
-import { toLazyIndexed } from '../utils/to-lazy-indexed';
-import { toSingle } from '../utils/to-single';
+import { _toLazyIndexed } from './_to-lazy-indexed';
+import { _toSingle } from './_to-single';
+import { purry } from './purry';
 
 /**
  * Returns the value of the first element in the array where predicate is true, and undefined otherwise.
  * @param items the array
  * @param fn the predicate
  * @signature
- *    find(items, fn)
- *    find.indexed(items, fn)
+ *  find(items, fn)
+ *  find.indexed(items, fn)
  * @example
- *    find([1, 3, 4, 6], n => n % 2 === 0) // => 4
- *    find.indexed([1, 3, 4, 6], (n, i) => n % 2 === 0) // => 4
+ *  import { find } from '@vinicunca/perkakas';
+ *
+ *  find([1, 3, 4, 6], n => n % 2 === 0) // => 4
+ *  find.indexed([1, 3, 4, 6], (n, i) => n % 2 === 0) // => 4
  * @dataFirst
  * @indexed
  * @pipeable
@@ -29,17 +31,19 @@ export function find<T>(
  * Returns the value of the first element in the array where predicate is true, and undefined otherwise.
  * @param fn the predicate
  * @signature
- *    find(fn)(items)
- *    find.indexed(fn)(items)
+ *  find(fn)(items)
+ *  find.indexed(fn)(items)
  * @example
- *    pipe(
- *      [1, 3, 4, 6],
- *      find(n => n % 2 === 0)
- *    ) // => 4
- *    pipe(
- *      [1, 3, 4, 6],
- *      find.indexed((n, i) => n % 2 === 0)
- *    ) // => 4
+ *  import { find, pipe } from '@vinicunca/perkakas';
+ *
+ *  pipe(
+ *    [1, 3, 4, 6],
+ *    find(n => n % 2 === 0)
+ *  ) // => 4
+ *  pipe(
+ *    [1, 3, 4, 6],
+ *    find.indexed((n, i) => n % 2 === 0)
+ *  ) // => 4
  * @dataLast
  * @indexed
  * @pipeable
@@ -79,7 +83,7 @@ export namespace find {
     return purry(find_(true), args, find.lazyIndexed);
   }
 
-  export const lazy = toSingle(lazy_(false));
+  export const lazy = _toSingle(lazy_(false));
 
-  export const lazyIndexed = toSingle(toLazyIndexed(lazy_(true)));
+  export const lazyIndexed = _toSingle(_toLazyIndexed(lazy_(true)));
 }

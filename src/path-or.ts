@@ -1,4 +1,4 @@
-import { purry } from '../purry';
+import { purry } from './purry';
 
 /**
  * Given a union of indexable types `T`, we derive an indexable type
@@ -6,17 +6,17 @@ import { purry } from '../purry';
  * present in multiple variants of `T`, then the corresponding type in
  * `Pathable<T>` will be the intersection of all types for that key.
  * @example
- *    type T1 = Pathable<{a: number} | {a: string; b: boolean}>
- *    // {a: number | string; b: boolean}
+ *  type T1 = Pathable<{a: number} | {a: string; b: boolean}>
+ *  // {a: number | string; b: boolean}
  *
- *    type T2 = Pathable<{a?: {b: string}}
- *    // {a: {b: string} | undefined}
+ *  type T2 = Pathable<{a?: {b: string}}
+ *  // {a: {b: string} | undefined}
  *
- *    type T3 = Pathable<{a: string} | number>
- *    // {a: string}
+ *  type T3 = Pathable<{a: string} | number>
+ *  // {a: string}
  *
- *    type T4 = Pathable<{a: number} | {a: string} | {b: boolean}>
- *    // {a: number | string; b: boolean}
+ *  type T4 = Pathable<{a: number} | {a: string} | {b: boolean}>
+ *  // {a: number | string; b: boolean}
  *
  * This type lets us answer the questions:
  * - Given some object of type `T`, what keys might this object have?
@@ -75,8 +75,10 @@ type PathValue3<
  * @param defaultValue the default value
  * @signature pathOr(object, array, defaultValue)
  * @example
- *    pathOr({x: 10}, ['y'], 2) // 2
- *    pathOr({y: 10}, ['y'], 2) // 10
+ *  import { pathOr } from '@vinicunca/perkakas';
+ *
+ *  pathOr({x: 10}, ['y'], 2); // 2
+ *  pathOr({y: 10}, ['y'], 2); // 10
  * @dataFirst
  * @category Object
  */
@@ -114,8 +116,10 @@ export function pathOr<
  * @param defaultValue the default value
  * @signature pathOr(array, defaultValue)(object)
  * @example
- *    pipe({x: 10}, pathOr(['y'], 2)) // 2
- *    pipe({y: 10}, pathOr(['y'], 2)) // 10
+ *  import { pathOr } from '@vinicunca/perkakas';
+ *
+ *  pipe({x: 10}, pathOr(['y'], 2)); // 2
+ *  pipe({y: 10}, pathOr(['y'], 2)); // 10
  * @dataLast
  * @category Object
  */

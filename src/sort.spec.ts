@@ -1,6 +1,6 @@
 import { describe, expect, expectTypeOf, it } from 'vitest';
 
-import { pipe } from '../pipe';
+import { pipe } from './pipe';
 import { sort } from './sort';
 
 describe('data_first', () => {

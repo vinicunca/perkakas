@@ -1,8 +1,8 @@
 import { expect, expectTypeOf, it } from 'vitest';
 
-import { sortBy } from '../array';
-import { pipe } from '../pipe';
+import { pipe } from './pipe';
 import { prop } from './prop';
+import { sortBy } from './sort-by';
 
 it('prop', () => {
   const result = pipe({ foo: 'bar' }, prop('foo'));

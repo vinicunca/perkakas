@@ -1,7 +1,7 @@
 import { describe, expect, expectTypeOf, it } from 'vitest';
 
-import { noop } from '../function';
 import { mergeDeep } from './merge-deep';
+import { noop } from './noop';
 
 describe('runtime (dataFirst)', () => {
   it('should merge objects', () => {

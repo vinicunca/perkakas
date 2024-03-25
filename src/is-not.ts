@@ -2,11 +2,13 @@
  * A function that takes a guard function as predicate and returns a guard that negates it
  * @param predicate the guard function to negate
  * @signature
- *    isNot(isTruthy)(data)
+ *  isNot(isTruthy)(data)
  * @returns function A guard function
  * @example
- *    isNot(isTruthy)(false) //=> true
- *    isNot(isTruthy)(true) //=> false
+ *  import { isNot, isTruthy } from '@vinicunca/perkakas';
+ *
+ *  isNot(isTruthy)(false); // => true
+ *  isNot(isTruthy)(true); // => false
  * @dataLast
  * @category Guard
  */

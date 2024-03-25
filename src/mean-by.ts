@@ -1,6 +1,6 @@
 import type { PredIndexed, PredIndexedOptional } from './_types';
 
-import { purry } from '../purry';
+import { purry } from './purry';
 
 function meanBy_(indexed: boolean) {
   return <T>(array: ReadonlyArray<T>, fn: PredIndexedOptional<T, number>) => {
@@ -22,13 +22,15 @@ function meanBy_(indexed: boolean) {
  * Returns the mean of the elements of an array using the provided predicate.
  * @param fn predicate function
  * @signature
- *   meanBy(fn)(array)
- *   meanBy.indexed(fn)(array)
+ *  meanBy(fn)(array)
+ *  meanBy.indexed(fn)(array)
  * @example
- *    pipe(
- *      [{a: 5}, {a: 1}, {a: 3}],
- *      meanBy(x => x.a)
- *    ) // 3
+ *  import { meanBy, pipe } from '@vinicunca/perkakas';
+ *
+ *  pipe(
+ *    [{a: 5}, {a: 1}, {a: 3}],
+ *    meanBy(x => x.a)
+ *  ); // 3
  * @dataLast
  * @indexed
  * @category Array
@@ -43,13 +45,15 @@ export function meanBy<T>(
  * @param items the array
  * @param fn predicate function
  * @signature
- *   meanBy(array, fn)
- *   meanBy.indexed(array, fn)
+ *  meanBy(array, fn)
+ *  meanBy.indexed(array, fn)
  * @example
- *    meanBy(
- *      [{a: 5}, {a: 1}, {a: 3}],
- *      x => x.a
- *    ) // 3
+ *  import { meanBy } from '@vinicunca/perkakas';
+ *
+ *  meanBy(
+ *    [{a: 5}, {a: 1}, {a: 3}],
+ *    x => x.a
+ *  ); // 3
  * @dataFirst
  * @indexed
  * @category Array

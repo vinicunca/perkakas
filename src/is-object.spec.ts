@@ -1,8 +1,8 @@
 import { describe, expect, expectTypeOf, it } from 'vitest';
 
-import type { AllTypesDataProviderTypes } from '../../test/types-data-provider';
+import type { AllTypesDataProviderTypes } from './../test/types-data-provider';
 
-import { ALL_TYPES_DATA_PROVIDER, TYPES_DATA_PROVIDER, TestClass } from '../../test/types-data-provider';
+import { ALL_TYPES_DATA_PROVIDER, TYPES_DATA_PROVIDER, TestClass } from './../test/types-data-provider';
 import { isObject } from './is-object';
 
 describe('runtime', () => {

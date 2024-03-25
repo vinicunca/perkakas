@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { pipe } from '../pipe';
 import { findLast } from './find-last';
+import { pipe } from './pipe';
 
 const array = [1, 2, 3, 4];
 

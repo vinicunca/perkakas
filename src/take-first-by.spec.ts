@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { identity } from '../function/identity';
-import { pipe } from '../pipe';
+import { identity } from './identity';
+import { pipe } from './pipe';
 import { takeFirstBy } from './take-first-by';
 
 describe('runtime (dataFirst)', () => {

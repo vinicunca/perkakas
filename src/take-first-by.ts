@@ -1,7 +1,7 @@
 import type { CompareFunction, NonEmptyArray } from './_types';
 
-import { heapMaybeInsert, heapify } from '../utils/heap';
-import { type OrderRule, purryOrderRulesWithArgument } from '../utils/purry-order-rules';
+import { heapMaybeInsert, heapify } from './_heap';
+import { type OrderRule, purryOrderRulesWithArgument } from './_purry-order-rules';
 
 /**
  * Take the first `n` items from `data` based on the provided ordering criteria.
@@ -16,9 +16,11 @@ import { type OrderRule, purryOrderRulesWithArgument } from '../utils/purry-orde
  * Each order rule is a projection function that extracts a comparable value from the data. Sorting is based on these extracted values using the native `<` and `>` operators. Earlier rules take precedence over later ones. Use the syntax `[projection, "desc"]` for descending order.
  * @returns a subset of the input array.
  * @signature
- *   takeFirstBy(data, n, ...rules);
+ *  takeFirstBy(data, n, ...rules);
  * @example
- *   takeFirstBy(['aa', 'aaaa', 'a', 'aaa'], 2, x => x.length); // => ['a', 'aa']
+ *  import { takeFirstBy } from '@vinicunca/perkakas';
+ *
+ *  takeFirstBy(['aa', 'aaaa', 'a', 'aaa'], 2, x => x.length); // => ['a', 'aa']
  * @dataFirst
  * @category Array
  */
@@ -40,9 +42,11 @@ export function takeFirstBy<T>(
  * Each order rule is a projection function that extracts a comparable value from the data. Sorting is based on these extracted values using the native `<` and `>` operators. Earlier rules take precedence over later ones. Use the syntax `[projection, "desc"]` for descending order.
  * @returns a subset of the input array.
  * @signature
- *   takeFirstBy(n, ...rules)(data);
+ *  takeFirstBy(n, ...rules)(data);
  * @example
- *   R.pipe(['aa', 'aaaa', 'a', 'aaa'], takeFirstBy(2, x => x.length)); // => ['a', 'aa']
+ *  import { takeFirstBy, pipe } from '@vinicunca/perkakas';
+ *
+ *  pipe(['aa', 'aaaa', 'a', 'aaa'], takeFirstBy(2, x => x.length)); // => ['a', 'aa']
  * @dataLast
  * @category Array
  */

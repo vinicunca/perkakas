@@ -1,9 +1,10 @@
 import { describe, expect, expectTypeOf, it } from 'vitest';
 
-import { isNumber, isString } from '../guard';
-import { isDeepEqual } from '../guard/is-deep-equal';
-import { pipe } from '../pipe';
 import { conditional } from './conditional';
+import { isDeepEqual } from './is-deep-equal';
+import { isNumber } from './is-number';
+import { isString } from './is-string';
+import { pipe } from './pipe';
 
 describe('runtime (dataFirst)', () => {
   it('falls back to trivial default', () => {

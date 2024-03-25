@@ -1,16 +1,18 @@
 import type { ObjectKeys } from './_types';
 
-import { purry } from '../purry';
-import { toPairs } from './to-pairs';
+import { entries } from './entries';
+import { purry } from './purry';
 
 /**
  * Maps values of `object` and keeps the same keys.
  * @param data the object to map
  * @param fn the mapping function
  * @signature
- *    mapValues(object, fn)
+ *  mapValues(object, fn)
  * @example
- *    mapValues({a: 1, b: 2}, (value, key) => value + key) // => {a: '1a', b: '2b'}
+ *  import { mapValues } from '@vinicunca/perkakas';
+ *
+ *  mapValues({a: 1, b: 2}, (value, key) => value + key); // => {a: '1a', b: '2b'}
  * @dataFirst
  * @category Object
  */
@@ -23,9 +25,11 @@ export function mapValues<T extends Record<PropertyKey, unknown>, S>(
  * Maps values of `object` and keeps the same keys.
  * @param fn the mapping function
  * @signature
- *    mapValues(fn)(object)
+ *  mapValues(fn)(object)
  * @example
- *    pipe({a: 1, b: 2}, mapValues((value, key) => value + key)) // => {a: '1a', b: '2b'}
+ *  import { mapValues, pipe } from '@vinicunca/perkakas';
+ *
+ *  pipe({a: 1, b: 2}, mapValues((value, key) => value + key)); // => {a: '1a', b: '2b'}
  * @dataLast
  * @category Object
  */
@@ -42,7 +46,7 @@ function mapValues_<T extends object>(
   fn: (value: Required<T>[keyof T], key: keyof T) => unknown,
 ) {
   const out: Partial<Record<keyof T, unknown>> = {};
-  for (const [key, value] of toPairs.strict(data)) {
+  for (const [key, value] of entries.strict(data)) {
     out[key] = fn(value, key);
   }
   return out;

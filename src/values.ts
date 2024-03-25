@@ -5,12 +5,14 @@
  * @signature
  *  values(source)
  * @example
+ *  import { values, pipe, first } from '@vinicunca/perkakas';
+ *
  *  values(['x', 'y', 'z']); // => ['x', 'y', 'z']
  *  values({ a: 'x', b: 'y', c: 'z' }); // => ['x', 'y', 'z']
  *  pipe(
  *    { a: 'x', b: 'y', c: 'z' },
- *  values,
- *  first
+ *    values,
+ *    first
  *  ); // => 'x'
  * @pipeable
  * @category Object

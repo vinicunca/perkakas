@@ -1,9 +1,12 @@
 /**
  * Gets the value of the given property.
+ *
  * @param propName the property name
  * @signature prop(prop)(object)
  * @example
- *    pipe({foo: 'bar'}, prop('foo')) // => 'bar'
+ *  import { prop, pipe } from '@vinicunca/perkakas';
+ *
+ *  pipe({foo: 'bar'}, prop('foo')); // => 'bar'
  * @dataLast
  * @category Object
  */

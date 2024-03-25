@@ -1,16 +1,19 @@
-import type { LazyEvaluator } from '../pipe';
+import type { LazyEvaluator } from './pipe';
 
-import { purry } from '../purry';
-import { reduceLazy } from '../utils/reduce-lazy';
+import { _reduceLazy } from './_reduce-lazy';
+import { purry } from './purry';
 
 /**
  * Returns the first `n` elements of `array`.
+ *
  * @param array the array
  * @param n the number of elements to take
  * @signature
- *    take(array, n)
+ *  take(array, n)
  * @example
- *    take([1, 2, 3, 4, 3, 2, 1], 3) // => [1, 2, 3]
+ *  import { take } from '@vinicunca/perkakas';
+ *
+ *  take([1, 2, 3, 4, 3, 2, 1], 3) // => [1, 2, 3]
  * @dataFirst
  * @pipeable
  * @category Array
@@ -19,11 +22,14 @@ export function take<T>(array: ReadonlyArray<T>, n: number): Array<T>;
 
 /**
  * Returns the first `n` elements of `array`.
+ *
  * @param n the number of elements to take
  * @signature
- *    take(n)(array)
+ *  take(n)(array)
  * @example
- *    pipe([1, 2, 3, 4, 3, 2, 1], take(n)) // => [1, 2, 3]
+ *  import { take, pipe } from '@vinicunca/perkakas';
+ *
+ *  pipe([1, 2, 3, 4, 3, 2, 1], take(n)) // => [1, 2, 3]
  * @dataLast
  * @pipeable
  * @category Array
@@ -35,7 +41,7 @@ export function take(...args: Array<any>): unknown {
 }
 
 function take_<T>(array: ReadonlyArray<T>, n: number): Array<T> {
-  return reduceLazy(array, take.lazy(n));
+  return _reduceLazy(array, take.lazy(n));
 }
 
 export namespace take {

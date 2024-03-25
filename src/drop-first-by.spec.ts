@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
-import { identity, pipe } from '../function';
 import { dropFirstBy } from './drop-first-by';
+import { identity } from './identity';
+import { pipe } from './pipe';
 
 describe('runtime (dataFirst)', () => {
   it('works', () => {

@@ -1,12 +1,15 @@
-import { purry } from '../purry';
+import { purry } from './purry';
 
 /**
  * Returns a list of numbers from `start` (inclusive) to `end` (exclusive).
+ *
  * @param start the start number
  * @param end the end number
  * @signature range(start, end)
  * @example
- *    range(1, 5) // => [1, 2, 3, 4]
+ *  import { range } from '@vinicunca/perkakas';
+ *
+ *  range(1, 5); // => [1, 2, 3, 4]
  * @dataFirst
  * @category Array
  */
@@ -14,10 +17,13 @@ export function range(start: number, end: number): Array<number>;
 
 /**
  * Returns a list of numbers from `start` (inclusive) to `end` (exclusive).
+ *
  * @param end the end number
  * @signature range(end)(start)
  * @example
- *    range(5)(1) // => [1, 2, 3, 4]
+ *  import { range } from '@vinicunca/perkakas';
+ *
+ *  range(5)(1); // => [1, 2, 3, 4]
  * @dataFirst
  * @category Array
  */

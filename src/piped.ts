@@ -1,67 +1,75 @@
 import { pipe } from './pipe';
 
 /**
- * Creates a data-last pipe function. First function must be always annotated. Other functions are automatically inferred.
+ * A dataLast version of `pipe` that could be used to provide more complex
+ * computations to functions that except a function as a param (like `map`,
+ * `filter`, `groupBy`, etc...).
+ *
+ * The first function must be always annotated. Other functions are
+ * automatically inferred.
  *
  * @signature
- *  createPipe(op1, op2, op3)(data);
+ *  piped(...ops)(data);
  * @example
- *  import { createPipe } from '@vinicunca/perkakas';
+ *  import { piped, prop, filter } from '@vinicunca/perkakas';
  *
- *  createPipe(
- *    (x: number) => x * 2,
- *    (x) => x * 3
- *  )(1); // => 6
+ *  filter(
+ *    [{ a: 1 }, { a: 2 }, { a: 3 }],
+ *    piped(
+ *      prop('a'),
+ *      (x) => x % 2 === 0,
+ *    ),
+ *  ); // => [{ a: 2 }]
  * @category Function
  */
-export function createPipe<A, B>(op1: (input: A) => B): (value: A) => B;
+export function piped<A, B>(op1: (input: A) => B): (value: A) => B;
 
-export function createPipe<A, B, C>(
-  op1: (input: A) => B,
-  op2: (input: B) => C
-): (value: A) => C;
-
-export function createPipe<A, B, C, D>(
+export function piped<A, B, C>(
   op1: (input: A) => B,
   op2: (input: B) => C,
-  op3: (input: C) => D
-): (value: A) => D;
+): (value: A) => C;
 
-export function createPipe<A, B, C, D, E>(
+export function piped<A, B, C, D>(
   op1: (input: A) => B,
   op2: (input: B) => C,
   op3: (input: C) => D,
-  op4: (input: D) => E
-): (value: A) => E;
+): (value: A) => D;
 
-export function createPipe<A, B, C, D, E, F>(
+export function piped<A, B, C, D, E>(
   op1: (input: A) => B,
   op2: (input: B) => C,
   op3: (input: C) => D,
   op4: (input: D) => E,
-  op5: (input: E) => F
-): (value: A) => F;
+): (value: A) => E;
 
-export function createPipe<A, B, C, D, E, F, G>(
+export function piped<A, B, C, D, E, F>(
   op1: (input: A) => B,
   op2: (input: B) => C,
   op3: (input: C) => D,
   op4: (input: D) => E,
   op5: (input: E) => F,
-  op6: (input: F) => G
-): (value: A) => G;
+): (value: A) => F;
 
-export function createPipe<A, B, C, D, E, F, G, H>(
+export function piped<A, B, C, D, E, F, G>(
   op1: (input: A) => B,
   op2: (input: B) => C,
   op3: (input: C) => D,
   op4: (input: D) => E,
   op5: (input: E) => F,
   op6: (input: F) => G,
-  op7: (input: G) => H
+): (value: A) => G;
+
+export function piped<A, B, C, D, E, F, G, H>(
+  op1: (input: A) => B,
+  op2: (input: B) => C,
+  op3: (input: C) => D,
+  op4: (input: D) => E,
+  op5: (input: E) => F,
+  op6: (input: F) => G,
+  op7: (input: G) => H,
 ): (value: A) => H;
 
-export function createPipe(
+export function piped(
   ...operations: ReadonlyArray<(input: unknown) => unknown>
 ) {
   return (value: unknown): unknown =>

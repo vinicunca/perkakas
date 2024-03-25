@@ -1,7 +1,7 @@
 import { assertType, describe, expect, expectTypeOf, it } from 'vitest';
 
-import { pipe } from '../pipe';
 import { keys } from './keys';
+import { pipe } from './pipe';
 
 describe('test for keys', () => {
   it('should return keys of array', () => {

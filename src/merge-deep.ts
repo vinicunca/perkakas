@@ -1,6 +1,6 @@
 import type { MergeDeep } from 'type-fest';
 
-import { purry } from '../purry';
+import { purry } from './purry';
 
 /**
  * Merges the `source` object into the `destination` object. The merge is similar to performing `{ ...destination, ... source }` (where disjoint values from each object would be copied as-is, and for any overlapping props the value from `source` would be used); But for *each prop* (`p`), if **both** `destination` and `source` have a **plain-object** as a value, the value would be taken as the result of recursively deepMerging them (`result.p === deepMerge(destination.p, source.p)`).
@@ -9,9 +9,11 @@ import { purry } from '../purry';
  * @param source - The object to merge from. In general, shared keys would be taken from this object.
  * @returns - The merged object.
  * @signature
- *    mergeDeep(destination, source)
+ *  mergeDeep(destination, source)
  * @example
- *    mergeDeep({ foo: 'bar', x: 1 }, { foo: 'baz', y: 2 }) // => { foo: 'baz', x: 1, y: 2 }
+ *  import { mergeDeep } from '@vinicunca/perkakas';
+ *
+ *  mergeDeep({ foo: 'bar', x: 1 }, { foo: 'baz', y: 2 }); // => { foo: 'baz', x: 1, y: 2 }
  * @dataFirst
  * @category Object
  */
@@ -26,12 +28,14 @@ export function mergeDeep<
  * @param source - The object to merge from. In general, shared keys would be taken from this object.
  * @returns - The merged object.
  * @signature
- *    mergeDeep(source)(destination)
+ *  mergeDeep(source)(destination)
  * @example
- *    pipe(
- *      { foo: 'bar', x: 1 },
- *      mergeDeep({ foo: 'baz', y: 2 }),
- *    );  // => { foo: 'baz', x: 1, y: 2 }
+ *  import { mergeDeep } from '@vinicunca/perkakas';
+ *
+ *  pipe(
+ *    { foo: 'bar', x: 1 },
+ *    mergeDeep({ foo: 'baz', y: 2 }),
+ *  ); // => { foo: 'baz', x: 1, y: 2 }
  * @dataLast
  * @category Object
  */

@@ -1,4 +1,4 @@
-import { purry } from '../purry';
+import { purry } from './purry';
 
 type Reverse<
   T extends ReadonlyArray<unknown>,
@@ -18,9 +18,11 @@ type IsNoTuple<T> = T extends readonly [unknown, ...Array<unknown>] ? never : T;
  *
  * @param array the array
  * @signature
- *    reverse(arr);
+ *  reverse(arr);
  * @example
- *    reverse([1, 2, 3]) // [3, 2, 1]
+ *  import { reverse } from '@vinicunca/perkakas';
+ *
+ *  reverse([1, 2, 3]); // [3, 2, 1]
  * @dataFirst
  * @category Array
  */
@@ -30,9 +32,11 @@ export function reverse<T extends ReadonlyArray<unknown>>(array: T): Reverse<T>;
  * Reverses an array.
  *
  * @signature
- *    reverse()(array);
+ *  reverse()(array);
  * @example
- *    reverse()([1, 2, 3]) // [3, 2, 1]
+ *  import { reverse } from '@vinicunca/perkakas';
+ *
+ *  reverse()([1, 2, 3]); // [3, 2, 1]
  * @dataLast
  * @category Array
  */

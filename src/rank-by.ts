@@ -1,6 +1,6 @@
 import type { CompareFunction, NonEmptyArray } from './_types';
 
-import { type OrderRule, purryOrderRulesWithArgument } from '../utils/purry-order-rules';
+import { type OrderRule, purryOrderRulesWithArgument } from './_purry-order-rules';
 
 /**
  * Calculates the rank of an item in an array based on `rules`. The rank is the position where the item would appear in the sorted array. This function provides an efficient way to determine the rank in *O(n)* time, compared to *O(nlogn)* for the equivalent `sortedIndex(sortBy(data, ...rules), item)`.
@@ -10,13 +10,15 @@ import { type OrderRule, purryOrderRulesWithArgument } from '../utils/purry-orde
  * @param rules - A variadic array of order rules defining the sorting criteria. Each order rule is a projection function that extracts a comparable value from the data. Sorting is based on these extracted values using the native `<` and `>` operators. Earlier rules take precedence over later ones. Use the syntax `[projection, "desc"]` for descending order.
  * @returns - The rank of the item in the sorted array in the range [0..data.length]
  * @signature
- *   rankBy(data, item, ...rules)
+ *  rankBy(data, item, ...rules)
  * @example
- *   const DATA = [{ a: 5 }, { a: 1 }, { a: 3 }] as const;
- *   rankBy(DATA, 0, prop('a')) // => 0
- *   rankBy(DATA, 1, prop('a')) // => 1
- *   rankBy(DATA, 2, prop('a')) // => 1
- *   rankBy(DATA, 3, prop('a')) // => 2
+ *  import { rankBy, prop } from '@vinicunca/perkakas';
+ *
+ *  const DATA = [{ a: 5 }, { a: 1 }, { a: 3 }] as const;
+ *  rankBy(DATA, 0, prop('a')); // => 0
+ *  rankBy(DATA, 1, prop('a')); // => 1
+ *  rankBy(DATA, 2, prop('a')); // => 1
+ *  rankBy(DATA, 3, prop('a')); // => 2
  * @dataFirst
  * @category Array
  */
@@ -33,13 +35,15 @@ export function rankBy<T>(
  * @param rules - A variadic array of order rules defining the sorting criteria. Each order rule is a projection function that extracts a comparable value from the data. Sorting is based on these extracted values using the native `<` and `>` operators. Earlier rules take precedence over later ones. Use the syntax `[projection, "desc"]` for descending order.
  * @returns - The rank of the item in the sorted array in the range [0..data.length]
  * @signature
- *   rankBy(item, ...rules)(data)
+ *  rankBy(item, ...rules)(data)
  * @example
- *   const DATA = [{ a: 5 }, { a: 1 }, { a: 3 }] as const;
- *   pipe(DATA, rankBy(0, prop('a'))) // => 0
- *   pipe(DATA, rankBy(1, prop('a'))) // => 1
- *   pipe(DATA, rankBy(2, prop('a'))) // => 1
- *   pipe(DATA, rankBy(3, prop('a'))) // => 2
+ *  import { rankBy, prop, pipe } from '@vinicunca/perkakas';
+ *
+ *  const DATA = [{ a: 5 }, { a: 1 }, { a: 3 }] as const;
+ *  pipe(DATA, rankBy(0, prop('a'))); // => 0
+ *  pipe(DATA, rankBy(1, prop('a'))); // => 1
+ *  pipe(DATA, rankBy(2, prop('a'))); // => 1
+ *  pipe(DATA, rankBy(3, prop('a'))); // => 2
  * @dataLast
  * @category Array
  */

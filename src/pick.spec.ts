@@ -1,8 +1,8 @@
 import { describe, expect, expectTypeOf, it } from 'vitest';
 
-import { concat } from '../array';
-import { pipe } from '../pipe';
+import { concat } from './concat';
 import { pick } from './pick';
+import { pipe } from './pipe';
 
 describe('data first', () => {
   it('it should pick props', () => {

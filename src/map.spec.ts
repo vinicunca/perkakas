@@ -1,8 +1,9 @@
 import { describe, expect, expectTypeOf, it, vi } from 'vitest';
 
-import { identity, pipe } from '../function';
 import { filter } from './filter';
+import { identity } from './identity';
 import { map } from './map';
+import { pipe } from './pipe';
 import { take } from './take';
 
 describe('data_first', () => {

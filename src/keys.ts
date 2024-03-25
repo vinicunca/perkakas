@@ -1,26 +1,28 @@
 import type { IterableContainer } from './_types';
 
-import { purry } from '../purry';
+import { purry } from './purry';
 
 /**
  * Returns a new array containing the keys of the array or object.
  *
  * @param source Either an array or an object
  * @signature
- *    keys(source)
- *    keys.strict(source)
+ *  keys(source)
+ *  keys.strict(source)
  * @example
- *    keys(['x', 'y', 'z']) // => ['0', '1', '2']
- *    keys({ a: 'x', b: 'y', c: 'z' }) // => ['a', 'b', 'c']
- *    keys.strict({ a: 'x', b: 'y', 5: 'z' } as const ) // => ['a', 'b', '5'], typed Array<'a' | 'b' | '5'>
- *    pipe(['x', 'y', 'z'], keys) // => ['0', '1', '2']
- *    pipe({ a: 'x', b: 'y', c: 'z' }, keys) // => ['a', 'b', 'c']
- *    pipe(
- *      { a: 'x', b: 'y', c: 'z' },
- *      keys,
- *      first(),
- *    ) // => 'a'
- *    pipe({ a: 'x', b: 'y', 5: 'z' } as const, keys.strict) // => ['a', 'b', '5'], typed Array<'a' | 'b' | '5'>
+ *  import { keys, pipe, first } from '@vinicunca/perkakas';
+ *
+ *  keys(['x', 'y', 'z']) // => ['0', '1', '2']
+ *  keys({ a: 'x', b: 'y', c: 'z' }) // => ['a', 'b', 'c']
+ *  keys.strict({ a: 'x', b: 'y', 5: 'z' } as const ) // => ['a', 'b', '5'], typed Array<'a' | 'b' | '5'>
+ *  pipe(['x', 'y', 'z'], keys) // => ['0', '1', '2']
+ *  pipe({ a: 'x', b: 'y', c: 'z' }, keys) // => ['a', 'b', 'c']
+ *  pipe(
+ *    { a: 'x', b: 'y', c: 'z' },
+ *    keys,
+ *    first(),
+ *  ) // => 'a'
+ *  pipe({ a: 'x', b: 'y', 5: 'z' } as const, keys.strict) // => ['a', 'b', '5'], typed Array<'a' | 'b' | '5'>
  * @pipeable
  * @strict
  * @category Object
@@ -34,17 +36,19 @@ export function keys(
  * Returns a new array containing the keys of the array or object.
  *
  * @signature
- *    keys()(source)
- *    keys.strict()(source)
+ *  keys()(source)
+ *  keys.strict()(source)
  * @example
- *    pipe(['x', 'y', 'z'], keys()) // => ['0', '1', '2']
- *    pipe({ a: 'x', b: 'y', c: 'z' }, keys()) // => ['a', 'b', 'c']
- *    pipe(
- *      { a: 'x', b: 'y', c: 'z' },
- *      keys(),
- *      first(),
- *    ) // => 'a'
- *    pipe({ a: 'x', b: 'y', 5: 'z' } as const, keys.strict()) // => ['a', 'b', '5'], typed Array<'a' | 'b' | '5'>
+ *  import { keys, pipe, first } from '@vinicunca/perkakas';
+ *
+ *  pipe(['x', 'y', 'z'], keys()) // => ['0', '1', '2']
+ *  pipe({ a: 'x', b: 'y', c: 'z' }, keys()) // => ['a', 'b', 'c']
+ *  pipe(
+ *    { a: 'x', b: 'y', c: 'z' },
+ *    keys(),
+ *    first(),
+ *  ) // => 'a'
+ *  pipe({ a: 'x', b: 'y', 5: 'z' } as const, keys.strict()) // => ['a', 'b', '5'], typed Array<'a' | 'b' | '5'>
  * @pipeable
  * @strict
  * @category Object

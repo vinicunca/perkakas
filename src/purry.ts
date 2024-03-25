@@ -26,6 +26,8 @@ interface MaybeLazyFunction {
  * @param lazyFactory - A lazy version of the function to purry.
  * @signature purry(fn, arguments);
  * @exampleRaw
+ *  import { purry } from '@vinicunca/perkakas';
+ *
  *  function findIndex_(array, fn) {
  *    for (let i = 0; i < array.length; i++) {
  *      if (fn(array[i])) {
@@ -35,10 +37,10 @@ interface MaybeLazyFunction {
  *    return -1;
  *  }
  *
- * ; // data-first
+ *  // data-first
  *  function findIndex<T>(array: T[], fn: (item: T) => boolean): number;
  *
- * ; // data-last
+ *  // data-last
  *  function findIndex<T>(fn: (item: T) => boolean): (array: T[]) => number;
  *
  *  function findIndex() {

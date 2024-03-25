@@ -1,4 +1,4 @@
-import { purry } from '../purry';
+import { purry } from './purry';
 
 type Inverted<T extends object> = T[keyof T] extends PropertyKey
   ? Record<T[keyof T], keyof T>
@@ -10,9 +10,11 @@ type Inverted<T extends object> = T[keyof T] extends PropertyKey
  *
  * @param object the object
  * @signature
- *    invert(object)
+ *  invert(object)
  * @example
- *    invert({ a: "d", b: "e", c: "f" }) // => { d: "a", e: "b", f: "c" }
+ *  import { invert } from '@vinicunca/perkakas';
+ *
+ *  invert({ a: "d", b: "e", c: "f" }) // => { d: "a", e: "b", f: "c" }
  * @dataFirst
  * @category Object
  * @pipeable
@@ -24,9 +26,11 @@ export function invert<T extends object>(object: T): Inverted<T>;
  * subsequent values will overwrite previous values.
  *
  * @signature
- *    invert()(object)
+ *  invert()(object)
  * @example
- *    pipe({ a: "d", b: "e", c: "f" }, invert()); // => { d: "a", e: "b", f: "c" }
+ *  import { invert, pipe } from '@vinicunca/perkakas';
+ *
+ *  pipe({ a: "d", b: "e", c: "f" }, invert()); // => { d: "a", e: "b", f: "c" }
  * @dataLast
  * @category Object
  * @pipeable

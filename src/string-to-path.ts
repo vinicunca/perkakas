@@ -1,8 +1,12 @@
 /**
  * Converts a path string to an array of keys.
+ *
  * @param path a string path
  * @signature stringToPathArray(path)
- * @example stringToPathArray('a.b[0].c') // => ['a', 'b', 0, 'c']
+ * @example
+ *  import { stringToPathArray } from '@vicnunca/perkakas';
+ *
+ *  stringToPathArray('a.b[0].c') // => ['a', 'b', 0, 'c']
  * @dataFirst
  * @category String
  */

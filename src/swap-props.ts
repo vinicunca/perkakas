@@ -1,4 +1,4 @@
-import { purry } from '../purry';
+import { purry } from './purry';
 
 type SwappedProps<T, K1 extends keyof T, K2 extends keyof T> = {
   [K in keyof T]: T[K1 extends K ? K2 : K2 extends K ? K1 : K];
@@ -12,15 +12,16 @@ type SwappedProps<T, K1 extends keyof T, K2 extends keyof T> = {
  * @param key2 the second property key
  *
  * @signature
- *   swap(data, key1, key2)
+ *  swap(data, key1, key2)
  *
  * @returns Returns the manipulated object.
  *
  * @example
- *   swap({a: 1, b: 2, c: 3}, 'a', 'b') // => {a: 2, b: 1, c: 3}
+ *  import { swap } from '@vinicunca/perkakas';
+ *
+ *  swap({a: 1, b: 2, c: 3}, 'a', 'b') // => {a: 2, b: 1, c: 3}
  *
  * @category Object
- *
  * @dataFirst
  */
 export function swapProps<
@@ -36,15 +37,16 @@ export function swapProps<
  * @param key2 the second property key
  *
  * @signature
- *   swap(key1, key2)(data)
+ *  swap(key1, key2)(data)
  *
  * @example
- *   swap('a', 'b')({a: 1, b: 2, c: 3}) // => {a: 2, b: 1, c: 3}
+ *  import { swap } from '@vinicunca/perkakas';
+ *
+ *  swap('a', 'b')({a: 1, b: 2, c: 3}) // => {a: 2, b: 1, c: 3}
  *
  * @returns Returns the manipulated object.
  *
  * @category Object
- *
  * @dataLast
  */
 export function swapProps<

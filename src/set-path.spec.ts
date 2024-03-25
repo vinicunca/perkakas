@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
-import { pipe } from '../pipe';
-import { stringToPath } from '../string';
+import { pipe } from './pipe';
 import { setPath } from './set-path';
+import { stringToPath } from './string-to-path';
 
 interface SampleType {
   a: {

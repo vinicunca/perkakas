@@ -1,6 +1,6 @@
 import type { IterableContainer } from './_types';
 
-import { purry } from '../purry';
+import { purry } from './purry';
 
 type Sampled<T extends IterableContainer, N extends number> =
   // Check if N is generic (e.g. not '5' but 'number')
@@ -61,10 +61,12 @@ type SampledLiteral<
  * @param data the array
  * @param sampleSize the number of elements to take
  * @signature
- *    sample(array, sampleSize)
+ *  sample(array, sampleSize)
  * @example
- *    sample(["hello", "world"], 1); // => ["hello"] // typed string[]
- *    sample(["hello", "world"] as const, 1); // => ["world"] // typed ["hello" | "world"]
+ *  import { sample } from '@vinicunca/perkakas';
+ *
+ *  sample(["hello", "world"], 1); // => ["hello"] // typed string[]
+ *  sample(["hello", "world"] as const, 1); // => ["world"] // typed ["hello" | "world"]
  * @dataFirst
  * @pipeable
  * @category Array
@@ -87,10 +89,12 @@ export function sample<T extends IterableContainer, N extends number = number>(
  *
  * @param sampleSize the number of elements to take
  * @signature
- *    sample(sampleSize)(array)
+ *  sample(sampleSize)(array)
  * @example
- *    sample(1)(["hello", "world"]); // => ["hello"] // typed string[]
- *    sample(1)(["hello", "world"] as const); // => ["world"] // typed ["hello" | "world"]
+ *  import { sample } from '@vinicunca/perkakas';
+ *
+ *  sample(1)(["hello", "world"]); // => ["hello"] // typed string[]
+ *  sample(1)(["hello", "world"] as const); // => ["world"] // typed ["hello" | "world"]
  * @dataLast
  * @pipeable
  * @category Array

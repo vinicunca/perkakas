@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { pipe } from '../pipe';
 import { mapToObj } from './map-to-obj';
+import { pipe } from './pipe';
 
 describe('data_first', () => {
   it('mapToObj', () => {

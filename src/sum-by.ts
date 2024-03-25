@@ -1,6 +1,6 @@
 import type { PredIndexed, PredIndexedOptional } from './_types';
 
-import { purry } from '../purry';
+import { purry } from './purry';
 
 function sumBy_(indexed: boolean) {
   return <T>(array: ReadonlyArray<T>, fn: PredIndexedOptional<T, number>) => {
@@ -16,15 +16,18 @@ function sumBy_(indexed: boolean) {
 
 /**
  * Returns the sum of the elements of an array using the provided predicate.
+ *
  * @param fn predicate function
  * @signature
- *   sumBy(fn)(array)
- *   sumBy.indexed(fn)(array)
+ *  sumBy(fn)(array)
+ *  sumBy.indexed(fn)(array)
  * @example
- *    pipe(
- *      [{a: 5}, {a: 1}, {a: 3}],
- *      sumBy(x => x.a)
- *    ) // 9
+ *  import { sumBy, pipe } from '@vicnunca/perkakas';
+ *
+ *  pipe(
+ *    [{a: 5}, {a: 1}, {a: 3}],
+ *    sumBy(x => x.a)
+ *  ) // 9
  * @dataLast
  * @indexed
  * @category Array
@@ -36,16 +39,19 @@ export function sumBy<T>(
 
 /**
  * Returns the sum of the elements of an array using the provided predicate.
+ *
  * @param items the array
  * @param fn predicate function
  * @signature
- *   sumBy(array, fn)
- *   sumBy.indexed(array, fn)
+ *  sumBy(array, fn)
+ *  sumBy.indexed(array, fn)
  * @example
- *    sumBy(
- *      [{a: 5}, {a: 1}, {a: 3}],
- *      x => x.a
- *    ) // 9
+ *  import { sumBy } from '@vicnunca/perkakas';
+ *
+ *  sumBy(
+ *    [{a: 5}, {a: 1}, {a: 3}],
+ *    x => x.a
+ *  ) // 9
  * @dataFirst
  * @indexed
  * @category Array

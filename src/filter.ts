@@ -1,8 +1,8 @@
-import type { LazyEvaluator } from '../pipe';
 import type { Pred, PredIndexed, PredIndexedOptional } from './_types';
+import type { LazyEvaluator } from './pipe';
 
-import { reduceLazy } from '../utils/reduce-lazy';
-import { toLazyIndexed } from '../utils/to-lazy-indexed';
+import { _reduceLazy } from './_reduce-lazy';
+import { _toLazyIndexed } from './_to-lazy-indexed';
 import { purry } from './purry';
 
 /**
@@ -14,11 +14,13 @@ import { purry } from './purry';
  *  filter(array, fn)
  *  filter.indexed(array, fn)
  * @example
+ *  import { filter, isIncludedIn } from '@vinicunca/perkakas';
+ *
  *  filter([1, 2, 3], x => x % 2 === 1); // => [1, 3]
  *  filter.indexed([1, 2, 3], (x, i, array) => x % 2 === 1); // => [1, 3]
- * ; // Excludes the values from `other` array
+ *  // Excludes the values from `other` array
  *  filter(array, isNot(isIncludedIn(other)))
- * ; // Returns a list of elements that exist in both array.
+ *  // Returns a list of elements that exist in both array.
  *  filter(array, isIncludedIn(other))
  * @dataFirst
  * @indexed
@@ -42,15 +44,17 @@ export function filter<T>(
  *  filter(fn)(array)
  *  filter.indexed(fn)(array)
  * @example
+ *  import { filter, isIncludedIn, isTruthy } from '@vinicunca/perkakas';
+ *
  *  pipe([1, 2, 3], filter(x => x % 2 === 1)); // => [1, 3]
  *  pipe([1, 2, 3], filter.indexed((x, i) => x % 2 === 1)); // => [1, 3]
- * ; // Filter out all falsy values
+ *  // Filter out all falsy values
  *  filter(isTruthy)
- * ; // Counts how many values of the collection pass the specified predicate
+ *  // Counts how many values of the collection pass the specified predicate
  *  filter(fn).length
- * ; // Excludes the values from `other` array
+ *  // Excludes the values from `other` array
  *  filter(isNot(isIncludedIn(other)))
- * ; // Returns a list of elements that exist in both array.
+ *  // Returns a list of elements that exist in both array.
  *  filter(isIncludedIn(other))
  * @dataLast
  * @indexed
@@ -70,7 +74,7 @@ export function filter(...args: Array<any>): unknown {
 
 function filter_(indexed: boolean) {
   return <T>(array: ReadonlyArray<T>, fn: PredIndexedOptional<T, boolean>) => {
-    return reduceLazy(
+    return _reduceLazy(
       array,
       indexed ? filter.lazyIndexed(fn) : filter.lazy(fn),
       indexed,
@@ -109,5 +113,5 @@ export namespace filter {
   }
 
   export const lazy = lazy_(false);
-  export const lazyIndexed = toLazyIndexed(lazy_(true));
+  export const lazyIndexed = _toLazyIndexed(lazy_(true));
 }

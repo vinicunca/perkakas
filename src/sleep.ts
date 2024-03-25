@@ -3,9 +3,11 @@
  *
  * @param timeout the number of milliseconds to wait
  * @signature
- *   sleep(timeout)
+ *  sleep(timeout)
  * @example
- *  sleep(1000) // => Promise<void>
+ *  import { sleep } from '@vinicunca/perkakas';
+ *
+ *  sleep(1000); // => Promise<void>
  * @category Function
  */
 export function sleep(timeout: number): Promise<void> {

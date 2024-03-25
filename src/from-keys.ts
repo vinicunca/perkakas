@@ -2,7 +2,7 @@ import type { Simplify } from 'type-fest';
 
 import type { IterableContainer } from './_types';
 
-import { purry } from '../purry';
+import { purry } from './purry';
 
 // Takes a union of literals and creates a union of records with the value V for
 // each key **separately**
@@ -28,10 +28,12 @@ type FromKeys<T extends IterableContainer, V> = T extends readonly []
  * @param mapper - Takes a key and returns the value that would be associated
  * with that key.
  * @signature
- *   fromKeys(data, mapper);
+ *  fromKeys(data, mapper);
  * @example
- *   fromKeys(["cat", "dog"], length()); // { cat: 3, dog: 3 } (typed as Partial<Record<"cat" | "dog", number>>)
- *   fromKeys([1, 2], add(1)); // { 1: 2, 2: 3 } (typed as Partial<Record<1 | 2, number>>)
+ *  import { fromKeys, length, add } from '@vinicunca/perkakas';
+ *
+ *  fromKeys(["cat", "dog"], length()); // { cat: 3, dog: 3 } (typed as Partial<Record<"cat" | "dog", number>>)
+ *  fromKeys([1, 2], add(1)); // { 1: 2, 2: 3 } (typed as Partial<Record<1 | 2, number>>)
  * @dataFirst
  * @category Object
  */
@@ -48,10 +50,12 @@ export function fromKeys<T extends IterableContainer<PropertyKey>, V>(
  * @param mapper - Takes a key and returns the value that would be associated
  * with that key.
  * @signature
- *   fromKeys(mapper)(data);
+ *  fromKeys(mapper)(data);
  * @example
- *   pipe(["cat", "dog"], fromKeys(length())); // { cat: 3, dog: 3 } (typed as Partial<Record<"cat" | "dog", number>>)
- *   pipe([1, 2], fromKeys(add(1))); // { 1: 2, 2: 3 } (typed as Partial<Record<1 | 2, number>>)
+ *  import { fromKeys, length, add, pipe } from '@vinicunca/perkakas';
+ *
+ *  pipe(["cat", "dog"], fromKeys(length())); // { cat: 3, dog: 3 } (typed as Partial<Record<"cat" | "dog", number>>)
+ *  pipe([1, 2], fromKeys(add(1))); // { 1: 2, 2: 3 } (typed as Partial<Record<1 | 2, number>>)
  * @dataLast
  * @category Object
  */

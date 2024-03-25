@@ -1,4 +1,4 @@
-import { purry } from '../purry';
+import { purry } from './purry';
 
 /**
  * Calls an input function `n` times, returning an array containing the results
@@ -10,7 +10,10 @@ import { purry } from '../purry';
  * @param count A value between `0` and `n - 1`. Increments after each function call.
  * @param fn The function to invoke. Passed one argument, the current value of `n`.
  * @return An array containing the return values of all calls to `fn`.
- * @example times(5, identity); //=> [0, 1, 2, 3, 4]
+ * @example
+ *  import { times } from '@vinicunca/perkakas';
+ *
+ *  times(5, identity); // => [0, 1, 2, 3, 4]
  * @dataFirst
  */
 export function times<T>(count: number, fn: (n: number) => T): Array<T>;
@@ -24,7 +27,10 @@ export function times<T>(count: number, fn: (n: number) => T): Array<T>;
  *
  * @param fn The function to invoke. Passed one argument, the current value of `n`.
  * @return An array containing the return values of all calls to `fn`.
- * @example times(identity)(5); //=> [0, 1, 2, 3, 4]
+ * @example
+ *  import { times, identity } from '@vinicunca/perkakas';
+ *
+ *  times(identity)(5); // => [0, 1, 2, 3, 4]
  * @dataLast
  */
 export function times<T>(fn: (n: number) => T): (count: number) => Array<T>;

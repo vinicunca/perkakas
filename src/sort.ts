@@ -1,6 +1,6 @@
 import type { IterableContainer } from './_types';
 
-import { purry } from '../purry';
+import { purry } from './purry';
 
 /**
  * Sorts an array. The comparator function should accept two values at a time and return a negative number if the first value is smaller, a positive number if it's larger, and zero if they are equal.
@@ -12,11 +12,13 @@ import { purry } from '../purry';
  * @param items the array to sort
  * @param cmp the comparator function
  * @signature
- *    sort(items, cmp)
- *    sort.strict(items, cmp)
+ *  sort(items, cmp)
+ *  sort.strict(items, cmp)
  * @example
- *    sort([4, 2, 7, 5], (a, b) => a - b) // => [2, 4, 5, 7] typed Array<number>
- *    sort.strict([4, 2] as [number, number], (a, b) => a - b) // [2, 4] typed [number, number]
+ *  import { sort } from '@vinicunca/perkakas';
+ *
+ *  sort([4, 2, 7, 5], (a, b) => a - b) // => [2, 4, 5, 7] typed Array<number>
+ *  sort.strict([4, 2] as [number, number], (a, b) => a - b) // [2, 4] typed [number, number]
  * @dataFirst
  * @category Array
  * @strict
@@ -35,11 +37,13 @@ export function sort<T>(
  *
  * @param cmp the comparator function
  * @signature
- *    sort(cmp)(items)
- *    sort.strict(cmp)(items)
+ *  sort(cmp)(items)
+ *  sort.strict(cmp)(items)
  * @example
- *    pipe([4, 2, 7, 5], sort((a, b) => a - b)) // => [2, 4, 5, 7] typed Array<number>
- *    pipe([4, 2] as [number, number], sort.strict((a, b) => a - b)) // => [2, 4] typed [number, number]
+ *  import { sort, pipe } from '@vinicunca/perkakas';
+ *
+ *  pipe([4, 2, 7, 5], sort((a, b) => a - b)) // => [2, 4, 5, 7] typed Array<number>
+ *  pipe([4, 2] as [number, number], sort.strict((a, b) => a - b)) // => [2, 4] typed [number, number]
  * @dataLast
  * @category Array
  * @strict

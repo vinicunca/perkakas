@@ -1,10 +1,13 @@
 /**
  * Merges a list of objects into a single object.
+ *
  * @param array the array of objects
  * @signature
- *    mergeAll(objects)
+ *  mergeAll(objects)
  * @example
- *    mergeAll([{ a: 1, b: 1 }, { b: 2, c: 3 }, { d: 10 }]) // => { a: 1, b: 2, c: 3, d: 10 }
+ *  import { mergeAll } from '@vinicunca/perkakas';
+ *
+ *  mergeAll([{ a: 1, b: 1 }, { b: 2, c: 3 }, { d: 10 }]) // => { a: 1, b: 2, c: 3, d: 10 }
  * @category Array
  */
 export function mergeAll<A>(array: readonly [A]): A;

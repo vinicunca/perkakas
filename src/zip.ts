@@ -1,6 +1,6 @@
 import type { IterableContainer } from './_types';
 
-import { purry } from '../purry';
+import { purry } from './purry';
 
 /**
  * Creates a new list from two supplied lists by pairing up equally-positioned items.
@@ -11,10 +11,12 @@ import { purry } from '../purry';
  * @param first the first input list
  * @param second the second input list
  * @signature
- *   zip(first, second)
+ *  zip(first, second)
  * @example
- *   zip([1, 2], ['a', 'b']) // => [[1, 'a'], [2, 'b']] (type: [number, string][])
- *   zip.strict([1, 2] as const, ['a', 'b'] as const) // => [[1, 'a'], [2, 'b']]  (type: [[1, 'a'], [2, 'b']])
+ *  import { zip } from '@vinicunca/perkakas';
+ *
+ *  zip([1, 2], ['a', 'b']) // => [[1, 'a'], [2, 'b']] (type: [number, string][])
+ *  zip.strict([1, 2] as const, ['a', 'b'] as const) // => [[1, 'a'], [2, 'b']]  (type: [[1, 'a'], [2, 'b']])
  * @dataFirst
  * @category Array
  * @strict
@@ -32,10 +34,12 @@ export function zip<F, S>(
  * to get another tuple instead of a generic array type.
  * @param second the second input list
  * @signature
- *   zip(second)(first)
+ *  zip(second)(first)
  * @example
- *   zip(['a', 'b'])([1, 2]) // => [[1, 'a'], [2, 'b']] (type: [number, string][])
- *   zip.strict(['a', 'b'] as const)([1, 2] as const) // => [[1, 'a'], [2, 'b']]  (type: [[1, 'a'], [2, 'b']])
+ *  import { zip } from '@vinicunca/perkakas';
+ *
+ *  zip(['a', 'b'])([1, 2]) // => [[1, 'a'], [2, 'b']] (type: [number, string][])
+ *  zip.strict(['a', 'b'] as const)([1, 2] as const) // => [[1, 'a'], [2, 'b']]  (type: [[1, 'a'], [2, 'b']])
  * @dataLast
  * @category Array
  * @strict

@@ -1,7 +1,7 @@
-import type { LazyEvaluator } from '../pipe';
+import type { LazyEvaluator } from './pipe';
 
-import { purry } from '../purry';
-import { reduceLazy } from '../utils/reduce-lazy';
+import { _reduceLazy } from './_reduce-lazy';
+import { purry } from './purry';
 
 type FlattenDeep<T> = T extends ReadonlyArray<infer K> ? FlattenDeep2<K> : T;
 type FlattenDeep2<T> = T extends ReadonlyArray<infer K> ? FlattenDeep3<K> : T;
@@ -13,9 +13,11 @@ type FlattenDeep4<T> = T extends ReadonlyArray<infer K> ? K : T;
  *
  * @param items the target array
  * @signature
- *   flattenDeep(array)
+ *  flattenDeep(array)
  * @example
- *    flattenDeep([[1, 2], [[3], [4, 5]]]) // => [1, 2, 3, 4, 5]
+ *  import { flattenDeep } from '@vinicunca/perkakas';
+ *
+ *  flattenDeep([[1, 2], [[3], [4, 5]]]) // => [1, 2, 3, 4, 5]
  * @pipeable
  * @category Array
  */
@@ -25,12 +27,14 @@ export function flattenDeep<T>(items: ReadonlyArray<T>): Array<FlattenDeep<T>>;
  * Recursively flattens `array`.
  *
  * @signature
- *   flattenDeep()(array)
+ *  flattenDeep()(array)
  * @example
- *    pipe(
- *      [[1, 2], [[3], [4, 5]]],
- *      flattenDeep(),
- *    ); // => [1, 2, 3, 4, 5]
+ *  import { flattenDeep, pipe } from '@vinicunca/perkakas';
+ *
+ *  pipe(
+ *    [[1, 2], [[3], [4, 5]]],
+ *    flattenDeep(),
+ *  ); // => [1, 2, 3, 4, 5]
  * @dataLast
  * @pipeable
  * @category Array
@@ -44,7 +48,7 @@ export function flattenDeep(...args: Array<any>): unknown {
 }
 
 function flattenDeep_<T>(items: ReadonlyArray<T>): Array<FlattenDeep<T>> {
-  return reduceLazy(items, flattenDeep.lazy());
+  return _reduceLazy(items, flattenDeep.lazy());
 }
 
 function flattenDeepValue_<T>(value: Array<T> | T): Array<FlattenDeep<T>> | T {

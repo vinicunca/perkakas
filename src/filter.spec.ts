@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
-import { createLazyInvocationCounter } from '../../test/lazy-invocation-counter';
-import { pipe } from '../pipe';
+import { createLazyInvocationCounter } from './../test/lazy-invocation-counter';
 import { filter } from './filter';
+import { pipe } from './pipe';
 
 function assertType<T>(data: T): T {
   return data;
@@ -36,7 +36,7 @@ describe('data_first', () => {
 
   it('filter.indexed with typescript guard', () => {
     const result = filter.indexed(
-      [1, 2, 3, false, 'text'] as const,; // Type (1 | 2 | 3 | false | "text")[]
+      [1, 2, 3, false, 'text'] as const, // Type (1 | 2 | 3 | false | "text")[]
       isNumber,
     );
     assertType<Array<1 | 2 | 3>>(result); // Type test (1 | 2 | 3)[]
@@ -72,7 +72,7 @@ describe('data_last', () => {
   it('filter with typescript guard', () => {
     const counter = createLazyInvocationCounter();
     const result = pipe(
-      [1, 2, 3, false, 'text'] as const,; // Type (1 | 2 | 3 | false | "text")[]
+      [1, 2, 3, false, 'text'] as const, // Type (1 | 2 | 3 | false | "text")[]
       filter(isNumber),
       counter.fn(),
     );
@@ -83,7 +83,7 @@ describe('data_last', () => {
   it('filter.indexed with typescript guard', () => {
     const counter = createLazyInvocationCounter();
     const result = pipe(
-      [1, 2, 3, false, 'text'] as const,; // Type (1 | 2 | 3 | false | "text")[]
+      [1, 2, 3, false, 'text'] as const, // Type (1 | 2 | 3 | false | "text")[]
       filter.indexed(isNumber),
       counter.fn(),
     );

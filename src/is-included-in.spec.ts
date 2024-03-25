@@ -1,7 +1,7 @@
 import { describe, expect, expectTypeOf, it } from 'vitest';
 
-import { pipe } from '../pipe';
 import { isIncludedIn } from './is-included-in';
+import { pipe } from './pipe';
 
 describe('dataFirst', () => {
   it('empty containers', () => {

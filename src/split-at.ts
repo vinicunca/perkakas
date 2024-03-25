@@ -1,4 +1,4 @@
-import { purry } from '../purry';
+import { purry } from './purry';
 
 /**
  * Splits a given array at a given index.
@@ -6,10 +6,12 @@ import { purry } from '../purry';
  * @param array the array to split
  * @param index the index to split at
  * @signature
- *    splitAt(array, index)
+ *  splitAt(array, index)
  * @example
- *    splitAt([1, 2, 3], 1) // => [[1], [2, 3]]
- *    splitAt([1, 2, 3, 4, 5], -1) // => [[1, 2, 3, 4], [5]]
+ *  import { splitAt } from '@vinicunca/perkakas';
+ *
+ *  splitAt([1, 2, 3], 1) // => [[1], [2, 3]]
+ *  splitAt([1, 2, 3, 4, 5], -1) // => [[1, 2, 3, 4], [5]]
  * @dataFirst
  * @category Array
  */
@@ -23,10 +25,12 @@ export function splitAt<T>(
  *
  * @param index the index to split at
  * @signature
- *    splitAt(index)(array)
+ *  splitAt(index)(array)
  * @example
- *    splitAt(1)([1, 2, 3]) // => [[1], [2, 3]]
- *    splitAt(-1)([1, 2, 3, 4, 5]) // => [[1, 2, 3, 4], [5]]
+ *  import { splitAt } from '@vinicunca/perkakas';
+ *
+ *  splitAt(1)([1, 2, 3]) // => [[1], [2, 3]]
+ *  splitAt(-1)([1, 2, 3, 4, 5]) // => [[1, 2, 3, 4], [5]]
  * @dataLast
  * @category Array
  */

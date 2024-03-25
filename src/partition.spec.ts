@@ -1,8 +1,8 @@
 import { assertType, describe, expect, it } from 'vitest';
 
-import { isNumber } from '../guard/is-number';
-import { pipe } from '../pipe';
+import { isNumber } from './is-number';
 import { partition } from './partition';
+import { pipe } from './pipe';
 
 const array = [
   { a: 1, b: 1 },

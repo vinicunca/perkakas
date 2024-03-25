@@ -1,7 +1,7 @@
-import type { LazyEvaluator } from '../pipe';
+import type { LazyEvaluator } from './pipe';
 
-import { purry } from '../purry';
 import { flatten } from './flatten';
+import { purry } from './purry';
 
 /**
  * Map each element of an array using a defined callback function and flatten the mapped result.
@@ -9,9 +9,10 @@ import { flatten } from './flatten';
  * @param array The array to map.
  * @param fn The function mapper.
  * @signature
- *    flatMap(array, fn)
+ *  flatMap(array, fn)
  * @example
- *    flatMap([1, 2, 3], x => [x, x * 10]) // => [1, 10, 2, 20, 3, 30]
+ *  import { flatMap } from '@vinicunca/perkakas';
+ *  flatMap([1, 2, 3], x => [x, x * 10]) // => [1, 10, 2, 20, 3, 30]
  * @dataFirst
  * @pipeable
  * @category Array
@@ -26,9 +27,11 @@ export function flatMap<T, K>(
  *
  * @param fn The function mapper.
  * @signature
- *    flatMap(fn)(array)
+ *  flatMap(fn)(array)
  * @example
- *    pipe([1, 2, 3], flatMap(x => [x, x * 10])) // => [1, 10, 2, 20, 3, 30]
+ *  import { flatMap, pipe } from '@vinicunca/perkakas';
+ *
+ *  pipe([1, 2, 3], flatMap(x => [x, x * 10])) // => [1, 10, 2, 20, 3, 30]
  * @dataLast
  * @pipeable
  * @category Array

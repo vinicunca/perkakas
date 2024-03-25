@@ -1,14 +1,16 @@
-import { hasAtLeast } from '../../src/has-at-least';
-import { fromPairs } from './from-pairs';
+import { hasAtLeast } from './../src/has-at-least';
+import { fromEntries } from './from-entries';
 import { purry } from './purry';
 
 /**
  * Returns a partial copy of an object omitting the keys specified.
  * @param propNames the property names
  * @signature
- *    omit(propNames)(obj);
+ *  omit(propNames)(obj);
  * @example
- *    pipe({ a: 1, b: 2, c: 3, d: 4 }, omit(['a', 'd'])) // => { b: 2, c: 3 }
+ *  import { omit, pipe } from '@vinicunca/perkakas';
+ *
+ *  pipe({ a: 1, b: 2, c: 3, d: 4 }, omit(['a', 'd'])); // => { b: 2, c: 3 }
  * @dataLast
  * @category Object
  */
@@ -21,9 +23,11 @@ export function omit<T extends object, K extends keyof T>(
  * @param data the object
  * @param propNames the property names
  * @signature
- *    omit(obj, names);
+ *  omit(obj, names);
  * @example
- *    omit({ a: 1, b: 2, c: 3, d: 4 }, ['a', 'd']) // => { b: 2, c: 3 }
+ *  import { omit } from '@vinicunca/perkakas';
+ *
+ *  omit({ a: 1, b: 2, c: 3, d: 4 }, ['a', 'd']); // => { b: 2, c: 3 }
  * @dataFirst
  * @category Object
  */
@@ -55,7 +59,7 @@ function omit_<T extends object, K extends keyof T>(
   }
 
   const asSet = new Set(propNames);
-  return fromPairs(
+  return fromEntries(
     Object.entries(data).filter(([key]) => !asSet.has(key as K)),
   ) as Omit<T, K>;
 }

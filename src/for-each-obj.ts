@@ -1,4 +1,4 @@
-import { purry } from '../purry';
+import { purry } from './purry';
 
 type IndexedIteratee<
   T extends Record<PropertyKey, unknown>,
@@ -13,14 +13,16 @@ type UnindexedIteratee<T extends Record<PropertyKey, unknown>> = (
  * @param fn The callback function.
  * @returns The original object
  * @signature
- *    forEachObj(object, fn)
+ *  forEachObj(object, fn)
  * @example
- *    forEachObj({a: 1}, (val) => {
- *      console.log(`${val}`)
- *    }) // "1"
- *    forEachObj.indexed({a: 1}, (val, key, obj) => {
- *      console.log(`${key}: ${val}`)
- *    }) // "a: 1"
+ *  import { forEachObj } from '@vinicunca/perkakas';
+ *
+ *  forEachObj({a: 1}, (val) => {
+ *    console.log(`${val}`)
+ *  }) // "1"
+ *  forEachObj.indexed({a: 1}, (val, key, obj) => {
+ *    console.log(`${key}: ${val}`)
+ *  }) // "a: 1"
  * @dataFirst
  * @category Object
  */
@@ -33,16 +35,18 @@ export function forEachObj<T extends Record<PropertyKey, unknown>>(
  * Iterate an object using a defined callback function. The original object is returned.
  * @param fn The callback function.
  * @signature
- *    forEachObj(fn)(object)
+ *  forEachObj(fn)(object)
  * @example
+ *  import { forEachObj, pipe } from '@vinicunca/perkakas';
+ *
  *  pipe(
- *      {a: 1},
- *      forEachObj((val) => console.log(`${val}`))
- *    ) // "1"
- *    pipe(
- *      {a: 1},
- *      forEachObj.indexed((val, key) => console.log(`${key}: ${val}`))
- *    ) // "a: 1"
+ *    {a: 1},
+ *    forEachObj((val) => console.log(`${val}`))
+ *  ) // "1"
+ *  pipe(
+ *    {a: 1},
+ *    forEachObj.indexed((val, key) => console.log(`${key}: ${val}`))
+ *  ) // "a: 1"
  * @dataLast
  * @category Object
  */

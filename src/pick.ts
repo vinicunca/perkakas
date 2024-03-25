@@ -1,11 +1,13 @@
-import { purry } from '../purry';
+import { purry } from './purry';
 
 /**
  * Creates an object composed of the picked `object` properties.
  * @param names the properties names
  * @signature pick([prop1, prop2])(object)
  * @example
- *    pipe({ a: 1, b: 2, c: 3, d: 4 }, pick(['a', 'd'])) // => { a: 1, d: 4 }
+ *  import { pick, pipe } from '@vinicunca/perkakas';
+ *
+ *  pipe({ a: 1, b: 2, c: 3, d: 4 }, pick(['a', 'd'])) // => { a: 1, d: 4 }
  * @dataLast
  * @category Object
  */
@@ -19,7 +21,9 @@ export function pick<T extends object, K extends keyof T>(
  * @param names the properties names
  * @signature pick(object, [prop1, prop2])
  * @example
- *    pick({ a: 1, b: 2, c: 3, d: 4 }, ['a', 'd']) // => { a: 1, d: 4 }
+ *  import { pick } from '@vinicunca/perkakas';
+ *
+ *  pick({ a: 1, b: 2, c: 3, d: 4 }, ['a', 'd']) // => { a: 1, d: 4 }
  * @dataFirst
  * @category Object
  */

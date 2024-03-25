@@ -1,4 +1,4 @@
-import { purry } from '../purry';
+import { purry } from './purry';
 
 type Enumerable<T> = ArrayLike<T> | Iterable<T>;
 
@@ -7,9 +7,11 @@ type Enumerable<T> = ArrayLike<T> | Iterable<T>;
  *
  * @param items The input data.
  * @signature
- *    length(array)
+ *  length(array)
  * @example
- *    length([1, 2, 3]) // => 3
+ *  import { length } from '@vinicunca/perkakas';
+ *
+ *  length([1, 2, 3]) // => 3
  * @category Array
  */
 export function length<T>(items: Enumerable<T>): number;
@@ -19,9 +21,11 @@ export function length<T>(): (items: Enumerable<T>) => number;
  * Counts values of the collection or iterable.
  *
  * @signature
- *    length()(array)
+ *  length()(array)
  * @example
- *    pipe([1, 2, 3], length()) // => 3
+ *  import { length, pipe } from '@vinicunca/perkakas';
+ *
+ *  pipe([1, 2, 3], length()) // => 3
  * @category Array
  */
 export function length(...args: Array<any>): unknown {

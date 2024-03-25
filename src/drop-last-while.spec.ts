@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { pipe } from '../pipe';
 import { dropLastWhile } from './drop-last-while';
+import { pipe } from './pipe';
 
 describe('data first', () => {
   it('should return items until the last predicate failure', () => {

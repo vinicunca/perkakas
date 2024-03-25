@@ -1,6 +1,6 @@
 import type { PredIndexedOptional } from './_types';
 
-import { purry } from '../purry';
+import { purry } from './purry';
 
 /**
  * Map each element of an array into an object using a defined callback function.
@@ -8,11 +8,13 @@ import { purry } from '../purry';
  * @param fn The mapping function, which should return a tuple of [key, value], similar to Object.fromEntries
  * @returns The new mapped object.
  * @signature
- *    mapToObj(array, fn)
- *    mapToObj.indexed(array, fn)
+ *  mapToObj(array, fn)
+ *  mapToObj.indexed(array, fn)
  * @example
- *    mapToObj([1, 2, 3], x => [String(x), x * 2]) // => {1: 2, 2: 4, 3: 6}
- *    mapToObj.indexed([0, 0, 0], (x, i) => [i, i]) // => {0: 0, 1: 1, 2: 2}
+ *  import { mapToObj } from '@vinicunca/perkakas';
+ *
+ *  mapToObj([1, 2, 3], x => [String(x), x * 2]) // => {1: 2, 2: 4, 3: 6}
+ *  mapToObj.indexed([0, 0, 0], (x, i) => [i, i]) // => {0: 0, 1: 1, 2: 2}
  * @dataFirst
  * @indexed
  * @category Array
@@ -27,17 +29,19 @@ export function mapToObj<T, K extends PropertyKey, V>(
  * @param fn The mapping function, which should return a tuple of [key, value], similar to Object.fromEntries
  * @returns The new mapped object.
  * @signature
- *    mapToObj(fn)(array)
- *    mapToObj.indexed(fn)(array)
+ *  mapToObj(fn)(array)
+ *  mapToObj.indexed(fn)(array)
  * @example
- *    pipe(
- *      [1, 2, 3],
- *      mapToObj(x => [String(x), x * 2])
- *    ) // => {1: 2, 2: 4, 3: 6}
- *    pipe(
- *      [0, 0, 0],
- *      mapToObj.indexed((x, i) => [i, i])
- *    ) // => {0: 0, 1: 1, 2: 2}
+ *  import { mapToObj, pipe } from '@vinicunca/perkakas';
+ *
+ *  pipe(
+ *    [1, 2, 3],
+ *    mapToObj(x => [String(x), x * 2])
+ *  ); // => {1: 2, 2: 4, 3: 6}
+ *  pipe(
+ *    [0, 0, 0],
+ *    mapToObj.indexed((x, i) => [i, i])
+ *  ); // => {0: 0, 1: 1, 2: 2}
  * @dataLast
  * @indexed
  * @category Array

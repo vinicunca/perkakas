@@ -1,4 +1,4 @@
-export function binarySearchCutoffIndex<T>(
+export function _binarySearchCutoffIndex<T>(
   array: ReadonlyArray<T>,
   predicate: (item: T, index: number) => boolean,
 ): number {

@@ -1,14 +1,14 @@
 import { expect, it } from 'vitest';
 
-import { createPipe } from './create-pipe';
+import { piped } from './piped';
 
 it('should pipe a single operation', () => {
-  const fn = createPipe((x: number) => x * 2);
+  const fn = piped((x: number) => x * 2);
   expect(fn(1)).toEqual(2);
 });
 
 it('should pipe operations', () => {
-  const fn = createPipe(
+  const fn = piped(
     (x: number) => x * 2,
     (x) => x * 3,
   );

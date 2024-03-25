@@ -8,38 +8,39 @@ type Entry<Key extends PropertyKey = PropertyKey, Value = unknown> = readonly [
 ];
 
 /**
- * Creates a new object from an array of tuples by pairing up first and second elements as `{[key]: value}`.
+ * Creates a new object from an array of tuples by pairing up first and second elements as {[key]: value}.
  * If a tuple is not supplied for any element in the array, the element will be ignored
  * If duplicate keys exist, the tuple with the greatest index in the input array will be preferred.
  *
  * The strict option supports more sophisticated use-cases like those that would
  * result when calling the strict `toPairs` function.
- * @param pairs the list of input tuples
- * @signature
- *   fromPairs(tuples)
- *   fromPairs.strict(tuples)
- * @example
- *  import { fromPairs, pipe } from '@vinicunca/perkakas';
  *
- *  fromPairs([['a', 'b'], ['c', 'd']]) // => {a: 'b', c: 'd'} (type: Record<string, string>)
- *  fromPairs.strict(['a', 1] as const) // => {a: 1} (type: {a: 1})
- *  pipe(
- *    [['a', 'b'], ['c', 'd']],
- *    fromPairs,
- *  ); // => {a: 'b', c: 'd'} (type: Record<string, string>)
- *  pipe(
- *    ['a', 1] as const,
- *    fromPairs.strict,
- *  ); // => {a: 1} (type: {a: 1})
- * @category Object
- * @strict
+ * There are several other functions that could be used to build an object from
+ * an array:
+ * `fromKeys` - Builds an object from an array of *keys* and a mapper for values.
+ * `indexBy` - Builds an object from an array of *values* and a mapper for keys.
+ * `pullObject` - Builds an object from an array of items with mappers for *both* keys and values.
+ * `mapToObj` - Builds an object from an array of items and a single mapper for key-value pairs.
+ * Refer to the docs for more details.
+ *
+ * @param entries - The list of input tuples.
+ * @signature
+ *  fromEntries(tuples)
+ *  fromEntries.strict(tuples)
+ * @example
+ *  import { fromEntries } from '@vinicunca/perkakas';
+ *
+ *  fromEntries([['a', 'b'], ['c', 'd']]); // => {a: 'b', c: 'd'} (type: Record<string, string>)
+ *  fromEntries.strict(['a', 1] as const); // => {a: 1} (type: {a: 1})
  * @dataFirst
+ * @strict
+ * @category Object
  */
-export function fromPairs<V>(
-  pairs: ReadonlyArray<Entry<number, V>>,
+export function fromEntries<V>(
+  entries: ReadonlyArray<Entry<number, V>>,
 ): Record<number, V>;
-export function fromPairs<V>(
-  pairs: ReadonlyArray<Entry<string, V>>,
+export function fromEntries<V>(
+  entries: ReadonlyArray<Entry<string, V>>,
 ): Record<string, V>;
 
 /**
@@ -49,34 +50,42 @@ export function fromPairs<V>(
  *
  * The strict option supports more sophisticated use-cases like those that would
  * result when calling the strict `toPairs` function.
- * @param pairs the list of input tuples
+ *
+ * There are several other functions that could be used to build an object from
+ * an array:
+ * `fromKeys` - Builds an object from an array of *keys* and a mapper for values.
+ * `indexBy` - Builds an object from an array of *values* and a mapper for keys.
+ * `pullObject` - Builds an object from an array of items with mappers for *both* keys and values.
+ * `mapToObj` - Builds an object from an array of items and a single mapper for key-value pairs.
+ * Refer to the docs for more details.
+ *
  * @signature
- *   fromPairs()(tuples)
- *   fromPairs.strict()(tuples)
+ *  fromEntries()(tuples)
+ *  fromEntries.strict()(tuples)
  * @example
- *   pipe(
- *     [['a', 'b'], ['c', 'd']],
- *     fromPairs(),
- *   ); // => {a: 'b', c: 'd'} (type: Record<string, string>)
- *   pipe(
- *     ['a', 1] as const,
- *     fromPairs.strict(),
- *   ); // => {a: 1} (type: {a: 1})
- * @category Object
- * @strict
+ *  import { fromEntries, pipe } from '@vinicunca/perkakas';
+ *
+ *  pipe(
+ *    [['a', 'b'], ['c', 'd']],
+ *    fromEntries(),
+ *  ); // => {a: 'b', c: 'd'} (type: Record<string, string>)
+ *  pipe(
+ *    ['a', 1] as const,
+ *    R.fromEntries.strict(),
+ *  ); // => {a: 1} (type: {a: 1})
  * @dataLast
+ * @strict
+ * @category Object
  */
-// TODO: Currently the dataLast overload breaks the typing for the headless version of the function, which is used widely in the wild.
-// export function fromPairs(): <K extends PropertyKey, V>(
-//   pairs: ReadonlyArray<Entry<K, V>>,
-// ) => Record<K extends string ? string : K extends number ? number : never, V>;
+export function fromEntries(): <K extends PropertyKey, V>(
+  entries: ReadonlyArray<Entry<K, V>>,
+) => Record<K extends string ? string : K extends number ? number : never, V>;
 
-export function fromPairs(...args: Array<any>): unknown {
-  // TODO: When we bump the typescript target beyond ES2019 we can use Object.fromEntries directly here instead of our user-space implementation.
-  return purry(fromPairsImplementation, args);
+export function fromEntries(...args: Array<any>): unknown {
+  return purry(fromEntriesImplementation, args);
 }
 
-function fromPairsImplementation(
+function fromEntriesImplementation(
   entries: ReadonlyArray<Entry>,
 ): Record<string, unknown> {
   const out: Record<PropertyKey, unknown> = {};
@@ -86,35 +95,37 @@ function fromPairsImplementation(
   return out;
 }
 
-// Redefining the fromPairs function to allow stricter pairs arrays and fine-
-// grained handling of partiality of the output.
-type Strict = // ) => StrictOut<Entries>;
-  //   entries: Entries,
-  // (): <Entries extends IterableContainer<Entry>>(
-  // TODO: Currently the dataLast overload breaks the typing for the headless version of the function, which is used widely in the wild.
+// Redefining the fromEntries function to allow stricter entries arrays and
+// fine-grained handling of partiality of the output.
+interface Strict {
   <Entries extends IterableContainer<Entry>>(
     entries: Entries,
+  ): StrictOut<Entries>;
+
+  (): <Entries extends IterableContainer<Entry>>(
+    entries: Entries,
   ) => StrictOut<Entries>;
+}
 
 // The 2 kinds of arrays we accept result in different kinds of outputs:
-// 1. If the input is a *tuple*, we know exactly what pairs it would hold,
+// 1. If the input is a *tuple*, we know exactly what entries it would hold,
 // and thus can type the result so that the keys are required. We will then run
-// recusrisvely on the rest of the tuple.
+// recursively on the rest of the tuple.
 // 2. If the input is an *array* then any keys defined in the array might not
 // actually show up in runtime, and thus need to be optional. (e.g. if the input
 // is an empty array).
 type StrictOut<Entries> = Entries extends readonly [infer First, ...infer Tail]
-  ? FromPairsTuple<First, Tail>
+  ? fromEntriesTuple<First, Tail>
   : Entries extends readonly [...infer Head, infer Last]
-    ? FromPairsTuple<Last, Head>
+    ? fromEntriesTuple<Last, Head>
     : Entries extends IterableContainer<Entry>
-      ? FromPairsArray<Entries>
-      : 'ERROR: Entries array-like could not be infered';
+      ? fromEntriesArray<Entries>
+      : 'ERROR: Entries array-like could not be inferred';
 
-// For strict tuples we build the result by intersecting each pair as a record
+// For strict tuples we build the result by intersecting each entry as a record
 // between it's key and value, recursively. The recursion goes through our main
 // type so that we support tuples which also contain rest parts.
-type FromPairsTuple<E, Rest> = E extends Entry
+type fromEntriesTuple<E, Rest> = E extends Entry
   ? Record<E[0], E[1]> & StrictOut<Rest>
   : 'ERROR: Array-like contains a non-entry element';
 
@@ -123,28 +134,29 @@ type FromPairsTuple<E, Rest> = E extends Entry
 // number or string) then the result is a simple record.
 // 2. If the keys are *literals* then we need to make the record partial
 // (because those props are explicit), and we need to match each key it's
-// specific possible value, as defined by the pairs.
+// specific possible value, as defined by the entries.
 //
-// Note that this destinction between keys is the result of how typescript
+// Note that this destination between keys is the result of how typescript
 // considers Record<string, unknown> to be **implicitly** partial, whereas
 // Record<"a", unknown> is not.
-type FromPairsArray<Entries extends IterableContainer<Entry>> =
+type fromEntriesArray<Entries extends IterableContainer<Entry>> =
   string extends AllKeys<Entries>
     ? Record<string, Entries[number][1]>
     : number extends AllKeys<Entries>
       ? Record<number, Entries[number][1]>
       : symbol extends AllKeys<Entries>
         ? Record<symbol, Entries[number][1]>
-        : FromPairsArrayWithLiteralKeys<Entries>;
+        : fromEntriesArrayWithLiteralKeys<Entries>;
 
 // This type is largely copied from `objectFromEntries` in the repo:
 // *sindresorhus/ts-extras* but makes all properties of the output optional,
 // which is more correct because we can't assure that an entry will exist for
 // every possible prop/key of the input.
 // @see https://github.com/sindresorhus/ts-extras/blob/44f57392c5f027268330771996c4fdf9260b22d6/source/object-from-entries.ts)
-type FromPairsArrayWithLiteralKeys<Entries extends IterableContainer<Entry>> = {
-  [K in AllKeys<Entries>]?: ValueForKey<Entries, K>;
-};
+type fromEntriesArrayWithLiteralKeys<Entries extends IterableContainer<Entry>> =
+  {
+    [K in AllKeys<Entries>]?: ValueForKey<Entries, K>;
+  };
 
 type AllKeys<Entries extends IterableContainer<Entry>> = Extract<
   Entries[number],
@@ -165,7 +177,7 @@ type ValueForKey<
     ? Entries[number]
     : Extract<Entries[number], Entry<K>>)[1];
 
-export namespace fromPairs {
-  // Strict is simply a retyping of fromPairs, it runs the same runtime logic.
-  export const strict = fromPairs as Strict;
+export namespace fromEntries {
+  // Strict is simply a retyping of fromEntries, it runs the same runtime logic.
+  export const strict = fromEntries as Strict;
 }

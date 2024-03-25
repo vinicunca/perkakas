@@ -17,16 +17,18 @@ import { isString } from './is-string';
  *
  * @param data the variable to check
  * @signature
- *    isEmpty(data)
+ *  isEmpty(data)
  * @returns true if the passed input is empty, false otherwise
  * @example
- *    isEmpty(undefined) //=>true
- *    isEmpty('') //=> true
- *    isEmpty([]) //=> true
- *    isEmpty({}) //=> true
- *    isEmpty('test') //=> false
- *    isEmpty([1, 2, 3]) //=> false
- *    isEmpty({ length: 0 }) //=> false
+ *  import { isEmpty } from '@vinicunca/perkakas';
+ *
+ *  isEmpty(undefined); // =>true
+ *  isEmpty(''); // => true
+ *  isEmpty([]); // => true
+ *  isEmpty({}); // => true
+ *  isEmpty('test'); // => false
+ *  isEmpty([1, 2, 3]); // => false
+ *  isEmpty({ length: 0 }); // => false
  * @category Guard
  */
 export function isEmpty<T extends string | undefined>(

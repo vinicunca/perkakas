@@ -4,8 +4,10 @@
  * @signature
  *  slugify(str)
  * @example
- *  slugify('FooBar') // => 'foobar'
- *  slugify('This!-is*&%#@^up!') // => 'this-is-up'
+ *  import { slugify } from '@vinicunca/perkakas';
+ *
+ *  slugify('FooBar'); // => 'foobar'
+ *  slugify('This!-is*&%#@^up!'); // => 'this-is-up'
  * @category String
  */
 export function slugify(str: string): string {

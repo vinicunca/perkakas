@@ -1,7 +1,7 @@
 import type { IterableContainer } from './_types';
 import type { Joined } from './join';
 
-import { purry } from '../purry';
+import { purry } from './purry';
 
 /**
  * @link https://github.com/sindresorhus/type-fest/blob/main/source/is-equal.d.ts
@@ -112,17 +112,17 @@ type SwappedIndices<
  * @param index2 the second index
  *
  * @signature
- *   swapIndices(data, index1, index2)
+ *  swapIndices(data, index1, index2)
  *
  * @example
- *   swapIndices(['a', 'b', 'c'], 0, 1) // => ['b', 'a', 'c']
- *   swapIndices(['a', 'b', 'c'], 1, -1) // => ['c', 'b', 'a']
- *   swapIndices('abc', 0, 1) // => 'bac'
+ *  import { swapIndices } from '@vinicunca/perkakas';
+ *
+ *  swapIndices(['a', 'b', 'c'], 0, 1) // => ['b', 'a', 'c']
+ *  swapIndices(['a', 'b', 'c'], 1, -1) // => ['c', 'b', 'a']
+ *  swapIndices('abc', 0, 1) // => 'bac'
  *
  * @category Array
- *
  * @returns Returns the manipulated array or string.
- *
  * @dataFirst
  */
 export function swapIndices<
@@ -136,11 +136,13 @@ export function swapIndices<
  * @param index2 the second index
  *
  * @signature
- *   swapIndices(index1, index2)(data)
+ *  swapIndices(index1, index2)(data)
  *
  * @example
- *   swapIndices(0, 1)(['a', 'b', 'c']) // => ['b', 'a', 'c']
- *   swapIndices(0, -1)('abc') // => 'cba'
+ *  import { swapIndices } from '@vinicunca/perkakas';
+ *
+ *  swapIndices(0, 1)(['a', 'b', 'c']) // => ['b', 'a', 'c']
+ *  swapIndices(0, -1)('abc') // => 'cba'
  *
  * @category Array
  * @returns Returns the manipulated array or string.

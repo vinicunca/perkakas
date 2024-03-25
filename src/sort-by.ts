@@ -1,6 +1,6 @@
 import type { CompareFunction, IterableContainer, NonEmptyArray } from './_types';
 
-import { type OrderRule, purryOrderRules } from '../utils/purry-order-rules';
+import { type OrderRule, purryOrderRules } from './_purry-order-rules';
 
 /**
  * Sorts `data` using the provided ordering rules. The `sort` is done via the native `Array.prototype.sort` but is performed on a shallow copy of the array to avoid mutating the original data.
@@ -18,17 +18,19 @@ import { type OrderRule, purryOrderRules } from '../utils/purry-order-rules';
  * @param rules - A variadic array of order rules defining the sorting criteria. Each order rule is a projection function that extracts a comparable value from the data. Sorting is based on these extracted values using the native `<` and `>` operators. Earlier rules take precedence over later ones. Use the syntax `[projection, "desc"]` for descending order.
  * @return - A shallow copy of the input array sorted by the provided rules.
  * @signature
- *    sortBy(...rules)(data)
- *    sortBy.strict(...rules)(data)
+ *  sortBy(...rules)(data)
+ *  sortBy.strict(...rules)(data)
  * @example
- *    pipe(
- *      [{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }],
- *      sortBy(x => x.a)
- *    ) // => [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 7 }] typed Array<{a:number}>
- *    pipe(
- *      [{ a: 1 }, { a: 3 }] as const,
- *      sortBy.strict(x => x.a)
- *    ) // => [{ a: 1 }, { a: 3 }] typed [{a: 1 | 3}, {a: 1 | 3}]
+ *  import { sortBy, pipe } from '@vinicunca/perkakas';
+ *
+ *  pipe(
+ *    [{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }],
+ *    sortBy(x => x.a)
+ *  ); // => [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 7 }] typed Array<{a:number}>
+ *  pipe(
+ *    [{ a: 1 }, { a: 3 }] as const,
+ *    sortBy.strict(x => x.a)
+ *  ); // => [{ a: 1 }, { a: 3 }] typed [{a: 1 | 3}, {a: 1 | 3}]
  * @dataLast
  * @category Array
  * @strict
@@ -54,36 +56,38 @@ export function sortBy<T>(
  * @param sortRules - A variadic array of order rules defining the sorting criteria. Each order rule is a projection function that extracts a comparable value from the data. Sorting is based on these extracted values using the native `<` and `>` operators. Earlier rules take precedence over later ones. Use the syntax `[projection, "desc"]` for descending order.
  * @return - A shallow copy of the input array sorted by the provided rules.
  * @signature
- *    sortBy(data, ...rules)
- *    sortBy.strict(data, ...rules)
+ *  sortBy(data, ...rules)
+ *  sortBy.strict(data, ...rules)
  * @example
- *    sortBy(
- *      [{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }],
- *      x => x.a
- *    )
- *    // => [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 7 }] typed Array<{a:number}>
+ *  import { sortBy } from '@vinicunca/perkakas';
  *
- *    sortBy(
- *     [
- *       {color: 'red', weight: 2},
- *       {color: 'blue', weight: 3},
- *       {color: 'green', weight: 1},
- *       {color: 'purple', weight: 1},
- *     ],
- *      [x => x.weight, 'asc'], x => x.color
- *    )
- *    // =>
- *    //   {color: 'green', weight: 1},
- *    //   {color: 'purple', weight: 1},
- *    //   {color: 'red', weight: 2},
- *    //   {color: 'blue', weight: 3},
- *    // typed Array<{color: string, weight: number}>
+ *  sortBy(
+ *    [{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }],
+ *    x => x.a
+ *  );
+ *  // => [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 7 }] typed Array<{a:number}>
  *
- *    sortBy.strict(
- *      [{ a: 1 }, { a: 3 }] as const,
- *      x => x.a
- *    )
- *    // => [{ a: 1 }, { a: 3 }] typed [{a: 1 | 3}, {a: 1 | 3}]
+ *  sortBy(
+ *   [
+ *     {color: 'red', weight: 2},
+ *     {color: 'blue', weight: 3},
+ *     {color: 'green', weight: 1},
+ *     {color: 'purple', weight: 1},
+ *   ],
+ *    [x => x.weight, 'asc'], x => x.color
+ *  );
+ *  // =>
+ *  //   {color: 'green', weight: 1},
+ *  //   {color: 'purple', weight: 1},
+ *  //   {color: 'red', weight: 2},
+ *  //   {color: 'blue', weight: 3},
+ *  // typed Array<{color: string, weight: number}>
+ *
+ *  sortBy.strict(
+ *    [{ a: 1 }, { a: 3 }] as const,
+ *    x => x.a
+ *  );
+ *  // => [{ a: 1 }, { a: 3 }] typed [{a: 1 | 3}, {a: 1 | 3}]
  * @dataFirst
  * @category Array
  * @strict

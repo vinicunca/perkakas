@@ -3,9 +3,9 @@
  * @see https://en.wikipedia.org/wiki/Quickselect
  */
 
-import type { CompareFunction } from './types';
+import type { CompareFunction } from './_types';
 
-import { swapInPlace } from './swap-in-place';
+import { swapInPlace } from './_swap-in-place';
 
 /**
  * Perform QuickSelect on the given data. Notice that the data would be cloned

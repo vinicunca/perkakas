@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { pipe } from '../pipe';
 import { pathOr } from './path-or';
+import { pipe } from './pipe';
 
 interface SampleType {
   a: {

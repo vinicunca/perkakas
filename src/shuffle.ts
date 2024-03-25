@@ -1,12 +1,14 @@
-import { purry } from '../purry';
+import { purry } from './purry';
 
 /**
  * Shuffles the input array, returning a new array with the same elements in a random order.
  * @param items the array to shuffle
  * @signature
- *    shuffle(array)
+ *  shuffle(array)
  * @example
- *    shuffle([4, 2, 7, 5]) // => [7, 5, 4, 2]
+ *  import { shuffle } from '@vinicunca/perkakas';
+ *
+ *  shuffle([4, 2, 7, 5]); // => [7, 5, 4, 2]
  * @category Array
  * @dataFirst
  */
@@ -15,9 +17,11 @@ export function shuffle<T>(items: ReadonlyArray<T>): Array<T>;
 /**
  * Shuffles the input array, returning a new array with the same elements in a random order.
  * @signature
- *    shuffle()(array)
+ *  shuffle()(array)
  * @example
- *    pipe([4, 2, 7, 5], shuffle()) // => [7, 5, 4, 2]
+ *  import { shuffle, pipe } from '@vinicunca/perkakas';
+ *
+ *  pipe([4, 2, 7, 5], shuffle()); // => [7, 5, 4, 2]
  * @category Array
  * @dataLast
  */

@@ -1,6 +1,6 @@
 import type { Merge } from 'type-fest';
 
-import { purry } from '../purry';
+import { purry } from './purry';
 
 /**
  * Merges two objects into one by combining their properties, effectively
@@ -20,9 +20,11 @@ import { purry } from '../purry';
  * @returns An object fully containing `source`, and any properties from `data`
  * that don't share a name with any property in `source`.
  * @signature
- *    R.merge(data, source)
+ *  merge(data, source)
  * @example
- *    R.merge({ x: 1, y: 2 }, { y: 10, z: 2 }) // => { x: 1, y: 10, z: 2 }
+ *  import { merge } from '@vinicunca/perkakas';
+ *
+ *  merge({ x: 1, y: 2 }, { y: 10, z: 2 }) // => { x: 1, y: 10, z: 2 }
  * @dataFirst
  * @category Object
  */
@@ -43,12 +45,14 @@ export function merge<T, Source>(data: T, source: Source): Merge<T, Source>;
  * @returns An object fully containing `source`, and any properties from `data`
  * that don't share a name with any property in `source`.
  * @signature
- *    R.merge(source)(data)
+ *  merge(source)(data)
  * @example
- *    R.pipe(
- *      { x: 1, y: 2 },
- *      R.merge({ y: 10, z: 2 }),
- *    ); // => { x: 1, y: 10, z: 2 }
+ *  import { merge, pipe } from '@vinicunca/perkakas';
+ *
+ *  pipe(
+ *    { x: 1, y: 2 },
+ *    merge({ y: 10, z: 2 }),
+ *  ); // => { x: 1, y: 10, z: 2 }
  * @dataLast
  * @category Object
  */

@@ -1,7 +1,7 @@
 import { assertType, describe, expect, it } from 'vitest';
 
-import { pipe } from '../pipe';
 import { omitBy } from './omit-by';
+import { pipe } from './pipe';
 
 describe('data first', () => {
   it('it should omit props', () => {

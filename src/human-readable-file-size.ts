@@ -5,8 +5,10 @@
  * @signature
  *  humanReadableFileSize(bytes, base)
  * @example
- *  humanReadableFileSize(1000) // => '1.0 kB'
- *  humanReadableFileSize(2097152, 1024) // => '2.0 Mib'
+ *  import { humanReadableFileSize } from '@vinicunca/perkakas';
+ *
+ *  humanReadableFileSize(1000); // => '1.0 kB'
+ *  humanReadableFileSize(2097152, 1024); // => '2.0 Mib'
  * @category String
  */
 export function humanReadableFileSize(bytes: number, base: 1000 | 1024 = 1000): string {

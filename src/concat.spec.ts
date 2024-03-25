@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { pipe } from '../pipe';
 import { concat } from './concat';
+import { pipe } from './pipe';
 
 describe('data first', () => {
   it('concat', () => {

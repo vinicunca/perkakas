@@ -1,7 +1,7 @@
-import type { LazyEvaluator } from '../pipe';
 import type { IterableContainer } from './_types';
+import type { LazyEvaluator } from './pipe';
 
-import { purry } from '../purry';
+import { purry } from './purry';
 
 type FirstOut<T extends IterableContainer> = T extends []
   ? undefined

@@ -11,7 +11,7 @@ import { purry } from './purry';
  * @example
  *  import { addProp } from '@vinicunca/perkakas';
  *
- *  addProp({firstName: 'john'}, 'lastName', 'doe'); // => {firstName: 'john', lastName: 'doe'}
+ *  addProp({ firstName: 'john' }, 'lastName', 'doe'); // => {firstName: 'john', lastName: 'doe'}
  * @dataFirst
  * @category Object
  */

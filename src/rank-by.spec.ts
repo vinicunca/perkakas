@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { identity } from '../function/identity';
+import { identity } from './identity';
 import { rankBy } from './rank-by';
 
 describe('runtime (dataFirst)', () => {

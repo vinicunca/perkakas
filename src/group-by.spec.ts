@@ -79,10 +79,10 @@ describe('result key types', () => {
 });
 
 describe('filtering on undefined grouper result', () => {
- ; // These tests use a contrived example that is basically a simple filter. The
- ; // goal of these tests is to make sure that all flavours of the function
- ; // accept an undefined return value for the grouper function, and that it
- ; // works in all the cases, including the typing.
+  // These tests use a contrived example that is basically a simple filter. The
+  // goal of these tests is to make sure that all flavours of the function
+  // accept an undefined return value for the grouper function, and that it
+  // works in all the cases, including the typing.
 
   it('regular', () => {
     const result = groupBy([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], (x) => x % 2 === 0 ? 'even' : undefined);

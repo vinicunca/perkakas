@@ -1,6 +1,6 @@
 import type { IterableContainer } from './_types';
 
-import { purry } from '../purry';
+import { purry } from './purry';
 
 type Joinable = bigint | boolean | null | number | string | undefined;
 
@@ -41,11 +41,13 @@ type NullishCoalesce<T, Fallback> = T extends Joinable
  * @param data The array to join
  * @param glue The string to put in between every two elements
  * @signature
- *    join(data, glue)
+ *  join(data, glue)
  * @example
- *    join([1,2,3], ",") // => "1,2,3" (typed `string`)
- *    join(['a','b','c'], "") // => "abc" (typed `string`)
- *    join(['hello', 'world'] as const, " ") // => "hello world" (typed `hello world`)
+ *  import { join } from '@vinicunca/perkakas';
+ *
+ *  join([1,2,3], ",") // => "1,2,3" (typed `string`)
+ *  join(['a','b','c'], "") // => "abc" (typed `string`)
+ *  join(['hello', 'world'] as const, " ") // => "hello world" (typed `hello world`)
  * @dataFirst
  * @category Array
  */
@@ -64,11 +66,13 @@ export function join<
  *
  * @param glue The string to put in between every two elements
  * @signature
- *    join(glue)(data)
+ *  join(glue)(data)
  * @example
- *    pipe([1,2,3], join(",")) // => "1,2,3" (typed `string`)
- *    pipe(['a','b','c'], join("")) // => "abc" (typed `string`)
- *    pipe(['hello', 'world'] as const, join(" ")) // => "hello world" (typed `hello world`)
+ *  import { join, pipe } from '@vinicunca/perkakas';
+ *
+ *  pipe([1,2,3], join(",")) // => "1,2,3" (typed `string`)
+ *  pipe(['a','b','c'], join("")) // => "abc" (typed `string`)
+ *  pipe(['hello', 'world'] as const, join(" ")) // => "hello world" (typed `hello world`)
  * @dataLast
  * @category Array
  */

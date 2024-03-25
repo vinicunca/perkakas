@@ -1,9 +1,9 @@
-import type { LazyEvaluator } from '../pipe';
 import type { Pred, PredIndexed, PredIndexedOptional } from './_types';
+import type { LazyEvaluator } from './pipe';
 
-import { purry } from '../purry';
-import { reduceLazy } from '../utils/reduce-lazy';
-import { toLazyIndexed } from '../utils/to-lazy-indexed';
+import { _reduceLazy } from './_reduce-lazy';
+import { _toLazyIndexed } from './_to-lazy-indexed';
+import { purry } from './purry';
 
 /**
  * Iterate an array using a defined callback function. The original array is returned instead of `void`.
@@ -11,15 +11,17 @@ import { toLazyIndexed } from '../utils/to-lazy-indexed';
  * @param fn The callback function.
  * @returns The original array
  * @signature
- *    forEach(array, fn)
- *    forEach.indexed(array, fn)
+ *  forEach(array, fn)
+ *  forEach.indexed(array, fn)
  * @example
- *    forEach([1, 2, 3], x => {
- *      console.log(x)
- *    }) // => [1, 2, 3]
- *    forEach.indexed([1, 2, 3], (x, i) => {
- *      console.log(x, i)
- *    }) // => [1, 2, 3]
+ *  import { forEach } from '@vinicunca/perkakas';
+ *
+ *  forEach([1, 2, 3], x => {
+ *    console.log(x)
+ *  }) // => [1, 2, 3]
+ *  forEach.indexed([1, 2, 3], (x, i) => {
+ *    console.log(x, i)
+ *  }) // => [1, 2, 3]
  * @dataFirst
  * @indexed
  * @pipeable
@@ -34,21 +36,23 @@ export function forEach<T>(
  * Iterate an array using a defined callback function. The original array is returned instead of `void`.
  * @param fn the function mapper
  * @signature
- *    forEach(fn)(array)
- *    forEach.indexed(fn)(array)
+ *  forEach(fn)(array)
+ *  forEach.indexed(fn)(array)
  * @example
- *    pipe(
- *      [1, 2, 3],
- *      forEach(x => {
- *        console.log(x)
- *      })
- *    ) // => [1, 2, 3]
- *    pipe(
- *      [1, 2, 3],
- *      forEach.indexed((x, i) => {
- *        console.log(x, i)
- *      })
- *    ) // => [1, 2, 3]
+ *  import { forEach, pipe } from '@vinicunca/perkakas';
+ *
+ *  pipe(
+ *    [1, 2, 3],
+ *    forEach(x => {
+ *      console.log(x)
+ *    })
+ *  ) // => [1, 2, 3]
+ *  pipe(
+ *    [1, 2, 3],
+ *    forEach.indexed((x, i) => {
+ *      console.log(x, i)
+ *    })
+ *  ) // => [1, 2, 3]
  * @dataLast
  * @indexed
  * @pipeable
@@ -64,7 +68,7 @@ export function forEach(...args: Array<any>): unknown {
 
 function forEach_(indexed: boolean) {
   return <T, K>(array: ReadonlyArray<T>, fn: PredIndexedOptional<T, K>) =>
-    reduceLazy(
+    _reduceLazy(
       array,
       indexed ? forEach.lazyIndexed(fn) : forEach.lazy(fn),
       indexed,
@@ -99,5 +103,5 @@ export namespace forEach {
     return purry(forEach_(true), args, forEach.lazyIndexed);
   }
   export const lazy = lazy_(false);
-  export const lazyIndexed = toLazyIndexed(lazy_(true));
+  export const lazyIndexed = _toLazyIndexed(lazy_(true));
 }

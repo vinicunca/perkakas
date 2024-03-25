@@ -1,9 +1,11 @@
 /**
  * A function that returns always `undefined`.
  * @signature
- *    noop()
+ *  noop()
  * @example
- *    onSomething(noop)
+ *  import { noop } from '@vinicunca/perkakas';
+ *
+ *  onSomething(noop)
  * @category Function
  */
 export function noop(): undefined {

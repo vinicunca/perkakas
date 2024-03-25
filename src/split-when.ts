@@ -1,4 +1,4 @@
-import { purry } from '../purry';
+import { purry } from './purry';
 import { splitAt } from './split-at';
 
 /**
@@ -6,9 +6,11 @@ import { splitAt } from './split-at';
  * @param array the array to split
  * @param fn the predicate
  * @signature
- *    splitWhen(array, fn)
+ *  splitWhen(array, fn)
  * @example
- *    splitWhen([1, 2, 3], x => x === 2) // => [[1], [2, 3]]
+ *  import { splitWhen } from '@vicnunca/perkakas';
+ *
+ *  splitWhen([1, 2, 3], x => x === 2) // => [[1], [2, 3]]
  * @dataFirst
  * @category Array
  */
@@ -21,9 +23,11 @@ export function splitWhen<T>(
  * Splits a given array at an index where the given predicate returns true.
  * @param fn the predicate
  * @signature
- *    splitWhen(fn)(array)
+ *  splitWhen(fn)(array)
  * @example
- *    splitWhen(x => x === 2)([1, 2, 3]) // => [[1], [2, 3]]
+ *  import { splitWhen } from '@vicnunca/perkakas';
+ *
+ *  splitWhen(x => x === 2)([1, 2, 3]) // => [[1], [2, 3]]
  * @dataLast
  * @category Array
  */

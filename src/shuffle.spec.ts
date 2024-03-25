@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 
-import { isIncludedIn } from '../guard/is-included-in';
-import { isNot } from '../guard/is-not';
-import { pipe } from '../pipe';
 import { filter } from './filter';
+import { isIncludedIn } from './is-included-in';
+import { isNot } from './is-not';
+import { pipe } from './pipe';
 import { shuffle } from './shuffle';
 
 describe('data_first', () => {

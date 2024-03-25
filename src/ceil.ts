@@ -1,4 +1,4 @@
-import { withPrecision } from './_with-precision';
+import { _withPrecision } from './_with-precision';
 import { purry } from './purry';
 
 /**
@@ -43,5 +43,5 @@ export function ceil(value: number, precision: number): number;
 export function ceil(precision: number): (value: number) => number;
 
 export function ceil(...args: Array<any>): unknown {
-  return purry(withPrecision(Math.ceil), args);
+  return purry(_withPrecision(Math.ceil), args);
 }

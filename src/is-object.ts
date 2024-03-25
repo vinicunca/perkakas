@@ -10,19 +10,21 @@ import type { NarrowedTo } from './_types';
  * @param data - The variable to check.
  * @returns - The input type, narrowed to only plain objects.
  * @signature
- *    isObject(data)
+ *  isObject(data)
  * @example
- *    // true
- *    isObject({}) //=> true
- *    isObject({ a: 123 }) //=> true
+ *  import { isObject } from '@vinicunca/perkakas';
  *
- *    // false
- *    isObject([]) //=> false
- *    isObject(Promise.resolve("something")) //=> false
- *    isObject(new Date()) //=> false
- *    isObject(new Error("error")) //=> false
- *    isObject('somethingElse') //=> false
- *    isObject(null) //=> false
+ *  // true
+ *  isObject({}); // => true
+ *  isObject({ a: 123 }); // => true
+ *
+ *  // false
+ *  isObject([]); // => false
+ *  isObject(Promise.resolve("something")); // => false
+ *  isObject(new Date()); // => false
+ *  isObject(new Error("error")); // => false
+ *  isObject('somethingElse'); // => false
+ *  isObject(null); // => false
  * @category Guard
  */
 export function isObject<T>(

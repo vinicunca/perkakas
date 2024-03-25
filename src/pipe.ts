@@ -28,7 +28,7 @@ interface LazyMany<T> {
 }
 
 type PreparedLazyOperation = LazyEvaluator & {
- ; // These are intentionally mutable, they maintain the lazy piped state.
+  // These are intentionally mutable, they maintain the lazy piped state.
   index: number;
   readonly isIndexed: boolean;
 
@@ -38,13 +38,16 @@ type PreparedLazyOperation = LazyEvaluator & {
 
 /**
  * Perform left-to-right function composition.
+ *
  * @param value The initial value.
  * @param arguments the list of operations to apply.
  * @signature pipe(data, op1, op2, op3)
  * @example
+ *  import { pipe, map } from '@vinicunca/perkakas';
+ *
  *  pipe(
  *    [1, 2, 3, 4],
- *  map(x => x * 2),
+ *    map(x => x * 2),
  *    arr => [arr[0] + arr[1], arr[2] + arr[3]],
  *  ); // => [6, 14]
  *
@@ -337,8 +340,8 @@ function processItem_(
     if (!lazyResult.hasNext) {
       break;
     }
-   ; // process remaining functions in the pipe
-   ; // but don't process remaining elements in the input array
+    // process remaining functions in the pipe
+    // but don't process remaining elements in the input array
     if (lazyResult.done) {
       isDone = true;
     }
@@ -363,7 +366,7 @@ function prepareLazyOperation(op: LazyOp): PreparedLazyOperation {
 }
 
 function isIterable(something: unknown): something is Iterable<unknown> {
- ; // Check for null and undefined to avoid errors when accessing Symbol.iterator
+  // Check for null and undefined to avoid errors when accessing Symbol.iterator
   return (
     typeof something === 'string'
     || (typeof something === 'object'

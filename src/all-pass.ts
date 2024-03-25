@@ -9,6 +9,7 @@ import { purry } from './purry';
  *  allPass(data, fns)
  * @example
  *  import { allPass } from '@vinicunca/perkakas';
+ *
  *  const isDivisibleBy3 = (x: number) => x % 3 === 0
  *  const isDivisibleBy4 = (x: number) => x % 4 === 0
  *  const fns = [isDivisibleBy3, isDivisibleBy4]
@@ -30,6 +31,8 @@ export function allPass<T>(
  * @signature
  *  allPass(fns)(data)
  * @example
+ *  import { allPass } from '@vinicunca/perkakas';
+ *
  *  const isDivisibleBy3 = (x: number) => x % 3 === 0
  *  const isDivisibleBy4 = (x: number) => x % 4 === 0
  *  const fns = [isDivisibleBy3, isDivisibleBy4]

@@ -1,6 +1,6 @@
 import { assertType, describe, expect, it } from 'vitest';
 
-import { pipe } from '../pipe';
+import { pipe } from './pipe';
 import { reverse } from './reverse';
 
 describe('data first', () => {

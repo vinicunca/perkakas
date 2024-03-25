@@ -2,9 +2,9 @@ import type { Simplify } from 'type-fest';
 
 import { describe, expect, expectTypeOf, it } from 'vitest';
 
-import { add } from '../add';
-import { pipe } from '../pipe';
+import { add } from './add';
 import { fromKeys } from './from-keys';
+import { pipe } from './pipe';
 
 type Letter =
   | 'a'

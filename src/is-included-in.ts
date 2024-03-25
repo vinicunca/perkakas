@@ -14,13 +14,15 @@ import type { IterableContainer } from './_types';
  * @param container - The items that are checked against.
  * @returns A narrowed version of the input data on success, `false` otherwise.
  * @signature
- *   isIncludedIn(data, container);
+ *  isIncludedIn(data, container);
  * @example
- *   isIncludedIn(2, [1, 2, 3]); // => true
- *   isIncludedIn(4, [1, 2, 3]); // => false
+ *  import { isIncludedIn } from '@vinicunca/perkakas';
  *
- *   const data = "cat" as "cat" | "dog" | "mouse";
- *   isIncludedIn(data, ["cat", "dog"] as const); // true (typed "cat" | "dog");
+ *  isIncludedIn(2, [1, 2, 3]); // => true
+ *  isIncludedIn(4, [1, 2, 3]); // => false
+ *
+ *  const data = "cat" as "cat" | "dog" | "mouse";
+ *  isIncludedIn(data, ["cat", "dog"] as const); // true (typed "cat" | "dog");
  * @dataFirst
  * @category Guard
  */
@@ -42,16 +44,18 @@ export function isIncludedIn<T, S extends T>(
  * @param container - The items that are checked against.
  * @returns A narrowed version of the input data on success, `false` otherwise.
  * @signature
- *   isIncludedIn(container)(data);
+ *  isIncludedIn(container)(data);
  * @example
- *   pipe(2, isIncludedIn([1, 2, 3])); // => true
- *   pipe(4, isIncludedIn([1, 2, 3])); // => false
+ *  import { isIncludedIn, pipe } from '@vinicunca/perkakas';
  *
- *   const data = "cat" as "cat" | "dog" | "mouse";
- *   pipe(
- *     data,
- *     isIncludedIn(["cat", "dog"] as const),
- *   ); // => true (typed "cat" | "dog");
+ *  pipe(2, isIncludedIn([1, 2, 3])); // => true
+ *  pipe(4, isIncludedIn([1, 2, 3])); // => false
+ *
+ *  const data = "cat" as "cat" | "dog" | "mouse";
+ *  pipe(
+ *    data,
+ *    isIncludedIn(["cat", "dog"] as const),
+ *  ); // => true (typed "cat" | "dog");
  * @dataLast
  * @category Guard
  */

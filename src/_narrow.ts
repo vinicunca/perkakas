@@ -12,7 +12,7 @@
  * @returns `A1 | Catch`
  * @example
  * ```ts
- * import {A} from 'ts-toolbelt'
+ *  import {A} from 'ts-toolbelt'
  *
  * type test0 = A.Try<'42', string>          // '42'
  * type test1 = A.Try<'42', number>          // never
@@ -44,7 +44,7 @@ type NarrowRaw<A> =
  * @returns `A`
  * @example
  * ```ts
- * import {F} from 'ts-toolbelt'
+ *  import {F} from 'ts-toolbelt'
  *
  * declare function foo<A extends any[]>(x: F.Narrow<A>): A;
  * declare function bar<A extends object>(x: F.Narrow<A>): A;

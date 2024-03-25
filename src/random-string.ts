@@ -1,5 +1,5 @@
-import { purry } from '../purry';
-import { times } from '../function/times';
+import { purry } from './purry';
+import { times } from './times';
 
 const ALPHABET
   = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -10,10 +10,12 @@ const ALPHABET
  * @param length the length of the random string
  * @returns the random string
  * @signature
- *   randomString(length)
+ *  randomString(length)
  * @example
- *   randomString(5) // => aB92J
- *   pipe(5, randomString) // => aB92J
+ *  import { randomString, pipe } from '@vinicunca/perkakas';
+ *
+ *  randomString(5); // => aB92J
+ *  pipe(5, randomString); // => aB92J
  * @category String
  * @dataFirst
  */
@@ -24,9 +26,11 @@ export function randomString(length: number): string;
  *
  * @returns the random string
  * @signature
- *   randomString()(length)
+ *  randomString()(length)
  * @example
- *    pipe(5, randomString()) // => aB92J
+ *  import { randomString, pipe } from '@vinicunca/perkakas';
+ *
+ *  pipe(5, randomString()); // => aB92J
  * @category String
  * @dataLast
  */

@@ -6,13 +6,14 @@ import type {
 } from './_types';
 import type { LazyEvaluator } from './pipe';
 
-import { reduceLazy } from './_reduce-lazy';
-import { toLazyIndexed } from './_to-lazy-indexed';
+import { _reduceLazy } from './_reduce-lazy';
+import { _toLazyIndexed } from './_to-lazy-indexed';
 import { purry } from './purry';
 
 /**
  * Map each element of an array using a defined callback function. If the input
  * array is a tuple use the `strict` variant to maintain it's shape.
+ *
  * @param array The array to map.
  * @param fn The function mapper.
  * @returns The new mapped array.
@@ -22,6 +23,8 @@ import { purry } from './purry';
  *  map.strict(array, fn)
  *  map.strict.indexed(array, fn)
  * @example
+ *  import { map } from '@vinicunca/perkakas';
+ *
  *  map([1, 2, 3], x => x * 2); // => [2, 4, 6], typed number[]
  *  map.indexed([0, 0, 0], (x, i) => i); // => [0, 1, 2], typed number[]
  *  map.strict([0, 0] as const, x => x + 1); // => [1, 1], typed [number, number]
@@ -36,11 +39,14 @@ export function map<T, K>(array: ReadonlyArray<T>, fn: Pred<T, K>): Array<K>;
 
 /**
  * Map each value of an object using a defined callback function.
+ *
  * @param fn the function mapper
  * @signature
  *  map(fn)(array)
  *  map.indexed(fn)(array)
  * @example
+ *  import { map, pipe } from '@vinicunca/perkakas';
+ *
  *  pipe([0, 1, 2], map(x => x * 2)); // => [0, 2, 4]
  *  pipe([0, 0, 0], map.indexed((x, i) => i)); // => [0, 1, 2]
  * @dataLast
@@ -58,7 +64,7 @@ export function map(...args: Array<any>): unknown {
 
 function map_(indexed: boolean) {
   return <T, K>(array: ReadonlyArray<T>, fn: PredIndexedOptional<T, K>) => {
-    return reduceLazy(
+    return _reduceLazy(
       array,
       indexed ? map.lazyIndexed(fn) : map.lazy(fn),
       indexed,
@@ -116,7 +122,7 @@ export namespace map {
   }
 
   export const lazy = lazy_(false);
-  export const lazyIndexed = toLazyIndexed(lazy_(true));
+  export const lazyIndexed = _toLazyIndexed(lazy_(true));
 
   export const strict: Strict = map;
 }

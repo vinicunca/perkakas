@@ -1,13 +1,16 @@
-import { purry } from '../purry';
+import { purry } from './purry';
 
 /**
  * Returns elements from the array until predicate returns false.
+ *
  * @param array the array
  * @param fn the predicate
  * @signature
- *    takeWhile(array, fn)
+ *  takeWhile(array, fn)
  * @example
- *    takeWhile([1, 2, 3, 4, 3, 2, 1], x => x !== 4) // => [1, 2, 3]
+ *  import { takeWhile } from '@vicnunca/perkakas';
+ *
+ *  takeWhile([1, 2, 3, 4, 3, 2, 1], x => x !== 4) // => [1, 2, 3]
  * @dataFirst
  * @category Array
  */
@@ -18,11 +21,14 @@ export function takeWhile<T>(
 
 /**
  * Returns elements from the array until predicate returns false.
+ *
  * @param fn the predicate
  * @signature
- *    takeWhile(fn)(array)
+ *  takeWhile(fn)(array)
  * @example
- *    pipe([1, 2, 3, 4, 3, 2, 1], takeWhile(x => x !== 4))  // => [1, 2, 3]
+ *  import { takeWhile, pipe } from '@vicnunca/perkakas';
+ *
+ *  pipe([1, 2, 3, 4, 3, 2, 1], takeWhile(x => x !== 4))  // => [1, 2, 3]
  * @dataLast
  * @category Array
  */

@@ -1,5 +1,5 @@
-import { purry } from '../purry';
 import { keys } from './keys';
+import { purry } from './purry';
 
 /**
  * Returns a partial copy of an object omitting the keys matching predicate.
@@ -7,7 +7,9 @@ import { keys } from './keys';
  * @param fn the predicate
  * @signature omitBy(object, fn)
  * @example
- *    omitBy({a: 1, b: 2, A: 3, B: 4}, (val, key) => key.toUpperCase() === key) // => {a: 1, b: 2}
+ *  import { omitBy } from '@vinicunca/perkakas';
+ *
+ *  omitBy({a: 1, b: 2, A: 3, B: 4}, (val, key) => key.toUpperCase() === key) // => {a: 1, b: 2}
  * @dataFirst
  * @category Object
  */
@@ -21,7 +23,9 @@ export function omitBy<T>(
  * @param fn the predicate
  * @signature omitBy(fn)(object)
  * @example
- *    omitBy((val, key) => key.toUpperCase() === key)({a: 1, b: 2, A: 3, B: 4}) // => {a: 1, b: 2}
+ *  import { omitBy } from '@vinicunca/perkakas';
+ *
+ *  omitBy((val, key) => key.toUpperCase() === key)({a: 1, b: 2, A: 3, B: 4}) // => {a: 1, b: 2}
  * @dataLast
  * @category Object
  */

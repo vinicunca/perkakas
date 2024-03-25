@@ -1,5 +1,5 @@
-import { purry } from '../purry';
-import { binarySearchCutoffIndex } from '../utils/binary-search-cutoff-index';
+import { _binarySearchCutoffIndex } from './_binary-search-cutoff-index';
+import { purry } from './purry';
 
 /**
  * Find the insertion position (index) of an item in an array with items sorted
@@ -20,9 +20,11 @@ import { binarySearchCutoffIndex } from '../utils/binary-search-cutoff-index';
  * @return - Insertion index (In the range 0..data.length)
  *
  * @signature
- *    sortedIndexBy(data, item, valueFunction)
+ *  sortedIndexBy(data, item, valueFunction)
  * @example
- *    sortedIndexBy([{age:20},{age:22}],{age:21},prop('age')) // => 1
+ *  import { sortedIndexBy } from '@vinicunca/perkakas';
+ *
+ *  sortedIndexBy([{age:20},{age:22}],{age:21},prop('age')) // => 1
  * @dataFirst
  * @indexed
  * @category Array
@@ -53,9 +55,11 @@ export function sortedIndexBy<T>(
  * @return - Insertion index (In the range 0..data.length)
  *
  * @signature
- *    sortedIndexBy(data, item, valueFunction)
+ *  sortedIndexBy(data, item, valueFunction)
  * @example
- *    sortedIndexBy([{age:20},{age:22}],{age:21},prop('age')) // => 1
+ *  import { sortedIndexBy } from '@vinicunca/perkakas';
+ *
+ *  sortedIndexBy([{age:20},{age:22}],{age:21},prop('age')) // => 1
  * @dataLast
  * @indexed
  * @category Array
@@ -92,7 +96,7 @@ function sortedIndexByImplementation<T>(
   valueFunction: (item: T, index?: number) => NonNullable<unknown>,
 ): number {
   const value = valueFunction(item);
-  return binarySearchCutoffIndex(
+  return _binarySearchCutoffIndex(
     array,
     (pivot, index) => valueFunction(pivot, index) < value,
   );

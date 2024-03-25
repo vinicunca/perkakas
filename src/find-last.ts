@@ -11,6 +11,8 @@ import { purry } from './purry';
  *  findLast(items, fn)
  *  findLast.indexed(items, fn)
  * @example
+ *  import { findLast } from '@vinicunca/perkakas';
+ *
  *  findLast([1, 3, 4, 6], n => n % 2 === 1); // => 3
  *  findLast.indexed([1, 3, 4, 6], (n, i) => n % 2 === 1); // => 3
  * @dataFirst
@@ -31,13 +33,15 @@ export function findLast<T>(
  *  findLast(fn)(items)
  *  findLast.indexed(fn)(items)
  * @example
+ *  import { pipe, findLast } from '@vinicunca/perkakas';
+ *
  *  pipe(
  *    [1, 3, 4, 6],
- *  findLast(n => n % 2 === 1)
+ *    findLast(n => n % 2 === 1)
  *  ); // => 3
  *  pipe(
  *    [1, 3, 4, 6],
- *  findLast.indexed((n, i) => n % 2 === 1)
+ *    findLast.indexed((n, i) => n % 2 === 1)
  *  ); // => 3
  * @dataLast
  * @indexed

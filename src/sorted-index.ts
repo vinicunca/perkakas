@@ -1,4 +1,4 @@
-import { binarySearchCutoffIndex } from '../utils/binary-search-cutoff-index';
+import { _binarySearchCutoffIndex } from './_binary-search-cutoff-index';
 import { purry } from './purry';
 
 /**
@@ -15,9 +15,11 @@ import { purry } from './purry';
  * @return - Insertion index (In the range 0..array.length)
  *
  * @signature
- *    sortedIndex(data, item)
+ *  sortedIndex(data, item)
  * @example
- *    sortedIndex(['a','a','b','c','c'], 'c') // => 3
+ *  import { sortedIndex } from '@vinicunca/perkakas';
+ *
+ *  sortedIndex(['a','a','b','c','c'], 'c') // => 3
  * @dataFirst
  * @category Array
  *
@@ -38,9 +40,11 @@ export function sortedIndex<T>(data: ReadonlyArray<T>, item: T): number;
  * @return - Insertion index (In the range 0..array.length)
  *
  * @signature
- *    sortedIndex(item)(data)
+ *  sortedIndex(item)(data)
  * @example
- *    pipe(['a','a','b','c','c'], sortedIndex('c')) // => 3
+ *  import { sortedIndex, pipe } from '@vinicunca/perkakas';
+ *
+ *  pipe(['a','a','b','c','c'], sortedIndex('c')) // => 3
  * @dataLast
  * @category Array
  *
@@ -54,5 +58,5 @@ export function sortedIndex(...args: Array<any>): unknown {
 
 function sortedIndexImplementation<T>(array: ReadonlyArray<T>,
   item: T): number {
-  return binarySearchCutoffIndex(array, (pivot) => pivot < item);
+  return _binarySearchCutoffIndex(array, (pivot) => pivot < item);
 }

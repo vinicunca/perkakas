@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import { pipe } from '../pipe';
 import { invert } from './invert';
+import { pipe } from './pipe';
 
 describe('data first', () => {
   it('empty object', () => {

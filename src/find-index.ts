@@ -1,8 +1,8 @@
-import type { LazyEvaluator } from '../pipe';
 import type { Pred, PredIndexed, PredIndexedOptional } from './_types';
+import type { LazyEvaluator } from './pipe';
 
-import { toLazyIndexed } from '../utils/to-lazy-indexed';
-import { toSingle } from '../utils/to-single';
+import { _toLazyIndexed } from './_to-lazy-indexed';
+import { _toSingle } from './_to-single';
 import { purry } from './purry';
 
 /**
@@ -14,6 +14,8 @@ import { purry } from './purry';
  *  findIndex(items, fn)
  *  findIndex.indexed(items, fn)
  * @example
+ *  import { findIndex } from '@vinicunca/perkakas';
+ *
  *  findIndex([1, 3, 4, 6], n => n % 2 === 0); // => 2
  *  findIndex.indexed([1, 3, 4, 6], (n, i) => n % 2 === 0); // => 2
  * @dataFirst
@@ -34,13 +36,14 @@ export function findIndex<T>(
  *  findIndex(fn)(items)
  *  findIndex.indexed(fn)(items)
  * @example
+ *  import { pipe, findIndex } from '@vinicunca/perkakas';
  *  pipe(
  *    [1, 3, 4, 6],
- *  findIndex(n => n % 2 === 0)
+ *    findIndex(n => n % 2 === 0)
  *  ); // => 2
  *  pipe(
  *    [1, 3, 4, 6],
- *  findIndex.indexed((n, i) => n % 2 === 0)
+ *    findIndex.indexed((n, i) => n % 2 === 0)
  *  ); // => 2
  * @dataLast
  * @indexed
@@ -87,7 +90,7 @@ export namespace findIndex {
     return purry(findIndex_(true), args, findIndex.lazyIndexed);
   }
 
-  export const lazy = toSingle(lazy_(false));
+  export const lazy = _toSingle(lazy_(false));
 
-  export const lazyIndexed = toSingle(toLazyIndexed(lazy_(true)));
+  export const lazyIndexed = _toSingle(_toLazyIndexed(lazy_(true)));
 }

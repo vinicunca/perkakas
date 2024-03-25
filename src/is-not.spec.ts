@@ -1,8 +1,8 @@
 import { describe, expect, expectTypeOf, it } from 'vitest';
 
-import type { AllTypesDataProviderTypes, TestClass } from '../../test/types-data-provider';
+import type { AllTypesDataProviderTypes, TestClass } from './../test/types-data-provider';
 
-import { ALL_TYPES_DATA_PROVIDER, TYPES_DATA_PROVIDER } from '../../test/types-data-provider';
+import { ALL_TYPES_DATA_PROVIDER, TYPES_DATA_PROVIDER } from './../test/types-data-provider';
 import { isNot } from './is-not';
 import { isPromise } from './is-promise';
 import { isString } from './is-string';

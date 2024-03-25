@@ -71,24 +71,24 @@ function groupBy_(indexed: boolean) {
 // Redefining the groupBy API with a stricter return type. This API is accessed
 // via `groupBy.strict`
 interface Strict {
- ; // Data-First
+  // Data-First
   <Value, Key extends PropertyKey = PropertyKey>(
     items: ReadonlyArray<Value>,
     fn: (item: Value) => Key | undefined
   ): StrictOut<Value, Key>;
 
- ; // Data-Last
+  // Data-Last
   <Value, Key extends PropertyKey = PropertyKey>(
     fn: (item: Value) => Key | undefined
   ): (items: ReadonlyArray<Value>) => StrictOut<Value, Key>;
 
   readonly indexed: {
-   ; // Data-Last
+    // Data-Last
     <Value, Key extends PropertyKey = PropertyKey>(
       fn: PredIndexed<Value, Key | undefined>
     ): (items: ReadonlyArray<Value>) => StrictOut<Value, Key>;
 
-   ; // Data-First
+    // Data-First
     <Value, Key extends PropertyKey = PropertyKey>(
       items: ReadonlyArray<Value>,
       fn: PredIndexed<Value, Key | undefined>
@@ -103,17 +103,18 @@ interface Strict {
 // record by definition, we need to make sure the result is properly partial
 // when using it with a refined key.
 type StrictOut<Value, Key extends PropertyKey = PropertyKey> =
- ; // If either string, number or symbol extend Key it means that Key is at least
- ; // as wide as them, so we don't need to wrap the returned record with Partial.
+  // If either string, number or symbol extend Key it means that Key is at least
+  // as wide as them, so we don't need to wrap the returned record with Partial.
   string extends Key
     ? Record<Key, NonEmptyArray<Value>>
     : number extends Key
       ? Record<Key, NonEmptyArray<Value>>
       : symbol extends Key
         ? Record<Key, NonEmptyArray<Value>>
-        :; // If the key is specific, e.g. 'cat' | 'dog', the result is partial
-     ; // because we can't statically know what values the mapper would return on
-     ; // a specific input
+        :
+        // If the key is specific, e.g. 'cat' | 'dog', the result is partial
+        // because we can't statically know what values the mapper would return on
+        // a specific input
         Partial<Record<Key, NonEmptyArray<Value>>>;
 
 export namespace groupBy {

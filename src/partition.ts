@@ -1,6 +1,6 @@
 import type { PredIndexed, PredIndexedOptional } from './_types';
 
-import { purry } from '../purry';
+import { purry } from './purry';
 
 /**
  * Splits a collection into two groups, the first of which contains elements the `predicate` type guard passes, and the second one containing the rest.
@@ -8,9 +8,11 @@ import { purry } from '../purry';
  * @param predicate a type guard function to invoke on every item
  * @returns the array of grouped elements.
  * @signature
- *    partition(array, fn)
+ *  partition(array, fn)
  * @example
- *    partition(['one', 'two', 'forty two'], x => x.length === 3) // => [['one', 'two'], ['forty two']]
+ *  import { partition } from '@vinicunca/perkakas';
+ *
+ *  partition(['one', 'two', 'forty two'], x => x.length === 3); // => [['one', 'two'], ['forty two']]
  * @dataFirst
  * @indexed
  * @category Array
@@ -26,9 +28,11 @@ export function partition<T, S extends T>(
  * @param predicate the function invoked per iteration
  * @returns the array of grouped elements.
  * @signature
- *    partition(array, fn)
+ *  partition(array, fn)
  * @example
- *    partition(['one', 'two', 'forty two'], x => x.length === 3) // => [['one', 'two'], ['forty two']]
+ *  import { partition } from '@vinicunca/perkakas';
+ *
+ *  partition(['one', 'two', 'forty two'], x => x.length === 3); // => [['one', 'two'], ['forty two']]
  * @dataFirst
  * @indexed
  * @category Array
@@ -43,9 +47,11 @@ export function partition<T>(
  * @param predicate the grouping function
  * @returns the array of grouped elements.
  * @signature
- *    partition(fn)(array)
+ *  partition(fn)(array)
  * @example
- *    pipe(['one', 'two', 'forty two'], partition(x => x.length === 3)) // => [['one', 'two'], ['forty two']]
+ *  import { partition, pipe } from '@vinicunca/perkakas';
+ *
+ *  pipe(['one', 'two', 'forty two'], partition(x => x.length === 3)); // => [['one', 'two'], ['forty two']]
  * @dataLast
  * @indexed
  * @category Array
@@ -59,9 +65,11 @@ export function partition<T, S extends T>(
  * @param predicate the grouping function
  * @returns the array of grouped elements.
  * @signature
- *    partition(fn)(array)
+ *  partition(fn)(array)
  * @example
- *    pipe(['one', 'two', 'forty two'], partition(x => x.length === 3)) // => [['one', 'two'], ['forty two']]
+ *  import { partition, pipe } from '@vinicunca/perkakas';
+ *
+ *  pipe(['one', 'two', 'forty two'], partition(x => x.length === 3)); // => [['one', 'two'], ['forty two']]
  * @dataLast
  * @indexed
  * @category Array

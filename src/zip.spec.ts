@@ -1,6 +1,6 @@
 import { assertType, describe, expect, expectTypeOf, it } from 'vitest';
 
-import { pipe } from '../pipe';
+import { pipe } from './pipe';
 import { zip } from './zip';
 
 const first = [1, 2, 3];

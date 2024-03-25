@@ -1,6 +1,6 @@
 import type { LazyEvaluator } from './pipe';
 
-import { reduceLazy } from './_reduce-lazy';
+import { _reduceLazy } from './_reduce-lazy';
 import { purry } from './purry';
 
 /**
@@ -41,7 +41,7 @@ export function drop(...args: Array<any>): unknown {
 }
 
 function drop_<T>(array: Array<T>, n: number) {
-  return reduceLazy(array, drop.lazy(n));
+  return _reduceLazy(array, drop.lazy(n));
 }
 
 export namespace drop {

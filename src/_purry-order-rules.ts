@@ -1,7 +1,7 @@
 // We define the comparators in a global const so that they are only
 // instantiated once, and so we can couple a label (string) for them that could
 
-import type { CompareFunction, NonEmptyArray } from './types';
+import type { CompareFunction, NonEmptyArray } from './_types';
 
 // be used in runtime to refer to them (e.g. "asc", "desc").
 const COMPARATORS = {

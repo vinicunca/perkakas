@@ -1,5 +1,5 @@
-import { purry } from '../purry';
-import { binarySearchCutoffIndex } from '../utils/binary-search-cutoff-index';
+import { _binarySearchCutoffIndex } from './_binary-search-cutoff-index';
+import { purry } from './purry';
 
 /**
  * Performs a **binary search** for the index of the item at which the predicate
@@ -21,9 +21,11 @@ import { binarySearchCutoffIndex } from '../utils/binary-search-cutoff-index';
  * @return - Index (In the range 0..data.length)
  *
  * @signature
- *    sortedIndexWith(data, predicate)
+ *  sortedIndexWith(data, predicate)
  * @example
- *    sortedIndexWith(['a','ab','abc'], (item) => item.length < 2) // => 1
+ *  import { sortedIndexWith } from '@vinicunca/perkakas';
+ *
+ *  sortedIndexWith(['a','ab','abc'], (item) => item.length < 2) // => 1
  * @dataFirst
  * @indexed
  * @category Array
@@ -54,9 +56,11 @@ export function sortedIndexWith<T>(
  * @return - Index (In the range 0..data.length)
  *
  * @signature
- *    sortedIndexWith(predicate)(data)
+ *  sortedIndexWith(predicate)(data)
  * @example
- *    pipe(['a','ab','abc'], sortedIndexWith((item) => item.length < 2)) // => 1
+ *  import { sortedIndexWith, pipe } from '@vinicunca/perkakas';
+ *
+ *  pipe(['a','ab','abc'], sortedIndexWith((item) => item.length < 2)) // => 1
  * @dataLast
  * @indexed
  * @category Array
@@ -68,7 +72,7 @@ export function sortedIndexWith<T>(
 ): (data: ReadonlyArray<T>) => number;
 
 export function sortedIndexWith(...args: Array<any>): unknown {
-  return purry(binarySearchCutoffIndex, args);
+  return purry(_binarySearchCutoffIndex, args);
 }
 
 export namespace sortedIndexWith {
@@ -80,6 +84,6 @@ export namespace sortedIndexWith {
     predicate: (item: T, index: number) => NonNullable<unknown>,
   ): (data: ReadonlyArray<T>) => number;
   export function indexed(...args: Array<any>): unknown {
-    return purry(binarySearchCutoffIndex, args);
+    return purry(_binarySearchCutoffIndex, args);
   }
 }

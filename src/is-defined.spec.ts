@@ -11,9 +11,6 @@ describe('isDefined', () => {
     if (isDefined(data)) {
       expect(data instanceof Date).toEqual(true);
       expectTypeOf(data).toEqualTypeOf<
-        | (() => void)
-        | [number, number, number]
-        | { readonly a: 'asd' }
         | Array<number>
         | Date
         | Error
@@ -27,6 +24,9 @@ describe('isDefined', () => {
         | number
         | string
         | symbol
+        | (() => void)
+        | { readonly a: 'asd' }
+        | [number, number, number]
       >();
     }
   });
@@ -35,9 +35,6 @@ describe('isDefined', () => {
     expect(data).toHaveLength(16);
     expectTypeOf(data).toEqualTypeOf<
       Array<
-        | (() => void)
-        | [number, number, number]
-        | { readonly a: 'asd' }
         | Array<number>
         | Date
         | Error
@@ -51,6 +48,9 @@ describe('isDefined', () => {
         | number
         | string
         | symbol
+        | (() => void)
+        | { readonly a: 'asd' }
+        | [number, number, number]
       >
     >();
   });
@@ -62,9 +62,6 @@ describe('strict', () => {
     if (isDefined.strict(data)) {
       expect(data instanceof Date).toEqual(true);
       expectTypeOf(data).toEqualTypeOf<
-        | (() => void)
-        | [number, number, number]
-        | { readonly a: 'asd' }
         | Array<number>
         | Date
         | Error
@@ -75,10 +72,13 @@ describe('strict', () => {
         | TestClass
         | Uint8Array
         | boolean
-        | null
         | number
         | string
         | symbol
+        | (() => void)
+        | { readonly a: 'asd' }
+        | [number, number, number]
+        | null
       >();
     }
   });
@@ -88,9 +88,6 @@ describe('strict', () => {
     expect(data).toHaveLength(17);
     expectTypeOf(data).toEqualTypeOf<
       Array<
-        | (() => void)
-        | [number, number, number]
-        | { readonly a: 'asd' }
         | Array<number>
         | Date
         | Error
@@ -101,10 +98,13 @@ describe('strict', () => {
         | TestClass
         | Uint8Array
         | boolean
-        | null
         | number
         | string
         | symbol
+        | (() => void)
+        | { readonly a: 'asd' }
+        | [number, number, number]
+        | null
       >
     >();
   });

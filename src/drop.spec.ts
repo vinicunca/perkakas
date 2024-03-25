@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
-import { createLazyInvocationCounter } from '../../test/lazy-invocation-counter';
-import { pipe } from '../pipe';
+import { createLazyInvocationCounter } from './../test/lazy-invocation-counter';
 import { drop } from './drop';
+import { pipe } from './pipe';
 import { take } from './take';
 
 const array = [1, 2, 3, 4, 5] as const;

@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { pipe } from '../pipe';
 import { forEachObj } from './for-each-obj';
+import { pipe } from './pipe';
 
 const obj = {
   a: 1,

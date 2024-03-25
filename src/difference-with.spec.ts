@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 
-import { createLazyInvocationCounter } from '../../test/lazy-invocation-counter';
-import { isDeepEqual } from '../guard/is-deep-equal';
-import { pipe } from '../pipe';
+import { createLazyInvocationCounter } from './../test/lazy-invocation-counter';
 import { differenceWith } from './difference-with';
+import { isDeepEqual } from './is-deep-equal';
+import { pipe } from './pipe';
 import { take } from './take';
 
 const source = [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 4 }];

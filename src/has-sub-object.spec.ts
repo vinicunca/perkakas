@@ -1,7 +1,7 @@
 import { describe, expect, expectTypeOf, it } from 'vitest';
 
-import { pipe } from '../pipe';
 import { hasSubObject } from './has-sub-object';
+import { pipe } from './pipe';
 
 describe('data first', () => {
   it('works with empty sub-object', () => {

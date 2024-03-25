@@ -7,9 +7,11 @@ type ZippingFunction<F = unknown, S = unknown, R = unknown> = (f: F, s: S) => R;
  * @param second the second input list
  * @param fn the function applied to each position of the list
  * @signature
- *   zipWith(first, second, fn)
+ *  zipWith(first, second, fn)
  * @example
- *   zipWith(['1', '2', '3'], ['a', 'b', 'c'], (a, b) => a + b) // => ['1a', '2b', '3c']
+ *  import { zipWith } from '@vinicunca/perkakas';
+ *
+ *  zipWith(['1', '2', '3'], ['a', 'b', 'c'], (a, b) => a + b) // => ['1a', '2b', '3c']
  * @dataFirst
  * @category Array
  */
@@ -24,9 +26,11 @@ export function zipWith<F, S, R>(
  * with the same-positioned element from each list.
  * @param fn the function applied to each position of the list
  * @signature
- *   zipWith(fn)(first, second)
+ *  zipWith(fn)(first, second)
  * @example
- *   zipWith((a, b) => a + b)(['1', '2', '3'], ['a', 'b', 'c']) // => ['1a', '2b', '3c']
+ *  import { zipWith } from '@vinicunca/perkakas';
+ *
+ *  zipWith((a, b) => a + b)(['1', '2', '3'], ['a', 'b', 'c']) // => ['1a', '2b', '3c']
  * @dataLast
  * @category Array
  */
@@ -40,9 +44,11 @@ export function zipWith<F, S, R>(
  * @param fn the function applied to each position of the list
  * @param second the second input list
  * @signature
- *   zipWith(fn)(first, second)
+ *  zipWith(fn)(first, second)
  * @example
- *   zipWith((a, b) => a + b, ['a', 'b', 'c'])(['1', '2', '3']) // => ['1a', '2b', '3c']
+ *  import { zipWith } from '@vinicunca/perkakas';
+ *
+ *  zipWith((a, b) => a + b, ['a', 'b', 'c'])(['1', '2', '3']) // => ['1a', '2b', '3c']
  * @dataLast
  * @category Array
  */

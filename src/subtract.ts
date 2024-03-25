@@ -1,4 +1,4 @@
-import { purry } from '../purry';
+import { purry } from './purry';
 
 /**
  * Subtracts two numbers.
@@ -6,11 +6,13 @@ import { purry } from '../purry';
  * @param value The number.
  * @param subtrahend The number to subtract from the value.
  * @signature
- *    subtract(value, subtrahend);
+ *  subtract(value, subtrahend);
  * @example
- *    subtract(10, 5) // => 5
- *    subtract(10, -5) // => 15
- *    R.reduce([1, 2, 3, 4], subtract, 20) // => 10
+ *  import { subtract, reduce } from '@vinicunca/perkakas';
+ *
+ *  subtract(10, 5) // => 5
+ *  subtract(10, -5) // => 15
+ *  reduce([1, 2, 3, 4], subtract, 20) // => 10
  * @dataFirst
  * @category Number
  */
@@ -21,11 +23,13 @@ export function subtract(value: number, subtrahend: number): number;
  *
  * @param subtrahend The number to subtract from the value.
  * @signature
- *    subtract(subtrahend)(value);
+ *  subtract(subtrahend)(value);
  * @example
- *    subtract(5)(10) // => 5
- *    subtract(-5)(10) // => 15
- *    map([1, 2, 3, 4], subtract(1)) // => [0, 1, 2, 3]
+ *  import { subtract, map } from '@vinicunca/perkakas';
+ *
+ *  subtract(5)(10) // => 5
+ *  subtract(-5)(10) // => 15
+ *  map([1, 2, 3, 4], subtract(1)) // => [0, 1, 2, 3]
  * @dataLast
  * @category Number
  */
