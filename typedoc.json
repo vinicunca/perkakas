@@ -1,9 +1,9 @@
 {
   "$schema": "https://typedoc.org/schema.json",
 
-  "tsconfig": "./tsconfig.json",
+  "tsconfig": "./tsconfig.typedoc.json",
   "entryPoints": ["./src/index.ts"],
-  "exclude": ["./src/**/*.spec.ts"],
+  "exclude": ["./src/*.spec.ts"],
 
   "jsDocCompatibility": {
     "exampleTag": false

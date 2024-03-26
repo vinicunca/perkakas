@@ -30,5 +30,5 @@
     "skipLibCheck": true
   },
 
-  "include": ["src", "test", "*.config.js", "*.config.ts", "ayo/aria", "ayo/array", "ayo/function", "ayo/guard", "ayo/number", "ayo/object", "ayo/string", "ayo/type", "ayo/utils"]
+  "include": ["src", "test", "*.config.js", "*.config.ts"]
 }
