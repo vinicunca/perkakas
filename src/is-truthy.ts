@@ -1,23 +1,22 @@
 /**
- * A function that checks if the passed parameter is truthy and narrows its type accordingly
+ * A function that checks if the passed parameter is truthy and narrows its type accordingly.
  *
- * @param data the variable to check
+ * @param data - The variable to check.
+ * @returns True if the passed input is truthy, false otherwise.
  * @signature
- *  isTruthy(data)
- * @returns true if the passed input is truthy, false otherwise
+ *    P.isTruthy(data)
  * @example
- *  import { isTruthy } from '@vinicunca/perkakas';
- *
- *  isTruthy('somethingElse'); // => true
- *  isTruthy(null); // => false
- *  isTruthy(undefined); // => false
- *  isTruthy(false); // => false
- *  isTruthy(0); // => false
- *  isTruthy(''); // => false
+ *    P.isTruthy('somethingElse') //=> true
+ *    P.isTruthy(null) //=> false
+ *    P.isTruthy(undefined) //=> false
+ *    P.isTruthy(false) //=> false
+ *    P.isTruthy(0) //=> false
+ *    P.isTruthy('') //=> false
  * @category Guard
  */
+
 export function isTruthy<T>(
   data: T,
 ): data is Exclude<T, '' | 0 | false | null | undefined> {
-  return !!data;
+  return Boolean(data);
 }

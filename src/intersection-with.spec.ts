@@ -1,8 +1,6 @@
-import { describe, expect, it } from 'vitest';
-
-import { createLazyInvocationCounter } from './../test/lazy-invocation-counter';
-import { isDeepEqual } from './is-deep-equal';
+import { createLazyInvocationCounter } from '../test/lazy-invocation-counter';
 import { intersectionWith } from './intersection-with';
+import { isDeepEqual } from './is-deep-equal';
 import { pipe } from './pipe';
 import { take } from './take';
 
@@ -31,15 +29,13 @@ describe('intersectionWith', () => {
       expect(
         intersectionWith(
           other,
-          /**
-           * type inference doesn't work properly for the comparator's first parameter
-           * in data last variant
-           */
+          // type inference doesn't work properly for the comparator's first
+          // parameter in data last variant
           (a, b) => (a as (typeof source)[0]).id === b,
         )(source),
       ).toEqual(expected);
     });
-    it('checks if items are equal based on imported util function as a comparator', () => {
+    it('checks if items are equal based on the imported util function as a comparator', () => {
       expect(
         pipe(
           [

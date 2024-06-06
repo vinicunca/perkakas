@@ -1,65 +1,63 @@
-import { hasAtLeast } from './../src/has-at-least';
-import { fromEntries } from './from-entries';
-import { purry } from './purry';
+import { curry } from './curry';
+import { hasAtLeast } from './has-at-least';
 
 /**
  * Returns a partial copy of an object omitting the keys specified.
- * @param propNames the property names
- * @signature
- *  omit(propNames)(obj);
- * @example
- *  import { omit, pipe } from '@vinicunca/perkakas';
  *
- *  pipe({ a: 1, b: 2, c: 3, d: 4 }, omit(['a', 'd'])); // => { b: 2, c: 3 }
+ * @param propNames - The property names.
+ * @signature
+ *    P.omit(names)(obj);
+ * @example
+ *    P.pipe({ a: 1, b: 2, c: 3, d: 4 }, P.omit(['a', 'd'])) // => { b: 2, c: 3 }
  * @dataLast
  * @category Object
  */
 export function omit<T extends object, K extends keyof T>(
-  propNames: ReadonlyArray<K>
+  propNames: ReadonlyArray<K>,
 ): (data: T) => Omit<T, K>;
 
 /**
  * Returns a partial copy of an object omitting the keys specified.
- * @param data the object
- * @param propNames the property names
- * @signature
- *  omit(obj, names);
- * @example
- *  import { omit } from '@vinicunca/perkakas';
  *
- *  omit({ a: 1, b: 2, c: 3, d: 4 }, ['a', 'd']); // => { b: 2, c: 3 }
+ * @param data - The object.
+ * @param propNames - The property names.
+ * @signature
+ *    P.omit(obj, names);
+ * @example
+ *    P.omit({ a: 1, b: 2, c: 3, d: 4 }, ['a', 'd']) // => { b: 2, c: 3 }
  * @dataFirst
  * @category Object
  */
 export function omit<T extends object, K extends keyof T>(
   data: T,
-  propNames: ReadonlyArray<K>
+  propNames: ReadonlyArray<K>,
 ): Omit<T, K>;
 
-export function omit(...args: Array<any>): unknown {
-  return purry(omit_, args);
+export function omit(...args: ReadonlyArray<unknown>): unknown {
+  return curry(omitImplementation, args);
 }
 
-function omit_<T extends object, K extends keyof T>(
+function omitImplementation<T extends object, K extends keyof T>(
   data: T,
   propNames: ReadonlyArray<K>,
 ): Omit<T, K> {
   if (!hasAtLeast(propNames, 1)) {
+    // No props to omit at all!
     return { ...data };
   }
 
   if (!hasAtLeast(propNames, 2)) {
-    const [propName] = propNames;
-    const { [propName]: omitted, ...remaining } = data;
+    // Only one prop to omit.
+    const { [propNames[0]]: _omitted, ...remaining } = data;
     return remaining;
   }
 
-  if (!propNames.some((propName) => propName in data)) {
-    return { ...data };
-  }
+  // Multiple props to omit...
 
-  const asSet = new Set(propNames);
-  return fromEntries(
-    Object.entries(data).filter(([key]) => !asSet.has(key as K)),
-  ) as Omit<T, K>;
+  const out = { ...data };
+  for (const prop of propNames) {
+    // eslint-disable-next-line ts/no-dynamic-delete -- This is the best way to do it!
+    delete out[prop];
+  }
+  return out;
 }

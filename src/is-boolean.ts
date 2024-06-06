@@ -1,17 +1,16 @@
-import type { NarrowedTo } from './_types';
+import type { NarrowedTo } from './helpers/types';
 
 /**
- * A function that checks if the passed parameter is a boolean and narrows its type accordingly
- * @param data the variable to check
- * @signature
- *  isBoolean(data)
- * @returns true if the passed input is a boolean, false otherwise
- * @example
- *  import { isBoolean } from '@vinicunca/perkakas';
+ * A function that checks if the passed parameter is a boolean and narrows its type accordingly.
  *
- *  isBoolean(true); // => true
- *  isBoolean(false); // => true
- *  isBoolean('somethingElse'); // => false
+ * @param data - The variable to check.
+ * @returns True if the passed input is a boolean, false otherwise.
+ * @signature
+ *    P.isBoolean(data)
+ * @example
+ *    P.isBoolean(true) //=> true
+ *    P.isBoolean(false) //=> true
+ *    P.isBoolean('somethingElse') //=> false
  * @category Guard
  */
 export function isBoolean<T>(

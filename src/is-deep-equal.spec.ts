@@ -1,5 +1,4 @@
-import { describe, expect, expectTypeOf, it } from 'vitest';
-
+import { differenceWith } from './difference-with';
 import { isDeepEqual } from './is-deep-equal';
 
 function func1(): void {
@@ -75,7 +74,7 @@ describe('objects', () => {
     expect(isDeepEqual({ a: 1, b: '2' }, { a: 1, b: '2' })).toBe(true);
   });
   it('equal objects (different properties "order")', () => {
-    expect(isDeepEqual({ a: 1, b: '2' }, { a: 1, b: '2' })).toBe(true);
+    expect(isDeepEqual({ a: 1, b: '2' }, { b: '2', a: 1 })).toBe(true);
   });
   it('not equal objects (extra property)', () => {
     expect(isDeepEqual({ a: 1, b: '2' }, { a: 1, b: '2', c: [] })).toBe(false);
@@ -129,6 +128,53 @@ describe('objects', () => {
   });
 });
 
+describe('sets', () => {
+  it('two empty sets should be equal', () => {
+    expect(isDeepEqual(new Set(), new Set())).toBe(true);
+  });
+
+  it('two sets of the same lenght should not be equal', () => {
+    expect(isDeepEqual(new Set([1]), new Set([1, 2]))).toBe(false);
+  });
+
+  it('two sets of with different primitive content should not be equal', () => {
+    expect(isDeepEqual(new Set([1, 2, 4]), new Set([1, 2, 3]))).toBe(false);
+  });
+
+  it('two sets of with the same primitive content should equal', () => {
+    expect(
+      isDeepEqual(new Set([{ a: 1 }, { b: 3 }]), new Set([{ b: 3 }, { a: 1 }])),
+    ).toBe(true);
+  });
+
+  it('two sets with duplicated non primitive content should not be equal', () => {
+    expect(
+      isDeepEqual(
+        new Set([{ a: 1 }, { b: 3 }, { a: 1 }]),
+        new Set([{ b: 3 }, { a: 1 }, { b: 3 }]),
+      ),
+    ).toBe(false);
+  });
+
+  it('two sets of Maps with the same values should be equal', () => {
+    expect(
+      isDeepEqual(
+        new Set([new Map([['a', 123]]), new Map([['b', 456]])]),
+        new Set([new Map([['b', 456]]), new Map([['a', 123]])]),
+      ),
+    ).toBe(true);
+  });
+
+  it('two sets with more than two items that are all equal should be equal', () => {
+    expect(
+      isDeepEqual(
+        new Set([{ a: 1 }, { b: 3 }, { c: 4 }, { a: 1 }]),
+        new Set([{ b: 3 }, { c: 4 }, { a: 1 }, { a: 1 }]),
+      ),
+    ).toBe(true);
+  });
+});
+
 describe('arrays', () => {
   it('two empty arrays are equal', () => {
     expect(isDeepEqual([], [])).toBe(true);
@@ -154,6 +200,69 @@ describe('arrays', () => {
   });
   it('pseudo array and equivalent array are not equal', () => {
     expect(isDeepEqual({ 0: 0, 1: 1, length: 2 }, [0, 1])).toBe(false);
+  });
+});
+
+describe('maps', () => {
+  it('works on shallow equal maps', () => {
+    expect(isDeepEqual(new Map([['a', 1]]), new Map([['a', 1]]))).toBe(true);
+  });
+
+  it('two empty Maps should be equal', () => {
+    expect(isDeepEqual(new Map(), new Map())).toBe(true);
+  });
+
+  it('two Maps with different size should not be equal', () => {
+    expect(isDeepEqual(new Map(), new Map([['a', 1]]))).toBe(false);
+  });
+
+  it('two Maps with different keys shoud not be equal', () => {
+    expect(
+      isDeepEqual(
+        new Map([
+          ['a', 1],
+          ['c', 2],
+        ]),
+        new Map([
+          ['a', 1],
+          ['b', 2],
+        ]),
+      ),
+    ).toBe(false);
+  });
+
+  it('two maps with the same keys but with different values should not be equal', () => {
+    expect(
+      isDeepEqual(
+        new Map([
+          ['a', 1],
+          ['b', 3],
+          ['c', 2],
+        ]),
+        new Map([
+          ['a', 1],
+          ['b', 2],
+          ['c', 2],
+        ]),
+      ),
+    ).toBe(false);
+  });
+
+  it('two Maps with the same non primitives data should be equal', () => {
+    expect(
+      isDeepEqual(
+        new Map([
+          ['a', { a: [1, 2, 3] }],
+          ['b', { a: [3] }],
+          ['c', { b: [4] }],
+        ]),
+        new Map([
+          ['a', { a: [1, 2, 3] }],
+          ['b', { a: [3] }],
+          ['c', { b: [4] }],
+        ]),
+      ),
+    ).toBe(true);
   });
 });
 
@@ -228,25 +337,25 @@ describe('sample objects', () => {
             subProp1: 'sub value1',
             subProp2: {
               subSubProp1: 'sub sub value1',
-              subSubProp2: [1, 2, { prop: 2, prop2: 1 }, 4, 5],
+              subSubProp2: [1, 2, { prop2: 1, prop: 2 }, 4, 5],
             },
           },
           prop5: 1000,
           prop6: new Date(2016, 2, 10),
         },
         {
+          prop5: 1000,
+          prop3: 'value3',
           prop1: 'value1',
           prop2: 'value2',
-          prop3: 'value3',
+          prop6: new Date('2016/03/10'),
           prop4: {
-            subProp1: 'sub value1',
             subProp2: {
               subSubProp1: 'sub sub value1',
-              subSubProp2: [1, 2, { prop: 2, prop2: 1 }, 4, 5],
+              subSubProp2: [1, 2, { prop2: 1, prop: 2 }, 4, 5],
             },
+            subProp1: 'sub value1',
           },
-          prop5: 1000,
-          prop6: new Date('2016/03/10'),
         },
       ),
     ).toBe(true);
@@ -259,10 +368,14 @@ describe('typing', () => {
 
     if (isDeepEqual(data, 1)) {
       expectTypeOf(data).toEqualTypeOf<number>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<number | string>();
     }
 
     if (isDeepEqual(data, 'hello')) {
       expectTypeOf(data).toEqualTypeOf<string>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<number | string>();
     }
   });
 
@@ -270,6 +383,8 @@ describe('typing', () => {
     const data = 1 as number;
     if (isDeepEqual(data, 1 as const)) {
       expectTypeOf(data).toEqualTypeOf<1>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<number>();
     }
   });
 
@@ -284,6 +399,34 @@ describe('typing', () => {
     >;
     if (isDeepEqual(data, [{ a: [1] }])) {
       expectTypeOf(data).toEqualTypeOf<Array<{ a: Array<number> }>>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<
+        Array<
+          | {
+            a: Array<number> | Array<string>;
+          }
+          | {
+            b: Array<boolean>;
+          }
+        >
+      >();
     }
+  });
+
+  it('doesn\'t narrow when comparing objects of the same type', () => {
+    const data1 = { a: 1 } as { a: number };
+    const data2 = { a: 2 } as { a: number };
+    if (isDeepEqual(data1, data2)) {
+      expectTypeOf(data1).toEqualTypeOf<{ a: number }>();
+    }
+  });
+
+  it('headless usage can infer types', () => {
+    const result = differenceWith(
+      ['a', 'b', 'c'],
+      ['a', 'c', 'd'],
+      isDeepEqual,
+    );
+    expectTypeOf(result).toEqualTypeOf<Array<string>>();
   });
 });

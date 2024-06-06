@@ -1,5 +1,3 @@
-import { describe, expect, it } from 'vitest';
-
 import { createLazyInvocationCounter } from '../test/lazy-invocation-counter';
 import { identity } from './identity';
 import { pipe } from './pipe';
@@ -8,45 +6,47 @@ import { uniqueBy } from './unique-by';
 
 describe('uniqueBy', () => {
   const people = [
-    { age: 42, name: 'John' },
-    { age: 30, name: 'Jörn' },
-    { age: 33, name: 'Sarah' },
-    { age: 22, name: 'Kim' },
-    { age: 38, name: 'Sarah' },
-    { age: 33, name: 'John' },
-    { age: 42, name: 'Emily' },
+    { name: 'John', age: 42 },
+    { name: 'Jörn', age: 30 },
+    { name: 'Sarah', age: 33 },
+    { name: 'Kim', age: 22 },
+    { name: 'Sarah', age: 38 },
+    { name: 'John', age: 33 },
+    { name: 'Emily', age: 42 },
   ] as const;
 
   it('handles uniq by identity', () => {
-    expect(uniqueBy([1, 2, 2, 5, 1, 6, 7], identity)).toEqual([1, 2, 5, 6, 7]);
+    expect(uniqueBy([1, 2, 2, 5, 1, 6, 7], identity())).toEqual([
+      1, 2, 5, 6, 7,
+    ]);
   });
 
   it('returns people with uniq names', () => {
     expect(uniqueBy(people, (p) => p.name)).toEqual([
-      { age: 42, name: 'John' },
-      { age: 30, name: 'Jörn' },
-      { age: 33, name: 'Sarah' },
-      { age: 22, name: 'Kim' },
-      { age: 42, name: 'Emily' },
+      { name: 'John', age: 42 },
+      { name: 'Jörn', age: 30 },
+      { name: 'Sarah', age: 33 },
+      { name: 'Kim', age: 22 },
+      { name: 'Emily', age: 42 },
     ]);
   });
 
   it('returns people with uniq ages', () => {
     expect(uniqueBy(people, (p) => p.age)).toEqual([
-      { age: 42, name: 'John' },
-      { age: 30, name: 'Jörn' },
-      { age: 33, name: 'Sarah' },
-      { age: 22, name: 'Kim' },
-      { age: 38, name: 'Sarah' },
+      { name: 'John', age: 42 },
+      { name: 'Jörn', age: 30 },
+      { name: 'Sarah', age: 33 },
+      { name: 'Kim', age: 22 },
+      { name: 'Sarah', age: 38 },
     ]);
   });
 
   it('returns people with uniq first letter of name', () => {
     expect(uniqueBy(people, (p) => p.name.slice(0, 1))).toEqual([
-      { age: 42, name: 'John' },
-      { age: 33, name: 'Sarah' },
-      { age: 22, name: 'Kim' },
-      { age: 42, name: 'Emily' },
+      { name: 'John', age: 42 },
+      { name: 'Sarah', age: 33 },
+      { name: 'Kim', age: 22 },
+      { name: 'Emily', age: 42 },
     ]);
   });
 
@@ -56,7 +56,7 @@ describe('uniqueBy', () => {
       const result = pipe(
         [1, 2, 2, 5, 1, 6, 7],
         counter.fn(),
-        uniqueBy(identity),
+        uniqueBy(identity()),
         take(3),
       );
 
@@ -70,7 +70,7 @@ describe('uniqueBy', () => {
         [1, 2, 2, 5, 1, 6, 7],
         counter.fn(),
         take(3),
-        uniqueBy(identity),
+        uniqueBy(identity()),
       );
 
       expect(counter.count).toHaveBeenCalledTimes(3);

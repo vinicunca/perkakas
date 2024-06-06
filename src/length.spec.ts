@@ -1,5 +1,3 @@
-import { describe, expect, it } from 'vitest';
-
 import { length } from './length';
 import { pipe } from './pipe';
 

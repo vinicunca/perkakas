@@ -1,53 +1,47 @@
-import { purry } from './purry';
-import { splitAt } from './split-at';
+import { curry } from './curry';
 
 /**
  * Splits a given array at the first index where the given predicate returns true.
- * @param array the array to split
- * @param fn the predicate
- * @signature
- *  splitWhen(array, fn)
- * @example
- *  import { splitWhen } from '@vicnunca/perkakas';
  *
- *  splitWhen([1, 2, 3], x => x === 2) // => [[1], [2, 3]]
+ * @param data - The array to split.
+ * @param predicate - The predicate.
+ * @signature
+ *    P.splitWhen(array, fn)
+ * @example
+ *    P.splitWhen([1, 2, 3], x => x === 2) // => [[1], [2, 3]]
  * @dataFirst
  * @category Array
  */
 export function splitWhen<T>(
-  array: ReadonlyArray<T>,
-  fn: (item: T) => boolean
+  data: ReadonlyArray<T>,
+  predicate: (item: T, index: number, data: ReadonlyArray<T>) => boolean,
 ): [Array<T>, Array<T>];
 
 /**
  * Splits a given array at an index where the given predicate returns true.
- * @param fn the predicate
- * @signature
- *  splitWhen(fn)(array)
- * @example
- *  import { splitWhen } from '@vicnunca/perkakas';
  *
- *  splitWhen(x => x === 2)([1, 2, 3]) // => [[1], [2, 3]]
+ * @param predicate - The predicate.
+ * @signature
+ *    P.splitWhen(fn)(array)
+ * @example
+ *    P.splitWhen(x => x === 2)([1, 2, 3]) // => [[1], [2, 3]]
  * @dataLast
  * @category Array
  */
 export function splitWhen<T>(
-  fn: (item: T) => boolean
+  predicate: (item: T, index: number, data: ReadonlyArray<T>) => boolean,
 ): (array: ReadonlyArray<T>) => [Array<T>, Array<T>];
 
-export function splitWhen(...args: Array<any>): unknown {
-  return purry(splitWhen_, args);
+export function splitWhen(...args: ReadonlyArray<unknown>): unknown {
+  return curry(splitWhenImplementation, args);
 }
 
-function splitWhen_<T>(
-  array: ReadonlyArray<T>,
-  fn: (item: T) => boolean,
+function splitWhenImplementation<T>(
+  data: ReadonlyArray<T>,
+  predicate: (item: T, index: number, data: ReadonlyArray<T>) => boolean,
 ): [Array<T>, Array<T>] {
-  for (const [index, item] of array.entries()) {
-    if (fn(item)) {
-      return splitAt(array, index);
-    }
-  }
-
-  return [array.slice(), []];
+  const index = data.findIndex(predicate);
+  return index === -1
+    ? [[...data], []]
+    : [data.slice(0, index), data.slice(index)];
 }

@@ -1,5 +1,3 @@
-import { expect, it } from 'vitest';
-
 import { splitWhen } from './split-when';
 
 it('should split array', () => {

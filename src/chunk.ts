@@ -1,6 +1,6 @@
-import type { IterableContainer, NonEmptyArray } from './_types';
+import type { IterableContainer, NonEmptyArray } from './helpers/types';
 
-import { purry } from './purry';
+import { curry } from './curry';
 
 type Chunked<T extends IterableContainer> = T[number] extends never
   ? []
@@ -13,53 +13,48 @@ type Chunked<T extends IterableContainer> = T[number] extends never
 /**
  * Split an array into groups the length of `size`. If `array` can't be split evenly, the final chunk will be the remaining elements.
  *
- * @param array the array
- * @param size the length of the chunk
+ * @param array - The array.
+ * @param size - The length of the chunk.
  * @signature
- *  chunk(array, size)
+ *    P.chunk(array, size)
  * @example
- *  import { chunk } from '@vinicunca/perkakas';
- *
- *  chunk(['a', 'b', 'c', 'd'], 2); // => [['a', 'b'], ['c', 'd']]
- *  chunk(['a', 'b', 'c', 'd'], 3); // => [['a', 'b', 'c'], ['d']]
+ *    P.chunk(['a', 'b', 'c', 'd'], 2) // => [['a', 'b'], ['c', 'd']]
+ *    P.chunk(['a', 'b', 'c', 'd'], 3) // => [['a', 'b', 'c'], ['d']]
  * @dataFirst
  * @category Array
  */
 export function chunk<T extends IterableContainer>(
   array: T,
-  size: number
+  size: number,
 ): Chunked<T>;
 
 /**
  * Split an array into groups the length of `size`. If `array` can't be split evenly, the final chunk will be the remaining elements.
  *
- * @param size the length of the chunk
+ * @param size - The length of the chunk.
  * @signature
- *  chunk(size)(array)
+ *    P.chunk(size)(array)
  * @example
- *  import { chunk } from '@vinicunca/perkakas';
- *
- *  chunk(2)(['a', 'b', 'c', 'd']); // => [['a', 'b'], ['c', 'd']]
- *  chunk(3)(['a', 'b', 'c', 'd']); // => [['a', 'b', 'c'], ['d']]
+ *    P.chunk(2)(['a', 'b', 'c', 'd']) // => [['a', 'b'], ['c', 'd']]
+ *    P.chunk(3)(['a', 'b', 'c', 'd']) // => [['a', 'b', 'c'], ['d']]
  * @dataLast
  * @category Array
  */
 export function chunk<T extends IterableContainer>(
-  size: number
+  size: number,
 ): (array: T) => Chunked<T>;
 
-export function chunk(...args: Array<any>): unknown {
-  return purry(chunk_, args);
+export function chunk(...args: ReadonlyArray<unknown>): unknown {
+  return curry(chunkImplementation, args);
 }
 
-function chunk_<T>(array: ReadonlyArray<T>, size: number): Array<Array<T>> {
-  const ret: Array<Array<T>> = Array.from({
-    length: Math.ceil(array.length / size),
-  });
-
-  for (let index = 0; index < ret.length; index++) {
-    ret[index] = array.slice(index * size, (index + 1) * size);
+function chunkImplementation<T>(
+  array: ReadonlyArray<T>,
+  size: number,
+): Array<Array<T>> {
+  const ret: Array<Array<T>> = [];
+  for (let offset = 0; offset < array.length; offset += size) {
+    ret.push(array.slice(offset, offset + size));
   }
-
   return ret;
 }

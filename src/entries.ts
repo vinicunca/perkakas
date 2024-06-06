@@ -1,63 +1,45 @@
-import { purry } from './purry';
+/* eslint-disable ts/ban-types --
+ * We want to match the typing of the built-in Object.entries as much as
+ * possible!
+ */
+
+import type { Simplify } from 'type-fest';
+
+import { curry } from './curry';
+
+// Object.entries only returns enumerable keys, skipping symbols. It also
+// only returns string keys, translating numbers to strings.
+type EntryForKey<T, Key extends keyof T> = Key extends number | string
+  ? [key: `${Key}`, value: Required<T>[Key]]
+  : never;
+
+type Entry<T> = Simplify<{ [P in keyof T]-?: EntryForKey<T, P> }[keyof T]>;
 
 /**
  * Returns an array of key/values of the enumerable properties of an object.
  *
- * @param object - Object to return keys and values of.
+ * @param data - Object to return keys and values of.
  * @signature
- *  entries(object)
- *  entries.strict(object)
+ *    P.entries(object)
  * @example
- *  import { entries } from '@vinicunca/perkakas';
- *
- *  entries({ a: 1, b: 2, c: 3 }) // => [['a', 1], ['b', 2], ['c', 3]]
- *  entries.strict({ a: 1 } as const) // => [['a', 1]] typed Array<['a', 1]>
+ *    P.entries({ a: 1, b: 2, c: 3 }); // => [['a', 1], ['b', 2], ['c', 3]]
  * @dataFirst
- * @strict
  * @category Object
  */
-export function entries<T>(
-  object: Readonly<Record<string, T>>,
-): Array<[string, T]>;
+export function entries<T extends {}>(data: T): Array<Entry<T>>;
 
 /**
  * Returns an array of key/values of the enumerable properties of an object.
  *
  * @signature
- *  entries()(object)
- *  entries.strict()(object)
+ *    P.entries()(object)
  * @example
- *  import { entries, pipe } from '@vinicunca/perkakas';
- *
- *  pipe(
- *    { a: 1, b: 2, c: 3 },
- *    entries(),
- *  ); // => [['a', 1], ['b', 2], ['c', 3]]
- *  pipe(
- *    { a: 1 } as const,
- *    entries.strict(),
- *  ); // => [['a', 1]] typed Array<['a', 1]>
+ *    P.pipe({ a: 1, b: 2, c: 3 }, P.entries()); // => [['a', 1], ['b', 2], ['c', 3]]
  * @dataLast
- * @strict
  * @category Object
  */
-export function entries(): <T>(
-  object: Readonly<Record<string, T>>,
-) => Array<[string, T]>;
+export function entries(): <T extends {}>(data: T) => Array<Entry<T>>;
 
-export function entries(...args: Array<any>): unknown {
-  return purry(Object.entries, args);
-}
-
-type Entries<T> = Array<
-  { [K in keyof T]-?: [key: K, value: Required<T>[K]] }[keyof T]
->;
-
-interface Strict {
-  <T extends NonNullable<unknown>>(object: T): Entries<T>;
-  (): <T extends NonNullable<unknown>>(object: T) => Entries<T>;
-}
-
-export namespace entries {
-  export const strict = entries as Strict;
+export function entries(...args: ReadonlyArray<unknown>): unknown {
+  return curry(Object.entries, args);
 }

@@ -1,5 +1,3 @@
-import { describe, expect, it } from 'vitest';
-
 import { createLazyInvocationCounter } from '../test/lazy-invocation-counter';
 import { isDeepEqual } from './is-deep-equal';
 import { pipe } from './pipe';
@@ -41,7 +39,6 @@ describe('data_last', () => {
   });
 
   it('take before uniq', () => {
-    // bug from https://github.com/remeda/remeda/issues/14
     const counter = createLazyInvocationCounter();
     const result = pipe(
       [{ a: 1 }, { a: 2 }, { a: 2 }, { a: 5 }, { a: 1 }, { a: 6 }, { a: 7 }],

@@ -1,13 +1,13 @@
-import type { IterableContainer } from './_types';
+import type { IterableContainer } from './helpers/types';
 
-import { purry } from './purry';
+import { curry } from './curry';
 
 type Sampled<T extends IterableContainer, N extends number> =
   // Check if N is generic (e.g. not '5' but 'number')
   number extends N
     ? SampledGeneric<T>
     : // We check if the input tuple is shorter than N. We need to check this
-    // outside the recursive loop because T changes inside that loop
+  // outside the recursive loop because T changes inside that loop
     undefined extends T[N]
       ? T
       : SampledLiteral<T, N>;
@@ -17,11 +17,11 @@ type SampledGeneric<T extends IterableContainer> =
   T[number] extends never
     ? T
     : // As long as the tuple has non-rest elements we continue expanding the type
-    // by both taking the item, and not taking it.
+  // by both taking the item, and not taking it.
     T extends readonly [infer First, ...infer Rest]
       ? [First, ...SampledGeneric<Rest>] | SampledGeneric<Rest>
       : // Stop the recursion also when we have an array, or the rest element of the
-      // tuple
+    // tuple
       Array<T[number]>;
 
 type SampledLiteral<
@@ -33,7 +33,7 @@ type SampledLiteral<
   Iteration['length'] extends N
     ? []
     : // If the tuple has a defined (non-rest) element, cut it and add it to the
-    // output tuple.
+  // output tuple.
     T extends readonly [infer First, ...infer Tail]
       ? [
           First | Tail[number],
@@ -58,22 +58,19 @@ type SampledLiteral<
  * If you need to get a shuffled response you can pipe the shuffle function
  * after this one.
  *
- * @param data the array
- * @param sampleSize the number of elements to take
+ * @param data - The array.
+ * @param sampleSize - The number of elements to take.
  * @signature
- *  sample(array, sampleSize)
+ *    P.sample(array, sampleSize)
  * @example
- *  import { sample } from '@vinicunca/perkakas';
- *
- *  sample(["hello", "world"], 1); // => ["hello"] // typed string[]
- *  sample(["hello", "world"] as const, 1); // => ["world"] // typed ["hello" | "world"]
+ *    P.sample(["hello", "world"], 1); // => ["hello"] // typed string[]
+ *    P.sample(["hello", "world"] as const, 1); // => ["world"] // typed ["hello" | "world"]
  * @dataFirst
- * @pipeable
  * @category Array
  */
 export function sample<T extends IterableContainer, N extends number = number>(
   data: T,
-  sampleSize: N
+  sampleSize: N,
 ): Sampled<T, N>;
 
 /**
@@ -87,46 +84,35 @@ export function sample<T extends IterableContainer, N extends number = number>(
  * If you need to get a shuffled response you can pipe the shuffle function
  * after this one.
  *
- * @param sampleSize the number of elements to take
+ * @param sampleSize - The number of elements to take.
  * @signature
- *  sample(sampleSize)(array)
+ *    P.sample(sampleSize)(array)
  * @example
- *  import { sample } from '@vinicunca/perkakas';
- *
- *  sample(1)(["hello", "world"]); // => ["hello"] // typed string[]
- *  sample(1)(["hello", "world"] as const); // => ["world"] // typed ["hello" | "world"]
+ *    P.sample(1)(["hello", "world"]); // => ["hello"] // typed string[]
+ *    P.sample(1)(["hello", "world"] as const); // => ["world"] // typed ["hello" | "world"]
  * @dataLast
- * @pipeable
  * @category Array
  */
 export function sample<T extends IterableContainer, N extends number = number>(
-  sampleSize: N
+  sampleSize: N,
 ): (data: T) => Sampled<T, N>;
 
 export function sample(...args: ReadonlyArray<unknown>): unknown {
-  return purry(sampleImplementation, args);
+  return curry(sampleImplementation, args);
 }
 
 function sampleImplementation<T>(
   data: ReadonlyArray<T>,
   sampleSize: number,
 ): Array<T> {
-  if (sampleSize < 0) {
-    throw new RangeError(`sampleSize must cannot be negative: ${sampleSize}`);
-  }
-
-  if (!Number.isInteger(sampleSize)) {
-    throw new TypeError(`sampleSize must be an integer: ${sampleSize}`);
+  if (sampleSize <= 0) {
+    // Trivial
+    return [];
   }
 
   if (sampleSize >= data.length) {
     // Trivial
-    return data.slice();
-  }
-
-  if (sampleSize === 0) {
-    // Trivial
-    return [];
+    return [...data];
   }
 
   // We have 2 modes of sampling, depending on the size of the sample requested.
@@ -157,7 +143,7 @@ function sampleImplementation<T>(
   }
 
   if (sampleSize === actualSampleSize) {
-    return Array.from(sampleIndices)
+    return [...sampleIndices]
       .sort((a, b) => a - b)
       .map((index) => data[index]!);
   }

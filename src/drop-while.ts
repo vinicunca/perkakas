@@ -1,27 +1,22 @@
-import { purry } from './purry';
+import { curry } from './curry';
 
 /**
  * Removes elements from the beginning of the array until the predicate returns false.
  *
- * The predicate is applied to each element in the array,
- * until the predicate returns false.
- * The returned array includes the rest of the elements,
- * starting with the element that produced false for the predicate.
+ * The predicate is applied to each element in the array, until the predicate returns false. The returned array includes the rest of the elements, starting with the element that produced false for the predicate.
  *
- * @param data the array
- * @param predicate the predicate
+ * @param data - The array.
+ * @param predicate - The predicate.
  * @signature
- *  dropWhile(data, predicate)
+ *    P.dropWhile(data, predicate)
  * @example
- *  import { dropWhile } from '@vinicunca/perkakas';
- *
- *  dropWhile([1, 2, 10, 3, 4], x => x < 10); // => [10, 3, 4]
+ *    P.dropWhile([1, 2, 10, 3, 4], x => x < 10) // => [10, 3, 4]
  * @dataFirst
  * @category Array
  */
 export function dropWhile<T>(
   data: ReadonlyArray<T>,
-  predicate: (item: T) => boolean
+  predicate: (item: T, index: number, data: ReadonlyArray<T>) => boolean,
 ): Array<T>;
 
 /**
@@ -29,31 +24,29 @@ export function dropWhile<T>(
  *
  * The predicate is applied to each element in the array, until the predicate returns false. The returned array includes the rest of the elements, starting with the element that produced false for the predicate.
  *
- * @param predicate the predicate
+ * @param predicate - The predicate.
  * @signature
- *  dropWhile(predicate)(data)
+ *    P.dropWhile(predicate)(data)
  * @example
- *  import { dropWhile, pipe } from '@vinicunca/perkakas';
- *
- *  pipe([1, 2, 10, 3, 4], dropWhile(x => x < 10)) ; // => [10, 3, 4]
+ *    P.pipe([1, 2, 10, 3, 4], P.dropWhile(x => x < 10))  // => [10, 3, 4]
  * @dataLast
  * @category Array
  */
 export function dropWhile<T>(
-  predicate: (item: T) => boolean
+  predicate: (item: T, index: number, data: ReadonlyArray<T>) => boolean,
 ): (data: ReadonlyArray<T>) => Array<T>;
 
-export function dropWhile(...args: Array<any>): unknown {
-  return purry(dropWhile_, args);
+export function dropWhile(...args: ReadonlyArray<unknown>): unknown {
+  return curry(dropWhileImplementation, args);
 }
 
-function dropWhile_<T>(
+function dropWhileImplementation<T>(
   data: ReadonlyArray<T>,
-  predicate: (item: T) => boolean,
+  predicate: (item: T, index: number, data: ReadonlyArray<T>) => boolean,
 ): Array<T> {
-  for (let i = 0; i < data.length; i++) {
-    if (!predicate(data[i]!)) {
-      return data.slice(i);
+  for (const [index, item] of data.entries()) {
+    if (!predicate(item, index, data)) {
+      return data.slice(index);
     }
   }
   return [];

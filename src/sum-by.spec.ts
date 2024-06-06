@@ -1,18 +1,21 @@
-import { describe, expect, it } from 'vitest';
-
 import { pipe } from './pipe';
+import { prop } from './prop';
 import { sumBy } from './sum-by';
-
-const array = [{ a: 1 }, { a: 2 }, { a: 4 }, { a: 5 }, { a: 3 }] as const;
-const expected = 15;
 
 describe('data first', () => {
   it('sumBy', () => {
-    expect(sumBy(array, (x) => x.a)).toEqual(expected);
+    expect(
+      sumBy([{ a: 1 }, { a: 2 }, { a: 4 }, { a: 5 }, { a: 3 }], prop('a')),
+    ).toEqual(15);
   });
 
-  it('sumBy.indexed', () => {
-    expect(sumBy.indexed(array, (x, idx) => x.a + idx)).toEqual(25);
+  it('indexed', () => {
+    expect(
+      sumBy(
+        [{ a: 1 }, { a: 2 }, { a: 4 }, { a: 5 }, { a: 3 }],
+        ({ a }, idx) => a + idx,
+      ),
+    ).toEqual(25);
   });
 });
 
@@ -20,16 +23,16 @@ describe('data last', () => {
   it('sumBy', () => {
     expect(
       pipe(
-        array,
-        sumBy((x) => x.a),
+        [{ a: 1 }, { a: 2 }, { a: 4 }, { a: 5 }, { a: 3 }],
+        sumBy(prop('a')),
       ),
-    ).toEqual(expected);
+    ).toEqual(15);
   });
 
-  it('sumBy.indexed', () => {
+  it('indexed', () => {
     const actual = pipe(
-      array,
-      sumBy.indexed((x, idx) => x.a + idx),
+      [{ a: 1 }, { a: 2 }, { a: 4 }, { a: 5 }, { a: 3 }],
+      sumBy(({ a }, idx) => a + idx),
     );
     expect(actual).toEqual(25);
   });

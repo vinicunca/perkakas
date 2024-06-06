@@ -1,6 +1,4 @@
-import { describe, expect, it } from 'vitest';
-
-import { createLazyInvocationCounter } from './../test/lazy-invocation-counter';
+import { createLazyInvocationCounter } from '../test/lazy-invocation-counter';
 import { differenceWith } from './difference-with';
 import { isDeepEqual } from './is-deep-equal';
 import { pipe } from './pipe';

@@ -1,53 +1,50 @@
-import { purry } from './purry';
+import { curry } from './curry';
 
 type Reverse<
   T extends ReadonlyArray<unknown>,
   R extends ReadonlyArray<unknown> = [],
 > = ReturnType<
-T extends IsNoTuple<T>
-  ? () => [...T, ...R]
-  : T extends readonly [infer F, ...infer L]
-    ? () => Reverse<L, [F, ...R]>
-    : () => R
+  T extends IsNoTuple<T>
+    ? () => [...T, ...R]
+    : T extends readonly [infer F, ...infer L]
+      ? () => Reverse<L, [F, ...R]>
+      : () => R
 >;
 
 type IsNoTuple<T> = T extends readonly [unknown, ...Array<unknown>] ? never : T;
 
 /**
- * Reverses an array.
+ * Reverses array.
  *
- * @param array the array
+ * @param array - The array.
  * @signature
- *  reverse(arr);
+ *    P.reverse(arr);
  * @example
- *  import { reverse } from '@vinicunca/perkakas';
- *
- *  reverse([1, 2, 3]); // [3, 2, 1]
+ *    P.reverse([1, 2, 3]) // [3, 2, 1]
  * @dataFirst
  * @category Array
  */
 export function reverse<T extends ReadonlyArray<unknown>>(array: T): Reverse<T>;
 
 /**
- * Reverses an array.
+ * Reverses array.
  *
  * @signature
- *  reverse()(array);
+ *    P.reverse()(array);
  * @example
- *  import { reverse } from '@vinicunca/perkakas';
- *
- *  reverse()([1, 2, 3]); // [3, 2, 1]
+ *    P.reverse()([1, 2, 3]) // [3, 2, 1]
  * @dataLast
  * @category Array
  */
 export function reverse<T extends ReadonlyArray<unknown>>(): (
-  array: T
+  array: T,
 ) => Reverse<T>;
 
-export function reverse(...args: Array<any>): unknown {
-  return purry(reverse_, args);
+export function reverse(...args: ReadonlyArray<unknown>): unknown {
+  return curry(reverseImplementation, args);
 }
 
-function reverse_<T>(array: ReadonlyArray<T>): Array<T> {
-  return array.slice().reverse();
+function reverseImplementation<T>(array: ReadonlyArray<T>): Array<T> {
+  // TODO [2025-05-01]: When node 18 reaches end-of-life bump target lib to ES2023+ and use `Array.prototype.toReversed` here.
+  return [...array].reverse();
 }

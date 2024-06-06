@@ -1,7 +1,7 @@
 import type { Simplify } from 'type-fest';
 
+import { curry } from './curry';
 import { isDeepEqual } from './is-deep-equal';
-import { purry } from './purry';
 
 /**
  * Checks if `subObject` is a sub-object of `object`, which means for every
@@ -11,13 +11,11 @@ import { purry } from './purry';
  * @param data - The object to test.
  * @param subObject - The sub-object to test against.
  * @signature
- *  hasSubObject(data, subObject)
+ *    P.hasSubObject(data, subObject)
  * @example
- *  import { hasSubObject } from '@vinicunca/perkakas';
- *
- *  hasSubObject({ a: 1, b: 2, c: 3 }, { a: 1, c: 3 }); // => true
- *  hasSubObject({ a: 1, b: 2, c: 3 }, { b: 4 }); // => false
- *  hasSubObject({ a: 1, b: 2, c: 3 }, {}); // => true
+ *    P.hasSubObject({ a: 1, b: 2, c: 3 }, { a: 1, c: 3 }) //=> true
+ *    P.hasSubObject({ a: 1, b: 2, c: 3 }, { b: 4 }) //=> false
+ *    P.hasSubObject({ a: 1, b: 2, c: 3 }, {}) //=> true
  * @dataFirst
  * @category Guard
  */
@@ -34,13 +32,11 @@ data is Simplify<S & T>;
  *
  * @param subObject - The sub-object to test against.
  * @signature
- *  hasSubObject(subObject)(data)
+ *    P.hasSubObject(subObject)(data)
  * @example
- *  import { hasSubObject } from '@vinicunca/perkakas';
- *
- *  hasSubObject({ a: 1, c: 3 })({ a: 1, b: 2, c: 3 }); // => true
- *  hasSubObject({ b: 4 })({ a: 1, b: 2, c: 3 }); // => false
- *  hasSubObject({})({ a: 1, b: 2, c: 3 }); // => true
+ *    P.hasSubObject({ a: 1, c: 3 })({ a: 1, b: 2, c: 3 }) //=> true
+ *    P.hasSubObject({ b: 4 })({ a: 1, b: 2, c: 3 }) //=> false
+ *    P.hasSubObject({})({ a: 1, b: 2, c: 3 }) //=> true
  * @dataLast
  * @category Guard
  */
@@ -48,21 +44,26 @@ export function hasSubObject<T, S extends Partial<T>>(
   subObject: S,
 ): (data: T) => data is Simplify<S & T>;
 
-export function hasSubObject(...args: Array<any>): unknown {
-  return purry(_hasSubObject, args);
+export function hasSubObject(...args: ReadonlyArray<unknown>): unknown {
+  return curry(hasSubObjectImplementation, args);
 }
 
-function _hasSubObject<T, S extends Partial<T>>(
+function hasSubObjectImplementation<T extends object, S extends Partial<T>>(
   data: T,
   subObject: S,
 ): data is Simplify<S & T> {
-  for (const key of Object.keys(subObject)) {
-    if (!Object.prototype.hasOwnProperty.call(data, key)) {
+  for (const [key, value] of Object.entries(subObject)) {
+    if (!Object.hasOwn(data, key)) {
       return false;
     }
 
-    // @ts-expect-error [ts7053] - key is in both subObject and data:
-    if (!isDeepEqual(subObject[key], data[key])) {
+    if (
+      !isDeepEqual(
+        value,
+        // @ts-expect-error [ts7053] - We already checked that `data` has `key
+        data[key],
+      )
+    ) {
       return false;
     }
   }

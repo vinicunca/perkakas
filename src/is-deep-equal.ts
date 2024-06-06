@@ -1,4 +1,4 @@
-import { purry } from './purry';
+import { curry } from './curry';
 
 /**
  * Performs a deep *semantic* comparison between two values to determine if they
@@ -7,8 +7,8 @@ import { purry } from './purry';
  * objects all props will be compared recursively. The built-in Date and RegExp
  * are special-cased and will be compared by their values.
  *
- * !IMPORTANT: Maps, Sets and TypedArrays, and symbol properties of objects  are
- * not supported right now and might result in unexpected behavior.
+ * !IMPORTANT: TypedArrays and symbol properties of objects are not supported
+ * right now and might result in unexpected behavior.
  *
  * The result would be narrowed to the second value so that the function can be
  * used as a type guard.
@@ -16,17 +16,19 @@ import { purry } from './purry';
  * @param data - The first value to compare.
  * @param other - The second value to compare.
  * @signature
- *  isDeepEqual(data, other)
+ *    P.isDeepEqual(data, other)
  * @example
- *  import { isDeepEqual } from '@vinicunca/perkakas';
- *
- *  isDeepEqual(1, 1); // => true
- *  isDeepEqual(1, '1'); // => false
- *  isDeepEqual([1, 2, 3], [1, 2, 3]); // => true
+ *    P.isDeepEqual(1, 1) //=> true
+ *    P.isDeepEqual(1, '1') //=> false
+ *    P.isDeepEqual([1, 2, 3], [1, 2, 3]) //=> true
  * @dataFirst
  * @category Guard
  */
-export function isDeepEqual<T, S extends T = T>(data: T, other: S): data is S;
+export function isDeepEqual<T, S extends T>(
+  data: T,
+  other: T extends Exclude<T, S> ? S : never,
+): data is S;
+export function isDeepEqual<T, S extends T = T>(data: T, other: S): boolean;
 
 /**
  * Performs a deep *semantic* comparison between two values to determine if they
@@ -35,30 +37,29 @@ export function isDeepEqual<T, S extends T = T>(data: T, other: S): data is S;
  * objects all props will be compared recursively. The built-in Date and RegExp
  * are special-cased and will be compared by their values.
  *
- * !IMPORTANT: Maps, Sets and TypedArrays, and symbol properties of objects  are
- * not supported right now and might result in unexpected behavior.
+ * !IMPORTANT: TypedArrays and symbol properties of objects are not supported
+ * right now and might result in unexpected behavior.
  *
  * The result would be narrowed to the second value so that the function can be
  * used as a type guard.
  *
  * @param other - The second value to compare.
  * @signature
- *  isDeepEqual(other)(data)
+ *    P.isDeepEqual(other)(data)
  * @example
- *  import { isDeepEqual, pipe } from '@vinicunca/perkakas';
- *
- *  pipe(1, isDeepEqual(1)); // => true
- *  pipe(1, isDeepEqual('1')); // => false
- *  pipe([1, 2, 3], isDeepEqual([1, 2, 3])); // => true
+ *    P.pipe(1, P.isDeepEqual(1)); //=> true
+ *    P.pipe(1, P.isDeepEqual('1')); //=> false
+ *    P.pipe([1, 2, 3], P.isDeepEqual([1, 2, 3])); //=> true
  * @dataLast
  * @category Guard
  */
-export function isDeepEqual<T, S extends T = T>(
-  other: S,
+export function isDeepEqual<T, S extends T>(
+  other: T extends Exclude<T, S> ? S : never,
 ): (data: T) => data is S;
+export function isDeepEqual<S>(other: S): <T extends S = S>(data: T) => boolean;
 
-export function isDeepEqual(...args: Array<any>): unknown {
-  return purry(isDeepEqualImplementation, args);
+export function isDeepEqual(...args: ReadonlyArray<unknown>): unknown {
+  return curry(isDeepEqualImplementation, args);
 }
 
 function isDeepEqualImplementation<T, S>(data: S | T, other: S): data is S {
@@ -66,10 +67,10 @@ function isDeepEqualImplementation<T, S>(data: S | T, other: S): data is S {
     return true;
   }
 
-  if (typeof data === 'number' && typeof other === 'number') {
-    // TODO: This is a temporary fix for NaN, we should use Number.isNaN once we bump our target above ES5.
-    // eslint-disable-next-line no-self-compare -- We should use Number.isNaN here, but it's ES2015.
-    return data !== data && other !== other;
+  if (Object.is(data, other)) {
+    // We want to ignore the slight differences between `===` and `Object.is` as
+    // both of them largely define equality from a semantic point-of-view.
+    return true;
   }
 
   if (typeof data !== 'object' || typeof other !== 'object') {
@@ -92,22 +93,15 @@ function isDeepEqualImplementation<T, S>(data: S | T, other: S): data is S {
   }
 
   if (Array.isArray(data)) {
-    if (data.length !== (other as ReadonlyArray<unknown>).length) {
-      return false;
-    }
+    return isDeepEqualArrays(data, other as unknown as ReadonlyArray<unknown>);
+  }
 
-    for (let i = 0; i < data.length; i++) {
-      if (
-        !isDeepEqualImplementation(
-          data[i],
-          (other as ReadonlyArray<unknown>)[i],
-        )
-      ) {
-        return false;
-      }
-    }
+  if (data instanceof Map) {
+    return isDeepEqualMaps(data, other as unknown as Map<unknown, unknown>);
+  }
 
-    return true;
+  if (data instanceof Set) {
+    return isDeepEqualSets(data, other as unknown as Set<unknown>);
   }
 
   if (data instanceof Date) {
@@ -124,19 +118,93 @@ function isDeepEqualImplementation<T, S>(data: S | T, other: S): data is S {
   // something weird. We assume that comparing values by keys is enough to judge
   // their equality.
 
-  const keys = Object.keys(data);
-
-  if (keys.length !== Object.keys(other).length) {
+  if (Object.keys(data).length !== Object.keys(other).length) {
     return false;
   }
 
-  for (const key of keys) {
-    if (!Object.prototype.hasOwnProperty.call(other, key)) {
+  for (const [key, value] of Object.entries(data)) {
+    if (!(key in other)) {
       return false;
     }
 
-    // @ts-expect-error [ts7053] - There's no easy way to tell typescript these keys are safe.
-    if (!isDeepEqualImplementation(data[key], other[key])) {
+    if (
+      !isDeepEqualImplementation(
+        value,
+        // @ts-expect-error [ts7053] - We already checked that `other` has `key`
+        other[key],
+      )
+    ) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+function isDeepEqualArrays(
+  data: ReadonlyArray<unknown>,
+  other: ReadonlyArray<unknown>,
+): boolean {
+  if (data.length !== other.length) {
+    return false;
+  }
+
+  for (const [index, item] of data.entries()) {
+    if (!isDeepEqualImplementation(item, other[index])) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+function isDeepEqualMaps(
+  data: ReadonlyMap<unknown, unknown>,
+  other: ReadonlyMap<unknown, unknown>,
+): boolean {
+  if (data.size !== other.size) {
+    return false;
+  }
+
+  for (const [key, value] of data.entries()) {
+    if (!other.has(key)) {
+      return false;
+    }
+
+    if (!isDeepEqualImplementation(value, other.get(key))) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+function isDeepEqualSets(
+  data: ReadonlySet<unknown>,
+  other: ReadonlySet<unknown>,
+): boolean {
+  if (data.size !== other.size) {
+    return false;
+  }
+
+  // To ensure we only count each item once we need to "remember" which items of
+  // the other set we've already matched against. We do this by creating a copy
+  // of the other set and removing items from it as we find them in the data
+  // set.
+  const otherCopy = [...other];
+
+  for (const dataItem of data) {
+    let isFound = false;
+
+    for (const [index, otherItem] of otherCopy.entries()) {
+      if (isDeepEqualImplementation(dataItem, otherItem)) {
+        isFound = true;
+        otherCopy.splice(index, 1);
+        break;
+      }
+    }
+
+    if (!isFound) {
       return false;
     }
   }

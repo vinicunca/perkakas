@@ -1,17 +1,13 @@
-import { describe, expect, expectTypeOf, it } from 'vitest';
-
-import { createLazyInvocationCounter } from './../test/lazy-invocation-counter';
+import { createLazyInvocationCounter } from '../test/lazy-invocation-counter';
 import { filter } from './filter';
 import { first } from './first';
 import { pipe } from './pipe';
 
 function defaultTo<T>(d: T) {
-  return function (v: T | null | undefined) {
-    return v ?? d;
-  };
+  return (v: T | null | undefined) => v ?? d;
 }
 
-it('should return last', () => {
+it('should return first', () => {
   expect(first([1, 2, 3] as const)).toEqual(1);
 });
 
@@ -20,18 +16,6 @@ it('empty array', () => {
 });
 
 describe('pipe', () => {
-  it('as no-fn', () => {
-    const counter = createLazyInvocationCounter();
-    const result = pipe(
-      [1, 2, 3, 4, 5, 6] as const,
-      counter.fn(),
-      first,
-      (x) => x,
-    );
-    expect(counter.count).toHaveBeenCalledTimes(1);
-    expect(result).toEqual(1);
-  });
-
   it('as fn', () => {
     const counter = createLazyInvocationCounter();
     const result = pipe([1, 2, 3, 4, 5, 6] as const, counter.fn(), first());
@@ -92,7 +76,7 @@ describe('pipe', () => {
   });
 });
 
-describe('strict typing', () => {
+describe('typing', () => {
   it('simple empty array', () => {
     const arr: Array<number> = [];
     const result = first(arr);

@@ -1,6 +1,6 @@
 import type { Merge } from 'type-fest';
 
-import { purry } from './purry';
+import { curry } from './curry';
 
 /**
  * Merges two objects into one by combining their properties, effectively
@@ -20,11 +20,9 @@ import { purry } from './purry';
  * @returns An object fully containing `source`, and any properties from `data`
  * that don't share a name with any property in `source`.
  * @signature
- *  merge(data, source)
+ *    P.merge(data, source)
  * @example
- *  import { merge } from '@vinicunca/perkakas';
- *
- *  merge({ x: 1, y: 2 }, { y: 10, z: 2 }) // => { x: 1, y: 10, z: 2 }
+ *    P.merge({ x: 1, y: 2 }, { y: 10, z: 2 }) // => { x: 1, y: 10, z: 2 }
  * @dataFirst
  * @category Object
  */
@@ -45,23 +43,24 @@ export function merge<T, Source>(data: T, source: Source): Merge<T, Source>;
  * @returns An object fully containing `source`, and any properties from `data`
  * that don't share a name with any property in `source`.
  * @signature
- *  merge(source)(data)
+ *    P.merge(source)(data)
  * @example
- *  import { merge, pipe } from '@vinicunca/perkakas';
- *
- *  pipe(
- *    { x: 1, y: 2 },
- *    merge({ y: 10, z: 2 }),
- *  ); // => { x: 1, y: 10, z: 2 }
+ *    P.pipe(
+ *      { x: 1, y: 2 },
+ *      P.merge({ y: 10, z: 2 }),
+ *    ); // => { x: 1, y: 10, z: 2 }
  * @dataLast
  * @category Object
  */
 export function merge<Source>(source: Source): <T>(data: T) => Merge<T, Source>;
 
-export function merge(...args: Array<any>): unknown {
-  return purry(merge_, args);
+export function merge(...args: ReadonlyArray<unknown>): unknown {
+  return curry(mergeImplementation, args);
 }
 
-function merge_<T, Source>(data: T, source: Source): Merge<T, Source> {
-  return { ...data, ...source };
+function mergeImplementation<T, Source>(
+  data: T,
+  source: Source,
+): Merge<T, Source> {
+  return ({ ...data, ...source });
 }

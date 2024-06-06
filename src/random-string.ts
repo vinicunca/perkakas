@@ -1,5 +1,4 @@
-import { purry } from './purry';
-import { times } from './times';
+import { curry } from './curry';
 
 const ALPHABET
   = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -7,43 +6,39 @@ const ALPHABET
 /**
  * Random a non-cryptographic random string from characters a-zA-Z0-9.
  *
- * @param length the length of the random string
- * @returns the random string
+ * @param length - The length of the random string.
+ * @returns The random string.
  * @signature
- *  randomString(length)
+ *   P.randomString(length)
  * @example
- *  import { randomString, pipe } from '@vinicunca/perkakas';
- *
- *  randomString(5); // => aB92J
- *  pipe(5, randomString); // => aB92J
- * @category String
+ *   P.randomString(5) // => aB92J
  * @dataFirst
+ * @category String
  */
 export function randomString(length: number): string;
 
 /**
  * Random a non-cryptographic random string from characters a-zA-Z0-9.
  *
- * @returns the random string
+ * @returns The random string.
  * @signature
- *  randomString()(length)
+ *   P.randomString()(length)
  * @example
- *  import { randomString, pipe } from '@vinicunca/perkakas';
- *
- *  pipe(5, randomString()); // => aB92J
- * @category String
+ *   P.pipe(5, P.randomString()) // => aB92J
  * @dataLast
+ * @category String
  */
-// export function randomString(): (length: number) => string;
+export function randomString(): (length: number) => string;
 
-export function randomString(...args: Array<any>): unknown {
-  return purry(randomStringImplementation, args);
+export function randomString(...args: ReadonlyArray<unknown>): unknown {
+  return curry(randomStringImplementation, args);
 }
 
 function randomStringImplementation(length: number): string {
-  return times(length, randomChar).join('');
-}
-
-function randomChar(): string {
-  return ALPHABET[Math.floor(Math.random() * ALPHABET.length)]!;
+  const out: Array<string> = [];
+  for (let iteration = 0; iteration < length; iteration++) {
+    const randomChar = ALPHABET[Math.floor(Math.random() * ALPHABET.length)]!;
+    out.push(randomChar);
+  }
+  return out.join('');
 }

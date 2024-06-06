@@ -1,21 +1,19 @@
 import type { LazyEvaluator } from './pipe';
 
-import { _reduceLazy } from './_reduce-lazy';
-import { purry } from './purry';
+import { curry } from './curry';
+import { lazyEmptyEvaluator } from './helpers/utility-evaluators';
 
 /**
  * Returns the first `n` elements of `array`.
  *
- * @param array the array
- * @param n the number of elements to take
+ * @param array - The array.
+ * @param n - The number of elements to take.
  * @signature
- *  take(array, n)
+ *    P.take(array, n)
  * @example
- *  import { take } from '@vinicunca/perkakas';
- *
- *  take([1, 2, 3, 4, 3, 2, 1], 3) // => [1, 2, 3]
+ *    P.take([1, 2, 3, 4, 3, 2, 1], 3) // => [1, 2, 3]
  * @dataFirst
- * @pipeable
+ * @lazy
  * @category Array
  */
 export function take<T>(array: ReadonlyArray<T>, n: number): Array<T>;
@@ -23,37 +21,33 @@ export function take<T>(array: ReadonlyArray<T>, n: number): Array<T>;
 /**
  * Returns the first `n` elements of `array`.
  *
- * @param n the number of elements to take
+ * @param n - The number of elements to take.
  * @signature
- *  take(n)(array)
+ *    P.take(n)(array)
  * @example
- *  import { take, pipe } from '@vinicunca/perkakas';
- *
- *  pipe([1, 2, 3, 4, 3, 2, 1], take(n)) // => [1, 2, 3]
+ *    P.pipe([1, 2, 3, 4, 3, 2, 1], P.take(n)) // => [1, 2, 3]
  * @dataLast
- * @pipeable
+ * @lazy
  * @category Array
  */
 export function take<T>(n: number): (array: ReadonlyArray<T>) => Array<T>;
 
-export function take(...args: Array<any>): unknown {
-  return purry(take_, args, take.lazy);
+export function take(...args: ReadonlyArray<unknown>): unknown {
+  return curry(takeImplementation, args, lazyImplementation);
 }
 
-function take_<T>(array: ReadonlyArray<T>, n: number): Array<T> {
-  return _reduceLazy(array, take.lazy(n));
+function takeImplementation<T>(array: ReadonlyArray<T>, n: number): Array<T> {
+  return n < 0 ? [] : array.slice(0, n);
 }
 
-export namespace take {
-  export function lazy<T>(n: number): LazyEvaluator<T> {
-    if (n <= 0) {
-      return () => ({ done: true, hasNext: false });
-    }
-
-    let remaining = n;
-    return (value) => {
-      remaining -= 1;
-      return { done: remaining <= 0, hasNext: true, next: value };
-    };
+function lazyImplementation<T>(n: number): LazyEvaluator<T> {
+  if (n <= 0) {
+    return lazyEmptyEvaluator;
   }
+
+  let remaining = n;
+  return (value) => {
+    remaining -= 1;
+    return { done: remaining <= 0, hasNext: true, next: value };
+  };
 }

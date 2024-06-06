@@ -1,44 +1,47 @@
-import { describe, expect, expectTypeOf, it } from 'vitest';
-
 import { concat } from './concat';
 import { pick } from './pick';
 import { pipe } from './pipe';
 
-describe('data first', () => {
-  it('it should pick props', () => {
+describe('runtime', () => {
+  it('dataFirst', () => {
     const result = pick({ a: 1, b: 2, c: 3, d: 4 }, ['a', 'd']);
     expect(result).toStrictEqual({ a: 1, d: 4 });
   });
 
   it('support inherited properties', () => {
     class BaseClass {
-      testProp() {
+      testProp(): string {
         return 'abc';
       }
     }
     class TestClass extends BaseClass {}
     const testClass = new TestClass();
-    expect(pick(testClass, ['testProp'])).toEqual({
-      testProp: expect.any(Function),
-    });
+    expectTypeOf(pick(testClass, ['testProp'])).toEqualTypeOf<{
+      testProp: () => string;
+    }>();
   });
-});
 
-describe('data last', () => {
-  it('it should pick props', () => {
+  it('dataLast', () => {
     const result = pipe({ a: 1, b: 2, c: 3, d: 4 }, pick(['a', 'd']));
     expect(result).toEqual({ a: 1, d: 4 });
   });
-});
 
-it('read only', () => {
-  concat([1, 2], [3, 4] as const);
-  // or similar:
-  // const props: ReadonlyArray<string> = ["prop1", "prop2"];
-  // const getProps = <T extends string>(props: readonly T[]) => props;
-  const someObject = { a: 'b', prop1: 'a', prop2: 2 };
-  const props = ['prop1', 'prop2'] as const;
-  pick(someObject, props); // TS2345 compilation error
+  it('read only', () => {
+    concat([1, 2], [3, 4] as const);
+    // or similar:
+    // const props: ReadonlyArray<string> = ["prop1", "prop2"];
+    // const getProps = <T extends string>(props: readonly T[]) => props;
+    const someObject = { prop1: 'a', prop2: 2, a: 'b' };
+    const props = ['prop1', 'prop2'] as const;
+    pick(someObject, props); // TS2345 compilation error
+  });
+
+  it('it can pick symbol keys', () => {
+    const mySymbol = Symbol('mySymbol');
+    expect(pick({ [mySymbol]: 3, a: 4 }, [mySymbol])).toStrictEqual({
+      [mySymbol]: 3,
+    });
+  });
 });
 
 describe('typing', () => {
@@ -73,5 +76,21 @@ describe('typing', () => {
         Pick<{ a: number } | { a?: number; b: string }, 'a'>
       >();
     });
+  });
+
+  it('multiple keys', () => {
+    interface Data {
+      aProp: string; bProp: string;
+    }
+
+    const obj: Data = {
+      aProp: 'p1',
+
+      bProp: 'p2',
+    };
+
+    const result = pipe(obj, pick(['aProp', 'bProp']));
+
+    expectTypeOf(result).toEqualTypeOf<Pick<Data, 'aProp' | 'bProp'>>();
   });
 });

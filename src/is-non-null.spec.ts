@@ -1,19 +1,17 @@
-import { describe, expect, expectTypeOf, it } from 'vitest';
-
-import type { AllTypesDataProviderTypes, TestClass } from './../test/types-data-provider';
-
-import { ALL_TYPES_DATA_PROVIDER, TYPES_DATA_PROVIDER } from './../test/types-data-provider';
+import {
+  ALL_TYPES_DATA_PROVIDER,
+  type AllTypesDataProviderTypes,
+  TYPES_DATA_PROVIDER,
+  type TestClass,
+} from '../test/types-data-provider';
 import { isNonNull } from './is-non-null';
 
 describe('isNonNull', () => {
   it('should work as type guard', () => {
     const data = TYPES_DATA_PROVIDER.date as AllTypesDataProviderTypes;
     if (isNonNull(data)) {
-      expect(data instanceof Date).toEqual(true);
+      expect(data instanceof Date).toBe(true);
       expectTypeOf(data).toEqualTypeOf<
-        | (() => void)
-        | [number, number, number]
-        | { readonly a: 'asd' }
         | Array<number>
         | Date
         | Error
@@ -27,18 +25,19 @@ describe('isNonNull', () => {
         | number
         | string
         | symbol
+        | 1n
+        | (() => void)
+        | { readonly a: 'asd' }
+        | [number, number, number]
         | undefined
       >();
     }
   });
   it('should work as type guard in filter', () => {
     const data = ALL_TYPES_DATA_PROVIDER.filter(isNonNull);
-    expect(data).toHaveLength(17);
+    expect(data).toHaveLength(18);
     expectTypeOf(data).toEqualTypeOf<
       Array<
-        | (() => void)
-        | [number, number, number]
-        | { readonly a: 'asd' }
         | Array<number>
         | Date
         | Error
@@ -52,6 +51,10 @@ describe('isNonNull', () => {
         | number
         | string
         | symbol
+        | 1n
+        | (() => void)
+        | { readonly a: 'asd' }
+        | [number, number, number]
         | undefined
       >
           >(data);

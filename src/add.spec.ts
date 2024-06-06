@@ -1,5 +1,3 @@
-import { expect, it } from 'vitest';
-
 import { add } from './add';
 
 it('data-first', () => {

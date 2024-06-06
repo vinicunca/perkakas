@@ -1,5 +1,3 @@
-import { describe, expect, it } from 'vitest';
-
 import { sortedIndexBy } from './sorted-index-by';
 
 describe('runtime correctness', () => {
@@ -263,7 +261,7 @@ function indicesSeen<T>(
   valueFunction: (item: T) => NonNullable<unknown>,
 ): ReadonlyArray<number | undefined> {
   const indices: Array<number | undefined> = [];
-  sortedIndexBy.indexed(items, item, (pivot, index) => {
+  sortedIndexBy(items, item, (pivot, index) => {
     indices.push(index);
     return valueFunction(pivot);
   });

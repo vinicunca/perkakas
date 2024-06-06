@@ -1,15 +1,13 @@
 /**
  * Creates a function that is restricted to invoking `func` once. Repeat calls to the function return the value of the first invocation.
  *
- * @param fn the function to wrap
- * @signature once(fn)
+ * @param fn - The function to wrap.
+ * @signature P.once(fn)
  * @example
- *  import { once } from '@vinicunca/perkakas';
- *
- *  const initialize = once(createApplication);
- *  initialize();
- *  initialize();
- *  // => `createApplication` is invoked once
+ * const initialize = P.once(createApplication);
+ * initialize();
+ * initialize();
+ * // => `createApplication` is invoked once
  * @category Function
  */
 export function once<T>(fn: () => T): () => T {

@@ -1,4 +1,4 @@
-import { purry } from './purry';
+import { curry } from './curry';
 
 /**
  * Calls an input function `n` times, returning an array containing the results
@@ -7,13 +7,10 @@ import { purry } from './purry';
  * `fn` is passed one argument: The current value of `n`, which begins at `0`
  * and is gradually incremented to `n - 1`.
  *
- * @param count A value between `0` and `n - 1`. Increments after each function call.
- * @param fn The function to invoke. Passed one argument, the current value of `n`.
- * @return An array containing the return values of all calls to `fn`.
- * @example
- *  import { times } from '@vinicunca/perkakas';
- *
- *  times(5, identity); // => [0, 1, 2, 3, 4]
+ * @param count - A value between `0` and `n - 1`. Increments after each function call.
+ * @param fn - The function to invoke. Passed one argument, the current value of `n`.
+ * @returns An array containing the return values of all calls to `fn`.
+ * @example times(5, identity()); //=> [0, 1, 2, 3, 4]
  * @dataFirst
  */
 export function times<T>(count: number, fn: (n: number) => T): Array<T>;
@@ -25,21 +22,18 @@ export function times<T>(count: number, fn: (n: number) => T): Array<T>;
  * `fn` is passed one argument: The current value of `n`, which begins at `0`
  * and is gradually incremented to `n - 1`.
  *
- * @param fn The function to invoke. Passed one argument, the current value of `n`.
- * @return An array containing the return values of all calls to `fn`.
- * @example
- *  import { times, identity } from '@vinicunca/perkakas';
- *
- *  times(identity)(5); // => [0, 1, 2, 3, 4]
+ * @param fn - The function to invoke. Passed one argument, the current value of `n`.
+ * @returns An array containing the return values of all calls to `fn`.
+ * @example times(identity())(5); //=> [0, 1, 2, 3, 4]
  * @dataLast
  */
 export function times<T>(fn: (n: number) => T): (count: number) => Array<T>;
 
-export function times(...args: Array<any>): unknown {
-  return purry(times_, args);
+export function times(...args: ReadonlyArray<unknown>): unknown {
+  return curry(timesImplementation, args);
 }
 
-function times_<T>(count: number, fn: (n: number) => T): Array<T> {
+function timesImplementation<T>(count: number, fn: (n: number) => T): Array<T> {
   if (count < 0) {
     throw new RangeError('n must be a non-negative number');
   }

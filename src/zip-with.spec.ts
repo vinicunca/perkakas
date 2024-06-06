@@ -1,69 +1,109 @@
-import { assertType, describe, expect, it } from 'vitest';
-
+import { pipe } from './pipe';
 import { zipWith } from './zip-with';
 
-function pred(a: string, b: string): string {
-  return a + b;
-}
+describe('runtime', () => {
+  describe('data first', () => {
+    it('should zip with predicate', () => {
+      expect(
+        zipWith(['1', '2', '3'], ['a', 'b', 'c'], (a, b) => `${a}${b}`),
+      ).toStrictEqual(['1a', '2b', '3c']);
+    });
 
-const first = ['1', '2', '3'];
-const second = ['a', 'b', 'c'];
-const shorterFirst = ['1', '2'];
-const shorterSecond = ['a', 'b'];
+    it('should truncate to shorter second', () => {
+      expect(
+        zipWith(['1', '2', '3'], ['a', 'b'], (a, b) => `${a}${b}`),
+      ).toStrictEqual(['1a', '2b']);
+    });
 
-describe('data first', () => {
-  it('should zip with predicate', () => {
-    expect(zipWith(first, second, pred)).toEqual(['1a', '2b', '3c']);
+    it('should truncate to shorter first', () => {
+      expect(
+        zipWith(['1', '2'], ['a', 'b', 'c'], (a, b) => `${a}${b}`),
+      ).toStrictEqual(['1a', '2b']);
+    });
   });
-  it('should truncate to shorter second', () => {
-    expect(zipWith(first, shorterSecond, pred)).toEqual(['1a', '2b']);
+
+  describe('data second', () => {
+    it('should zip with predicate', () => {
+      expect(
+        zipWith((a: string, b: string) => `${a}${b}`)(
+          ['1', '2', '3'],
+          ['a', 'b', 'c'],
+        ),
+      ).toStrictEqual(['1a', '2b', '3c']);
+    });
+
+    it('should truncate to shorter second', () => {
+      expect(
+        zipWith((a: string, b: string) => `${a}${b}`)(
+          ['1', '2', '3'],
+          ['a', 'b'],
+        ),
+      ).toStrictEqual(['1a', '2b']);
+    });
+
+    it('should truncate to shorter first', () => {
+      expect(
+        zipWith((a: string, b: string) => `${a}${b}`)(
+          ['1', '2'],
+          ['a', 'b', 'c'],
+        ),
+      ).toStrictEqual(['1a', '2b']);
+    });
   });
-  it('should truncate to shorter first', () => {
-    expect(zipWith(shorterFirst, second, pred)).toEqual(['1a', '2b']);
+
+  describe('data second with initial arg', () => {
+    it('should zip with predicate', () => {
+      expect(
+        pipe(
+          ['1', '2', '3'],
+          zipWith(['a', 'b', 'c'], (a, b) => `${a}${b}`),
+        ),
+      ).toStrictEqual(['1a', '2b', '3c']);
+    });
+
+    it('should truncate to shorter second', () => {
+      expect(
+        pipe(
+          ['1', '2', '3'],
+          zipWith(['a', 'b'], (a, b) => `${a}${b}`),
+        ),
+      ).toStrictEqual(['1a', '2b']);
+    });
+
+    it('should truncate to shorter first', () => {
+      expect(
+        pipe(
+          ['1', '2'],
+          zipWith(['a', 'b', 'c'], (a, b) => `${a}${b}`),
+        ),
+      ).toStrictEqual(['1a', '2b']);
+    });
   });
 });
 
-describe('data first typings', () => {
-  it('infers typing from predicate', () => {
-    const actual = zipWith(first, second, pred);
-    assertType<Array<string>>(actual);
+describe('typing', () => {
+  it('data first typings', () => {
+    const actual = zipWith(
+      ['1', '2', '3'],
+      ['a', 'b', 'c'],
+      (a, b) => `${a}${b}`,
+    );
+    expectTypeOf(actual).toEqualTypeOf<Array<string>>();
   });
-});
 
-describe('data second', () => {
-  it('should zip with predicate', () => {
-    expect(zipWith(pred)(first, second)).toEqual(['1a', '2b', '3c']);
+  it('data second typings', () => {
+    const actual = zipWith((a: string, b: string) => `${a}${b}`)(
+      ['1', '2', '3'],
+      ['a', 'b', 'c'],
+    );
+    expectTypeOf(actual).toEqualTypeOf<Array<string>>();
   });
-  it('should truncate to shorter second', () => {
-    expect(zipWith(pred)(first, shorterSecond)).toEqual(['1a', '2b']);
-  });
-  it('should truncate to shorter first', () => {
-    expect(zipWith(pred)(shorterFirst, second)).toEqual(['1a', '2b']);
-  });
-});
 
-describe('data second typings', () => {
-  it('infers typing from predicate', () => {
-    const actual = zipWith(pred)(first, second);
-    assertType<Array<string>>(actual);
-  });
-});
-
-describe('data second with initial arg', () => {
-  it('should zip with predicate', () => {
-    expect(zipWith(pred, second)(first)).toEqual(['1a', '2b', '3c']);
-  });
-  it('should truncate to shorter second', () => {
-    expect(zipWith(pred, shorterSecond)(first)).toEqual(['1a', '2b']);
-  });
-  it('should truncate to shorter first', () => {
-    expect(zipWith(pred, second)(shorterFirst)).toEqual(['1a', '2b']);
-  });
-});
-
-describe('data second with initial arg typings', () => {
-  it('infers typing from predicate', () => {
-    const actual = zipWith(pred, second)(first);
-    assertType<Array<string>>(actual);
+  it('data second with initial arg typings', () => {
+    const actual = pipe(
+      ['1', '2', '3'],
+      zipWith(['a', 'b', 'c'], (a, b) => `${a}${b}`),
+    );
+    expectTypeOf(actual).toEqualTypeOf<Array<string>>();
   });
 });

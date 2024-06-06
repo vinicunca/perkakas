@@ -1,117 +1,77 @@
-import type { Pred, PredIndexed, PredIndexedOptional } from './_types';
 import type { LazyEvaluator } from './pipe';
 
-import { _reduceLazy } from './_reduce-lazy';
-import { _toLazyIndexed } from './_to-lazy-indexed';
-import { purry } from './purry';
+import { curry } from './curry';
+import { SKIP_ITEM } from './helpers/utility-evaluators';
 
 /**
- * Filter the elements of an array that meet the condition specified in a callback function.
+ * Creates a shallow copy of a portion of a given array, filtered down to just
+ * the elements from the given array that pass the test implemented by the
+ * provided function. Equivalent to `Array.prototype.filter`.
  *
- * @param array The array to filter.
- * @param fn the callback function.
+ * @param data - The array to filter.
+ * @param predicate - A function to execute for each element in the array. It
+ * should return `true` to keep the element in the resulting array, and `false`
+ * otherwise. A type-predicate can also be used to narrow the result.
+ * @returns A shallow copy of the given array containing just the elements that
+ * pass the test. If no elements pass the test, an empty array is returned.
  * @signature
- *  filter(array, fn)
- *  filter.indexed(array, fn)
+ *    P.filter(data, predicate)
  * @example
- *  import { filter, isIncludedIn } from '@vinicunca/perkakas';
- *
- *  filter([1, 2, 3], x => x % 2 === 1); // => [1, 3]
- *  filter.indexed([1, 2, 3], (x, i, array) => x % 2 === 1); // => [1, 3]
- *  // Excludes the values from `other` array
- *  filter(array, isNot(isIncludedIn(other)))
- *  // Returns a list of elements that exist in both array.
- *  filter(array, isIncludedIn(other))
+ *    P.filter([1, 2, 3], x => x % 2 === 1) // => [1, 3]
  * @dataFirst
- * @indexed
- * @pipeable
+ * @lazy
  * @category Array
  */
 export function filter<T, S extends T>(
-  array: ReadonlyArray<T>,
-  fn: (value: T) => value is S
+  data: ReadonlyArray<T>,
+  predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S,
 ): Array<S>;
 export function filter<T>(
-  array: ReadonlyArray<T>,
-  fn: Pred<T, boolean>
+  data: ReadonlyArray<T>,
+  predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
 ): Array<T>;
 
 /**
- * Filter the elements of an array that meet the condition specified in a callback function.
+ * Creates a shallow copy of a portion of a given array, filtered down to just
+ * the elements from the given array that pass the test implemented by the
+ * provided function. Equivalent to `Array.prototype.filter`.
  *
- * @param fn the callback function.
+ * @param predicate - A function to execute for each element in the array. It
+ * should return `true` to keep the element in the resulting array, and `false`
+ * otherwise.
+ * @returns A shallow copy of the given array containing just the elements that
+ * pass the test. If no elements pass the test, an empty array is returned.
  * @signature
- *  filter(fn)(array)
- *  filter.indexed(fn)(array)
+ *    P.filter(predicate)(data)
  * @example
- *  import { filter, isIncludedIn, isTruthy } from '@vinicunca/perkakas';
- *
- *  pipe([1, 2, 3], filter(x => x % 2 === 1)); // => [1, 3]
- *  pipe([1, 2, 3], filter.indexed((x, i) => x % 2 === 1)); // => [1, 3]
- *  // Filter out all falsy values
- *  filter(isTruthy)
- *  // Counts how many values of the collection pass the specified predicate
- *  filter(fn).length
- *  // Excludes the values from `other` array
- *  filter(isNot(isIncludedIn(other)))
- *  // Returns a list of elements that exist in both array.
- *  filter(isIncludedIn(other))
+ *    P.pipe([1, 2, 3], P.filter(x => x % 2 === 1)) // => [1, 3]
  * @dataLast
- * @indexed
- * @pipeable
+ * @lazy
  * @category Array
  */
 export function filter<T, S extends T>(
-  fn: (input: T) => input is S
-): (array: ReadonlyArray<T>) => Array<S>;
+  predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S,
+): (data: ReadonlyArray<T>) => Array<S>;
 export function filter<T>(
-  fn: Pred<T, boolean>
-): (array: ReadonlyArray<T>) => Array<T>;
+  predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
+): (data: ReadonlyArray<T>) => Array<T>;
 
-export function filter(...args: Array<any>): unknown {
-  return purry(filter_(false), args, filter.lazy);
+export function filter(...args: ReadonlyArray<unknown>): unknown {
+  return curry(filterImplementation, args, lazyImplementation);
 }
 
-function filter_(indexed: boolean) {
-  return <T>(array: ReadonlyArray<T>, fn: PredIndexedOptional<T, boolean>) => {
-    return _reduceLazy(
-      array,
-      indexed ? filter.lazyIndexed(fn) : filter.lazy(fn),
-      indexed,
-    );
-  };
-}
+function filterImplementation<T>(
+  data: ReadonlyArray<T>,
+  predicate: (value: T, index: number, array: ReadonlyArray<T>) => boolean,
+): Array<T> {
+  return data.filter(predicate);
+};
 
-function lazy_(indexed: boolean) {
-  return <T>(fn: PredIndexedOptional<T, boolean>): LazyEvaluator<T> =>
-    (value, index, array) =>
-      (indexed ? fn(value, index, array) : fn(value))
-        ? { done: false, hasNext: true, next: value }
-        : { done: false, hasNext: false };
-}
-
-export namespace filter {
-  export function indexed<T, S extends T>(
-    array: ReadonlyArray<T>,
-    fn: (input: T, index: number, array: ReadonlyArray<T>) => input is S,
-  ): Array<S>;
-  export function indexed<T>(
-    array: ReadonlyArray<T>,
-    fn: PredIndexed<T, boolean>,
-  ): Array<T>;
-  /**
-   * @dataLast
-   */
-  export function indexed<T, S extends T>(
-    fn: (input: T, index: number, array: ReadonlyArray<T>) => input is S,
-  ): (array: ReadonlyArray<T>) => Array<S>;
-  export function indexed<T>(
-    fn: PredIndexed<T, boolean>,
-  ): (array: ReadonlyArray<T>) => Array<T>;
-  export function indexed(...args: Array<any>): unknown {
-    return purry(filter_(true), args, filter.lazyIndexed);
-  }
-
-  export const lazy = lazy_(false);
-  export const lazyIndexed = _toLazyIndexed(lazy_(true));
+function lazyImplementation<T>(
+  predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
+): LazyEvaluator<T> {
+  return (value, index, data) =>
+    predicate(value, index, data)
+      ? { done: false, hasNext: true, next: value }
+      : SKIP_ITEM;
 }

@@ -1,5 +1,3 @@
-import { describe, expect, it, vi } from 'vitest';
-
 import { filter } from './filter';
 import { identity } from './identity';
 import { map } from './map';
@@ -106,7 +104,7 @@ describe('lazy', () => {
         return x * 10;
       }),
       take(4),
-      identity,
+      identity(),
       map((x) => {
         count2();
         return x * 10;

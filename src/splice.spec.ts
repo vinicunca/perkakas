@@ -1,5 +1,3 @@
-import { describe, expect, expectTypeOf, it } from 'vitest';
-
 import { pipe } from './pipe';
 import { splice } from './splice';
 
@@ -26,85 +24,86 @@ describe('at runtime', () => {
   });
 
   describe('regression test including edge cases', () => {
+    // prettier-ignore
     const testCases = [
       // items: multiple elements
       //              start: < 0
       //                         deleteCount: < 0
-      { deleteCount: -1, expected: [1, 2], items: [1, 2], replacement: [], start: -1 },
-      { deleteCount: -1, expected: [1, 3, 2], items: [1, 2], replacement: [3], start: -1 },
+      { items: [1, 2], start: -1, deleteCount: -1, replacement: [], expected: [1, 2] },
+      { items: [1, 2], start: -1, deleteCount: -1, replacement: [3], expected: [1, 3, 2] },
       //                         deleteCount: = 0
-      { deleteCount: 0, expected: [1, 2], items: [1, 2], replacement: [], start: -1 },
-      { deleteCount: 0, expected: [1, 3, 2], items: [1, 2], replacement: [3], start: -1 },
+      { items: [1, 2], start: -1, deleteCount: 0, replacement: [], expected: [1, 2] },
+      { items: [1, 2], start: -1, deleteCount: 0, replacement: [3], expected: [1, 3, 2] },
       //                         deleteCount: = 1
-      { deleteCount: 1, expected: [1], items: [1, 2], replacement: [], start: -1 },
-      { deleteCount: 1, expected: [1, 3], items: [1, 2], replacement: [3], start: -1 },
+      { items: [1, 2], start: -1, deleteCount: 1, replacement: [], expected: [1] },
+      { items: [1, 2], start: -1, deleteCount: 1, replacement: [3], expected: [1, 3] },
       //                         deleteCount: = items.length
-      { deleteCount: 2, expected: [1], items: [1, 2], replacement: [], start: -1 },
-      { deleteCount: 2, expected: [1, 3], items: [1, 2], replacement: [3], start: -1 },
+      { items: [1, 2], start: -1, deleteCount: 2, replacement: [], expected: [1] },
+      { items: [1, 2], start: -1, deleteCount: 2, replacement: [3], expected: [1, 3] },
       //              start: = 0
-      { deleteCount: -1, expected: [1, 2], items: [1, 2], replacement: [], start: 0 },
-      { deleteCount: -1, expected: [3, 1, 2], items: [1, 2], replacement: [3], start: 0 },
-      { deleteCount: 0, expected: [1, 2], items: [1, 2], replacement: [], start: 0 },
-      { deleteCount: 0, expected: [3, 1, 2], items: [1, 2], replacement: [3], start: 0 },
-      { deleteCount: 1, expected: [2], items: [1, 2], replacement: [], start: 0 },
-      { deleteCount: 1, expected: [3, 2], items: [1, 2], replacement: [3], start: 0 },
-      { deleteCount: 2, expected: [], items: [1, 2], replacement: [], start: 0 },
-      { deleteCount: 2, expected: [3], items: [1, 2], replacement: [3], start: 0 },
+      { items: [1, 2], start: 0, deleteCount: -1, replacement: [], expected: [1, 2] },
+      { items: [1, 2], start: 0, deleteCount: -1, replacement: [3], expected: [3, 1, 2] },
+      { items: [1, 2], start: 0, deleteCount: 0, replacement: [], expected: [1, 2] },
+      { items: [1, 2], start: 0, deleteCount: 0, replacement: [3], expected: [3, 1, 2] },
+      { items: [1, 2], start: 0, deleteCount: 1, replacement: [], expected: [2] },
+      { items: [1, 2], start: 0, deleteCount: 1, replacement: [3], expected: [3, 2] },
+      { items: [1, 2], start: 0, deleteCount: 2, replacement: [], expected: [] },
+      { items: [1, 2], start: 0, deleteCount: 2, replacement: [3], expected: [3] },
       //              start: = 1
-      { deleteCount: -1, expected: [1, 2], items: [1, 2], replacement: [], start: 1 },
-      { deleteCount: -1, expected: [1, 3, 2], items: [1, 2], replacement: [3], start: 1 },
-      { deleteCount: 0, expected: [1, 2], items: [1, 2], replacement: [], start: 1 },
-      { deleteCount: 0, expected: [1, 3, 2], items: [1, 2], replacement: [3], start: 1 },
-      { deleteCount: 1, expected: [1], items: [1, 2], replacement: [], start: 1 },
-      { deleteCount: 1, expected: [1, 3], items: [1, 2], replacement: [3], start: 1 },
-      { deleteCount: 2, expected: [1], items: [1, 2], replacement: [], start: 1 },
-      { deleteCount: 2, expected: [1, 3], items: [1, 2], replacement: [3], start: 1 },
+      { items: [1, 2], start: 1, deleteCount: -1, replacement: [], expected: [1, 2] },
+      { items: [1, 2], start: 1, deleteCount: -1, replacement: [3], expected: [1, 3, 2] },
+      { items: [1, 2], start: 1, deleteCount: 0, replacement: [], expected: [1, 2] },
+      { items: [1, 2], start: 1, deleteCount: 0, replacement: [3], expected: [1, 3, 2] },
+      { items: [1, 2], start: 1, deleteCount: 1, replacement: [], expected: [1] },
+      { items: [1, 2], start: 1, deleteCount: 1, replacement: [3], expected: [1, 3] },
+      { items: [1, 2], start: 1, deleteCount: 2, replacement: [], expected: [1] },
+      { items: [1, 2], start: 1, deleteCount: 2, replacement: [3], expected: [1, 3] },
       //              start: = items.length
-      { deleteCount: -1, expected: [1, 2], items: [1, 2], replacement: [], start: 2 },
-      { deleteCount: -1, expected: [1, 2, 3], items: [1, 2], replacement: [3], start: 2 },
-      { deleteCount: 0, expected: [1, 2], items: [1, 2], replacement: [], start: 2 },
-      { deleteCount: 0, expected: [1, 2, 3], items: [1, 2], replacement: [3], start: 2 },
-      { deleteCount: 1, expected: [1, 2], items: [1, 2], replacement: [], start: 2 },
-      { deleteCount: 1, expected: [1, 2, 3], items: [1, 2], replacement: [3], start: 2 },
-      { deleteCount: 2, expected: [1, 2], items: [1, 2], replacement: [], start: 2 },
-      { deleteCount: 2, expected: [1, 2, 3], items: [1, 2], replacement: [3], start: 2 },
+      { items: [1, 2], start: 2, deleteCount: -1, replacement: [], expected: [1, 2] },
+      { items: [1, 2], start: 2, deleteCount: -1, replacement: [3], expected: [1, 2, 3] },
+      { items: [1, 2], start: 2, deleteCount: 0, replacement: [], expected: [1, 2] },
+      { items: [1, 2], start: 2, deleteCount: 0, replacement: [3], expected: [1, 2, 3] },
+      { items: [1, 2], start: 2, deleteCount: 1, replacement: [], expected: [1, 2] },
+      { items: [1, 2], start: 2, deleteCount: 1, replacement: [3], expected: [1, 2, 3] },
+      { items: [1, 2], start: 2, deleteCount: 2, replacement: [], expected: [1, 2] },
+      { items: [1, 2], start: 2, deleteCount: 2, replacement: [3], expected: [1, 2, 3] },
       //              start: > items.length
-      { deleteCount: -1, expected: [1, 2], items: [1, 2], replacement: [], start: 3 },
-      { deleteCount: -1, expected: [1, 2, 3], items: [1, 2], replacement: [3], start: 3 },
-      { deleteCount: 0, expected: [1, 2], items: [1, 2], replacement: [], start: 3 },
-      { deleteCount: 0, expected: [1, 2, 3], items: [1, 2], replacement: [3], start: 3 },
-      { deleteCount: 1, expected: [1, 2], items: [1, 2], replacement: [], start: 3 },
-      { deleteCount: 1, expected: [1, 2, 3], items: [1, 2], replacement: [3], start: 3 },
-      { deleteCount: 2, expected: [1, 2], items: [1, 2], replacement: [], start: 3 },
-      { deleteCount: 2, expected: [1, 2, 3], items: [1, 2], replacement: [3], start: 3 },
+      { items: [1, 2], start: 3, deleteCount: -1, replacement: [], expected: [1, 2] },
+      { items: [1, 2], start: 3, deleteCount: -1, replacement: [3], expected: [1, 2, 3] },
+      { items: [1, 2], start: 3, deleteCount: 0, replacement: [], expected: [1, 2] },
+      { items: [1, 2], start: 3, deleteCount: 0, replacement: [3], expected: [1, 2, 3] },
+      { items: [1, 2], start: 3, deleteCount: 1, replacement: [], expected: [1, 2] },
+      { items: [1, 2], start: 3, deleteCount: 1, replacement: [3], expected: [1, 2, 3] },
+      { items: [1, 2], start: 3, deleteCount: 2, replacement: [], expected: [1, 2] },
+      { items: [1, 2], start: 3, deleteCount: 2, replacement: [3], expected: [1, 2, 3] },
 
       // items: empty
       //              start: < 0
-      { deleteCount: -1, expected: [], items: [], replacement: [], start: -1 },
-      { deleteCount: -1, expected: [3], items: [], replacement: [3], start: -1 },
-      { deleteCount: 0, expected: [], items: [], replacement: [], start: -1 },
-      { deleteCount: 0, expected: [3], items: [], replacement: [3], start: -1 },
-      { deleteCount: 1, expected: [], items: [], replacement: [], start: -1 },
-      { deleteCount: 1, expected: [3], items: [], replacement: [3], start: -1 },
+      { items: [], start: -1, deleteCount: -1, replacement: [], expected: [] },
+      { items: [], start: -1, deleteCount: -1, replacement: [3], expected: [3] },
+      { items: [], start: -1, deleteCount: 0, replacement: [], expected: [] },
+      { items: [], start: -1, deleteCount: 0, replacement: [3], expected: [3] },
+      { items: [], start: -1, deleteCount: 1, replacement: [], expected: [] },
+      { items: [], start: -1, deleteCount: 1, replacement: [3], expected: [3] },
       //              start: = items.length = 0
-      { deleteCount: -1, expected: [], items: [], replacement: [], start: 0 },
-      { deleteCount: -1, expected: [3], items: [], replacement: [3], start: 0 },
-      { deleteCount: 0, expected: [], items: [], replacement: [], start: 0 },
-      { deleteCount: 0, expected: [3], items: [], replacement: [3], start: 0 },
-      { deleteCount: 1, expected: [], items: [], replacement: [], start: 0 },
-      { deleteCount: 1, expected: [3], items: [], replacement: [3], start: 0 },
+      { items: [], start: 0, deleteCount: -1, replacement: [], expected: [] },
+      { items: [], start: 0, deleteCount: -1, replacement: [3], expected: [3] },
+      { items: [], start: 0, deleteCount: 0, replacement: [], expected: [] },
+      { items: [], start: 0, deleteCount: 0, replacement: [3], expected: [3] },
+      { items: [], start: 0, deleteCount: 1, replacement: [], expected: [] },
+      { items: [], start: 0, deleteCount: 1, replacement: [3], expected: [3] },
       //              start: > items.length = 0
-      { deleteCount: -1, expected: [], items: [], replacement: [], start: 1 },
-      { deleteCount: -1, expected: [3], items: [], replacement: [3], start: 1 },
-      { deleteCount: 0, expected: [], items: [], replacement: [], start: 1 },
-      { deleteCount: 0, expected: [3], items: [], replacement: [3], start: 1 },
-      { deleteCount: 1, expected: [], items: [], replacement: [], start: 1 },
-      { deleteCount: 1, expected: [3], items: [], replacement: [3], start: 1 },
+      { items: [], start: 1, deleteCount: -1, replacement: [], expected: [] },
+      { items: [], start: 1, deleteCount: -1, replacement: [3], expected: [3] },
+      { items: [], start: 1, deleteCount: 0, replacement: [], expected: [] },
+      { items: [], start: 1, deleteCount: 0, replacement: [3], expected: [3] },
+      { items: [], start: 1, deleteCount: 1, replacement: [], expected: [] },
+      { items: [], start: 1, deleteCount: 1, replacement: [3], expected: [3] },
     ] as const;
 
     it.each(testCases)(
       'splice($items, $start, $deleteCount, $replacement) -> $expected',
-      ({ deleteCount, expected, items, replacement, start }) => {
+      ({ items, start, deleteCount, replacement, expected }) => {
         expect(splice(items, start, deleteCount, replacement)).toEqual(
           expected,
         );

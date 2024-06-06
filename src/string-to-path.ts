@@ -1,41 +1,49 @@
+/* eslint-disable dot-notation */
+
+// eslint-disable-next-line regexp/no-super-linear-backtracking
+const PATH_RE = /^(?:\.?(?<propName>[^.[\]]+)|\[(?<index>.+?)\])(?<rest>.*)$/u;
+
+type StringToPath<T extends string> = string extends T
+  ? never
+  : T extends ''
+    ? []
+    : T extends `${infer Head}[${infer Nest}].${infer Tail}`
+      ? [...StringToPath<Head>, Nest, ...StringToPath<Tail>]
+      : T extends `${infer Head}[${infer Nest}]`
+        ? [...StringToPath<Head>, Nest]
+        : T extends `${infer Head}.${infer Tail}`
+          ? [...StringToPath<Head>, ...StringToPath<Tail>]
+          : [T];
+
 /**
- * Converts a path string to an array of keys.
+ * Converts a path string to an array of string keys (including array index
+ * access keys).
  *
- * @param path a string path
- * @signature stringToPathArray(path)
- * @example
- *  import { stringToPathArray } from '@vicnunca/perkakas';
+ * ! IMPORTANT: Attempting to pass a simple `string` type will result in the
+ * result being inferred as `never`. This is intentional to help with type-
+ * safety as this function is primarily intended to help with other "object path
+ * access" functions like `pathOr` or `setPath`.
  *
- *  stringToPathArray('a.b[0].c') // => ['a', 'b', 0, 'c']
+ * @param path - A string path.
+ * @signature P.stringToPathArray(path)
+ * @example P.stringToPathArray('a.b[0].c') // => ['a', 'b', '0', 'c']
  * @dataFirst
- * @category String
+ * @category Utility
  */
 export function stringToPath<Path extends string>(
   path: Path,
 ): StringToPath<Path> {
-  return stringToPath_(path) as StringToPath<Path>;
-}
-
-function stringToPath_(path: string): Array<string> {
   if (path.length === 0) {
-    return [];
+    return [] as StringToPath<Path>;
   }
 
-  const match = /^\[(.+?)\](.*)$/u.exec(path) ?? /^\.?([^.[\]]+)(.*)$/u.exec(path);
-  if (match !== null) {
-    const [, key, rest] = match;
-    // @ts-expect-error [ts2322] - Can we improve typing here to assure that `key` and `rest` are defined when the regex matches?
-    return [key, ...stringToPath_(rest)];
-  }
-  return [path];
+  const match = PATH_RE.exec(path);
+  return (
+    match?.groups === undefined
+      ? [path]
+      : [
+          match.groups['index'] ?? match.groups['propName']!,
+          ...stringToPath(match.groups['rest']!),
+        ]
+  ) as StringToPath<Path>;
 }
-
-export type StringToPath<T extends string> = T extends ''
-  ? []
-  : T extends `[${infer Head}].${infer Tail}`
-    ? [Head, ...StringToPath<Tail>]
-    : T extends `.${infer Head}${infer Tail}`
-      ? [Head, ...StringToPath<Tail>]
-      : T extends `${infer Head}${infer Tail}`
-        ? [Head, ...StringToPath<Tail>]
-        : [T];

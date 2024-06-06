@@ -1,5 +1,3 @@
-import { describe, expect, it } from 'vitest';
-
 import { createLazyInvocationCounter } from '../test/lazy-invocation-counter';
 import { pipe } from './pipe';
 import { take } from './take';
@@ -23,7 +21,6 @@ describe('pipe', () => {
   });
 
   it('take before unique', () => {
-    // bug from https://github.com/remeda/remeda/issues/14
     const counter = createLazyInvocationCounter();
     const result = pipe(
       [1, 2, 2, 5, 1, 6, 7] as const,

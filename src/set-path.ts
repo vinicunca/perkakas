@@ -1,77 +1,97 @@
-import type { Narrow } from './_narrow';
-import type { Path, SupportsValueAtPath, ValueAtPath } from './_paths';
+import { curry } from './curry';
 
-import { purry } from './purry';
+type Path<T, Prefix extends ReadonlyArray<unknown> = readonly []> =
+  T extends ReadonlyArray<unknown>
+    ? Path<T[number], readonly [...Prefix, number]> | Prefix
+    : T extends object
+      ? PathsOfObject<T, Prefix> | Prefix
+      : Prefix;
+
+type PathsOfObject<T, Prefix extends ReadonlyArray<unknown>> = {
+  [K in keyof T]-?: Path<T[K], readonly [...Prefix, K]>;
+}[keyof T];
+
+type ValueAtPath<T, TPath extends Path<T>> = TPath extends readonly [
+  infer Head,
+  ...infer Rest,
+]
+  ? Head extends keyof T
+    ? Rest extends Path<T[Head]>
+      ? ValueAtPath<T[Head], Rest>
+      : never
+    : never
+  : T;
 
 /**
- * Sets the value at `path` of `object`. `path` can be an array or a path string.
+ * Sets the value at `path` of `object`.
  *
- * @param object the target method
- * @param path the property name
- * @param value the value to set
+ * For simple cases where the path is only one level deep, prefer `set` instead.
+ *
+ * @param data - The target method.
+ * @param path - The array of properties.
+ * @param value - The value to set.
  * @signature
- *  setPath(obj, path, value)
+ *    P.setPath(obj, path, value)
  * @example
- *  import { setPath } from '@vinicunca/perkakas';
- *
- *  setPath({ a: { b: 1 } }, ['a', 'b'], 2); // => { a: { b: 2 } }
+ *    P.setPath({ a: { b: 1 } }, ['a', 'b'], 2) // => { a: { b: 2 } }
  * @dataFirst
  * @category Object
  */
-export function setPath<T, TPath extends Array<PropertyKey> & Path<T>>(
-  object: T,
-  path: Narrow<TPath>,
-  value: ValueAtPath<T, TPath>
+export function setPath<T, TPath extends Path<T>>(
+  data: T,
+  path: TPath,
+  value: ValueAtPath<T, TPath>,
 ): T;
 
 /**
- * Sets the value at `path` of `object`. `path` can be an array or a path string.
+ * Sets the value at `path` of `object`.
  *
- * @param path the property name
- * @param value the value to set
+ * @param path - The array of properties.
+ * @param value - The value to set.
  * @signature
- *  setPath(path, value)
+ *    P.setPath(path, value)(obj)
  * @example
- *  import { setPath, pipe } from '@vinicunca/perkakas';
- *
- *  pipe({ a: { b: 1 } }, setPath(['a', 'b'], 2)); // { a: { b: 2 } }
- * @dataFirst
+ *    P.pipe({ a: { b: 1 } }, P.setPath(['a', 'b'], 2)) // { a: { b: 2 } }
+ * @dataLast
  * @category Object
  */
-export function setPath<TPath extends Array<PropertyKey>, Value>(
-  path: Narrow<TPath>,
-  value: Value
-): <Obj>(object: SupportsValueAtPath<Obj, TPath, Value>) => Obj;
+export function setPath<
+  T,
+  TPath extends Path<T>,
+  Value extends ValueAtPath<T, TPath>,
+>(path: TPath, value: Value): (data: T) => T;
 
-export function setPath(...args: Array<any>): unknown {
-  return purry(setPath_, args);
+export function setPath(...args: ReadonlyArray<unknown>): unknown {
+  return curry(setPathImplementation, args);
 }
 
-export function setPath_(
+export function setPathImplementation(
   data: unknown,
   path: ReadonlyArray<PropertyKey>,
   value: unknown,
 ): unknown {
-  const [current, ...rest] = path;
-  if (current === undefined) {
+  const [pivot, ...rest] = path;
+  if (pivot === undefined) {
     return value;
   }
 
   if (Array.isArray(data)) {
-    return data.map((item: unknown, index) =>
-      index === current ? setPath_(item, rest, value) : item);
-  }
-
-  if (data === null || data === undefined) {
-    throw new Error('Path doesn\'t exist in object!');
-  }
-
-  return {
-    ...data,
-    [current]: setPath_(
-      (data as Record<PropertyKey, unknown>)[current],
+    const copy = [...data];
+    copy[pivot as number] = setPathImplementation(
+      data[pivot as number],
       rest,
       value,
-    ),
+    );
+    return copy;
+  }
+
+  const { [pivot]: currentValue, ...remaining } = data as Record<
+    PropertyKey,
+    unknown
+  >;
+
+  return {
+    ...remaining,
+    [pivot]: setPathImplementation(currentValue, rest, value),
   };
 }

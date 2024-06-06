@@ -1,12 +1,13 @@
-import { describe, expect, expectTypeOf, it } from 'vitest';
-
-import type { AllTypesDataProviderTypes } from './../test/types-data-provider';
-
-import { ALL_TYPES_DATA_PROVIDER, TYPES_DATA_PROVIDER } from './../test/types-data-provider';
+import {
+  ALL_TYPES_DATA_PROVIDER,
+  type AllTypesDataProviderTypes,
+  TYPES_DATA_PROVIDER,
+} from '../test/types-data-provider';
 import { isArray } from './is-array';
 
 describe('isArray', () => {
   it('should infer ReadonlyArray<unknown> when given any', () => {
+    // eslint-disable-next-line ts/no-explicit-any -- Explicitly testing `any`
     const data = [] as any;
     if (isArray(data)) {
       expectTypeOf(data).not.toBeAny();
@@ -19,7 +20,7 @@ describe('isArray', () => {
     if (isArray(data)) {
       expect(Array.isArray(data)).toEqual(true);
       expectTypeOf(data).toEqualTypeOf<
-        [number, number, number] | Array<number>
+        Array<number> | [number, number, number]
       >();
     }
   });
@@ -35,7 +36,7 @@ describe('isArray', () => {
     const data = ALL_TYPES_DATA_PROVIDER.filter(isArray);
     expect(data.every((c) => Array.isArray(c))).toEqual(true);
     expectTypeOf(data).toEqualTypeOf<
-      Array<[number, number, number] | Array<number>>
+      Array<Array<number> | [number, number, number]>
     >();
   });
 });
@@ -48,8 +49,7 @@ describe('typing', () => {
       expectTypeOf(data).toEqualTypeOf<Array<number>>();
     }
 
-    expectTypeOf([data].filter(isArray))
-      .toEqualTypeOf<Array<Array<number>>>();
+    expectTypeOf([data].filter(isArray)).toEqualTypeOf<Array<Array<number>>>();
   });
 
   it('readonly arrays work', () => {
@@ -59,7 +59,8 @@ describe('typing', () => {
       expectTypeOf(data).toEqualTypeOf<ReadonlyArray<number>>();
     }
 
-    expectTypeOf([data].filter(isArray))
-      .toEqualTypeOf<Array<ReadonlyArray<number>>>();
+    expectTypeOf([data].filter(isArray)).toEqualTypeOf<
+      Array<ReadonlyArray<number>>
+    >();
   });
 });

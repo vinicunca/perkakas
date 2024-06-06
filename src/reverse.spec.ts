@@ -1,5 +1,3 @@
-import { assertType, describe, expect, it } from 'vitest';
-
 import { pipe } from './pipe';
 import { reverse } from './reverse';
 
@@ -11,17 +9,17 @@ describe('data first', () => {
   describe('reverse typings', () => {
     it('arrays', () => {
       const actual = reverse([1, 2, 3]);
-      assertType<Array<number>>(actual);
+      expectTypeOf(actual).toEqualTypeOf<Array<number>>();
     });
     it('tuples', () => {
       const actual = reverse([1, 2, [true], 'a'] as const);
-      assertType<['a', readonly [true], 2, 1]>(actual);
+      expectTypeOf(actual).toEqualTypeOf<['a', readonly [true], 2, 1]>();
     });
 
     it('variadic tuples', () => {
       const input: [number, ...Array<string>] = [1, 'two', 'three'];
       const actual = reverse(input);
-      assertType<[...Array<string>, number]>(actual);
+      expectTypeOf(actual).toEqualTypeOf<[...Array<string>, number]>();
     });
   });
 });
@@ -34,17 +32,17 @@ describe('data last', () => {
   describe('reverse typings', () => {
     it('arrays', () => {
       const actual = pipe([1, 2, 3], reverse());
-      assertType<Array<number>>(actual);
+      expectTypeOf(actual).toEqualTypeOf<Array<number>>();
     });
     it('tuples', () => {
       const actual = pipe([1, 2, [true], 'a'] as const, reverse());
-      assertType<['a', readonly [true], 2, 1]>(actual);
+      expectTypeOf(actual).toEqualTypeOf<['a', readonly [true], 2, 1]>();
     });
 
     it('variadic tuples', () => {
       const input: [number, ...Array<string>] = [1, 'two', 'three'];
       const actual = pipe(input, reverse());
-      assertType<[...Array<string>, number]>(actual);
+      expectTypeOf(actual).toEqualTypeOf<[...Array<string>, number]>();
     });
   });
 });

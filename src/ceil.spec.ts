@@ -1,5 +1,3 @@
-import { describe, expect, it } from 'vitest';
-
 import { ceil } from './ceil';
 
 describe('data-first', () => {

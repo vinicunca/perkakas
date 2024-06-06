@@ -1,5 +1,3 @@
-import { describe, expect, it } from 'vitest';
-
 /**
  * This utility function simply delegates the call to `binarySearchCutoffIndex`,
  * so we test it mainly via the tests for that function.
@@ -16,7 +14,7 @@ describe('sanity', () => {
 
   it('indexed', () => {
     expect(
-      sortedIndexWith.indexed(
+      sortedIndexWith(
         ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'],
         (_, index) => index < 5,
       ),

@@ -1,43 +1,63 @@
-import { describe, expect, it } from 'vitest';
-
 import { indexBy } from './index-by';
 import { pipe } from './pipe';
+import { prop } from './prop';
 
-const array = [
-  { code: 97, dir: 'left' },
-  { code: 100, dir: 'right' },
-] as const;
-const expected = {
-  left: { code: 97, dir: 'left' },
-  right: { code: 100, dir: 'right' },
-};
-
-describe('data first', () => {
-  it('indexBy', () => {
-    expect(indexBy(array, (x) => x.dir)).toEqual(expected);
+describe('runtime', () => {
+  it('dataFirst', () => {
+    expect(
+      indexBy(
+        [
+          { dir: 'left', code: 97 },
+          { dir: 'right', code: 100 },
+        ],
+        prop('code'),
+      ),
+    ).toStrictEqual({
+      97: { dir: 'left', code: 97 },
+      100: { dir: 'right', code: 100 },
+    });
   });
 
-  it('indexBy.indexed', () => {
-    expect(indexBy.indexed(array, (x) => x.dir)).toEqual(expected);
+  it('dataLast', () => {
+    expect(
+      pipe(
+        [
+          { dir: 'left', code: 97 },
+          { dir: 'right', code: 100 },
+        ],
+        indexBy(prop('code')),
+      ),
+    ).toStrictEqual({
+      97: { dir: 'left', code: 97 },
+      100: { dir: 'right', code: 100 },
+    });
   });
 });
 
-describe('data last', () => {
-  it('indexBy', () => {
-    expect(
-      pipe(
-        array,
-        indexBy((x) => x.dir),
-      ),
-    ).toEqual(expected);
+describe('typing', () => {
+  it('dataFirst', () => {
+    const result = indexBy(
+      [
+        { dir: 'left', code: 97 },
+        { dir: 'right', code: 100 },
+      ],
+      prop('code'),
+    );
+    expectTypeOf<
+      Partial<Record<97 | 100, { dir: 'left' | 'right'; code: 97 | 100 }>>
+    >(result);
   });
 
-  it('indexBy.indexed', () => {
-    expect(
-      pipe(
-        array,
-        indexBy.indexed((x) => x.dir),
-      ),
-    ).toEqual(expected);
+  it('dataLast', () => {
+    const result = pipe(
+      [
+        { dir: 'left', code: 97 },
+        { dir: 'right', code: 100 },
+      ],
+      indexBy(prop('code')),
+    );
+    expectTypeOf<
+      Partial<Record<97 | 100, { dir: 'left' | 'right'; code: 97 | 100 }>>
+    >(result);
   });
 });

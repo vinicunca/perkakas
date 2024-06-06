@@ -1,8 +1,10 @@
-import { describe, expect, expectTypeOf, it } from 'vitest';
-
-import type { AllTypesDataProviderTypes, TestClass } from './../test/types-data-provider';
-
-import { ALL_TYPES_DATA_PROVIDER, TYPES_DATA_PROVIDER } from './../test/types-data-provider';
+/* eslint-disable style/indent */
+import {
+  ALL_TYPES_DATA_PROVIDER,
+  type AllTypesDataProviderTypes,
+  TYPES_DATA_PROVIDER,
+  type TestClass,
+} from '../test/types-data-provider';
 import { isNot } from './is-not';
 import { isPromise } from './is-promise';
 import { isString } from './is-string';
@@ -11,11 +13,8 @@ describe('isNot', () => {
   it('should work as type guard', () => {
     const data = TYPES_DATA_PROVIDER.promise as AllTypesDataProviderTypes;
     if (isNot(isString)(data)) {
-      expect(data instanceof Promise).toEqual(true);
+      expect(data instanceof Promise).toBe(true);
       expectTypeOf(data).toEqualTypeOf<
-        | (() => void)
-        | [number, number, number]
-        | { readonly a: 'asd' }
         | Array<number>
         | Date
         | Error
@@ -26,9 +25,13 @@ describe('isNot', () => {
         | TestClass
         | Uint8Array
         | boolean
-        | null
         | number
         | symbol
+        | 1n
+        | (() => void)
+        | { readonly a: 'asd' }
+        | [number, number, number]
+        | null
         | undefined
           >(data);
     }
@@ -36,12 +39,9 @@ describe('isNot', () => {
 
   it('should work as type guard in filter', () => {
     const data = ALL_TYPES_DATA_PROVIDER.filter(isNot(isPromise));
-    expect(data.some((c) => c instanceof Promise)).toEqual(false);
+    expect(data.some((c) => c instanceof Promise)).toBe(false);
     expectTypeOf(data).toEqualTypeOf<
       Array<
-        | (() => void)
-        | [number, number, number]
-        | { readonly a: 'asd' }
         | Array<number>
         | Date
         | Error
@@ -51,10 +51,14 @@ describe('isNot', () => {
         | TestClass
         | Uint8Array
         | boolean
-        | null
         | number
         | string
         | symbol
+        | 1n
+        | (() => void)
+        | { readonly a: 'asd' }
+        | [number, number, number]
+        | null
         | undefined
       >
     >();

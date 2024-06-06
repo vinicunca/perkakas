@@ -1,57 +1,53 @@
-import { purry } from './purry';
+import type { Simplify } from 'type-fest';
 
-type Inverted<T extends object> = T[keyof T] extends PropertyKey
-  ? Record<T[keyof T], keyof T>
-  : never;
+import { curry } from './curry';
+
+type Inverted<T extends object> = Simplify<{
+  -readonly [K in keyof T as K extends number | string
+    ? Required<T>[K] extends PropertyKey
+      ? Required<T>[K]
+      : never
+    : never]: `${K extends number | string ? K : never}`;
+}>;
 
 /**
- * Returns an object whose keys are values are swapped. If the object contains duplicate values,
+ * Returns an object whose keys and values are swapped. If the object contains duplicate values,
  * subsequent values will overwrite previous values.
  *
- * @param object the object
+ * @param object - The object.
  * @signature
- *  invert(object)
+ *    P.invert(object)
  * @example
- *  import { invert } from '@vinicunca/perkakas';
- *
- *  invert({ a: "d", b: "e", c: "f" }) // => { d: "a", e: "b", f: "c" }
+ *    P.invert({ a: "d", b: "e", c: "f" }) // => { d: "a", e: "b", f: "c" }
  * @dataFirst
  * @category Object
- * @pipeable
  */
 export function invert<T extends object>(object: T): Inverted<T>;
 
 /**
- * Returns an object whose keys are values are swapped. If the object contains duplicate values,
+ * Returns an object whose keys and values are swapped. If the object contains duplicate values,
  * subsequent values will overwrite previous values.
  *
  * @signature
- *  invert()(object)
+ *    P.invert()(object)
  * @example
- *  import { invert, pipe } from '@vinicunca/perkakas';
- *
- *  pipe({ a: "d", b: "e", c: "f" }, invert()); // => { d: "a", e: "b", f: "c" }
+ *    P.pipe({ a: "d", b: "e", c: "f" }, P.invert()); // => { d: "a", e: "b", f: "c" }
  * @dataLast
  * @category Object
- * @pipeable
  */
 export function invert<T extends object>(): (object: T) => Inverted<T>;
 
-export function invert(...args: Array<any>): unknown {
-  return purry(invert_, args);
+export function invert(...args: ReadonlyArray<unknown>): unknown {
+  return curry(invertImplementation, args);
 }
 
-function invert_(
-  object: Readonly<Record<PropertyKey, PropertyKey>>,
+function invertImplementation(
+  data: Readonly<Record<PropertyKey, PropertyKey>>,
 ): Record<PropertyKey, PropertyKey> {
   const result: Record<PropertyKey, PropertyKey> = {};
 
-  // eslint-disable-next-line no-restricted-syntax
-  for (const key in object) {
-    // @see https://eslint.org/docs/latest/rules/guard-for-in
-    if (Object.prototype.hasOwnProperty.call(object, key)) {
-      result[object[key]!] = key;
-    }
+  for (const [key, value] of Object.entries(data)) {
+    result[value] = key;
   }
 
   return result;

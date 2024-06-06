@@ -1,5 +1,3 @@
-import { describe, expect, expectTypeOf, it } from 'vitest';
-
 import { hasSubObject } from './has-sub-object';
 import { pipe } from './pipe';
 

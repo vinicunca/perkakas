@@ -1,15 +1,13 @@
-import { purry } from './purry';
+import { curry } from './curry';
 
 /**
  * Returns a list of numbers from `start` (inclusive) to `end` (exclusive).
  *
- * @param start the start number
- * @param end the end number
+ * @param start - The start number.
+ * @param end - The end number.
  * @signature range(start, end)
  * @example
- *  import { range } from '@vinicunca/perkakas';
- *
- *  range(1, 5); // => [1, 2, 3, 4]
+ *    P.range(1, 5) // => [1, 2, 3, 4]
  * @dataFirst
  * @category Array
  */
@@ -18,22 +16,20 @@ export function range(start: number, end: number): Array<number>;
 /**
  * Returns a list of numbers from `start` (inclusive) to `end` (exclusive).
  *
- * @param end the end number
+ * @param end - The end number.
  * @signature range(end)(start)
  * @example
- *  import { range } from '@vinicunca/perkakas';
- *
- *  range(5)(1); // => [1, 2, 3, 4]
+ *    P.range(5)(1) // => [1, 2, 3, 4]
  * @dataFirst
  * @category Array
  */
 export function range(end: number): (start: number) => Array<number>;
 
-export function range(...args: Array<any>): unknown {
-  return purry(range_, args);
+export function range(...args: ReadonlyArray<unknown>): unknown {
+  return curry(rangeImplementation, args);
 }
 
-function range_(start: number, end: number): Array<number> {
+function rangeImplementation(start: number, end: number): Array<number> {
   const ret: Array<number> = [];
   for (let i = start; i < end; i++) {
     ret.push(i);

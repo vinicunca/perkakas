@@ -1,11 +1,11 @@
-import { describe, expect, expectTypeOf, it } from 'vitest';
-
-import type { AllTypesDataProviderTypes } from './../test/types-data-provider';
-
-import { ALL_TYPES_DATA_PROVIDER, TYPES_DATA_PROVIDER } from './../test/types-data-provider';
+import {
+  ALL_TYPES_DATA_PROVIDER,
+  type AllTypesDataProviderTypes,
+  TYPES_DATA_PROVIDER,
+} from '../test/types-data-provider';
 import { isString } from './is-string';
 
-const dataFunction = (): 'a' | 'b' | 'c' | number => 'a';
+const dataFunction = (): number | 'a' | 'b' | 'c' => 'a';
 
 describe('isString', () => {
   it('should work as type guard', () => {

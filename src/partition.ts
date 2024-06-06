@@ -1,107 +1,76 @@
-import type { PredIndexed, PredIndexedOptional } from './_types';
-
-import { purry } from './purry';
+import { curry } from './curry';
 
 /**
- * Splits a collection into two groups, the first of which contains elements the `predicate` type guard passes, and the second one containing the rest.
- * @param items the items to split
- * @param predicate a type guard function to invoke on every item
- * @returns the array of grouped elements.
- * @signature
- *  partition(array, fn)
- * @example
- *  import { partition } from '@vinicunca/perkakas';
+ * Splits a collection into two groups, the first of which contains elements the
+ * `predicate` type guard passes, and the second one containing the rest.
  *
- *  partition(['one', 'two', 'forty two'], x => x.length === 3); // => [['one', 'two'], ['forty two']]
+ * @param data - The items to split.
+ * @param predicate - A function to execute for each element in the array. It
+ * should return `true` to add the element to the first partition, and and
+ * `false` to add the element to the other partition. A type-predicate can also
+ * be used to narrow the result.
+ * @returns A 2-tuple of arrays where the first array contains the elements that
+ * passed the predicate, and the second array contains the elements that did
+ * not. The items are in the same order as they were in the original array.
+ * @signature
+ *    P.partition(data, predicate)
+ * @example
+ *    P.partition(
+ *      ['one', 'two', 'forty two'],
+ *      x => x.length === 3,
+ *    ); // => [['one', 'two'], ['forty two']]
  * @dataFirst
- * @indexed
  * @category Array
  */
 export function partition<T, S extends T>(
-  items: ReadonlyArray<T>,
-  predicate: (item: T) => item is S
+  data: ReadonlyArray<T>,
+  predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S,
 ): [Array<S>, Array<Exclude<T, S>>];
-
-/**
- * Splits a collection into two groups, the first of which contains elements the `predicate` function matches, and the second one containing the rest.
- * @param items the items to split
- * @param predicate the function invoked per iteration
- * @returns the array of grouped elements.
- * @signature
- *  partition(array, fn)
- * @example
- *  import { partition } from '@vinicunca/perkakas';
- *
- *  partition(['one', 'two', 'forty two'], x => x.length === 3); // => [['one', 'two'], ['forty two']]
- * @dataFirst
- * @indexed
- * @category Array
- */
 export function partition<T>(
-  items: ReadonlyArray<T>,
-  predicate: (item: T) => boolean
+  data: ReadonlyArray<T>,
+  predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
 ): [Array<T>, Array<T>];
 
 /**
- * Splits a collection into two groups, the first of which contains elements the `predicate` type guard passes, and the second one containing the rest.
- * @param predicate the grouping function
- * @returns the array of grouped elements.
- * @signature
- *  partition(fn)(array)
- * @example
- *  import { partition, pipe } from '@vinicunca/perkakas';
+ * Splits a collection into two groups, the first of which contains elements the
+ * `predicate` type guard passes, and the second one containing the rest.
  *
- *  pipe(['one', 'two', 'forty two'], partition(x => x.length === 3)); // => [['one', 'two'], ['forty two']]
+ * @param predicate - A function to execute for each element in the array. It
+ * should return `true` to add the element to the first partition, and and
+ * `false` to add the element to the other partition. A type-predicate can also
+ * be used to narrow the result.
+ * @returns A 2-tuple of arrays where the first array contains the elements that
+ * passed the predicate, and the second array contains the elements that did
+ * not. The items are in the same order as they were in the original array.
+ * @signature
+ *    P.partition(predicate)(data)
+ * @example
+ *    P.pipe(
+ *      ['one', 'two', 'forty two'],
+ *      P.partition(x => x.length === 3),
+ *    ); // => [['one', 'two'], ['forty two']]
  * @dataLast
- * @indexed
  * @category Array
  */
 export function partition<T, S extends T>(
-  predicate: (item: T) => item is S
-): (array: ReadonlyArray<T>) => [Array<S>, Array<Exclude<T, S>>];
-
-/**
- * Splits a collection into two groups, the first of which contains elements the `predicate` function matches, and the second one containing the rest.
- * @param predicate the grouping function
- * @returns the array of grouped elements.
- * @signature
- *  partition(fn)(array)
- * @example
- *  import { partition, pipe } from '@vinicunca/perkakas';
- *
- *  pipe(['one', 'two', 'forty two'], partition(x => x.length === 3)); // => [['one', 'two'], ['forty two']]
- * @dataLast
- * @indexed
- * @category Array
- */
+  predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S,
+): (data: ReadonlyArray<T>) => [Array<S>, Array<Exclude<T, S>>];
 export function partition<T>(
-  predicate: (item: T) => boolean
-): (array: ReadonlyArray<T>) => [Array<T>, Array<T>];
+  predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
+): (data: ReadonlyArray<T>) => [Array<T>, Array<T>];
 
-export function partition(...args: Array<any>): unknown {
-  return purry(partition_(false), args);
+export function partition(...args: ReadonlyArray<unknown>): unknown {
+  return curry(partitionImplementation, args);
 }
 
-function partition_(indexed: boolean) {
-  return <T>(array: ReadonlyArray<T>, fn: PredIndexedOptional<T, boolean>) => {
-    const ret: [Array<T>, Array<T>] = [[], []];
-    for (const [index, item] of array.entries()) {
-      const matches = indexed ? fn(item, index, array) : fn(item);
-      ret[matches ? 0 : 1].push(item);
-    }
-    return ret;
-  };
-}
-
-export namespace partition {
-  export function indexed<T>(
-    array: ReadonlyArray<T>,
-    predicate: PredIndexed<T, boolean>
-  ): [Array<T>, Array<T>];
-  export function indexed<T>(
-    predicate: PredIndexed<T, boolean>
-  ): (array: ReadonlyArray<T>) => [Array<T>, Array<T>];
-  export function indexed(...args: Array<any>): unknown {
-    return purry(partition_(true), args);
+function partitionImplementation<T, S extends T>(
+  data: ReadonlyArray<T>,
+  predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S,
+): [Array<T>, Array<T>] {
+  const ret: [Array<T>, Array<T>] = [[], []];
+  for (const [index, item] of data.entries()) {
+    const matches = predicate(item, index, data);
+    ret[matches ? 0 : 1].push(item);
   }
-}
+  return ret;
+};

@@ -1,74 +1,84 @@
-import { describe, expect, expectTypeOf, it } from 'vitest';
-
 import { entries } from './entries';
 
 describe('runtime', () => {
-  it('dataFirst', () => {
-    expect(entries({ a: 1, b: 2, c: 3 })).toEqual([
+  it('should return pairs', () => {
+    expect(entries({ a: 1, b: 2, c: 3 })).toStrictEqual([
       ['a', 1],
       ['b', 2],
       ['c', 3],
     ]);
   });
 
-  describe('typing', () => {
-    it('with known properties', () => {
-      const actual = entries({ a: 1, b: 2, c: 3 });
-      expectTypeOf(actual).toEqualTypeOf<Array<[string, number]>>();
-    });
+  it('should ignore symbol keys', () => {
+    expect(entries({ [Symbol('a')]: 1 })).toStrictEqual([]);
+  });
 
-    it('with optional properties', () => {
-      const actual = entries({} as { a?: string });
-      expectTypeOf(actual).toEqualTypeOf<Array<[string, string]>>();
-    });
+  it('should turn numbers to strings', () => {
+    expect(entries({ 1: 'hello' })).toStrictEqual([['1', 'hello']]);
+  });
 
-    it('with undefined properties', () => {
-      const actual = entries({ a: undefined } as {
-        a: string | undefined;
-      });
-      expectTypeOf(actual).toEqualTypeOf<Array<[string, string | undefined]>>();
-    });
+  it('returns symbol values', () => {
+    const mySymbol = Symbol('hello');
+    expect(entries({ a: mySymbol })).toStrictEqual([['a', mySymbol]]);
+  });
 
-    it('with unknown properties', () => {
-      const actual = entries({} as Record<string, unknown>);
-      expectTypeOf(actual).toEqualTypeOf<Array<[string, unknown]>>();
-    });
+  it('works with complex objects as values', () => {
+    const complexObject = { a: { b: { c: [{ d: true }, { d: false }] } } };
+    expect(entries({ a: complexObject })).toStrictEqual([['a', complexObject]]);
   });
 });
 
-describe('entries.strict', () => {
-  it('should return pairs', () => {
-    const actual = entries.strict({ a: 1, b: 2, c: 3 });
-    expect(actual).toEqual([
-      ['a', 1],
-      ['b', 2],
-      ['c', 3],
-    ]);
+describe('typing', () => {
+  it('with known properties', () => {
+    const actual = entries({ a: 1, b: 2, c: 3 });
+    expectTypeOf(actual).toEqualTypeOf<
+      Array<['a', number] | ['b', number] | ['c', number]>
+    >();
   });
 
-  describe('typing', () => {
-    it('with known properties', () => {
-      const actual = entries.strict({ a: 1, b: 2, c: 3 } as const);
-      expectTypeOf(actual).toEqualTypeOf<
-        Array<['a', 1] | ['b', 2] | ['c', 3]>
-      >();
-    });
+  it('with different value types', () => {
+    const actual = entries({ a: 1, b: '2', c: true });
+    expectTypeOf(actual).toEqualTypeOf<
+      Array<['a', number] | ['b', string] | ['c', boolean]>
+    >();
+  });
 
-    it('with optional properties', () => {
-      const actual = entries.strict({} as { a?: string });
-      expectTypeOf(actual).toEqualTypeOf<Array<['a', string]>>();
-    });
+  it('with const object', () => {
+    const actual = entries({ a: 1, b: 2, c: 3 } as const);
+    expectTypeOf(actual).toEqualTypeOf<Array<['a', 1] | ['b', 2] | ['c', 3]>>();
+  });
 
-    it('with undefined properties', () => {
-      const actual = entries.strict({ a: undefined } as {
-        a: string | undefined;
-      });
-      expectTypeOf(actual).toEqualTypeOf<Array<['a', string | undefined]>>();
-    });
+  it('with optional properties', () => {
+    const actual = entries({} as { a?: string });
+    expectTypeOf(actual).toEqualTypeOf<Array<['a', string]>>();
+  });
 
-    it('with unknown properties', () => {
-      const actual = entries.strict({} as Record<string, unknown>);
-      expectTypeOf(actual).toEqualTypeOf<Array<[string, unknown]>>();
+  it('with undefined properties', () => {
+    const actual = entries({ a: undefined } as {
+      a: string | undefined;
     });
+    expectTypeOf(actual).toEqualTypeOf<Array<['a', string | undefined]>>();
+  });
+
+  it('with unknown properties', () => {
+    const actual = entries({} as Record<string, unknown>);
+    expectTypeOf(actual).toEqualTypeOf<Array<[string, unknown]>>();
+  });
+
+  it('object with just symbol keys', () => {
+    const actual = entries({ [Symbol('a')]: 1, [Symbol('b')]: 'world' });
+    expectTypeOf(actual).toEqualTypeOf<Array<never>>();
+  });
+
+  it('object with number keys', () => {
+    const actual = entries({ 123: 'HELLO' });
+    expectTypeOf(actual).toEqualTypeOf<Array<['123', string]>>();
+  });
+
+  it('object with combined symbols and keys', () => {
+    const actual = entries({ a: 1, [Symbol('b')]: 'world', 123: true });
+    expectTypeOf(actual).toEqualTypeOf<
+      Array<['123', boolean] | ['a', number]>
+    >();
   });
 });

@@ -1,107 +1,78 @@
-import type { Pred, PredIndexed, PredIndexedOptional } from './_types';
 import type { LazyEvaluator } from './pipe';
 
-import { _reduceLazy } from './_reduce-lazy';
-import { _toLazyIndexed } from './_to-lazy-indexed';
-import { purry } from './purry';
+import { curry } from './curry';
 
 /**
- * Iterate an array using a defined callback function. The original array is returned instead of `void`.
- * @param array The array.
- * @param fn The callback function.
- * @returns The original array
- * @signature
- *  forEach(array, fn)
- *  forEach.indexed(array, fn)
- * @example
- *  import { forEach } from '@vinicunca/perkakas';
+ * Executes a provided function once for each array element. Equivalent to
+ * `Array.prototype.forEach`.
  *
- *  forEach([1, 2, 3], x => {
- *    console.log(x)
- *  }) // => [1, 2, 3]
- *  forEach.indexed([1, 2, 3], (x, i) => {
- *    console.log(x, i)
- *  }) // => [1, 2, 3]
- * @dataFirst
- * @indexed
- * @pipeable
- * @category Array
- */
-export function forEach<T>(
-  array: ReadonlyArray<T>,
-  fn: Pred<T, void>
-): Array<T>;
-
-/**
- * Iterate an array using a defined callback function. The original array is returned instead of `void`.
- * @param fn the function mapper
- * @signature
- *  forEach(fn)(array)
- *  forEach.indexed(fn)(array)
- * @example
- *  import { forEach, pipe } from '@vinicunca/perkakas';
+ * The dataLast version returns the original array (instead of not returning
+ * anything (`void`)) to allow using it in a pipe. When not used in a `pipe` the
+ * returned array is equal to the input array (by reference), and not a shallow
+ * copy of it!
  *
- *  pipe(
- *    [1, 2, 3],
- *    forEach(x => {
+ * @param data - The values that would be iterated on.
+ * @param callbackfn - A function to execute for each element in the array.
+ * @signature
+ *    P.forEach(data, callbackfn)
+ * @example
+ *    P.forEach([1, 2, 3], x => {
  *      console.log(x)
- *    })
- *  ) // => [1, 2, 3]
- *  pipe(
- *    [1, 2, 3],
- *    forEach.indexed((x, i) => {
- *      console.log(x, i)
- *    })
- *  ) // => [1, 2, 3]
- * @dataLast
- * @indexed
- * @pipeable
+ *    });
+ * @dataFirst
+ * @lazy
  * @category Array
  */
 export function forEach<T>(
-  fn: Pred<T, void>
-): (array: ReadonlyArray<T>) => Array<T>;
+  data: ReadonlyArray<T>,
+  callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => void,
+): void;
 
-export function forEach(...args: Array<any>): unknown {
-  return purry(forEach_(false), args, forEach.lazy);
+/**
+ * Executes a provided function once for each array element. Equivalent to
+ * `Array.prototype.forEach`.
+ *
+ * The dataLast version returns the original array (instead of not returning
+ * anything (`void`)) to allow using it in a pipe. The returned array is the
+ * same reference as the input array, and not a shallow copy of it!
+ *
+ * @param callbackfn - A function to execute for each element in the array.
+ * @returns The original array (the ref itself, not a shallow copy of it).
+ * @signature
+ *    P.forEach(callbackfn)(data)
+ * @example
+ *    P.pipe(
+ *      [1, 2, 3],
+ *      P.forEach(x => {
+ *        console.log(x)
+ *      })
+ *    ) // => [1, 2, 3]
+ * @dataLast
+ * @lazy
+ * @category Array
+ */
+export function forEach<T>(
+  callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => void,
+): (data: ReadonlyArray<T>) => Array<T>;
+
+export function forEach(...args: ReadonlyArray<unknown>): unknown {
+  return curry(forEachImplementation, args, lazyImplementation);
 }
 
-function forEach_(indexed: boolean) {
-  return <T, K>(array: ReadonlyArray<T>, fn: PredIndexedOptional<T, K>) =>
-    _reduceLazy(
-      array,
-      indexed ? forEach.lazyIndexed(fn) : forEach.lazy(fn),
-      indexed,
-    );
+function forEachImplementation<T>(
+  data: ReadonlyArray<T>,
+  callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => void,
+): Array<T> {
+  data.forEach(callbackfn);
+  // @ts-expect-error [ts4104] - Because the dataFirst signature returns void this is only a problem when the dataLast function is used **outside** of a pipe; for these cases we warn the user that this is happening.
+  return data;
 }
 
-function lazy_(indexed: boolean) {
-  return <T>(fn: PredIndexedOptional<T, void>): LazyEvaluator<T> =>
-    (value, index, array) => {
-      if (indexed) {
-        fn(value, index, array);
-      } else {
-        fn(value);
-      }
-      return {
-        done: false,
-        hasNext: true,
-        next: value,
-      };
-    };
-}
-
-export namespace forEach {
-  export function indexed<T>(
-    array: ReadonlyArray<T>,
-    fn: PredIndexed<T, void>,
-  ): Array<T>;
-  export function indexed<T>(
-    fn: PredIndexed<T, void>,
-  ): (array: ReadonlyArray<T>) => Array<T>;
-  export function indexed(...args: Array<any>): unknown {
-    return purry(forEach_(true), args, forEach.lazyIndexed);
-  }
-  export const lazy = lazy_(false);
-  export const lazyIndexed = _toLazyIndexed(lazy_(true));
+function lazyImplementation<T>(
+  callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => void,
+): LazyEvaluator<T> {
+  return (value, index, data) => {
+    callbackfn(value, index, data);
+    return { done: false, hasNext: true, next: value };
+  };
 }

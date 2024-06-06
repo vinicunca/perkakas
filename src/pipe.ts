@@ -1,10 +1,15 @@
+/* eslint-disable ts/no-explicit-any */
+/* eslint-disable jsdoc/check-param-names -- we don't document the op params, it'd be redundant */
+
+import { SKIP_ITEM } from './helpers/utility-evaluators';
+
 export type LazyEvaluator<T = unknown, R = T> = (
   item: T,
-  index?: number,
-  data?: ReadonlyArray<T>,
+  index: number,
+  data: ReadonlyArray<T>,
 ) => LazyResult<R>;
 
-type LazyResult<T> = LazyEmpty | LazyMany<T> | LazyNext<T>;
+export type LazyResult<T> = LazyEmpty | LazyMany<T> | LazyNext<T>;
 
 interface LazyEmpty {
   done: boolean;
@@ -24,34 +29,46 @@ interface LazyMany<T> {
   done: boolean;
   hasMany: true;
   hasNext: true;
-  next: Array<T>;
+  next: ReadonlyArray<T>;
 }
 
 type PreparedLazyOperation = LazyEvaluator & {
+  readonly isSingle: boolean;
+
   // These are intentionally mutable, they maintain the lazy piped state.
   index: number;
-  readonly isIndexed: boolean;
-
-  readonly isSingle: boolean;
   items: Array<unknown>;
 };
+
+type LazyFn = (
+  value: unknown,
+  index: number,
+  items: ReadonlyArray<unknown>,
+) => LazyResult<unknown>;
+
+interface LazyMeta {
+  readonly single?: boolean;
+}
+
+export interface LazyDefinition {
+  readonly lazy: LazyMeta & ((...args: any) => LazyFn);
+  readonly lazyArgs: ReadonlyArray<unknown>;
+}
+
+type LazyOp = LazyDefinition & ((input: unknown) => unknown);
 
 /**
  * Perform left-to-right function composition.
  *
- * @param value The initial value.
- * @param arguments the list of operations to apply.
- * @signature pipe(data, op1, op2, op3)
+ * @param value - The initial value.
+ * @param operations - The list of operations to apply.
+ * @signature P.pipe(data, op1, op2, op3)
  * @example
- *  import { pipe, map } from '@vinicunca/perkakas';
- *
- *  pipe(
- *    [1, 2, 3, 4],
- *    map(x => x * 2),
- *    arr => [arr[0] + arr[1], arr[2] + arr[3]],
- *  ); // => [6, 14]
- *
- *
+ *    P.pipe(
+ *      [1, 2, 3, 4],
+ *      P.map(x => x * 2),
+ *      arr => [arr[0] + arr[1], arr[2] + arr[3]],
+ *    ) // => [6, 14]
  * @dataFirst
  * @category Function
  */
@@ -265,44 +282,25 @@ export function pipe(
 
     const accumulator: Array<unknown> = [];
 
-    const iterator = output[Symbol.iterator]();
-
-    while (true) {
-      const result = iterator.next();
-      if (result.done ?? false) {
-        break;
-      }
-
-      const shouldExitEarly = processItem_(
-        result.value,
-        accumulator,
-        lazySequence,
-      );
+    for (const value of output) {
+      const shouldExitEarly = processItem(value, accumulator, lazySequence);
       if (shouldExitEarly) {
         break;
       }
     }
 
-    const { isSingle } = lazySequence[lazySequence.length - 1]!;
+    const { isSingle } = lazySequence.at(-1)!;
     output = isSingle ? accumulator[0] : accumulator;
     operationIndex += lazySequence.length;
   }
   return output;
 }
 
-type LazyFn = (value: any, index?: number, items?: any) => LazyResult<any>;
-
-type LazyOp = ((input: any) => any) & {
-  readonly lazy: ((...args: ReadonlyArray<any>) => LazyFn) & {
-    readonly indexed: boolean;
-    readonly single: boolean;
-  };
-  readonly lazyArgs?: ReadonlyArray<unknown>;
-};
-
-function processItem_(
+function processItem(
   item: unknown,
+
   accumulator: Array<unknown>,
+
   lazySequence: ReadonlyArray<PreparedLazyOperation>,
 ): boolean {
   if (lazySequence.length === 0) {
@@ -312,19 +310,17 @@ function processItem_(
 
   let currentItem = item;
 
-  let lazyResult: LazyResult<any> = { done: false, hasNext: false };
+  let lazyResult: LazyResult<any> = SKIP_ITEM;
   let isDone = false;
   for (const [operationsIndex, lazyFn] of lazySequence.entries()) {
-    const { index, isIndexed, items } = lazyFn;
+    const { index, items } = lazyFn;
     items.push(currentItem);
-    lazyResult = isIndexed
-      ? lazyFn(currentItem, index, items)
-      : lazyFn(currentItem);
+    lazyResult = lazyFn(currentItem, index, items);
     lazyFn.index += 1;
     if (lazyResult.hasNext) {
       if (lazyResult.hasMany ?? false) {
         for (const subItem of lazyResult.next as ReadonlyArray<unknown>) {
-          const subResult = processItem_(
+          const subResult = processItem(
             subItem,
             accumulator,
             lazySequence.slice(operationsIndex + 1),
@@ -356,11 +352,10 @@ function processItem_(
 
 function prepareLazyOperation(op: LazyOp): PreparedLazyOperation {
   const { lazy, lazyArgs } = op;
-  const fn = lazy(...(lazyArgs ?? []));
+  const fn = lazy(...lazyArgs);
   return Object.assign(fn, {
+    isSingle: lazy.single ?? false,
     index: 0,
-    isIndexed: lazy.indexed,
-    isSingle: lazy.single,
     items: [] as Array<unknown>,
   });
 }

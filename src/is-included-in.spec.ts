@@ -1,7 +1,9 @@
-import { describe, expect, expectTypeOf, it } from 'vitest';
-
+import { filter } from './filter';
 import { isIncludedIn } from './is-included-in';
+import { isNot } from './is-not';
+import { map } from './map';
 import { pipe } from './pipe';
+import { take } from './take';
 
 describe('dataFirst', () => {
   it('empty containers', () => {
@@ -96,18 +98,6 @@ describe('dataLast', () => {
 });
 
 describe('typing', () => {
-  it('narrows the result', () => {
-    const data = 4 as 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
-
-    if (isIncludedIn(data, [1, 2, 3])) {
-      expectTypeOf(data).toEqualTypeOf<1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9>();
-    }
-
-    if (isIncludedIn(data, [1, 2, 3] as const)) {
-      expectTypeOf(data).toEqualTypeOf<1 | 2 | 3>();
-    }
-  });
-
   it('throws on bad value types', () => {
     // @ts-expect-error [ts2322] - strings are not numbers
     isIncludedIn(1, ['yes', 'no']);
@@ -117,5 +107,152 @@ describe('typing', () => {
     const myEnum = 'cat' as 'cat' | 'dog';
     // @ts-expect-error [ts2322] - "doog" is a typo
     isIncludedIn(myEnum, ['doog']);
+  });
+
+  describe('narrowing', () => {
+    it('data is single literal, container is pure tuple === NARROWED', () => {
+      const data = 1 as const;
+      if (isIncludedIn(data, [1] as const)) {
+        expectTypeOf(data).toEqualTypeOf<1>();
+      } else {
+        expectTypeOf(data).toBeNever();
+      }
+    });
+
+    it('data is literal union, container is pure tuple === NARROWED', () => {
+      const data = 1 as 1 | 2 | 3;
+      if (isIncludedIn(data, [1] as const)) {
+        expectTypeOf(data).toEqualTypeOf<1>();
+      } else {
+        expectTypeOf(data).toEqualTypeOf<2 | 3>();
+      }
+    });
+
+    it('data is single literal, container is array === NOT NARROWED', () => {
+      const data = 1 as const;
+      if (isIncludedIn(data, [1] as Array<1>)) {
+        expectTypeOf(data).toEqualTypeOf<1>();
+      }
+    });
+
+    it('data is literal union, container is array === NOT NARROWED', () => {
+      const data = 1 as 1 | 2 | 3;
+      if (isIncludedIn(data, [1] as Array<1>)) {
+        expectTypeOf(data).toEqualTypeOf<1 | 2 | 3>();
+      }
+    });
+
+    it('data is primitive, container is pure tuple of typeof data === NOT NARROWED', () => {
+      const data = 1 as number;
+      if (isIncludedIn(data, [1] as [number])) {
+        expectTypeOf(data).toEqualTypeOf<number>();
+      }
+    });
+
+    it('data is primitive, container is array of typeof data === NOT NARROWED', () => {
+      const data = 1 as number;
+      if (isIncludedIn(data, [1] as Array<number>)) {
+        expectTypeOf(data).toEqualTypeOf<number>();
+      }
+    });
+
+    it('data is primitive, container is pure tuple of literals === NARROWED', () => {
+      const data = 1 as number;
+      if (isIncludedIn(data, [1] as const)) {
+        expectTypeOf(data).toEqualTypeOf<1>();
+      } else {
+        expectTypeOf(data).toEqualTypeOf<number>();
+      }
+    });
+
+    it('data is primitive, container is array of literals === NARROWED', () => {
+      const data = 1 as number;
+      if (isIncludedIn(data, [1] as Array<1>)) {
+        expectTypeOf(data).toEqualTypeOf<1>();
+      } else {
+        expectTypeOf(data).toEqualTypeOf<number>();
+      }
+    });
+
+    it('data is primitive union, container is pure tuple of literals === NARROWED', () => {
+      const data = 1 as number | string;
+      if (isIncludedIn(data, [1] as const)) {
+        expectTypeOf(data).toEqualTypeOf<1>();
+      }
+    });
+
+    it('data is primitive union, container is pure tuple of primitives === NOT NARROWED', () => {
+      const data = 1 as number | string;
+      if (isIncludedIn(data, [1] as [number])) {
+        expectTypeOf(data).toEqualTypeOf<number | string>();
+      }
+    });
+
+    it('data is primitive union, container is array of primitives === NOT NARROWED', () => {
+      const data = 1 as number | string;
+      if (isIncludedIn(data, [1] as Array<number>)) {
+        expectTypeOf(data).toEqualTypeOf<number | string>();
+      }
+    });
+
+    it('pure tuples with literal unions', () => {
+      const data = 1 as 1 | 2 | 3;
+      if (isIncludedIn(data, [1] as [1 | 2])) {
+        expectTypeOf(data).toEqualTypeOf<1 | 2 | 3>();
+      }
+    });
+  });
+});
+
+// These tests are copy-pasted and adapted from existing tests of functions
+// that have been deprecated and removed from in v2. They validate that we
+// provide replacements for deprecated v1 functions. After v2 is out for a while
+// they could be removed.
+describe('legacy v1 replacements', () => {
+  describe('difference', () => {
+    describe('data_first', () => {
+      it('should return difference', () => {
+        expect(filter([1, 2, 3, 4], isNot(isIncludedIn([2, 5, 3])))).toEqual([
+          1, 4,
+        ]);
+      });
+    });
+
+    describe('data_last', () => {
+      it('should return difference', () => {
+        expect(filter(isNot(isIncludedIn([2, 5, 3])))([1, 2, 3, 4])).toEqual([
+          1, 4,
+        ]);
+      });
+
+      it('lazy', () => {
+        const count = vi.fn();
+        const result = pipe(
+          [1, 2, 3, 4, 5, 6],
+          map((x) => {
+            count();
+            return x;
+          }),
+          filter(isNot(isIncludedIn([2, 3]))),
+          take(2),
+        );
+        expect(count).toHaveBeenCalledTimes(4);
+        expect(result).toEqual([1, 4]);
+      });
+    });
+  });
+
+  describe('intersection', () => {
+    describe('data_first', () => {
+      it('intersection', () => {
+        expect(filter([1, 2, 3], isIncludedIn([2, 3, 5]))).toEqual([2, 3]);
+      });
+    });
+
+    describe('data_last', () => {
+      it('intersection', () => {
+        expect(filter(isIncludedIn([2, 3, 5]))([1, 2, 3])).toEqual([2, 3]);
+      });
+    });
   });
 });

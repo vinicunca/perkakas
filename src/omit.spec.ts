@@ -1,10 +1,8 @@
-import { describe, expect, expectTypeOf, it } from 'vitest';
-
 import { omit } from './omit';
 import { pipe } from './pipe';
 
-describe('data first', () => {
-  it('omit', () => {
+describe('runtime', () => {
+  it('dataFirst', () => {
     const result = omit({ a: 1, b: 2, c: 3, d: 4 }, ['a', 'd'] as const);
     expect(result).toEqual({ b: 2, c: 3 });
   });
@@ -14,12 +12,22 @@ describe('data first', () => {
     const result = omit(obj, ['a']);
     expect(result).toEqual({});
   });
-});
 
-describe('data last', () => {
-  it('omit', () => {
+  it('dataLast', () => {
     const result = pipe({ a: 1, b: 2, c: 3, d: 4 }, omit(['a', 'd'] as const));
     expect(result).toEqual({ b: 2, c: 3 });
+  });
+
+  it('can omit symbol keys', () => {
+    const mySymbol = Symbol('mySymbol');
+    expect(omit({ [mySymbol]: 3 }, [mySymbol])).toStrictEqual({});
+  });
+
+  it('shallow clone the array when there\'s nothing to omit', () => {
+    const obj = { a: 1, b: 2, c: 3, d: 4 };
+    const result = omit(obj, []);
+    expect(result).toStrictEqual(obj);
+    expect(result).not.toBe(obj);
   });
 });
 
@@ -55,5 +63,21 @@ describe('typing', () => {
         Omit<{ a: number } | { a?: number; b: string }, 'a'>
       >();
     });
+  });
+
+  it('multiple keys', () => {
+    interface Data {
+      aProp: string; bProp: string;
+    }
+
+    const obj: Data = {
+      aProp: 'p1',
+
+      bProp: 'p2',
+    };
+
+    const result = pipe(obj, omit(['aProp', 'bProp']));
+
+    expectTypeOf(result).toEqualTypeOf<Omit<Data, 'aProp' | 'bProp'>>();
   });
 });

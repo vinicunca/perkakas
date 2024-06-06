@@ -1,22 +1,23 @@
-import { purry } from './purry';
+import { curry } from './curry';
 
 /**
  * Given a union of indexable types `T`, we derive an indexable type
  * containing all of the keys of each variant of `T`. If a key is
  * present in multiple variants of `T`, then the corresponding type in
  * `Pathable<T>` will be the intersection of all types for that key.
+ *
  * @example
- *  type T1 = Pathable<{a: number} | {a: string; b: boolean}>
- *  // {a: number | string; b: boolean}
+ *    type T1 = Pathable<{a: number} | {a: string; b: boolean}>
+ *    // {a: number | string; b: boolean}
  *
- *  type T2 = Pathable<{a?: {b: string}}
- *  // {a: {b: string} | undefined}
+ *    type T2 = Pathable<{a?: {b: string}}
+ *    // {a: {b: string} | undefined}
  *
- *  type T3 = Pathable<{a: string} | number>
- *  // {a: string}
+ *    type T3 = Pathable<{a: string} | number>
+ *    // {a: string}
  *
- *  type T4 = Pathable<{a: number} | {a: string} | {b: boolean}>
- *  // {a: number | string; b: boolean}
+ *    type T4 = Pathable<{a: number} | {a: string} | {b: boolean}>
+ *    // {a: number | string; b: boolean}
  *
  * This type lets us answer the questions:
  * - Given some object of type `T`, what keys might this object have?
@@ -41,25 +42,25 @@ type StrictlyRequired<T> = { [K in keyof T]-?: NonNullable<T[K]> };
  * null or undefined.
  */
 type PathValue1<T, A extends keyof Pathable<T>> = StrictlyRequired<
-Pathable<T>
+  Pathable<T>
 >[A];
-/** All possible options after successfully reaching `T[A]` */
+/** All possible options after successfully reaching `T[A]`. */
 type Pathable1<T, A extends keyof Pathable<T>> = Pathable<PathValue1<T, A>>;
 
-/** As `PathValue1`, but for `T[A][B]` */
+/** As `PathValue1`, but for `T[A][B]`. */
 type PathValue2<
   T,
   A extends keyof Pathable<T>,
   B extends keyof Pathable1<T, A>,
 > = StrictlyRequired<Pathable1<T, A>>[B];
-/** As `Pathable1`, but for `T[A][B]` */
+/** As `Pathable1`, but for `T[A][B]`. */
 type Pathable2<
   T,
   A extends keyof Pathable<T>,
   B extends keyof Pathable1<T, A>,
 > = Pathable<PathValue2<T, A, B>>;
 
-/** As `PathValue1`, but for `T[A][B][C]` */
+/** As `PathValue1`, but for `T[A][B][C]`. */
 type PathValue3<
   T,
   A extends keyof Pathable<T>,
@@ -68,24 +69,22 @@ type PathValue3<
 > = StrictlyRequired<Pathable2<T, A, B>>[C];
 
 /**
- * Gets the value at `path` of `object`. If the resolved value is `undefined`, the `defaultValue` is returned in its place.
+ * Gets the value at `path` of `object`. If the resolved value is `null` or `undefined`, the `defaultValue` is returned in its place.
  *
- * @param object the target object
- * @param path the path of the property to get
- * @param defaultValue the default value
- * @signature pathOr(object, array, defaultValue)
+ * @param object - The target object.
+ * @param path - The path of the property to get.
+ * @param defaultValue - The default value.
+ * @signature P.pathOr(object, array, defaultValue)
  * @example
- *  import { pathOr } from '@vinicunca/perkakas';
- *
- *  pathOr({x: 10}, ['y'], 2); // 2
- *  pathOr({y: 10}, ['y'], 2); // 10
+ *    P.pathOr({x: 10}, ['y'], 2) // 2
+ *    P.pathOr({y: 10}, ['y'], 2) // 10
  * @dataFirst
  * @category Object
  */
 export function pathOr<T, A extends keyof Pathable<T>>(
   object: T,
   path: readonly [A],
-  defaultValue: PathValue1<T, A>
+  defaultValue: PathValue1<T, A>,
 ): PathValue1<T, A>;
 
 export function pathOr<
@@ -95,7 +94,7 @@ export function pathOr<
 >(
   object: T,
   path: readonly [A, B],
-  defaultValue: PathValue2<T, A, B>
+  defaultValue: PathValue2<T, A, B>,
 ): PathValue2<T, A, B>;
 
 export function pathOr<
@@ -106,26 +105,24 @@ export function pathOr<
 >(
   object: T,
   path: readonly [A, B, C],
-  defaultValue: PathValue3<T, A, B, C>
+  defaultValue: PathValue3<T, A, B, C>,
 ): PathValue3<T, A, B, C>;
 
 /**
  * Gets the value at `path` of `object`. If the resolved value is `undefined`, the `defaultValue` is returned in its place.
  *
- * @param path the path of the property to get
- * @param defaultValue the default value
- * @signature pathOr(array, defaultValue)(object)
+ * @param path - The path of the property to get.
+ * @param defaultValue - The default value.
+ * @signature P.pathOr(array, defaultValue)(object)
  * @example
- *  import { pathOr } from '@vinicunca/perkakas';
- *
- *  pipe({x: 10}, pathOr(['y'], 2)); // 2
- *  pipe({y: 10}, pathOr(['y'], 2)); // 10
+ *    P.pipe({x: 10}, P.pathOr(['y'], 2)) // 2
+ *    P.pipe({y: 10}, P.pathOr(['y'], 2)) // 10
  * @dataLast
  * @category Object
  */
 export function pathOr<T, A extends keyof Pathable<T>>(
   path: readonly [A],
-  defaultValue: PathValue1<T, A>
+  defaultValue: PathValue1<T, A>,
 ): (object: T) => PathValue1<T, A>;
 
 export function pathOr<
@@ -134,7 +131,7 @@ export function pathOr<
   B extends keyof Pathable1<T, A>,
 >(
   path: readonly [A, B],
-  defaultValue: PathValue2<T, A, B>
+  defaultValue: PathValue2<T, A, B>,
 ): (object: T) => PathValue2<T, A, B>;
 
 export function pathOr<
@@ -144,14 +141,14 @@ export function pathOr<
   C extends keyof Pathable2<T, A, B>,
 >(
   path: readonly [A, B, C],
-  defaultValue: PathValue3<T, A, B, C>
+  defaultValue: PathValue3<T, A, B, C>,
 ): (object: T) => PathValue3<T, A, B, C>;
 
-export function pathOr(...args: Array<any>): unknown {
-  return purry(pathOr_, args);
+export function pathOr(...args: ReadonlyArray<unknown>): unknown {
+  return curry(pathOrImplementation, args);
 }
 
-function pathOr_(
+function pathOrImplementation(
   data: unknown,
   path: ReadonlyArray<PropertyKey>,
   defaultValue: unknown,

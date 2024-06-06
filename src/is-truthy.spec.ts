@@ -1,13 +1,11 @@
-import { assertType, describe, expect, it } from 'vitest';
-
 import { isTruthy } from './is-truthy';
 
 describe('isTruthy', () => {
   it('isTruthy', () => {
-    const data: '' | { a: string } | 0 | false = { a: 'asd' };
+    const data: '' | 0 | false | { a: string } = { a: 'asd' };
     if (isTruthy(data)) {
       expect(data).toEqual({ a: 'asd' });
-      assertType<{ a: string }>(data);
+      expectTypeOf(data).toEqualTypeOf<{ a: string }>();
     }
   });
 });

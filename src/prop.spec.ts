@@ -1,5 +1,3 @@
-import { expect, expectTypeOf, it } from 'vitest';
-
 import { pipe } from './pipe';
 import { prop } from './prop';
 import { sortBy } from './sort-by';

@@ -1,50 +1,73 @@
-import { describe, expect, it, vi } from 'vitest';
-
 import { forEachObj } from './for-each-obj';
 import { pipe } from './pipe';
 
-const obj = {
-  a: 1,
-  b: 2,
-  c: 3,
-};
-
-describe('data_first', () => {
-  it('forEachObj', () => {
+describe('runtime', () => {
+  it('dataFirst', () => {
+    const data = {
+      a: 1,
+      b: 2,
+      c: 3,
+    };
     const cb = vi.fn();
-    const result = forEachObj(obj, cb);
-    expect(cb.mock.calls).toEqual([[1], [2], [3]]);
-    expect(result).toEqual(obj);
+
+    forEachObj(data, cb);
+
+    expect(cb).toHaveBeenCalledWith(1, 'a', data);
+    expect(cb).toHaveBeenCalledWith(2, 'b', data);
+    expect(cb).toHaveBeenCalledWith(3, 'c', data);
   });
 
-  it('forEachObj.indexed', () => {
+  it('doesn\'t run on symbol keys', () => {
+    const data = { [Symbol('a')]: 4 };
     const cb = vi.fn();
-    const result = forEachObj.indexed(obj, cb);
-    expect(cb.mock.calls).toEqual([
-      [1, 'a', obj],
-      [2, 'b', obj],
-      [3, 'c', obj],
-    ]);
-    expect(result).toEqual(obj);
+
+    forEachObj(data, cb);
+
+    expect(cb).toHaveBeenCalledTimes(0);
+  });
+
+  it('number keys are translated to string', () => {
+    const data = { 123: 456 };
+    forEachObj(data, (value, key) => {
+      expect(key).toBe('123');
+      expect(value).toBe(456);
+    });
+  });
+
+  it('dataLast', () => {
+    const data = {
+      a: 1,
+      b: 2,
+      c: 3,
+    };
+    const cb = vi.fn<[number, string, typeof data]>();
+
+    expect(pipe(data, forEachObj(cb))).toBe(data);
+    expect(cb).toHaveBeenCalledWith(1, 'a', data);
+    expect(cb).toHaveBeenCalledWith(2, 'b', data);
+    expect(cb).toHaveBeenCalledWith(3, 'c', data);
   });
 });
 
-describe('data_last', () => {
-  it('forEachObj', () => {
-    const cb = vi.fn();
-    const result = pipe(obj, forEachObj(cb));
-    expect(cb.mock.calls).toEqual([[1], [2], [3]]);
-    expect(result).toEqual(obj);
+describe('typing', () => {
+  it('typing is sound when only symbol keys', () => {
+    forEachObj({ [Symbol('a')]: 4 }, (value, key) => {
+      expectTypeOf(key).toBeNever();
+      expectTypeOf(value).toBeNever();
+    });
   });
 
-  it('forEachObj.indexed', () => {
-    const cb = vi.fn();
-    const result = pipe(obj, forEachObj.indexed(cb));
-    expect(cb.mock.calls).toEqual([
-      [1, 'a', obj],
-      [2, 'b', obj],
-      [3, 'c', obj],
-    ]);
-    expect(result).toEqual(obj);
+  it('symbol keys are ignored', () => {
+    forEachObj({ [Symbol('a')]: 4, a: 'hello', b: true }, (value, key) => {
+      expectTypeOf(key).toEqualTypeOf<'a' | 'b'>();
+      expectTypeOf(value).toEqualTypeOf<boolean | string>();
+    });
+  });
+
+  it('number keys are translated to strings', () => {
+    forEachObj({ 123: 'hello', 456: true }, (value, key) => {
+      expectTypeOf(key).toEqualTypeOf<'123' | '456'>();
+      expectTypeOf(value).toEqualTypeOf<boolean | string>();
+    });
   });
 });

@@ -1,111 +1,13 @@
-import type { IterableContainer } from './_types';
+import type { Simplify } from 'type-fest';
 
-import { purry } from './purry';
+import type { IterableContainer } from './helpers/types';
+
+import { curry } from './curry';
 
 type Entry<Key extends PropertyKey = PropertyKey, Value = unknown> = readonly [
   key: Key,
   value: Value,
 ];
-
-/**
- * Creates a new object from an array of tuples by pairing up first and second elements as {[key]: value}.
- * If a tuple is not supplied for any element in the array, the element will be ignored
- * If duplicate keys exist, the tuple with the greatest index in the input array will be preferred.
- *
- * The strict option supports more sophisticated use-cases like those that would
- * result when calling the strict `toPairs` function.
- *
- * There are several other functions that could be used to build an object from
- * an array:
- * `fromKeys` - Builds an object from an array of *keys* and a mapper for values.
- * `indexBy` - Builds an object from an array of *values* and a mapper for keys.
- * `pullObject` - Builds an object from an array of items with mappers for *both* keys and values.
- * `mapToObj` - Builds an object from an array of items and a single mapper for key-value pairs.
- * Refer to the docs for more details.
- *
- * @param entries - The list of input tuples.
- * @signature
- *  fromEntries(tuples)
- *  fromEntries.strict(tuples)
- * @example
- *  import { fromEntries } from '@vinicunca/perkakas';
- *
- *  fromEntries([['a', 'b'], ['c', 'd']]); // => {a: 'b', c: 'd'} (type: Record<string, string>)
- *  fromEntries.strict(['a', 1] as const); // => {a: 1} (type: {a: 1})
- * @dataFirst
- * @strict
- * @category Object
- */
-export function fromEntries<V>(
-  entries: ReadonlyArray<Entry<number, V>>,
-): Record<number, V>;
-export function fromEntries<V>(
-  entries: ReadonlyArray<Entry<string, V>>,
-): Record<string, V>;
-
-/**
- * Creates a new object from an array of tuples by pairing up first and second elements as {[key]: value}.
- * If a tuple is not supplied for any element in the array, the element will be ignored
- * If duplicate keys exist, the tuple with the greatest index in the input array will be preferred.
- *
- * The strict option supports more sophisticated use-cases like those that would
- * result when calling the strict `toPairs` function.
- *
- * There are several other functions that could be used to build an object from
- * an array:
- * `fromKeys` - Builds an object from an array of *keys* and a mapper for values.
- * `indexBy` - Builds an object from an array of *values* and a mapper for keys.
- * `pullObject` - Builds an object from an array of items with mappers for *both* keys and values.
- * `mapToObj` - Builds an object from an array of items and a single mapper for key-value pairs.
- * Refer to the docs for more details.
- *
- * @signature
- *  fromEntries()(tuples)
- *  fromEntries.strict()(tuples)
- * @example
- *  import { fromEntries, pipe } from '@vinicunca/perkakas';
- *
- *  pipe(
- *    [['a', 'b'], ['c', 'd']],
- *    fromEntries(),
- *  ); // => {a: 'b', c: 'd'} (type: Record<string, string>)
- *  pipe(
- *    ['a', 1] as const,
- *    R.fromEntries.strict(),
- *  ); // => {a: 1} (type: {a: 1})
- * @dataLast
- * @strict
- * @category Object
- */
-export function fromEntries(): <K extends PropertyKey, V>(
-  entries: ReadonlyArray<Entry<K, V>>,
-) => Record<K extends string ? string : K extends number ? number : never, V>;
-
-export function fromEntries(...args: Array<any>): unknown {
-  return purry(fromEntriesImplementation, args);
-}
-
-function fromEntriesImplementation(
-  entries: ReadonlyArray<Entry>,
-): Record<string, unknown> {
-  const out: Record<PropertyKey, unknown> = {};
-  for (const [key, value] of entries) {
-    out[key] = value;
-  }
-  return out;
-}
-
-// Redefining the fromEntries function to allow stricter entries arrays and
-// fine-grained handling of partiality of the output.
-interface Strict {
-  <Entries extends IterableContainer<Entry>>(
-    entries: Entries,
-  ): StrictOut<Entries>;
-
-  (): <Entries extends IterableContainer<Entry>>(
-    entries: Entries,
-  ) => StrictOut<Entries>;
-}
 
 // The 2 kinds of arrays we accept result in different kinds of outputs:
 // 1. If the input is a *tuple*, we know exactly what entries it would hold,
@@ -114,19 +16,22 @@ interface Strict {
 // 2. If the input is an *array* then any keys defined in the array might not
 // actually show up in runtime, and thus need to be optional. (e.g. if the input
 // is an empty array).
-type StrictOut<Entries> = Entries extends readonly [infer First, ...infer Tail]
-  ? fromEntriesTuple<First, Tail>
+type FromEntries<Entries> = Entries extends readonly [
+  infer First,
+  ...infer Tail,
+]
+  ? FromEntriesTuple<First, Tail>
   : Entries extends readonly [...infer Head, infer Last]
-    ? fromEntriesTuple<Last, Head>
+    ? FromEntriesTuple<Last, Head>
     : Entries extends IterableContainer<Entry>
-      ? fromEntriesArray<Entries>
+      ? FromEntriesArray<Entries>
       : 'ERROR: Entries array-like could not be inferred';
 
 // For strict tuples we build the result by intersecting each entry as a record
 // between it's key and value, recursively. The recursion goes through our main
 // type so that we support tuples which also contain rest parts.
-type fromEntriesTuple<E, Rest> = E extends Entry
-  ? Record<E[0], E[1]> & StrictOut<Rest>
+type FromEntriesTuple<E, Rest> = E extends Entry
+  ? FromEntries<Rest> & Record<E[0], E[1]>
   : 'ERROR: Array-like contains a non-entry element';
 
 // For the array case we also need to handle what kind of keys it defines:
@@ -139,23 +44,23 @@ type fromEntriesTuple<E, Rest> = E extends Entry
 // Note that this destination between keys is the result of how typescript
 // considers Record<string, unknown> to be **implicitly** partial, whereas
 // Record<"a", unknown> is not.
-type fromEntriesArray<Entries extends IterableContainer<Entry>> =
+type FromEntriesArray<Entries extends IterableContainer<Entry>> =
   string extends AllKeys<Entries>
     ? Record<string, Entries[number][1]>
     : number extends AllKeys<Entries>
       ? Record<number, Entries[number][1]>
       : symbol extends AllKeys<Entries>
         ? Record<symbol, Entries[number][1]>
-        : fromEntriesArrayWithLiteralKeys<Entries>;
+        : FromEntriesArrayWithLiteralKeys<Entries>;
 
 // This type is largely copied from `objectFromEntries` in the repo:
 // *sindresorhus/ts-extras* but makes all properties of the output optional,
 // which is more correct because we can't assure that an entry will exist for
 // every possible prop/key of the input.
 // @see https://github.com/sindresorhus/ts-extras/blob/44f57392c5f027268330771996c4fdf9260b22d6/source/object-from-entries.ts)
-type fromEntriesArrayWithLiteralKeys<Entries extends IterableContainer<Entry>> =
+type FromEntriesArrayWithLiteralKeys<Entries extends IterableContainer<Entry>> =
   {
-    [K in AllKeys<Entries>]?: ValueForKey<Entries, K>;
+    [P in AllKeys<Entries>]?: ValueForKey<Entries, P>;
   };
 
 type AllKeys<Entries extends IterableContainer<Entry>> = Extract<
@@ -163,21 +68,77 @@ type AllKeys<Entries extends IterableContainer<Entry>> = Extract<
   Entry
 >[0];
 
+// I tried and failed to simplify the type here! What the ternary does here is
+// to support the cases where the entries are defined by a single type that
+// defines all entries, but it defines the keys as a union of literals
+// (`['a' | 'b', number]`); which is different from the output of toPairs
+// which would define a separate tuple literal for each key (`['a', number] |
+// ['b', number]`). We need to support both cases!
 type ValueForKey<
   Entries extends IterableContainer<Entry>,
   K extends PropertyKey,
-> =
-  // I tried and failed to simplify the type here! What the ternary does here is
-  // to support the cases where the entries are defined by a single type that
-  // defines all entries, but it defines the keys as a union of literals
-  // (`['a' | 'b', number]`); which is different from the output of toPairs
-  // which would define a separate tuple literal for each key (`['a', number] |
-  // ['b', number]`). We need to support both cases!
-  (Extract<Entries[number], Entry<K>> extends never
-    ? Entries[number]
-    : Extract<Entries[number], Entry<K>>)[1];
+> = (Extract<Entries[number], Entry<K>> extends never
+  ? Entries[number]
+  : Extract<Entries[number], Entry<K>>)[1];
 
-export namespace fromEntries {
-  // Strict is simply a retyping of fromEntries, it runs the same runtime logic.
-  export const strict = fromEntries as Strict;
+/**
+ * Creates a new object from an array of tuples by pairing up first and second elements as {[key]: value}.
+ * If a tuple is not supplied for any element in the array, the element will be ignored
+ * If duplicate keys exist, the tuple with the greatest index in the input array will be preferred.
+ *
+ * The strict option supports more sophisticated use-cases like those that would
+ * result when calling the strict `toPairs` function.
+ *
+ * There are several other functions that could be used to build an object from
+ * an array:
+ * `fromKeys` - Builds an object from an array of *keys* and a mapper for values.
+ * `indexBy` - Builds an object from an array of *values* and a mapper for keys.
+ * `pullObject` - Builds an object from an array of items with mappers for *both* keys and values.
+ * `mapToObj` - Builds an object from an array of items and a single mapper for key-value pairs.
+ * Refer to the docs for more details.
+ *
+ * @param entries - An array of key-value pairs.
+ * @signature
+ *   P.fromEntries(tuples)
+ * @example
+ *   P.fromEntries([['a', 'b'], ['c', 'd']]); // => {a: 'b', c: 'd'}
+ * @dataFirst
+ * @category Object
+ */
+export function fromEntries<Entries extends IterableContainer<Entry>>(
+  entries: Entries,
+): Simplify<FromEntries<Entries>>;
+
+/**
+ * Creates a new object from an array of tuples by pairing up first and second elements as {[key]: value}.
+ * If a tuple is not supplied for any element in the array, the element will be ignored
+ * If duplicate keys exist, the tuple with the greatest index in the input array will be preferred.
+ *
+ * The strict option supports more sophisticated use-cases like those that would
+ * result when calling the strict `toPairs` function.
+ *
+ * There are several other functions that could be used to build an object from
+ * an array:
+ * `fromKeys` - Builds an object from an array of *keys* and a mapper for values.
+ * `indexBy` - Builds an object from an array of *values* and a mapper for keys.
+ * `pullObject` - Builds an object from an array of items with mappers for *both* keys and values.
+ * `mapToObj` - Builds an object from an array of items and a single mapper for key-value pairs.
+ * Refer to the docs for more details.
+ *
+ * @signature
+ *   P.fromEntries()(tuples)
+ * @example
+ *   P.pipe(
+ *     [['a', 'b'], ['c', 'd']] as const,
+ *     P.fromEntries(),
+ *   ); // => {a: 'b', c: 'd'}
+ * @dataLast
+ * @category Object
+ */
+export function fromEntries(): <Entries extends IterableContainer<Entry>>(
+  entries: Entries,
+) => Simplify<FromEntries<Entries>>;
+
+export function fromEntries(...args: ReadonlyArray<unknown>): unknown {
+  return curry(Object.fromEntries, args);
 }

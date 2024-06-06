@@ -1,52 +1,50 @@
-import { purry } from './purry';
+import { curry } from './curry';
 
 /**
  * Splits a given array at a given index.
  *
- * @param array the array to split
- * @param index the index to split at
+ * @param array - The array to split.
+ * @param index - The index to split at.
  * @signature
- *  splitAt(array, index)
+ *    P.splitAt(array, index)
  * @example
- *  import { splitAt } from '@vinicunca/perkakas';
- *
- *  splitAt([1, 2, 3], 1) // => [[1], [2, 3]]
- *  splitAt([1, 2, 3, 4, 5], -1) // => [[1, 2, 3, 4], [5]]
+ *    P.splitAt([1, 2, 3], 1) // => [[1], [2, 3]]
+ *    P.splitAt([1, 2, 3, 4, 5], -1) // => [[1, 2, 3, 4], [5]]
  * @dataFirst
  * @category Array
  */
 export function splitAt<T>(
   array: ReadonlyArray<T>,
-  index: number
+  index: number,
 ): [Array<T>, Array<T>];
 
 /**
  * Splits a given array at a given index.
  *
- * @param index the index to split at
+ * @param index - The index to split at.
  * @signature
- *  splitAt(index)(array)
+ *    P.splitAt(index)(array)
  * @example
- *  import { splitAt } from '@vinicunca/perkakas';
- *
- *  splitAt(1)([1, 2, 3]) // => [[1], [2, 3]]
- *  splitAt(-1)([1, 2, 3, 4, 5]) // => [[1, 2, 3, 4], [5]]
+ *    P.splitAt(1)([1, 2, 3]) // => [[1], [2, 3]]
+ *    P.splitAt(-1)([1, 2, 3, 4, 5]) // => [[1, 2, 3, 4], [5]]
  * @dataLast
  * @category Array
  */
 export function splitAt<T>(
-  index: number
+  index: number,
 ): (array: ReadonlyArray<T>) => [Array<T>, Array<T>];
 
-export function splitAt(...args: Array<any>): unknown {
-  return purry(splitAt_, args);
+export function splitAt(...args: ReadonlyArray<unknown>): unknown {
+  return curry(splitAtImplementation, args);
 }
 
-function splitAt_<T>(
+function splitAtImplementation<T>(
   array: ReadonlyArray<T>,
   index: number,
 ): [Array<T>, Array<T>] {
-  const copy = array.slice();
-  const tail = copy.splice(index);
-  return [copy, tail];
+  const effectiveIndex = Math.max(
+    Math.min(index < 0 ? array.length + index : index, array.length),
+    0,
+  );
+  return [array.slice(0, effectiveIndex), array.slice(effectiveIndex)];
 }

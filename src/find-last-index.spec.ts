@@ -1,44 +1,36 @@
-import { describe, expect, it } from 'vitest';
-
 import { findLastIndex } from './find-last-index';
 import { pipe } from './pipe';
 
-const array = [1, 2, 3, 4];
-
 describe('data first', () => {
   it('findLastIndex', () => {
-    expect(findLastIndex(array, (x) => x % 2 === 1)).toBe(2);
-  });
-
-  it('findLastIndex.indexed', () => {
-    expect(findLastIndex.indexed(array, (x) => x % 2 === 1)).toBe(2);
+    expect(findLastIndex([1, 2, 3, 4], (x) => x % 2 === 1)).toBe(2);
   });
 
   it('findLast first value', () => {
-    expect(findLastIndex(array, (x) => x === 1)).toEqual(0);
+    expect(findLastIndex([1, 2, 3, 4], (x) => x === 1)).toEqual(0);
   });
 
   it('findLastIndex -1', () => {
-    expect(findLastIndex(array, (x) => x === 5)).toBe(-1);
+    expect(findLastIndex([1, 2, 3, 4], (x) => x === 5)).toBe(-1);
   });
 });
 
 describe('data last', () => {
-  it('findLastIndex', () => {
+  it('found', () => {
     expect(
       pipe(
-        array,
+        [1, 2, 3, 4],
         findLastIndex((x) => x % 2 === 1),
       ),
     ).toEqual(2);
   });
 
-  it('findLastIndex.indexed', () => {
+  it('not found', () => {
     expect(
       pipe(
-        array,
-        findLastIndex.indexed((x) => x % 2 === 1),
+        [1, 2, 3, 4],
+        findLastIndex((x) => x === 5),
       ),
-    ).toEqual(2);
+    ).toBe(-1);
   });
 });

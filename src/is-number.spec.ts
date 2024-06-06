@@ -1,11 +1,11 @@
-import { assertType, describe, expect, expectTypeOf, it } from 'vitest';
-
-import type { AllTypesDataProviderTypes } from './../test/types-data-provider';
-
-import { ALL_TYPES_DATA_PROVIDER, TYPES_DATA_PROVIDER } from './../test/types-data-provider';
+import {
+  ALL_TYPES_DATA_PROVIDER,
+  type AllTypesDataProviderTypes,
+  TYPES_DATA_PROVIDER,
+} from '../test/types-data-provider';
 import { isNumber } from './is-number';
 
-const dataFunction = (): 1 | 2 | 3 | string => 1;
+const dataFunction = (): string | 1 | 2 | 3 => 1;
 
 describe('isNumber', () => {
   it('should work as type guard', () => {
@@ -26,7 +26,7 @@ describe('isNumber', () => {
     const data = TYPES_DATA_PROVIDER.number as unknown;
     if (isNumber(data)) {
       expect(typeof data).toEqual('number');
-      assertType<number>(data);
+      expectTypeOf(data).toEqualTypeOf<number>();
     }
   });
 

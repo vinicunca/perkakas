@@ -1,46 +1,58 @@
-import { purry } from './purry';
+import type { IterableContainer } from './helpers/types';
+
+import { curry } from './curry';
 
 /**
- * Combines two arrays.
+ * Merge two or more arrays. This method does not change the existing arrays,
+ * but instead returns a new array, even if the other array is empty.
  *
- * @param arr1 the first array
- * @param arr2 the second array
+ * @param data - The first items, these would be at the beginning of the new
+ * array.
+ * @param other - The remaining items, these would be at the end of the new
+ * array.
+ * @returns A new array with the items of the first array followed by the items
+ * of the second array.
  * @signature
- *  concat(arr1, arr2);
+ *    P.concat(data, other);
  * @example
- *  import { concat } from '@vinicunca/perkakas';
- *  concat([1, 2, 3], ['a']); // [1, 2, 3, 'a']
+ *    P.concat([1, 2, 3], ['a']) // [1, 2, 3, 'a']
  * @dataFirst
  * @category Array
  */
-export function concat<T, K>(
-  arr1: ReadonlyArray<T>,
-  arr2: ReadonlyArray<K>
-): Array<K | T>;
+export function concat<
+  T1 extends IterableContainer,
+  T2 extends IterableContainer,
+>(data: T1, other: T2): [...T1, ...T2];
 
 /**
- * Combines two arrays.
+ * Merge two or more arrays. This method does not change the existing arrays,
+ * but instead returns a new array, even if the other array is empty.
  *
- * @param arr2 the second array
+ * @param other - The remaining items, these would be at the end of the new
+ * array.
+ * @returns A new array with the items of the first array followed by the items
+ * of the second array.
  * @signature
- *  concat(arr2)(arr1);
+ *    P.concat(arr2)(arr1);
  * @example
- *  import { concat } from '@vinicunca/perkakas';
- *  concat(['a'])([1, 2, 3]); // [1, 2, 3, 'a']
+ *    P.concat(['a'])([1, 2, 3]) // [1, 2, 3, 'a']
  * @dataLast
  * @category Array
  */
-export function concat<T, K>(
-  arr2: ReadonlyArray<K>
-): (arr1: ReadonlyArray<T>) => Array<K | T>;
+export function concat<T2 extends IterableContainer>(
+  other: T2,
+): <T1 extends IterableContainer>(data: T1) => [...T1, ...T2];
 
-export function concat(...args: Array<any>): unknown {
-  return purry(concat_, args);
+export function concat(...args: ReadonlyArray<unknown>): unknown {
+  return curry(concatImplementation, args);
 }
 
-function concat_<T, K>(
-  arr1: ReadonlyArray<T>,
-  arr2: ReadonlyArray<K>,
-): Array<K | T> {
-  return (arr1 as Array<K | T>).concat(arr2);
-}
+function concatImplementation<
+  T1 extends IterableContainer,
+  T2 extends IterableContainer,
+>(
+  arr1: T1,
+  arr2: T2,
+): [...T1, ...T2] {
+  return [...arr1, ...arr2];
+};

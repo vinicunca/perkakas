@@ -1,6 +1,4 @@
-import { describe, expect, expectTypeOf, it } from 'vitest';
-
-import type { NonEmptyArray } from './_types';
+import type { NonEmptyArray } from './helpers/types';
 
 import { sample } from './sample';
 
@@ -96,12 +94,12 @@ describe('at runtime', () => {
       expect(result).toStrictEqual([]);
     });
 
-    it('throws on negative sample size', () => {
-      expect(() => sample([1, 2, 3], -1 as number)).toThrow();
+    it('treats negative sample sizes as 0', () => {
+      expect(sample([1, 2, 3], -1 as number)).toStrictEqual([]);
     });
 
-    it('throws on non-integer sample size', () => {
-      expect(() => sample([1, 2, 3], 0.5)).toThrow();
+    it('rounds non-integer sample sizes', () => {
+      expect(sample([1, 2, 3], 0.5)).toHaveLength(1);
     });
   });
 });
@@ -862,10 +860,10 @@ describe('typing', () => {
       ];
       const result = sample(array, 5 as number);
       expectTypeOf(result).toEqualTypeOf<
+        | Array<string>
         | [boolean, ...Array<string>]
         | [number, ...Array<string>]
         | [number, boolean, ...Array<string>]
-        | Array<string>
       >();
     });
 
@@ -879,10 +877,10 @@ describe('typing', () => {
       ];
       const result = sample(array, 5 as number);
       expectTypeOf(result).toEqualTypeOf<
+        | Array<string>
         | [boolean, ...Array<string>]
         | [number, ...Array<string>]
         | [number, boolean, ...Array<string>]
-        | Array<string>
       >();
     });
 
@@ -921,8 +919,9 @@ describe('typing', () => {
 });
 
 function generateRandomArray(): NonEmptyArray<number> {
+  // We use a set to remove duplicates, as it allows us to simplify our tests
   // @ts-expect-error [ts2322]: we know this array isn't empty!
-  return Array.from(new Set(Array.from({ length: 100 }).map(() => Math.random())));
+  return [...new Set(Array.from({ length: 100 }).map(() => Math.random()))];
 }
 
 function allIndices(array: ReadonlyArray<unknown>): Array<number> {

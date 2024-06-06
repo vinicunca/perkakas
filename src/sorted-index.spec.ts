@@ -1,5 +1,3 @@
-import { describe, expect, it } from 'vitest';
-
 import { sortedIndex } from './sorted-index';
 
 describe('runtime correctness', () => {

@@ -1,8 +1,8 @@
 import type { Simplify } from 'type-fest';
 
-import type { IterableContainer } from './_types';
+import type { IterableContainer } from './helpers/types';
 
-import { purry } from './purry';
+import { curry } from './curry';
 
 // Takes a union of literals and creates a union of records with the value V for
 // each key **separately**
@@ -23,23 +23,29 @@ type FromKeys<T extends IterableContainer, V> = T extends readonly []
  * that key. Duplicate keys are overwritten, guaranteeing that `mapper` is run
  * for each item in `data`.
  *
+ * There are several other functions that could be used to build an object from
+ * an array:
+ * `indexBy` - Builds an object from an array of *values* and a mapper for keys.
+ * `pullObject` - Builds an object from an array of items with mappers for *both* keys and values.
+ * `fromEntries` - Builds an object from an array of key-value pairs.
+ * `mapToObj` - Builds an object from an array of items and a single mapper for key-value pairs.
+ * Refer to the docs for more details.
+ *
  * @param data - An array of keys of the output object. All items in the array
  * would be keys in the output array.
  * @param mapper - Takes a key and returns the value that would be associated
  * with that key.
  * @signature
- *  fromKeys(data, mapper);
+ *   P.fromKeys(data, mapper);
  * @example
- *  import { fromKeys, length, add } from '@vinicunca/perkakas';
- *
- *  fromKeys(["cat", "dog"], length()); // { cat: 3, dog: 3 } (typed as Partial<Record<"cat" | "dog", number>>)
- *  fromKeys([1, 2], add(1)); // { 1: 2, 2: 3 } (typed as Partial<Record<1 | 2, number>>)
+ *   P.fromKeys(["cat", "dog"], P.length()); // { cat: 3, dog: 3 } (typed as Partial<Record<"cat" | "dog", number>>)
+ *   P.fromKeys([1, 2], P.add(1)); // { 1: 2, 2: 3 } (typed as Partial<Record<1 | 2, number>>)
  * @dataFirst
  * @category Object
  */
 export function fromKeys<T extends IterableContainer<PropertyKey>, V>(
   data: T,
-  mapper: (item: T[number]) => V,
+  mapper: (item: T[number], index: number, data: T) => V,
 ): Simplify<FromKeys<T, V>>;
 
 /**
@@ -47,35 +53,41 @@ export function fromKeys<T extends IterableContainer<PropertyKey>, V>(
  * that key. Duplicate keys are overwritten, guaranteeing that `mapper` is run
  * for each item in `data`.
  *
+ * There are several other functions that could be used to build an object from
+ * an array:
+ * `indexBy` - Builds an object from an array of *values* and a mapper for keys.
+ * `pullObject` - Builds an object from an array of items with mappers for *both* keys and values.
+ * `fromEntries` - Builds an object from an array of key-value pairs.
+ * `mapToObj` - Builds an object from an array of items and a single mapper for key-value pairs.
+ * Refer to the docs for more details.
+ *
  * @param mapper - Takes a key and returns the value that would be associated
  * with that key.
  * @signature
- *  fromKeys(mapper)(data);
+ *   P.fromKeys(mapper)(data);
  * @example
- *  import { fromKeys, length, add, pipe } from '@vinicunca/perkakas';
- *
- *  pipe(["cat", "dog"], fromKeys(length())); // { cat: 3, dog: 3 } (typed as Partial<Record<"cat" | "dog", number>>)
- *  pipe([1, 2], fromKeys(add(1))); // { 1: 2, 2: 3 } (typed as Partial<Record<1 | 2, number>>)
+ *   P.pipe(["cat", "dog"], P.fromKeys(P.length())); // { cat: 3, dog: 3 } (typed as Partial<Record<"cat" | "dog", number>>)
+ *   P.pipe([1, 2], P.fromKeys(P.add(1))); // { 1: 2, 2: 3 } (typed as Partial<Record<1 | 2, number>>)
  * @dataLast
  * @category Object
  */
 export function fromKeys<T extends IterableContainer<PropertyKey>, V>(
-  mapper: (item: T[number]) => V,
+  mapper: (item: T[number], index: number, data: T) => V,
 ): (data: T) => Simplify<FromKeys<T, V>>;
 
-export function fromKeys(...args: Array<any>): unknown {
-  return purry(fromKeysImplementation, args);
+export function fromKeys(...args: ReadonlyArray<unknown>): unknown {
+  return curry(fromKeysImplementation, args);
 }
 
 function fromKeysImplementation<T extends IterableContainer<PropertyKey>, V>(
   data: T,
-  mapper: (item: T[number]) => V,
+  mapper: (item: T[number], index: number, data: T) => V,
 ): FromKeys<T, V> {
   const result: Partial<FromKeys<T, V>> = {};
 
-  for (const key of data) {
+  for (const [index, key] of data.entries()) {
     // @ts-expect-error [ts7053] - There's no easy way to make Typescript aware that the items in T would be keys in the output object because it's type is built recursively and the "being an item of an array" property of a type is not "carried over" in the recursive type definition.
-    result[key] = mapper(key);
+    result[key] = mapper(key, index, data);
   }
 
   return result as FromKeys<T, V>;

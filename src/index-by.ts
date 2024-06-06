@@ -1,113 +1,74 @@
-import type { PredIndexed, PredIndexedOptional } from './_types';
+import type { ExactRecord } from './helpers/types';
 
-import { purry } from './purry';
+import { curry } from './curry';
 
 /**
- * Converts a list of objects into an object indexing the objects by the given key (casted to a string).
- * Use the strict version to maintain the given key's type, so long as it is a valid `PropertyKey`.
+ * Converts a list of objects into an object indexing the objects by the given
+ * key.
  *
- * @param array the array
- * @param fn the indexing function
+ * There are several other functions that could be used to build an object from
+ * an array:
+ * `fromKeys` - Builds an object from an array of *keys* and a mapper for values.
+ * `pullObject` - Builds an object from an array of items with mappers for *both* keys and values.
+ * `fromEntries` - Builds an object from an array of key-value pairs.
+ * `mapToObj` - Builds an object from an array of items and a single mapper for key-value pairs.
+ * Refer to the docs for more details.
+ *
+ * @param data - The array.
+ * @param mapper - The indexing function.
  * @signature
- *  indexBy(array, fn)
- *  indexBy.strict(array, fn)
+ *    P.indexBy(array, fn)
  * @example
- *  import { indexBy } from '@vinicunca/perkakas';
- *
- *  indexBy(['one', 'two', 'three'], x => x.length); // => {"3": 'two', "5": 'three'}
- *  indexBy.strict(['one', 'two', 'three'], x => x.length); // => {3: 'two', 5: 'three'}
+ *    P.indexBy(['one', 'two', 'three'], x => x.length) // => {3: 'two', 5: 'three'}
  * @dataFirst
- * @indexed
  * @category Array
- * @strict
  */
-export function indexBy<T>(
-  array: ReadonlyArray<T>,
-  fn: (item: T) => unknown,
-): Record<string, T>;
+export function indexBy<T, K extends PropertyKey>(
+  data: ReadonlyArray<T>,
+  mapper: (item: T, index: number, data: ReadonlyArray<T>) => K,
+): ExactRecord<K, T>;
 
 /**
- * Converts a list of objects into an object indexing the objects by the given key.
- * (casted to a string). Use the strict version to maintain the given key's type, so
- * long as it is a valid `PropertyKey`.
+ * Converts a list of objects into an object indexing the objects by the given
+ * key.
  *
- * @param fn the indexing function
+ * There are several other functions that could be used to build an object from
+ * an array:
+ * `fromKeys` - Builds an object from an array of *keys* and a mapper for values.
+ * `pullObject` - Builds an object from an array of items with mappers for *both* keys and values.
+ * `fromEntries` - Builds an object from an array of key-value pairs.
+ * `mapToObj` - Builds an object from an array of items and a single mapper for key-value pairs.
+ * Refer to the docs for more details.
+ *
+ * @param mapper - The indexing function.
  * @signature
- *  indexBy(fn)(array)
- *  indexBy.strict(fn)(array)
+ *    P.indexBy(fn)(array)
  * @example
- *  import { indexBy, pipe } from '@vinicunca/perkakas';
- *
- *  pipe(
- *    ['one', 'two', 'three'],
- *    indexBy(x => x.length)
- *  ); // => { "3": 'two', "5": 'three'}
- *  pipe(
- *    ['one', 'two', 'three'],
- *    indexBy.strict(x => x.length)
- *  ); // => { 3: 'two', 5: 'three'}
+ *    P.pipe(
+ *      ['one', 'two', 'three'],
+ *      P.indexBy(x => x.length)
+ *    ) // => {3: 'two', 5: 'three'}
  * @dataLast
- * @indexed
  * @category Array
- * @strict
  */
-export function indexBy<T>(
-  fn: (item: T) => unknown,
-): (array: ReadonlyArray<T>) => Record<string, T>;
+export function indexBy<T, K extends PropertyKey>(
+  mapper: (item: T, index: number, data: ReadonlyArray<T>) => K,
+): (data: ReadonlyArray<T>) => ExactRecord<K, T>;
 
-export function indexBy(...args: Array<any>): unknown {
-  return purry(indexBy_(false), args);
+export function indexBy(...args: ReadonlyArray<unknown>): unknown {
+  return curry(indexByImplementation, args);
 }
 
-function indexBy_(indexed: boolean) {
-  return <T>(array: ReadonlyArray<T>, fn: PredIndexedOptional<T, unknown>) => {
-    const out: Record<string, T> = {};
-    for (const [index, item] of array.entries()) {
-      const value = indexed ? fn(item, index, array) : fn(item);
-      const key = String(value);
-      out[key] = item;
-    }
-    return out;
-  };
-}
-
-function indexByStrict<K extends PropertyKey, T>(
-  array: ReadonlyArray<T>,
-  fn: (item: T) => K,
-): Partial<Record<K, T>>;
-
-function indexByStrict<K extends PropertyKey, T>(
-  fn: (item: T) => K,
-): (array: ReadonlyArray<T>) => Partial<Record<K, T>>;
-
-function indexByStrict(...args: Array<any>): unknown {
-  return purry(indexByStrict_, args);
-}
-
-function indexByStrict_<K extends PropertyKey, T>(
-  array: ReadonlyArray<T>,
-  fn: (item: T) => K,
-): Partial<Record<K, T>> {
+function indexByImplementation<T, K extends PropertyKey>(
+  data: ReadonlyArray<T>,
+  mapper: (item: T, index: number, data: ReadonlyArray<T>) => K,
+): ExactRecord<K, T> {
   const out: Partial<Record<K, T>> = {};
 
-  for (const item of array) {
-    const key = fn(item);
+  for (const [index, item] of data.entries()) {
+    const key = mapper(item, index, data);
     out[key] = item;
   }
 
-  return out;
-}
-
-export namespace indexBy {
-  export function indexed<T>(
-    array: ReadonlyArray<T>,
-    fn: PredIndexed<T, unknown>,
-  ): Record<string, T>;
-  export function indexed<T>(
-    fn: PredIndexed<T, unknown>,
-  ): (array: ReadonlyArray<T>) => Record<string, T>;
-  export function indexed(...args: Array<any>): unknown {
-    return purry(indexBy_(true), args);
-  }
-  export const strict = indexByStrict;
+  return out as ExactRecord<K, T>;
 }

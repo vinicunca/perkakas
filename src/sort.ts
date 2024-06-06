@@ -1,85 +1,54 @@
-import type { IterableContainer } from './_types';
+import type { IterableContainer, ReorderedArray } from './helpers/types';
 
-import { purry } from './purry';
+import { curry } from './curry';
 
 /**
- * Sorts an array. The comparator function should accept two values at a time and return a negative number if the first value is smaller, a positive number if it's larger, and zero if they are equal.
- * Sorting is based on a native `sort` function. It's not guaranteed to be stable.
+ * Sorts an array. The comparator function should accept two values at a time
+ * and return a negative number if the first value is smaller, a positive number
+ * if it's larger, and zero if they are equal. Sorting is based on a native
+ * `sort` function.
  *
- * If the input array is more complex (non-empty array, tuple, etc...) use the
- * strict mode to maintain it's shape.
- *
- * @param items the array to sort
- * @param cmp the comparator function
+ * @param items - The array to sort.
+ * @param cmp - The comparator function.
  * @signature
- *  sort(items, cmp)
- *  sort.strict(items, cmp)
+ *    P.sort(items, cmp)
  * @example
- *  import { sort } from '@vinicunca/perkakas';
- *
- *  sort([4, 2, 7, 5], (a, b) => a - b) // => [2, 4, 5, 7] typed Array<number>
- *  sort.strict([4, 2] as [number, number], (a, b) => a - b) // [2, 4] typed [number, number]
+ *    P.sort([4, 2, 7, 5], (a, b) => a - b); // => [2, 4, 5, 7]
  * @dataFirst
  * @category Array
- * @strict
  */
-export function sort<T>(
-  items: ReadonlyArray<T>,
-  cmp: (a: T, b: T) => number
-): Array<T>;
+export function sort<T extends IterableContainer>(
+  items: T,
+  cmp: (a: T[number], b: T[number]) => number,
+): ReorderedArray<T>;
 
 /**
- * Sorts an array. The comparator function should accept two values at a time and return a negative number if the first value is smaller, a positive number if it's larger, and zero if they are equal.
- * Sorting is based on a native `sort` function. It's not guaranteed to be stable.
+ * Sorts an array. The comparator function should accept two values at a time
+ * and return a negative number if the first value is smaller, a positive number
+ * if it's larger, and zero if they are equal. Sorting is based on a native
+ * `sort` function.
  *
- * If the input array is more complex (non-empty array, tuple, etc...) use the
- * strict mode to maintain it's shape.
- *
- * @param cmp the comparator function
+ * @param cmp - The comparator function.
  * @signature
- *  sort(cmp)(items)
- *  sort.strict(cmp)(items)
+ *    P.sort(cmp)(items)
  * @example
- *  import { sort, pipe } from '@vinicunca/perkakas';
- *
- *  pipe([4, 2, 7, 5], sort((a, b) => a - b)) // => [2, 4, 5, 7] typed Array<number>
- *  pipe([4, 2] as [number, number], sort.strict((a, b) => a - b)) // => [2, 4] typed [number, number]
+ *    P.pipe([4, 2, 7, 5], P.sort((a, b) => a - b)) // => [2, 4, 5, 7]
  * @dataLast
  * @category Array
- * @strict
  */
-export function sort<T>(
-  cmp: (a: T, b: T) => number
-): (items: ReadonlyArray<T>) => Array<T>;
+export function sort<T extends IterableContainer>(
+  cmp: (a: T[number], b: T[number]) => number,
+): (items: T) => ReorderedArray<T>;
 
-export function sort(...args: Array<any>): unknown {
-  return purry(sort_, args);
+export function sort(...args: ReadonlyArray<unknown>): unknown {
+  return curry(sortImplementation, args);
 }
 
-function sort_<T>(
-  items: ReadonlyArray<T>,
-  cmp: (a: T, b: T) => number,
-): Array<T> {
-  const ret = items.slice();
+function sortImplementation<T extends IterableContainer>(
+  items: T,
+  cmp: (a: T[number], b: T[number]) => number,
+): ReorderedArray<T> {
+  const ret = [...items];
   ret.sort(cmp);
-  return ret;
-}
-
-interface Strict {
-  <T extends IterableContainer>(
-    items: T,
-    cmp: (a: T[number], b: T[number]) => number
-  ): Sorted<T>;
-
-  <T extends IterableContainer>(cmp: (a: T[number], b: T[number]) => number): (
-    items: T
-  ) => Sorted<T>;
-}
-
-type Sorted<T extends IterableContainer> = {
-  -readonly [P in keyof T]: T[number];
-};
-
-export namespace sort {
-  export const strict: Strict = sort;
+  return ret as ReorderedArray<T>;
 }

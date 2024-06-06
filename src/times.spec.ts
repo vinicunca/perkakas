@@ -1,8 +1,6 @@
-import { describe, expect, it, vi } from 'vitest';
-
-import { noop } from './noop';
 import { times } from './times';
 
+const noop = (): undefined => undefined;
 const one = () => 1 as const;
 const mul1 = (idx: number): number => idx;
 const mul2 = (idx: number): number => idx * 2;

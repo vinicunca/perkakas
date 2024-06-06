@@ -1,8 +1,8 @@
-import { describe, expect, expectTypeOf, it } from 'vitest';
-
-import type { AllTypesDataProviderTypes } from './../test/types-data-provider';
-
-import { ALL_TYPES_DATA_PROVIDER, TYPES_DATA_PROVIDER } from './../test/types-data-provider';
+import {
+  ALL_TYPES_DATA_PROVIDER,
+  type AllTypesDataProviderTypes,
+  TYPES_DATA_PROVIDER,
+} from '../test/types-data-provider';
 import { isBoolean } from './is-boolean';
 
 describe('isBoolean', () => {
@@ -23,6 +23,7 @@ describe('isBoolean', () => {
   });
 
   it('should narrow `any`', () => {
+    // eslint-disable-next-line ts/no-explicit-any -- Explicitly testing `any`
     const data = TYPES_DATA_PROVIDER.boolean as any;
     if (isBoolean(data)) {
       expect(typeof data).toEqual('boolean');

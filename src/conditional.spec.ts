@@ -1,5 +1,3 @@
-import { describe, expect, expectTypeOf, it } from 'vitest';
-
 import { conditional } from './conditional';
 import { isDeepEqual } from './is-deep-equal';
 import { isNumber } from './is-number';
@@ -76,17 +74,35 @@ describe('typing', () => {
       [
         isString,
         (str) => {
-          expectTypeOf(str).toBeString();
-          expectTypeOf(str).not.toBeNumber();
+          expectTypeOf(str).toEqualTypeOf<string>();
+          expectTypeOf(str).not.toEqualTypeOf<number>();
         },
       ],
       [
         isNumber,
         (num) => {
-          expectTypeOf(num).toBeNumber();
-          expectTypeOf(num).not.toBeString();
+          expectTypeOf(num).toEqualTypeOf<number>();
+          expectTypeOf(num).not.toEqualTypeOf<string>();
         },
       ],
     );
+  });
+
+  it('passes the trivial defaultCase\'s type to the output', () => {
+    const result = conditional(
+      'Jokic',
+      [isString, () => 'hello' as const],
+      conditional.defaultCase(),
+    );
+    expectTypeOf(result).toEqualTypeOf<'hello' | undefined>();
+  });
+
+  it('passes the defaultCase\'s type to the output', () => {
+    const result = conditional(
+      'Jokic',
+      [isString, () => 'hello' as const],
+      conditional.defaultCase(() => 123 as const),
+    );
+    expectTypeOf(result).toEqualTypeOf<'hello' | 123>();
   });
 });

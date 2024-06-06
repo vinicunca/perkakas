@@ -1,16 +1,14 @@
 /**
- * A function that checks if the passed parameter is a Promise and narrows its type accordingly
+ * A function that checks if the passed parameter is a Promise and narrows its type accordingly.
  *
- * @param data the variable to check
+ * @param data - The variable to check.
+ * @returns True if the passed input is a Promise, false otherwise.
  * @signature
- *  isPromise(data)
- * @returns true if the passed input is a Promise, false otherwise
+ *    P.isPromise(data)
  * @example
- *  import { isPromise } from '@vinicunca/perkakas';
- *
- *  isPromise(Promise.resolve(5)) // => true
- *  isPromise(Promise.reject(5)) // => true
- *  isPromise('somethingElse') // => false
+ *    P.isPromise(Promise.resolve(5)) //=> true
+ *    P.isPromise(Promise.reject(5)) //=> true
+ *    P.isPromise('somethingElse') //=> false
  * @category Guard
  */
 export function isPromise<T, S>(data: Promise<T> | S): data is Promise<T> {

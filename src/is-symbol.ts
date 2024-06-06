@@ -1,16 +1,15 @@
-import type { NarrowedTo } from './_types';
+import type { NarrowedTo } from './helpers/types';
 
 /**
- * A function that checks if the passed parameter is a symbol and narrows its type accordingly
- * @param data the variable to check
- * @signature
- *  isSymbol(data)
- * @returns true if the passed input is a symbol, false otherwise
- * @example
- *  import { isSymbol } from '@vinicunca/perkakas';
+ * A function that checks if the passed parameter is a symbol and narrows its type accordingly.
  *
- *  isSymbol(Symbol('foo')); // => true
- *  isSymbol(1); // => false
+ * @param data - The variable to check.
+ * @returns True if the passed input is a symbol, false otherwise.
+ * @signature
+ *    P.isSymbol(data)
+ * @example
+ *    P.isSymbol(Symbol('foo')) //=> true
+ *    P.isSymbol(1) //=> false
  * @category Guard
  */
 export function isSymbol<T>(data: T | symbol): data is NarrowedTo<T, symbol> {

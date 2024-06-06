@@ -1,17 +1,17 @@
-import type { NarrowedTo } from './_types';
+import type { NarrowedTo } from './helpers/types';
 
 /**
- * A function that checks if the passed parameter is a number and narrows its type accordingly
+ * A function that checks if the passed parameter is a number and narrows its
+ * type accordingly.
  *
- * @param data the variable to check
+ * @param data - The variable to check.
+ * @returns True if the passed input is a number, false otherwise.
  * @signature
- *  isNumber(data)
- * @returns true if the passed input is a number, false otherwise
+ *    P.isNumber(data)
  * @example
- *  import { isNumber } from '@vinicunca/perkakas';
- *
- *  isNumber(1) // => true
- *  isNumber('notANumber') // => false
+ *    P.isNumber(1); // => true
+ *    P.isNumber(1n); // => false
+ *    P.isNumber('notANumber'); // => false
  * @category Guard
  */
 export function isNumber<T>(data: T | number): data is NarrowedTo<T, number> {

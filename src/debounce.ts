@@ -1,16 +1,17 @@
-interface Debouncer<
+/* eslint-disable ts/no-explicit-any, ts/consistent-type-definitions --
+ * Function inference doesn't work when `unknown` is used as the parameters
+ * generic type, it **has** to be `any`.
+ */
+
+type Debouncer<
   F extends (...args: any) => unknown,
   IsNullable extends boolean = true,
-> {
-  /**
-   * The last computed value of the debounced function.
-   */
-  readonly cachedValue: ReturnType<F> | undefined;
-
+> = {
   /**
    * Invoke the debounced function.
-   * @param args - same as the args for the debounced function.
-   * @returns - the last computed value of the debounced function with the
+   *
+   * @param args - Same as the args for the debounced function.
+   * @returns The last computed value of the debounced function with the
    * latest args provided to it. If `timing` does not include `leading` then the
    * the function would return `undefined` until the first cool-down period is
    * over, otherwise the function would always return the return type of the
@@ -37,12 +38,17 @@ interface Debouncer<
    * invocations.
    */
   readonly isPending: boolean;
-}
 
-interface DebounceOptions {
-  readonly maxWaitMs?: number;
+  /**
+   * The last computed value of the debounced function.
+   */
+  readonly cachedValue: ReturnType<F> | undefined;
+};
+
+type DebounceOptions = {
   readonly waitMs?: number;
-}
+  readonly maxWaitMs?: number;
+};
 
 /**
  * Wraps `func` with a debouncer object that "debounces" (delays) invocations of the function during a defined cool-down period (`waitMs`). It can be configured to invoke the function either at the start of the cool-down period, the end of it, or at both ends (`timing`).
@@ -50,9 +56,10 @@ interface DebounceOptions {
  * It stores the latest call's arguments so they could be used at the end of the cool-down period when invoking `func` (if configured to invoke the function at the end of the cool-down period).
  * It stores the value returned by `func` whenever its invoked. This value is returned on every call, and is accessible via the `cachedValue` property of the debouncer. Its important to note that the value might be different from the value that would be returned from running `func` with the current arguments as it is a cached value from a previous invocation.
  * **Important**: The cool-down period defines the minimum between two invocations, and not the maximum. The period will be **extended** each time a call is made until a full cool-down period has elapsed without any additional calls.
- * @param func The function to debounce, the returned `call` function will have
+ *
+ * @param func - The function to debounce, the returned `call` function will have
  * the exact same signature.
- * @param options An object allowing further customization of the debouncer:
+ * @param options - An object allowing further customization of the debouncer:
  * - `timing?: 'leading' | 'trailing' |'both'`. The default is `'trailing'`.
  *   `leading` would result in the function being invoked at the start of the
  *   cool-down period; `trailing` would result in the function being invoked at
@@ -71,52 +78,49 @@ interface DebounceOptions {
  *   reach the end of the cool-down period, this allows the function to still
  *   be invoked occasionally. IMPORTANT: This param is ignored when `timing` is
  *   `'leading'`.
- * @returns a debouncer object. The main function is `call`. In addition to it
+ * @returns A debouncer object. The main function is `call`. In addition to it
  * the debouncer comes with the following additional functions and properties:
  * - `cancel` method to cancel delayed `func` invocations
  * - `flush` method to end the cool-down period immediately.
  * - `cachedValue` the latest return value of an invocation (if one occurred).
  * - `isPending` flag to check if there is an inflight cool-down window.
  * @signature
- *  debounce(func, options);
+ *   P.debounce(func, options);
  * @example
- *  import { debounce } from '@vinicunca/perkakas';
- *
- *  const debouncer = debounce(identity, { timing: 'trailing', waitMs: 1000 });
- *  const result1 = debouncer.call(1); // => undefined
- *  const result2 = debouncer.call(2); // => undefined
- *  // after 1 second
- *  const result3 = debouncer.call(3); // => 2
- *  // after 1 second
- *  debouncer.cachedValue; // => 3
+ *   const debouncer = debounce(identity(), { timing: 'trailing', waitMs: 1000 });
+ *   const result1 = debouncer.call(1); // => undefined
+ *   const result2 = debouncer.call(2); // => undefined
+ *   // after 1 second
+ *   const result3 = debouncer.call(3); // => 2
+ *   // after 1 second
+ *   debouncer.cachedValue; // => 3
  * @dataFirst
  * @category Function
  * @see https://css-tricks.com/debouncing-throttling-explained-examples/
  */
 export function debounce<F extends (...args: any) => any>(
   func: F,
-  options: { readonly timing?: 'trailing' } & DebounceOptions
+  options: DebounceOptions & { readonly timing?: 'trailing' },
 ): Debouncer<F>;
-
 export function debounce<F extends (...args: any) => any>(
   func: F,
   options:
-  | ({ readonly timing: 'both' } & DebounceOptions)
-  | ({ readonly timing: 'leading' } & Omit<DebounceOptions, 'maxWaitMs'>)
+    | (DebounceOptions & { readonly timing: 'both' })
+    | (Omit<DebounceOptions, 'maxWaitMs'> & { readonly timing: 'leading' }),
 ): Debouncer<F, false /* call CAN'T return null */>;
 
-export function debounce<F extends (...args: Array<any>) => any>(
+export function debounce<F extends (...args: any) => any>(
   func: F,
   {
-    maxWaitMs,
-    timing = 'trailing',
     waitMs,
+    timing = 'trailing',
+    maxWaitMs,
   }: DebounceOptions & {
     readonly timing?: 'both' | 'leading' | 'trailing';
   }): Debouncer<F> {
   if (maxWaitMs !== undefined && waitMs !== undefined && maxWaitMs < waitMs) {
     throw new Error(
-        `debounce: maxWaitMs (${maxWaitMs}) cannot be less than waitMs (${waitMs})`,
+      `debounce: maxWaitMs (${maxWaitMs}) cannot be less than waitMs (${waitMs})`,
     );
   }
 
@@ -139,29 +143,19 @@ export function debounce<F extends (...args: Array<any>) => any>(
   // will return this cached value.
   let result: ReturnType<F> | undefined;
 
-  function handleDebouncedCall(args: Parameters<F>): void {
-    // We save the latest call args so that (if and) when we invoke the function
-    // in the future, we have args to invoke it with.
-    latestCallArgs = args;
-
-    if (maxWaitMs !== undefined && maxWaitTimeoutId === undefined) {
-      // We only need to start the maxWait timeout once, on the first debounced
-      // call that is now being delayed.
-      maxWaitTimeoutId = setTimeout(handleInvoke, maxWaitMs);
-    }
-  }
-
   function handleInvoke(): void {
-    if (latestCallArgs === undefined) {
-      // This should never happen! It means we forgot to clear a timeout!
-      return;
-    }
-
     if (maxWaitTimeoutId !== undefined) {
       // We are invoking the function so the wait is over...
       const timeoutId = maxWaitTimeoutId;
       maxWaitTimeoutId = undefined;
       clearTimeout(timeoutId);
+    }
+
+    /* v8 ignore next 7 -- This protects us against changes to the logic, there is no known flow we can simulate to reach this condition. It can only happen if a previous timeout isn't cleared (or faces a race condition clearing). */
+    if (latestCallArgs === undefined) {
+      throw new Error(
+        'PERKAKAS[debounce]: latestCallArgs was unexpectedly undefined.',
+      );
     }
 
     const args = latestCallArgs;
@@ -172,7 +166,7 @@ export function debounce<F extends (...args: Array<any>) => any>(
 
     // Invoke the function and store the results locally.
     result = func(...args);
-  }
+  };
 
   function handleCoolDownEnd(): void {
     if (coolDownTimeoutId === undefined) {
@@ -192,13 +186,21 @@ export function debounce<F extends (...args: Array<any>) => any>(
       // cool-down period we need to invoke it now.
       handleInvoke();
     }
-  }
+  };
+
+  function handleDebouncedCall(args: Parameters<F>): void {
+    // We save the latest call args so that (if and) when we invoke the function
+    // in the future, we have args to invoke it with.
+    latestCallArgs = args;
+
+    if (maxWaitMs !== undefined && maxWaitTimeoutId === undefined) {
+      // We only need to start the maxWait timeout once, on the first debounced
+      // call that is now being delayed.
+      maxWaitTimeoutId = setTimeout(handleInvoke, maxWaitMs);
+    }
+  };
 
   return {
-    get cachedValue() {
-      return result;
-    },
-
     call: (...args) => {
       if (coolDownTimeoutId === undefined) {
         // This call is starting a new cool-down window!
@@ -268,6 +270,10 @@ export function debounce<F extends (...args: Array<any>) => any>(
 
     get isPending() {
       return coolDownTimeoutId !== undefined;
+    },
+
+    get cachedValue() {
+      return result;
     },
   };
 }

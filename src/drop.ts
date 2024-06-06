@@ -1,21 +1,19 @@
 import type { LazyEvaluator } from './pipe';
 
-import { _reduceLazy } from './_reduce-lazy';
-import { purry } from './purry';
+import { curry } from './curry';
+import { SKIP_ITEM, lazyIdentityEvaluator } from './helpers/utility-evaluators';
 
 /**
  * Removes first `n` elements from the `array`.
  *
- * @param array the target array
- * @param n the number of elements to skip
+ * @param array - The target array.
+ * @param n - The number of elements to skip.
  * @signature
- *  drop(array, n)
+ *    P.drop(array, n)
  * @example
- *  import { drop } from '@vinicunca/perkakas';
- *
- *  drop([1, 2, 3, 4, 5], 2); // => [3, 4, 5]
+ *    P.drop([1, 2, 3, 4, 5], 2) // => [3, 4, 5]
  * @dataFirst
- * @pipeable
+ * @lazy
  * @category Array
  */
 export function drop<T>(array: ReadonlyArray<T>, n: number): Array<T>;
@@ -23,37 +21,36 @@ export function drop<T>(array: ReadonlyArray<T>, n: number): Array<T>;
 /**
  * Removes first `n` elements from the `array`.
  *
- * @param n the number of elements to skip
+ * @param n - The number of elements to skip.
  * @signature
- *  drop(n)(array)
+ *    P.drop(n)(array)
  * @example
- *  import { drop } from '@vinicunca/perkakas';
- *
- *  drop(2)([1, 2, 3, 4, 5]); // => [3, 4, 5]
+ *    P.drop(2)([1, 2, 3, 4, 5]) // => [3, 4, 5]
  * @dataLast
- * @pipeable
+ * @lazy
  * @category Array
  */
 export function drop<T>(n: number): (array: ReadonlyArray<T>) => Array<T>;
 
-export function drop(...args: Array<any>): unknown {
-  return purry(drop_, args, drop.lazy);
+export function drop(...args: ReadonlyArray<unknown>): unknown {
+  return curry(dropImplementation, args, lazyImplementation);
 }
 
-function drop_<T>(array: Array<T>, n: number) {
-  return _reduceLazy(array, drop.lazy(n));
+function dropImplementation<T>(array: ReadonlyArray<T>, n: number): Array<T> {
+  return n < 0 ? [...array] : array.slice(n);
 }
 
-export namespace drop {
-  export function lazy<T>(n: number): LazyEvaluator<T> {
-    let left = n;
-    return (value) => {
-      if (left > 0) {
-        left -= 1;
-        return { done: false, hasNext: false };
-      }
-
-      return { done: false, hasNext: true, next: value };
-    };
+function lazyImplementation<T>(n: number): LazyEvaluator<T> {
+  if (n <= 0) {
+    return lazyIdentityEvaluator;
   }
+
+  let left = n;
+  return (value) => {
+    if (left > 0) {
+      left -= 1;
+      return SKIP_ITEM;
+    }
+    return { done: false, hasNext: true, next: value };
+  };
 }

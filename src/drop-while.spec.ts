@@ -1,5 +1,3 @@
-import { describe, expect, it } from 'vitest';
-
 import { dropWhile } from './drop-while';
 import { pipe } from './pipe';
 

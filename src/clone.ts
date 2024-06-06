@@ -1,80 +1,113 @@
-// from https://github.com/ramda/ramda/blob/master/source/internal/_clone.js
-
-function cloneRegExp_(pattern: RegExp): RegExp {
-  return new RegExp(
-    pattern.source,
-    (pattern.global ? 'g' : '')
-    + (pattern.ignoreCase ? 'i' : '')
-    + (pattern.multiline ? 'm' : '')
-    + (pattern.sticky ? 'y' : '')
-    + (pattern.unicode ? 'u' : ''),
-  );
-}
-
-function clone_(
-  value: any,
-  refFrom: Array<any>,
-  refTo: Array<any>,
-  deep: boolean,
-): unknown {
-  function copy(copiedValue: any): unknown {
-    const len = refFrom.length;
-    let idx = 0;
-    while (idx < len) {
-      if (value === refFrom[idx]) {
-        return refTo[idx];
-      }
-      idx += 1;
-    }
-    refFrom[idx + 1] = value;
-    refTo[idx + 1] = copiedValue;
-    // eslint-disable-next-line no-restricted-syntax
-    for (const key in value) {
-      copiedValue[key] = deep
-        ? clone_(value[key], refFrom, refTo, true)
-        : value[key];
-    }
-    return copiedValue;
-  }
-  switch (type(value)) {
-    case 'Object':
-      return copy({});
-    case 'Array':
-      return copy([]);
-    case 'Date':
-      return new Date(value.valueOf());
-    case 'RegExp':
-      return cloneRegExp_(value);
-    default:
-      return value;
-  }
-}
+import { curry } from './curry';
 
 /**
- * Creates a deep copy of the value. Supported types: `Array`, `Object`, `Number`, `String`, `Boolean`, `Date`, `RegExp`. Functions are assigned by reference rather than copied.
+ * Creates a deep copy of the value. Supported types. Functions are assigned by
+ * reference rather than copied.
  *
- * @param value the object to clone
- * @category Object
- * @signature clone(value)
+ * @param data - The object to clone.
+ * @signature
+ *   P.clone(data)
  * @example
- *  import { clone } from '@vinicunca/perkakas';
- *
- *  clone({foo: 'bar'}); // {foo: 'bar'}
+ *   P.clone({foo: 'bar'}) // {foo: 'bar'}
+ * @dataFirst
+ * @category Object
  */
-export function clone<T>(value: T): T {
-  return value != null && typeof (value as any).clone === 'function'
-    ? (value as any).clone()
-    : clone_(value, [], [], true);
+export function clone<T>(data: T): T;
+
+/**
+ * Creates a deep copy of the value. Supported types. Functions are assigned by
+ * reference rather than copied.
+ *
+ * @signature
+ *   P.clone()(data)
+ * @example
+ *   P.pipe({foo: 'bar'}, P.clone()) // {foo: 'bar'}
+ * @dataLast
+ * @category Object
+ */
+export function clone(): <T>(data: T) => T;
+
+export function clone(...args: ReadonlyArray<unknown>): unknown {
+  return curry(cloneImplementation, args);
 }
 
-function type(val: unknown): string {
-  if (val === null) {
-    return 'Null';
+function cloneImplementation<T>(
+  value: T,
+  refFrom: Array<unknown> = [],
+  refTo: Array<unknown> = [],
+): T {
+  if (typeof value === 'function') {
+    // Functions aren't cloned, we return the same instance.
+    return value;
   }
 
-  if (val === undefined) {
-    return 'Undefined';
+  if (
+    typeof value !== 'object'
+    || value === null
+    || value instanceof Date
+    || value instanceof RegExp
+  ) {
+    // We can use the built-in deep cloning function.
+    return structuredClone(value);
   }
 
-  return Object.prototype.toString.call(val).slice(8, -1);
+  /**
+   * In order to support cyclic/self-referential structures,
+   * and to support functions _within_ objects,
+   * we need to have our own cloning logic.
+   */
+
+  // First we check if we've already cloned this value.
+  const idx = refFrom.indexOf(value);
+  if (idx >= 0) {
+    return refTo[idx] as T;
+  }
+  /**
+   * And if we haven't, we add it to our list of seen values so that it is kept
+   * and clone the deep structure.
+   */
+  refFrom.push(value);
+  return Array.isArray(value)
+    ? deepCloneArray(value, refFrom, refTo)
+    : deepCloneObject(value, refFrom, refTo);
+}
+
+function deepCloneObject<T extends object>(
+  value: T,
+  refFrom: Array<unknown>,
+  refTo: Array<unknown>,
+): T {
+  const copiedValue: Record<PropertyKey, unknown> = {};
+
+  /**
+   * It's important to first push the cloned ref so that it's index is kept in
+   * sync with the ref to the original value in refFrom.
+   */
+  refTo.push(copiedValue);
+
+  for (const [k, v] of Object.entries(value)) {
+    copiedValue[k] = cloneImplementation(v, refFrom, refTo);
+  }
+
+  return copiedValue as T;
+}
+
+function deepCloneArray<T extends ReadonlyArray<unknown>>(
+  value: T,
+  refFrom: Array<unknown>,
+  refTo: Array<unknown>,
+): T {
+  const copiedValue: Array<unknown> = [];
+
+  /**
+   * It's important to first push the cloned ref so that it's index is kept in
+   * sync with the ref to the original value in refFrom.
+   */
+  refTo.push(copiedValue);
+
+  for (const [index, item] of value.entries()) {
+    copiedValue[index] = cloneImplementation(item, refFrom, refTo);
+  }
+
+  return copiedValue as unknown as T;
 }

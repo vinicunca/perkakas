@@ -1,7 +1,5 @@
 import type { Simplify } from 'type-fest';
 
-import { describe, expect, expectTypeOf, it } from 'vitest';
-
 import { add } from './add';
 import { fromKeys } from './from-keys';
 import { pipe } from './pipe';
@@ -69,8 +67,8 @@ describe('runtime', () => {
   it('works with a mix of key types', () => {
     const symbol = Symbol('a');
     expect(fromKeys(['a', 123, symbol], (item) => typeof item)).toEqual({
-      123: 'number',
       a: 'string',
+      123: 'number',
       [symbol]: 'symbol',
     });
   });
@@ -139,8 +137,8 @@ describe('dataLast', () => {
         fromKeys((item) => typeof item),
       ),
     ).toEqual({
-      123: 'number',
       a: 'string',
+      123: 'number',
       [symbol]: 'symbol',
     });
   });

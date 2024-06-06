@@ -1,5 +1,3 @@
-import { describe, expect, expectTypeOf, it } from 'vitest';
-
 import { merge } from './merge';
 
 interface FooInterface {
@@ -49,12 +47,12 @@ describe('typing', () => {
         },
       ),
     ).toEqualTypeOf<{
-      [x: number]: number;
       [x: string]: unknown;
+      [x: number]: number;
       [x: symbol]: boolean;
+      foo: string;
       bar: Date;
       baz: boolean;
-      foo: string;
     }>();
   });
 
@@ -71,8 +69,8 @@ describe('typing', () => {
     expectTypeOf(
       merge(
         {} as {
-          [x: number]: unknown;
           [x: string]: unknown;
+          [x: number]: unknown;
           a: string;
           b?: string;
           c: undefined;
@@ -92,8 +90,8 @@ describe('typing', () => {
     ).toEqualTypeOf<{
       // Note that `c` and `g` is not marked as optional and this is deliberate, as this is the behaviour expected by the older version of Merge. This may change in a later version.
       [x: number]: number;
-      [x: string]: unknown;
       [x: symbol]: boolean;
+      [x: string]: unknown;
       a?: string;
       b: string;
       c: undefined;
@@ -108,40 +106,44 @@ describe('typing', () => {
     expectTypeOf(
       merge(
         {} as {
-          [x: number]: boolean;
           [x: string]: unknown;
+          [x: number]: boolean;
           [x: symbol]: number;
           foo: boolean;
           fooBar: boolean;
         },
         {} as {
-          [x: number]: number | string;
           [x: string]: boolean | number | string;
+          [x: number]: number | string;
           [x: symbol]: symbol;
           bar: string;
           fooBar: string;
         },
       ),
     ).toEqualTypeOf<{
-      [x: number]: number | string;
       [x: string]: boolean | number | string;
+      [x: number]: number | string;
       [x: symbol]: symbol;
-      bar: string;
       foo: boolean;
+      bar: string;
       fooBar: string;
     }>();
   });
 
   it('destination with any', () => {
+    /* eslint-disable ts/no-explicit-any -- Intentional! */
     expectTypeOf(
       merge({} as { foo?: any }, {} as { bar: true }),
-    ).toEqualTypeOf<{ bar: true; foo?: any }>();
+    ).toEqualTypeOf<{ foo?: any; bar: true }>();
+    /* eslint-enable ts/no-explicit-any */
   });
 
   it('source with any', () => {
+    /* eslint-disable ts/no-explicit-any -- Intentional! */
     expectTypeOf(
       merge({} as { foo: true }, {} as { bar?: any }),
-    ).toEqualTypeOf<{ bar?: any; foo: true }>();
+    ).toEqualTypeOf<{ foo: true; bar?: any }>();
+    /* eslint-enable ts/no-explicit-any */
   });
 
   it('type-fest issue #601?', () => {
@@ -154,6 +156,6 @@ describe('typing', () => {
         >,
         {} as { list: Array<string> },
       ),
-    ).toEqualTypeOf<{ list: Array<string>; t2?: number; t4?: number }>();
+    ).toEqualTypeOf<{ t2?: number; t4?: number; list: Array<string> }>();
   });
 });

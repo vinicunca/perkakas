@@ -23,10 +23,20 @@
     "typescript helpers"
   ],
   "sideEffects": false,
-  "main": "dist/commonjs/index.js",
-  "module": "dist/es/index.js",
-  "jsnext:main": "dist/es/index.js",
-  "types": "dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
   "files": [
     "dist/*"
   ],
@@ -34,26 +44,29 @@
     "node": ">=20.0.0"
   },
   "scripts": {
-    "build": "pnpm run clean && pnpm run build:es && pnpm run build:cjs && pnpm run build:types && pnpm run typedoc",
-    "build:cjs": "tsc --project tsconfig.build.json --module commonjs --outDir \"./dist/commonjs\"",
-    "build:es": "tsc --project tsconfig.build.json --module esnext --outDir \"./dist/es\"",
-    "build:types": "tsc --project tsconfig.build.types.json --outDir \"./dist/types\"",
-    "clean": "rm -rf ./dist && mkdir dist",
-    "test": "vitest",
-    "test:coverage": "vitest run --coverage",
+    "build": "tsup",
     "prepublish": "pnpm run build",
-    "release": "bumpp package.json",
     "typedoc": "typedoc --json dist/metadata.json",
     "dev": "pnpm build --watch",
     "lint": "eslint . --fix",
-    "publish:ci": "pnpm publish --access public --no-git-checks"
+    "publish:ci": "pnpm publish --access public --no-git-checks",
+    "release": "bumpp package.json",
+    "test": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "typeCheck": "tsc",
+    "typeCheck:dist": "tsc --project tsconfig.dist.json"
+  },
+  "dependencies": {
+    "type-fest": "^4.19.0"
   },
   "devDependencies": {
-    "@vinicunca/eslint-config": "^2.6.0",
+    "@types/node": "^20.14.2",
+    "@vinicunca/eslint-config": "^2.6.1",
     "@vitest/coverage-v8": "^1.6.0",
     "bumpp": "^9.4.1",
     "eslint": "^9.4.0",
-    "prettier": "^3.3.0",
+    "prettier": "^3.3.1",
+    "tsup": "^8.1.0",
     "typedoc": "^0.25.13",
     "typescript": "^5.4.5",
     "vitest": "^1.6.0"

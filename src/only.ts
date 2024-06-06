@@ -1,6 +1,6 @@
-import type { IterableContainer } from './_types';
+import type { IterableContainer } from './helpers/types';
 
-import { purry } from './purry';
+import { curry } from './curry';
 
 type Only<T extends IterableContainer> = T extends
   | readonly [...Array<unknown>, unknown, unknown]
@@ -14,49 +14,39 @@ type Only<T extends IterableContainer> = T extends
 
 /**
  * Returns the first and only element of `array`, or undefined otherwise.
- * Note: In `pipe`, use `only()` form instead of `only`. Otherwise, the
- * inferred type is lost.
  *
- * @param array the target array
+ * @param array - The target array.
  * @signature
- *  only(array)
+ *    P.only(array)
  * @example
- *  import { only } from '@vinicunca/perkakas';
- *
- *  only([]); // => undefined
- *  only([1]); // => 1
- *  only([1, 2]); // => undefined
- * @pipeable
- * @category Array
+ *    P.only([]) // => undefined
+ *    P.only([1]) // => 1
+ *    P.only([1, 2]) // => undefined
  * @dataFirst
+ * @category Array
  */
 export function only<T extends IterableContainer>(array: Readonly<T>): Only<T>;
 
 /**
  * Returns the first and only element of `array`, or undefined otherwise.
- * Note: In `pipe`, use `only()` form instead of `only`. Otherwise, the
- * inferred type is lost.
  *
  * @signature
- *  only(array)
+ *    P.only()(array)
  * @example
- *  import { only } from '@vinicunca/perkakas';
- *
- *  only([]); // => undefined
- *  only([1]); // => 1
- *  only([1, 2]); // => undefined
- * @pipeable
- * @category Array
+ *    P.pipe([], P.only()); // => undefined
+ *    P.pipe([1], P.only()); // => 1
+ *    P.pipe([1, 2], P.only()); // => undefined
  * @dataLast
+ * @category Array
  */
 export function only<T extends IterableContainer>(): (
-  array: Readonly<T>
+  array: Readonly<T>,
 ) => Only<T>;
 
-export function only(...args: Array<any>): unknown {
-  return purry(only_, args);
+export function only(...args: ReadonlyArray<unknown>): unknown {
+  return curry(onlyImplementation, args);
 }
 
-function only_<T>(array: ReadonlyArray<T>): T | undefined {
+function onlyImplementation<T>(array: ReadonlyArray<T>): T | undefined {
   return array.length === 1 ? array[0] : undefined;
 }

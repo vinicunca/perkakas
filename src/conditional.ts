@@ -1,4 +1,6 @@
-import { purryOn } from './_purry-on';
+/* eslint-disable jsdoc/check-param-names -- we don't document the case params, it'd be redundant */
+
+import { curryOn } from './helpers/curry-on';
 
 type Case<In, Out, Thru extends In = In> = readonly [
   when: ((data: In) => boolean) | ((data: In) => data is Thru),
@@ -33,21 +35,19 @@ type Case<In, Out, Thru extends In = In> = readonly [
  * exception is thrown. The return type is a union of the return types of all
  * provided transformers.
  * @signature
- *   conditional(...cases)(data);
+ *   P.conditional(...cases)(data);
  * @example
- *  import { conditional, isString, isNumber, pipe } from '@vinicunca/perkakas';
- *
- *  const nameOrId = 3 as string | number;
- *  pipe(
- *    nameOrId,
- *    conditional(
- *      [isString, (name) => `Hello ${name}`],
- *      [isNumber, (id) => `Hello ID: ${id}`],
- *      conditional.defaultCase(
- *        (something) => `Hello something (${JSON.stringify(something)})`,
- *      ),
- *    ),
- *  ); // => 'Hello ID: 3'
+ *   const nameOrId = 3 as string | number;
+ *   P.pipe(
+ *     nameOrId,
+ *     P.conditional(
+ *       [P.isString, (name) => `Hello ${name}`],
+ *       [P.isNumber, (id) => `Hello ID: ${id}`],
+ *       P.conditional.defaultCase(
+ *         (something) => `Hello something (${JSON.stringify(something)})`,
+ *       ),
+ *     ),
+ *   ); //=> 'Hello ID: 3'
  * @dataLast
  * @category Function
  */
@@ -83,9 +83,9 @@ export function conditional<
   case6?: Case<T, Return6, Thru6>,
   case7?: Case<T, Return7, Thru7>,
   case8?: Case<T, Return8, Thru8>,
-  case9?: Case<T, Return9, Thru9>
+  case9?: Case<T, Return9, Thru9>,
 ): (
-  data: T
+  data: T,
 ) =>
 | Return0
 | Return1
@@ -127,19 +127,17 @@ export function conditional<
  * exception is thrown. The return type is a union of the return types of all
  * provided transformers.
  * @signature
- *  conditional(data, ...cases);
+ *   P.conditional(data, ...cases);
  * @example
- *  import { conditional, isString, isNumber, pipe } from '@vinicunca/perkakas';
- *
- *  const nameOrId = 3 as string | number;
- *  conditional(
- *    nameOrId,
- *    [isString, (name) => `Hello ${name}`],
- *    [isNumber, (id) => `Hello ID: ${id}`],
- *    conditional.defaultCase(
- *      (something) => `Hello something (${JSON.stringify(something)})`,
- *    ),
- *  ); // => 'Hello ID: 3'
+ *   const nameOrId = 3 as string | number;
+ *   P.conditional(
+ *     nameOrId,
+ *     [P.isString, (name) => `Hello ${name}`],
+ *     [P.isNumber, (id) => `Hello ID: ${id}`],
+ *     P.conditional.defaultCase(
+ *       (something) => `Hello something (${JSON.stringify(something)})`,
+ *     ),
+ *   ); //=> 'Hello ID: 3'
  * @dataFirst
  * @category Function
  */
@@ -176,7 +174,7 @@ export function conditional<
   case6?: Case<T, Return6, Thru6>,
   case7?: Case<T, Return7, Thru7>,
   case8?: Case<T, Return8, Thru8>,
-  case9?: Case<T, Return9, Thru9>
+  case9?: Case<T, Return9, Thru9>,
 ):
   | Return0
   | Return1
@@ -189,9 +187,8 @@ export function conditional<
   | Return8
   | Return9;
 
-// TODO: replace any with proper argument typings
-export function conditional(...args: any): unknown {
-  return purryOn(isCase, conditionalImplementation, args);
+export function conditional(...args: ReadonlyArray<unknown>): unknown {
+  return curryOn(isCase, conditionalImplementation, args);
 }
 
 function conditionalImplementation<In, Out>(
@@ -212,7 +209,7 @@ function isCase(maybeCase: unknown): maybeCase is Case<unknown, unknown> {
     return false;
   }
 
-  const [when, then, ...rest] = maybeCase;
+  const [when, then, ...rest] = maybeCase as ReadonlyArray<unknown>;
   return (
     typeof when === 'function'
     && when.length <= 1
@@ -222,20 +219,45 @@ function isCase(maybeCase: unknown): maybeCase is Case<unknown, unknown> {
   );
 }
 
-// Lodash and Ramda return `undefined` as the default case.
-const trivialDefaultCase = (): undefined => undefined;
-
+// eslint-disable-next-line ts/no-namespace
 export namespace conditional {
   /**
    * A simplified case that accepts all data. Put this as the last case to
    * prevent an exception from being thrown when none of the previous cases
    * match.
    * If this is not the last case it will short-circuit anything after it.
+   *
    * @param then - You only need to provide the transformer, the predicate is
    * implicit. @default () => undefined, which is how Lodash and Ramda handle
    * the final fallback case.
+   * @example
+   *   const nameOrId = 3 as string | number;
+   *   P.conditional(
+   *     nameOrId,
+   *     [P.isString, (name) => `Hello ${name}`],
+   *     [P.isNumber, (id) => `Hello ID: ${id}`],
+   *     P.conditional.defaultCase(
+   *       (something) => `Hello something (${JSON.stringify(something)})`,
+   *     ),
+   *   ); //=> 'Hello ID: 3'
    */
-  export function defaultCase<In>(then: (data: In) => unknown = trivialDefaultCase) {
-    return [() => true, then] as const;
+  export function defaultCase(): Case<unknown, undefined>;
+  export function defaultCase<In, Then extends (param: In) => unknown>(
+    then: Then,
+  ): Case<In, ReturnType<Then>>;
+  export function defaultCase(
+    then: (data: unknown) => unknown = trivialDefaultCase,
+  ): Case<unknown, unknown> {
+    return [acceptAnything, then];
   }
 }
+
+// We memoize this so it isn't recreated on every invocation of `defaultCase`.
+function acceptAnything(): true {
+  return true as const;
+}
+
+// Lodash and Ramda return `undefined` as the default case.
+function trivialDefaultCase(): undefined {
+  return undefined;
+};

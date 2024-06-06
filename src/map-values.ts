@@ -1,53 +1,78 @@
-import type { ObjectKeys } from './_types';
+import type { Simplify } from 'type-fest';
 
-import { entries } from './entries';
-import { purry } from './purry';
+import type {
+  EnumerableStringKeyOf,
+  EnumerableStringKeyedValueOf,
+} from './helpers/types';
+
+import { curry } from './curry';
+
+type MappedValues<T extends object, Value> = Simplify<{
+  -readonly [P in keyof T as `${P extends number | string ? P : never}`]: Value;
+}>;
 
 /**
- * Maps values of `object` and keeps the same keys.
- * @param data the object to map
- * @param fn the mapping function
- * @signature
- *  mapValues(object, fn)
- * @example
- *  import { mapValues } from '@vinicunca/perkakas';
+ * Maps values of `object` and keeps the same keys. Symbol keys are not passed
+ * to the mapper and will be removed from the output object.
  *
- *  mapValues({a: 1, b: 2}, (value, key) => value + key); // => {a: '1a', b: '2b'}
+ * To also copy the symbol keys to the output use merge:
+ * `merge(data, mapValues(data, mapper))`).
+ *
+ * @param data - The object to map.
+ * @param valueMapper - The mapping function.
+ * @signature
+ *    P.mapValues(data, mapper)
+ * @example
+ *    P.mapValues({a: 1, b: 2}, (value, key) => value + key) // => {a: '1a', b: '2b'}
  * @dataFirst
  * @category Object
  */
-export function mapValues<T extends Record<PropertyKey, unknown>, S>(
+export function mapValues<T extends object, Value>(
   data: T,
-  fn: (value: T[ObjectKeys<T>], key: ObjectKeys<T>) => S
-): Record<ObjectKeys<T>, S>;
+  valueMapper: (
+    value: EnumerableStringKeyedValueOf<T>,
+    key: EnumerableStringKeyOf<T>,
+    data: T,
+  ) => Value,
+): MappedValues<T, Value>;
 
 /**
- * Maps values of `object` and keeps the same keys.
- * @param fn the mapping function
- * @signature
- *  mapValues(fn)(object)
- * @example
- *  import { mapValues, pipe } from '@vinicunca/perkakas';
+ * Maps values of `object` and keeps the same keys. Symbol keys are not passed
+ * to the mapper and will be removed from the output object.
  *
- *  pipe({a: 1, b: 2}, mapValues((value, key) => value + key)); // => {a: '1a', b: '2b'}
+ * To also copy the symbol keys to the output use merge:
+ * `merge(data, mapValues(data, mapper))`).
+ *
+ * @param valueMapper - The mapping function.
+ * @signature
+ *    P.mapValues(mapper)(data)
+ * @example
+ *    P.pipe({a: 1, b: 2}, P.mapValues((value, key) => value + key)) // => {a: '1a', b: '2b'}
  * @dataLast
  * @category Object
  */
-export function mapValues<T extends Record<PropertyKey, unknown>, S>(
-  fn: (value: T[keyof T], key: keyof T) => S
-): (data: T) => Record<ObjectKeys<T>, S>;
+export function mapValues<T extends object, Value>(
+  valueMapper: (
+    value: EnumerableStringKeyedValueOf<T>,
+    key: EnumerableStringKeyOf<T>,
+    data: T,
+  ) => Value,
+): (data: T) => MappedValues<T, Value>;
 
-export function mapValues(...args: Array<any>): unknown {
-  return purry(mapValues_, args);
+export function mapValues(...args: ReadonlyArray<unknown>): unknown {
+  return curry(mapValuesImplementation, args);
 }
 
-function mapValues_<T extends object>(
+function mapValuesImplementation<T extends Record<string, unknown>, S>(
   data: T,
-  fn: (value: Required<T>[keyof T], key: keyof T) => unknown,
-) {
-  const out: Partial<Record<keyof T, unknown>> = {};
-  for (const [key, value] of entries.strict(data)) {
-    out[key] = fn(value, key);
+  valueMapper: (value: unknown, key: string, data: T) => S,
+): Record<string, unknown> {
+  const out: Record<string, unknown> = {};
+
+  for (const [key, value] of Object.entries(data)) {
+    const mappedValue = valueMapper(value, key, data);
+    out[key] = mappedValue;
   }
+
   return out;
 }

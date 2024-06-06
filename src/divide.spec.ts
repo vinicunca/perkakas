@@ -1,5 +1,3 @@
-import { expect, it } from 'vitest';
-
 import { divide } from './divide';
 
 it('data-first', () => {

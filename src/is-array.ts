@@ -1,17 +1,16 @@
-import type { NarrowedTo } from './_types';
+import type { NarrowedTo } from './helpers/types';
 
 /**
- * A function that checks if the passed parameter is an Array and narrows its type accordingly
- * @param data the variable to check
- * @signature
- *  isArray(data)
- * @returns true if the passed input is an Array, false otherwise
- * @example
- *  import { isArray } from '@vinicunca/perkakas';
+ * A function that checks if the passed parameter is an Array and narrows its type accordingly.
  *
- *  isArray([5]); // => true
- *  isArray([]); // => true
- *  isArray('somethingElse'); // => false
+ * @param data - The variable to check.
+ * @returns True if the passed input is an Array, false otherwise.
+ * @signature
+ *    P.isArray(data)
+ * @example
+ *    P.isArray([5]) //=> true
+ *    P.isArray([]) //=> true
+ *    P.isArray('somethingElse') //=> false
  * @category Guard
  */
 export function isArray<T>(

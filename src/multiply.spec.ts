@@ -1,5 +1,3 @@
-import { expect, it } from 'vitest';
-
 import { multiply } from './multiply';
 
 it('data-first', () => {

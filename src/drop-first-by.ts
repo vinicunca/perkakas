@@ -1,25 +1,24 @@
-import type { CompareFunction, NonEmptyArray } from './_types';
+import type { CompareFunction, NonEmptyArray } from './helpers/types';
 
-import { heapMaybeInsert, heapify } from './_heap';
-import { type OrderRule, purryOrderRulesWithArgument } from './_purry-order-rules';
+import {
+  type OrderRule,
+  curryOrderRulesWithArgument,
+} from './helpers/curry-order-rules';
+import { heapMaybeInsert, heapify } from './helpers/heap';
 
 /**
- * Drop the first `n` items from `data` based on the provided ordering criteria.
- * This allows you to avoid sorting the array before dropping the items.
- * The complexity of this function is *O(Nlogn)* where `N` is the length of the array.
+ * Drop the first `n` items from `data` based on the provided ordering criteria. This allows you to avoid sorting the array before dropping the items. The complexity of this function is *O(Nlogn)* where `N` is the length of the array.
  *
  * For the opposite operation (to keep `n` elements) see `takeFirstBy`.
  *
- * @params data - the input array
- * @params n - the number of items to drop. If `n` is non-positive no items would be dropped and a *clone* of the input would be returned, if `n` is bigger then data.length no items would be returned.
+ * @param data - The input array.
+ * @param n - The number of items to drop. If `n` is non-positive no items would be dropped and a *clone* of the input would be returned, if `n` is bigger then data.length no items would be returned.
  * @param rules - A variadic array of order rules defining the sorting criteria. Each order rule is a projection function that extracts a comparable value from the data. Sorting is based on these extracted values using the native `<` and `>` operators. Earlier rules take precedence over later ones. Use the syntax `[projection, "desc"]` for descending order.
- * @returns a subset of the input array.
+ * @returns A subset of the input array.
  * @signature
- *   dropFirstBy(data, n, ...rules);
+ *   P.dropFirstBy(data, n, ...rules);
  * @example
- *  import { dropFirstBy } from '@vinicunca/perkakas';
- *
- *  dropFirstBy(['aa', 'aaaa', 'a', 'aaa'], 2, x => x.length); // => ['aaa', 'aaaa']
+ *   P.dropFirstBy(['aa', 'aaaa', 'a', 'aaa'], 2, x => x.length); // => ['aaa', 'aaaa']
  * @dataFirst
  * @category Array
  */
@@ -34,15 +33,13 @@ export function dropFirstBy<T>(
  *
  * For the opposite operation (to keep `n` elements) see `takeFirstBy`.
  *
- * @params n - the number of items to drop. If `n` is non-positive no items would be dropped and a *clone* of the input would be returned, if `n` is bigger then data.length no items would be returned.
+ * @param n - The number of items to drop. If `n` is non-positive no items would be dropped and a *clone* of the input would be returned, if `n` is bigger then data.length no items would be returned.
  * @param rules - A variadic array of order rules defining the sorting criteria. Each order rule is a projection function that extracts a comparable value from the data. Sorting is based on these extracted values using the native `<` and `>` operators. Earlier rules take precedence over later ones. Use the syntax `[projection, "desc"]` for descending order.
- * @returns a subset of the input array.
+ * @returns A subset of the input array.
  * @signature
- *   dropFirstBy(n, ...rules)(data);
+ *   P.dropFirstBy(n, ...rules)(data);
  * @example
- *  import { dropFirstBy, pipe } from '@vinicunca/perkakas';
- *
- *  pipe(['aa', 'aaaa', 'a', 'aaa'], dropFirstBy(2, x => x.length)); // => ['aaa', 'aaaa']
+ *   P.pipe(['aa', 'aaaa', 'a', 'aaa'], P.dropFirstBy(2, x => x.length)); // => ['aaa', 'aaaa']
  * @dataLast
  * @category Array
  */
@@ -51,8 +48,8 @@ export function dropFirstBy<T>(
   ...rules: Readonly<NonEmptyArray<OrderRule<T>>>
 ): (data: ReadonlyArray<T>) => Array<T>;
 
-export function dropFirstBy(...args: Array<any>): unknown {
-  return purryOrderRulesWithArgument(dropFirstByImplementation, args);
+export function dropFirstBy(...args: ReadonlyArray<unknown>): unknown {
+  return curryOrderRulesWithArgument(dropFirstByImplementation, args);
 }
 
 function dropFirstByImplementation<T>(
@@ -65,7 +62,7 @@ function dropFirstByImplementation<T>(
   }
 
   if (n <= 0) {
-    return data.slice();
+    return [...data];
   }
 
   const heap = data.slice(0, n);

@@ -1,71 +1,10 @@
-import type { IterableContainer } from './_types';
+import type {
+  EnumerableStringKeyOf,
+  IterableContainer,
+} from './helpers/types';
 
-import { purry } from './purry';
+import { curry } from './curry';
 
-/**
- * Returns a new array containing the keys of the array or object.
- *
- * @param source Either an array or an object
- * @signature
- *  keys(source)
- *  keys.strict(source)
- * @example
- *  import { keys, pipe, first } from '@vinicunca/perkakas';
- *
- *  keys(['x', 'y', 'z']) // => ['0', '1', '2']
- *  keys({ a: 'x', b: 'y', c: 'z' }) // => ['a', 'b', 'c']
- *  keys.strict({ a: 'x', b: 'y', 5: 'z' } as const ) // => ['a', 'b', '5'], typed Array<'a' | 'b' | '5'>
- *  pipe(['x', 'y', 'z'], keys) // => ['0', '1', '2']
- *  pipe({ a: 'x', b: 'y', c: 'z' }, keys) // => ['a', 'b', 'c']
- *  pipe(
- *    { a: 'x', b: 'y', c: 'z' },
- *    keys,
- *    first(),
- *  ) // => 'a'
- *  pipe({ a: 'x', b: 'y', 5: 'z' } as const, keys.strict) // => ['a', 'b', '5'], typed Array<'a' | 'b' | '5'>
- * @pipeable
- * @strict
- * @category Object
- * @dataFirst
- */
-export function keys(
-  source: ArrayLike<unknown> | Readonly<Record<PropertyKey, unknown>>,
-): Array<string>;
-
-/**
- * Returns a new array containing the keys of the array or object.
- *
- * @signature
- *  keys()(source)
- *  keys.strict()(source)
- * @example
- *  import { keys, pipe, first } from '@vinicunca/perkakas';
- *
- *  pipe(['x', 'y', 'z'], keys()) // => ['0', '1', '2']
- *  pipe({ a: 'x', b: 'y', c: 'z' }, keys()) // => ['a', 'b', 'c']
- *  pipe(
- *    { a: 'x', b: 'y', c: 'z' },
- *    keys(),
- *    first(),
- *  ) // => 'a'
- *  pipe({ a: 'x', b: 'y', 5: 'z' } as const, keys.strict()) // => ['a', 'b', '5'], typed Array<'a' | 'b' | '5'>
- * @pipeable
- * @strict
- * @category Object
- * @dataLast
- */
-// TODO: Add this back when we deprecate headless calls in the future. Currently the dataLast overload breaks the typing for the headless version of the function, which is used widely in the wild.
-// export function keys(): (
-//   source: Record<PropertyKey, unknown> | ArrayLike<unknown>,
-// ) => Array<string>;
-
-export function keys(...args: Array<any>): unknown {
-  return purry(Object.keys, args);
-}
-
-type Strict = // (): <T extends object>(data: T) => Keys<T>;
-  // TODO: Add this back when we deprecate headless calls in the future. Currently the dataLast overload breaks the typing for the headless version of the function, which is used widely in the wild.
-  <T extends object>(data: T) => Keys<T>;
 type Keys<T> = T extends IterableContainer ? ArrayKeys<T> : ObjectKeys<T>;
 
 // The keys output can mirror the input when it is an array/tuple. We do this by
@@ -112,9 +51,35 @@ type IndicesAfterSpread<
       : Iterations['length'];
 
 type ObjectKeys<T> =
-  T extends Record<PropertyKey, never>
-    ? []
-    : Array<`${Exclude<keyof T, symbol>}`>;
-export namespace keys {
-  export const strict = keys as Strict;
+  T extends Record<PropertyKey, never> ? [] : Array<EnumerableStringKeyOf<T>>;
+
+/**
+ * Returns a new array containing the keys of the array or object.
+ *
+ * @param data - Either an array or an object.
+ * @signature
+ *    P.keys(source)
+ * @example
+ *    P.keys(['x', 'y', 'z']); // => ['0', '1', '2']
+ *    P.keys({ a: 'x', b: 'y', 5: 'z' }); // => ['a', 'b', '5']
+ * @dataFirst
+ * @category Object
+ */
+export function keys<T extends object>(data: T): Keys<T>;
+
+/**
+ * Returns a new array containing the keys of the array or object.
+ *
+ * @signature
+ *    P.keys()(source)
+ * @example
+ *    P.Pipe(['x', 'y', 'z'], keys()); // => ['0', '1', '2']
+ *    P.pipe({ a: 'x', b: 'y', 5: 'z' } as const, P.keys()) // => ['a', 'b', '5']
+ * @dataLast
+ * @category Object
+ */
+export function keys(): <T extends object>(data: T) => Keys<T>;
+
+export function keys(...args: ReadonlyArray<unknown>): unknown {
+  return curry(Object.keys, args);
 }

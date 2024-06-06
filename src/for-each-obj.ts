@@ -1,96 +1,74 @@
-import { purry } from './purry';
+import type {
+  EnumerableStringKeyOf,
+  EnumerableStringKeyedValueOf,
+} from './helpers/types';
 
-type IndexedIteratee<
-  T extends Record<PropertyKey, unknown>,
-  K extends keyof T,
-> = (value: T[K], key: K, obj: T) => void;
-type UnindexedIteratee<T extends Record<PropertyKey, unknown>> = (
-  value: T[keyof T],
-) => void;
+import { curry } from './curry';
+
 /**
- * Iterate an object using a defined callback function. The original object is returned.
- * @param object The object.
- * @param fn The callback function.
- * @returns The original object
- * @signature
- *  forEachObj(object, fn)
- * @example
- *  import { forEachObj } from '@vinicunca/perkakas';
+ * Iterate an object using a defined callback function.
  *
- *  forEachObj({a: 1}, (val) => {
- *    console.log(`${val}`)
- *  }) // "1"
- *  forEachObj.indexed({a: 1}, (val, key, obj) => {
- *    console.log(`${key}: ${val}`)
- *  }) // "a: 1"
+ * The dataLast version returns the original object (instead of not returning
+ * anything (`void`)) to allow using it in a pipe. The returned object is the
+ * same reference as the input object, and not a shallow copy of it!
+ *
+ * @param data - The object who'se entries would be iterated on.
+ * @param callbackfn - A function to execute for each element in the array.
+ * @signature
+ *    P.forEachObj(object, fn)
+ * @example
+ *    P.forEachObj({a: 1}, (val, key, obj) => {
+ *      console.log(`${key}: ${val}`)
+ *    }) // "a: 1"
  * @dataFirst
  * @category Object
  */
-export function forEachObj<T extends Record<PropertyKey, unknown>>(
-  object: T,
-  fn: UnindexedIteratee<T>,
-): T;
+export function forEachObj<T extends object>(
+  data: T,
+  callbackfn: (
+    value: EnumerableStringKeyedValueOf<T>,
+    key: EnumerableStringKeyOf<T>,
+    obj: T,
+  ) => void,
+): void;
 
 /**
- * Iterate an object using a defined callback function. The original object is returned.
- * @param fn The callback function.
- * @signature
- *  forEachObj(fn)(object)
- * @example
- *  import { forEachObj, pipe } from '@vinicunca/perkakas';
+ * Iterate an object using a defined callback function.
  *
- *  pipe(
- *    {a: 1},
- *    forEachObj((val) => console.log(`${val}`))
- *  ) // "1"
- *  pipe(
- *    {a: 1},
- *    forEachObj.indexed((val, key) => console.log(`${key}: ${val}`))
- *  ) // "a: 1"
+ * The dataLast version returns the original object (instead of not returning
+ * anything (`void`)) to allow using it in a pipe. The returned object is the
+ * same reference as the input object, and not a shallow copy of it!
+ *
+ * @param callbackfn - A function to execute for each element in the array.
+ * @returns The original object (the ref itself, not a shallow copy of it).
+ * @signature
+ *    P.forEachObj(fn)(object)
+ * @example
+ *    P.pipe(
+ *      {a: 1},
+ *      P.forEachObj((val, key) => console.log(`${key}: ${val}`))
+ *    ) // "a: 1"
  * @dataLast
  * @category Object
  */
-export function forEachObj<T extends Record<PropertyKey, unknown>>(
-  fn: UnindexedIteratee<T>,
+export function forEachObj<T extends object>(
+  callbackfn: (
+    value: EnumerableStringKeyedValueOf<T>,
+    key: EnumerableStringKeyOf<T>,
+    obj: T,
+  ) => void,
 ): (object: T) => T;
 
-export function forEachObj(...args: Array<any>): unknown {
-  return purry(forEachObj_(false), args);
+export function forEachObj(...args: ReadonlyArray<unknown>): unknown {
+  return curry(forEachObjImplementation, args);
 }
 
-function forEachObj_(indexed: boolean) {
-  return <T extends Record<PropertyKey, unknown>>(
-    data: T,
-    fn: (
-      value: T[Extract<keyof T, string>],
-      key?: Extract<keyof T, string>,
-      obj?: T,
-    ) => void,
-  ) => {
-    // eslint-disable-next-line no-restricted-syntax
-    for (const key in data) {
-      if (Object.prototype.hasOwnProperty.call(data, key)) {
-        const { [key]: val } = data;
-        if (indexed) {
-          fn(val, key, data);
-        } else {
-          fn(val);
-        }
-      }
-    }
-    return data;
-  };
-}
-
-export namespace forEachObj {
-  export function indexed<T extends Record<PropertyKey, unknown>>(
-    object: T,
-    fn: IndexedIteratee<T, keyof T>,
-  ): T;
-  export function indexed<T extends Record<PropertyKey, unknown>>(
-    fn: IndexedIteratee<T, keyof T>,
-  ): (object: T) => T;
-  export function indexed(...args: Array<any>): unknown {
-    return purry(forEachObj_(true), args);
+function forEachObjImplementation<T extends object>(
+  data: T,
+  fn: (value: unknown, key: string, data: T) => void,
+): T {
+  for (const [key, value] of Object.entries(data)) {
+    fn(value, key, data);
   }
+  return data;
 }

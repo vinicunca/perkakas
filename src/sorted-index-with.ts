@@ -1,5 +1,5 @@
-import { _binarySearchCutoffIndex } from './_binary-search-cutoff-index';
-import { purry } from './purry';
+import { curry } from './curry';
+import { binarySearchCutoffIndex } from './helpers/binary-search-cutoff-index';
 
 /**
  * Performs a **binary search** for the index of the item at which the predicate
@@ -15,26 +15,29 @@ import { purry } from './purry';
  * This function is the basis for all other sortedIndex functions which search
  * for a specific item in a sorted array, and it could be used to perform
  * similar efficient searches.
+ * `sortedIndex` - scans a sorted array with a binary search, find the first suitable index.
+ * `sortedIndexBy` - like `sortedIndex`, but assumes sorting is based on a callbackfn.
+ * `sortedLastIndex` - scans a sorted array with a binary search, finding the last suitable index.
+ * `sortedLastIndexBy` - like `sortedLastIndex`, but assumes sorting is based on a callbackfn.
  *
- * @param data - Array, "sorted" by `predicate`
- * @param predicate - A predicate which also defines the array's order
- * @return - Index (In the range 0..data.length)
+ * See also:
+ * `findIndex` - scans a possibly unsorted array in-order (linear search).
+ * `rankBy` - scans a possibly unsorted array in-order, returning the index based on a sorting criteria.
  *
+ * @param data - Array, "sorted" by `predicate`.
+ * @param predicate - A predicate which also defines the array's order.
+ * @returns Index (In the range 0..data.length).
  * @signature
- *  sortedIndexWith(data, predicate)
+ *    P.sortedIndexWith(data, predicate)
  * @example
- *  import { sortedIndexWith } from '@vinicunca/perkakas';
- *
- *  sortedIndexWith(['a','ab','abc'], (item) => item.length < 2) // => 1
+ *    P.sortedIndexWith(['a','ab','abc'], (item) => item.length < 2) // => 1
  * @dataFirst
- * @indexed
  * @category Array
- *
  * @see findIndex, sortedIndex, sortedIndexBy, sortedLastIndex, sortedLastIndexBy
  */
 export function sortedIndexWith<T>(
   data: ReadonlyArray<T>,
-  predicate: (item: T) => boolean,
+  predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
 ): number;
 
 /**
@@ -46,44 +49,33 @@ export function sortedIndexWith<T>(
  * `findIndex` which does a similar thing:
  * 1. It would run at O(logN) time instead of O(N) time.
  * 2. It always returns a value (it would return `data.length` if the
- * predicate returns `false` for all items).
+ * predicate returns `true` for all items).
  *
  * This function is the basis for all other sortedIndex functions which search
  * for a specific item in a sorted array, and it could be used to perform
  * similar efficient searches.
+ * `sortedIndex` - scans a sorted array with a binary search, find the first suitable index.
+ * `sortedIndexBy` - like `sortedIndex`, but assumes sorting is based on a callbackfn.
+ * `sortedLastIndex` - scans a sorted array with a binary search, finding the last suitable index.
+ * `sortedLastIndexBy` - like `sortedLastIndex`, but assumes sorting is based on a callbackfn.
  *
- * @param predicate - A predicate which also defines the array's order
- * @return - Index (In the range 0..data.length)
+ * See also:
+ * `findIndex` - scans a possibly unsorted array in-order (linear search).
+ * `rankBy` - scans a possibly unsorted array in-order, returning the index based on a sorting criteria.
  *
+ * @param predicate - A predicate which also defines the array's order.
+ * @returns Index (In the range 0..data.length).
  * @signature
- *  sortedIndexWith(predicate)(data)
+ *    P.sortedIndexWith(predicate)(data)
  * @example
- *  import { sortedIndexWith, pipe } from '@vinicunca/perkakas';
- *
- *  pipe(['a','ab','abc'], sortedIndexWith((item) => item.length < 2)) // => 1
+ *    P.pipe(['a','ab','abc'], P.sortedIndexWith((item) => item.length < 2)) // => 1
  * @dataLast
- * @indexed
  * @category Array
- *
- * @see findIndex, sortedIndex, sortedIndexBy, sortedLastIndex, sortedLastIndexBy
  */
 export function sortedIndexWith<T>(
-  predicate: (item: T) => boolean,
+  predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
 ): (data: ReadonlyArray<T>) => number;
 
-export function sortedIndexWith(...args: Array<any>): unknown {
-  return purry(_binarySearchCutoffIndex, args);
-}
-
-export namespace sortedIndexWith {
-  export function indexed<T>(
-    data: ReadonlyArray<T>,
-    predicate: (item: T, index: number) => NonNullable<unknown>,
-  ): number;
-  export function indexed<T>(
-    predicate: (item: T, index: number) => NonNullable<unknown>,
-  ): (data: ReadonlyArray<T>) => number;
-  export function indexed(...args: Array<any>): unknown {
-    return purry(_binarySearchCutoffIndex, args);
-  }
+export function sortedIndexWith(...args: ReadonlyArray<unknown>): unknown {
+  return curry(binarySearchCutoffIndex, args);
 }

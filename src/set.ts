@@ -1,43 +1,58 @@
-import { purry } from './purry';
+import type { UpsertProp } from './helpers/types';
+
+import { curry } from './curry';
 
 /**
  * Sets the `value` at `prop` of `object`.
- * @param obj the target method
- * @param prop the property name
- * @param value the value to set
- * @signature
- *  set(obj, prop, value)
- * @example
- *  import { set } from '@vinicunca/perkakas';
  *
- *  set({ a: 1 }, 'a', 2); // => { a: 2 }
+ * To add a new property to an object, or to override its type, use `addProp`
+ * instead, and to set a property within a nested object use `setPath`.
+ *
+ * @param obj - The target method.
+ * @param prop - The property name.
+ * @param value - The value to set.
+ * @signature
+ *    P.set(obj, prop, value)
+ * @example
+ *    P.set({ a: 1 }, 'a', 2) // => { a: 2 }
  * @dataFirst
  * @category Object
  */
-export function set<T, K extends keyof T>(obj: T, prop: K, value: T[K]): T;
+export function set<T, K extends keyof T, V extends Required<T>[K]>(
+  obj: T,
+  prop: K,
+  value: V,
+): UpsertProp<T, K, V>;
 
 /**
  * Sets the `value` at `prop` of `object`.
- * @param prop the property name
- * @param value the value to set
- * @signature
- *  set(prop, value)(obj)
- * @example
- *  import { set, pipe } from '@vinicunca/perkakas';
  *
- *  pipe({ a: 1 }, set('a', 2)); // => { a: 2 }
+ * To add a new property to an object, or to override it's type use `addProp`
+ * instead.
+ *
+ * @param prop - The property name.
+ * @param value - The value to set.
+ * @signature
+ *    P.set(prop, value)(obj)
+ * @example
+ *    P.pipe({ a: 1 }, P.set('a', 2)) // => { a: 2 }
  * @dataLast
  * @category Object
  */
-export function set<T, K extends keyof T>(prop: K, value: T[K]): (obj: T) => T;
+export function set<T, K extends keyof T, V extends Required<T>[K]>(
+  prop: K,
+  value: V,
+): (obj: T) => UpsertProp<T, K, V>;
 
-export function set(...args: Array<any>): unknown {
-  return purry(set_, args);
+export function set(...args: ReadonlyArray<unknown>): unknown {
+  return curry(setImplementation, args);
 }
 
-function set_<T, K extends keyof T>(obj: T, prop: K, value: T[K]): T {
-  return {
-    ...obj,
-    [prop]: value,
-  };
+function setImplementation<T, K extends keyof T, V extends Required<T>[K]>(
+  obj: T,
+  prop: K,
+  value: V,
+): UpsertProp<T, K, V> {
+  // @ts-expect-error [ts2322] - Hard to type this function
+  return ({ ...obj, [prop]: value });
 }

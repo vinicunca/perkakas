@@ -1,5 +1,3 @@
-import { expect, it } from 'vitest';
-
 import { piped } from './piped';
 
 it('should pipe a single operation', () => {

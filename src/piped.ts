@@ -2,24 +2,22 @@ import { pipe } from './pipe';
 
 /**
  * A dataLast version of `pipe` that could be used to provide more complex
- * computations to functions that except a function as a param (like `map`,
- * `filter`, `groupBy`, etc...).
+ * computations to functions that accept a function as a param (like `map`,
+ * `filter`, `groupBy`, etc.).
  *
  * The first function must be always annotated. Other functions are
  * automatically inferred.
  *
  * @signature
- *  piped(...ops)(data);
+ *    P.piped(...ops)(data);
  * @example
- *  import { piped, prop, filter } from '@vinicunca/perkakas';
- *
- *  filter(
- *    [{ a: 1 }, { a: 2 }, { a: 3 }],
- *    piped(
- *      prop('a'),
- *      (x) => x % 2 === 0,
- *    ),
- *  ); // => [{ a: 2 }]
+ *    P.filter(
+ *      [{ a: 1 }, { a: 2 }, { a: 3 }],
+ *      P.piped(
+ *        P.prop('a'),
+ *        (x) => x % 2 === 0,
+ *      ),
+ *    ); // => [{ a: 2 }]
  * @category Function
  */
 export function piped<A, B>(op1: (input: A) => B): (value: A) => B;

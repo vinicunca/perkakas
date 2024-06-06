@@ -1,17 +1,19 @@
+/* eslint ts/ban-types: ["error",{types:{Function: false},extendDefaults:true}] --
+ * Function is used generically in this file to define any type of function, so
+ * this lint error is not relevant for it.
+ */
 type DefinitelyFunction<T> =
   Extract<T, Function> extends never ? Function : Extract<T, Function>;
-
 /**
- * A function that checks if the passed parameter is a Function and narrows its type accordingly
- * @param data the variable to check
- * @signature
- *  isFunction(data)
- * @returns true if the passed input is a Function, false otherwise
- * @example
- *  import { isFunction } from '@vinicunca/perkakas';
+ * A function that checks if the passed parameter is a Function and narrows its type accordingly.
  *
- *  isFunction(() => {}); // => true
- *  isFunction('somethingElse'); // => false
+ * @param data - The variable to check.
+ * @returns True if the passed input is a Function, false otherwise.
+ * @signature
+ *    P.isFunction(data)
+ * @example
+ *    P.isFunction(() => {}) //=> true
+ *    P.isFunction('somethingElse') //=> false
  * @category Guard
  */
 export function isFunction<T>(

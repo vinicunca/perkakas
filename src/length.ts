@@ -1,37 +1,36 @@
-import { purry } from './purry';
+import { curry } from './curry';
 
 type Enumerable<T> = ArrayLike<T> | Iterable<T>;
 
 /**
  * Counts values of the collection or iterable.
  *
- * @param items The input data.
+ * @param items - The input data.
  * @signature
- *  length(array)
+ *    P.length(array)
  * @example
- *  import { length } from '@vinicunca/perkakas';
- *
- *  length([1, 2, 3]) // => 3
+ *    P.length([1, 2, 3]) // => 3
+ * @dataFirst
  * @category Array
  */
 export function length<T>(items: Enumerable<T>): number;
-export function length<T>(): (items: Enumerable<T>) => number;
 
 /**
  * Counts values of the collection or iterable.
  *
  * @signature
- *  length()(array)
+ *    P.length()(array)
  * @example
- *  import { length, pipe } from '@vinicunca/perkakas';
- *
- *  pipe([1, 2, 3], length()) // => 3
+ *    P.pipe([1, 2, 3], P.length()) // => 3
+ * @dataLast
  * @category Array
  */
-export function length(...args: Array<any>): unknown {
-  return purry(length_, args);
+export function length<T>(): (items: Enumerable<T>) => number;
+
+export function length(...args: ReadonlyArray<unknown>): unknown {
+  return curry(lengthImplementation, args);
 }
 
-function length_<T>(items: Enumerable<T>): number {
-  return 'length' in items ? items.length : Array.from(items).length;
+function lengthImplementation<T>(items: Enumerable<T>): number {
+  return 'length' in items ? items.length : [...items].length;
 }

@@ -1,9 +1,10 @@
-import type { IterableContainer } from './_types';
+import type { IterableContainer } from './helpers/types';
 import type { LazyEvaluator } from './pipe';
 
-import { purry } from './purry';
+import { curry } from './curry';
+import { toSingle } from './helpers/to-single';
 
-type FirstOut<T extends IterableContainer> = T extends []
+type First<T extends IterableContainer> = T extends []
   ? undefined
   : T extends readonly [unknown, ...Array<unknown>]
     ? T[0]
@@ -13,44 +14,52 @@ type FirstOut<T extends IterableContainer> = T extends []
 
 /**
  * Gets the first element of `array`.
- * Note: In `pipe`, use `first()` form instead of `first`. Otherwise, the inferred type is lost.
- * @param array the array
+ *
+ * @param data - The array.
+ * @returns The first element of the array.
  * @signature
- *    first(array)
+ *    P.first(array)
  * @example
- *    first([1, 2, 3]) // => 1
- *    first([]) // => undefined
- *    pipe(
+ *    P.first([1, 2, 3]) // => 1
+ *    P.first([]) // => undefined
+ * @dataFirst
+ * @lazy
+ * @category Array
+ */
+export function first<T extends IterableContainer>(data: T): First<T>;
+
+/**
+ * Gets the first element of `array`.
+ *
+ * @returns The first element of the array.
+ * @signature
+ *    P.first()(array)
+ * @example
+ *    P.pipe(
  *      [1, 2, 4, 8, 16],
- *      filter(x => x > 3),
- *      first(),
+ *      P.filter(x => x > 3),
+ *      P.first(),
  *      x => x + 1
  *    ); // => 5
- *
+ * @dataLast
+ * @lazy
  * @category Array
- * @pipeable
  */
-export function first<T extends IterableContainer>(
-  array: Readonly<T>
-): FirstOut<T>;
-export function first<T extends IterableContainer>(): (
-  array: Readonly<T>
-) => FirstOut<T>;
+export function first(): <T extends IterableContainer>(data: T) => First<T>;
 
-export function first(...args: Array<any>): unknown {
-  return purry(first_, args, first.lazy);
+export function first(...args: ReadonlyArray<unknown>): unknown {
+  return curry(firstImplementation, args, toSingle(lazyImplementation));
 }
 
-function first_<T>([item]: ReadonlyArray<T>): T | undefined {
+function firstImplementation<T>([item]: ReadonlyArray<T>): T | undefined {
   return item;
 }
 
-export namespace first {
-  export function lazy<T>(): LazyEvaluator<T> {
-    return (value) => ({ done: true, hasNext: true, next: value });
-  }
+function lazyImplementation(): LazyEvaluator {
+  return firstLazy;
+}
 
-  export namespace lazy {
-    export const single = true;
-  }
+// eslint-disable-next-line ts/explicit-function-return-type
+function firstLazy<T>(value: T) {
+  return ({ hasNext: true, next: value, done: true }) as const;
 }

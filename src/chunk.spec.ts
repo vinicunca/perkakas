@@ -1,6 +1,4 @@
-import { describe, expect, expectTypeOf, it } from 'vitest';
-
-import type { NonEmptyArray } from './_types';
+import type { NonEmptyArray } from './helpers/types';
 
 import { chunk } from './chunk';
 
@@ -37,7 +35,7 @@ describe('data last', () => {
   });
 });
 
-describe('strict typing', () => {
+describe('typing', () => {
   it('empty tuple', () => {
     const input: [] = [];
     const result = chunk(input, 2);

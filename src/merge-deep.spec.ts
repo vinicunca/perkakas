@@ -1,7 +1,8 @@
-import { describe, expect, expectTypeOf, it } from 'vitest';
-
 import { mergeDeep } from './merge-deep';
-import { noop } from './noop';
+
+const NOOP = (): void => {
+  /* do nothing */
+};
 
 describe('runtime (dataFirst)', () => {
   it('should merge objects', () => {
@@ -48,10 +49,10 @@ describe('runtime (dataFirst)', () => {
   });
 
   it('should work with weird object types, functions', () => {
-    const a = { foo: noop };
+    const a = { foo: NOOP };
     const b = { foo: 123 };
     expect(mergeDeep(a, b)).toEqual({ foo: 123 });
-    expect(mergeDeep(b, a)).toEqual({ foo: noop });
+    expect(mergeDeep(b, a)).toEqual({ foo: NOOP });
   });
 
   it('should work with weird object types, date', () => {
@@ -69,8 +70,8 @@ describe('runtime (dataFirst)', () => {
 
   it('doesn\'t recurse into arrays', () => {
     const a = { foo: [{ bar: 'baz' }] };
-    const b = { foo: [{ bar: 'hello world' }] };
-    expect(mergeDeep(a, b)).toEqual({ foo: [{ bar: 'hello world' }] });
+    const b = { foo: [{ bar: 'hello, world' }] };
+    expect(mergeDeep(a, b)).toEqual({ foo: [{ bar: 'hello, world' }] });
   });
 });
 
@@ -87,7 +88,7 @@ describe('typing', () => {
     const a = { foo: 'bar' };
     const b = { bar: 'baz' };
     const result = mergeDeep(a, b);
-    expectTypeOf(result).toEqualTypeOf<{ bar: string; foo: string }>();
+    expectTypeOf(result).toEqualTypeOf<{ foo: string; bar: string }>();
   });
 
   it('merges fully overlapping types', () => {
