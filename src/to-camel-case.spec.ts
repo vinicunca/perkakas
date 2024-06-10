@@ -7,4 +7,12 @@ describe('to camel case', () => {
       expect(toCamelCase(input, options)).toBe(result.camelCase);
     });
   }
+
+  it('should merge ambiguous characters', () => {
+    const input = 'version 1.2.10';
+
+    expect(toCamelCase(input, { mergeAmbiguousCharacters: true })).toEqual(
+      'version1210',
+    );
+  });
 });

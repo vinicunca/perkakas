@@ -7,4 +7,12 @@ describe('to pascal case', () => {
       expect(toPascalCase(input, options)).toBe(result.pascalCase);
     });
   }
+
+  it('should merge ambiguous characters', () => {
+    const input = 'version 1.2.10';
+
+    expect(toPascalCase(input, { mergeAmbiguousCharacters: true })).toEqual(
+      'Version1210',
+    );
+  });
 });
