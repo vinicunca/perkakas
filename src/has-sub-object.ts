@@ -1,4 +1,4 @@
-import type { Merge } from 'type-fest';
+import type { Simplify } from 'type-fest';
 
 import type { Branded } from './helpers/types';
 
@@ -7,9 +7,8 @@ import { isDeepEqual } from './is-deep-equal';
 
 declare const HAS_SUB_OBJECT_BRAND: unique symbol;
 
-type HasSubObjectGuard<T, S> = Branded<
-  Merge<T, S>,
-  typeof HAS_SUB_OBJECT_BRAND
+type HasSubObjectGuard<T, S> = Simplify<
+  Branded<S & T, typeof HAS_SUB_OBJECT_BRAND>
 >;
 
 /**
@@ -29,7 +28,7 @@ type HasSubObjectGuard<T, S> = Branded<
  * @category Guard
  */
 export function hasSubObject<T, S extends Partial<T>>(
-  data: Merge<T, S> | T,
+  data: T,
   subObject: S,
 ): data is HasSubObjectGuard<T, S>;
 
@@ -50,14 +49,14 @@ export function hasSubObject<T, S extends Partial<T>>(
  */
 export function hasSubObject<T, S extends Partial<T>>(
   subObject: S,
-): (data: Merge<T, S> | T) => data is HasSubObjectGuard<T, S>;
+): (data: T) => data is HasSubObjectGuard<T, S>;
 
 export function hasSubObject(...args: ReadonlyArray<unknown>): unknown {
   return curry(hasSubObjectImplementation, args);
 }
 
 function hasSubObjectImplementation<T extends object, S extends Partial<T>>(
-  data: Merge<T, S> | T,
+  data: T,
   subObject: S,
 ): data is HasSubObjectGuard<T, S> {
   for (const [key, value] of Object.entries(subObject)) {
