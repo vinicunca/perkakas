@@ -3,7 +3,7 @@ import type { ChangeCaseOptions } from './helpers/case.types';
 import { capitalCaseTransformFactory, pascalCaseTransformFactory, splitPrefixSuffix } from './helpers/case.transform';
 
 /**
- * Convert a string to pascal case.
+ * Convert a string to camel case.
  *
  * @param input the string to convert
  * @param options - Optional configuration for the conversion.
@@ -15,18 +15,18 @@ import { capitalCaseTransformFactory, pascalCaseTransformFactory, splitPrefixSuf
  * @param options.mergeAmbiguousCharacters - If true, merges ambiguous characters.
  *
  * @signature
- *   toPascalCase(str)
+ *   toCamelCase(str)
  * @example
- *   toPascalCase('test'); // => 'Test'
- *   toPascalCase('test string'); // => 'TestString'
- *   toPascalCase('test string', { delimiter: '$' }); // => 'Test$String'
- *   toPascalCase('testV2', { separateNumbers: true }); // => 'TestV_2'
- *   toPascalCase('__typename', { prefixCharacters: '_' }); // => '__Typename'
- *   toPascalCase('type__', { suffixCharacters: '_' }); // => 'Type__'
- *   toPascalCase('version 1.2.10', { mergeAmbiguousCharacters: true }); // => 'Version1210'
+ *   toCamelCase('test'); // => 'test'
+ *   toCamelCase('test string'); // => 'testSTring'
+ *   toCamelCase('test string', { delimiter: '$' }); // => 'test$string'
+ *   toCamelCase('TestV2', { separateNumbers: true }); // => 'testV_2'
+ *   toCamelCase('__typename', { prefixCharacters: '_' }); // => '__typename'
+ *   toCamelCase('type__', { suffixCharacters: '_' }); // => 'type__'
+ *   toCamelCase('version 1.2.10', { mergeAmbiguousCharacters: true }); // => 'version1210'
  * @category String
  */
-export function toPascalCase(input: string, options?: ChangeCaseOptions): string {
+export function toCamelCase(input: string, options?: ChangeCaseOptions): string {
   const [prefix, words, suffix] = splitPrefixSuffix(input, options);
 
   const transform = options?.mergeAmbiguousCharacters
@@ -35,7 +35,15 @@ export function toPascalCase(input: string, options?: ChangeCaseOptions): string
 
   return (
     prefix
-    + words.map(transform).join(options?.delimiter ?? '')
-    + suffix
+    + words
+      .map((word, index) => {
+        if (index === 0) {
+          return word.toLowerCase();
+        }
+
+        return transform(word, index);
+      })
+      .join(options?.delimiter ?? '')
+      + suffix
   );
 }

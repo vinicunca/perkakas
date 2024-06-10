@@ -1,10 +1,10 @@
 import { TEST_CASES } from '../test/transform-case-provider';
-import { toPascalCase } from './to-pascal-case';
+import { toCamelCase } from './to-camel-case';
 
-describe('to pascal case', () => {
+describe('to camel case', () => {
   for (const [input, result, options] of TEST_CASES) {
     it(input, () => {
-      expect(toPascalCase(input, options)).toBe(result.pascalCase);
+      expect(toCamelCase(input, options)).toBe(result.camelCase);
     });
   }
 });

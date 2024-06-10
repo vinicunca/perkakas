@@ -128,6 +128,8 @@ export * from './take-last-while';
 export * from './take-while';
 export * from './tap';
 export * from './times';
+export * from './to-camel-case';
+export * from './to-pascal-case';
 export * from './unique';
 export * from './unique-by';
 export * from './unique-with';
