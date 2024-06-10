@@ -19,6 +19,7 @@ export default vinicuncaESLint(
       'perfectionist/sort-intersection-types': 'off',
       'perfectionist/sort-object-types': 'off',
       'perfectionist/sort-objects': 'off',
+      'perfectionist/sort-interfaces': 'off',
       'vinicunca/cognitive-complexity': 'off',
       'vinicunca/consistent-list-newline': 'off',
 

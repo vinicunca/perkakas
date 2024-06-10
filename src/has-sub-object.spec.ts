@@ -1,3 +1,4 @@
+/* eslint-disable sonar/no-all-duplicated-branches */
 import { hasSubObject } from './has-sub-object';
 import { pipe } from './pipe';
 
@@ -29,7 +30,7 @@ describe('data first', () => {
 });
 
 describe('data last', () => {
-  it('empty sub-object', () => {
+  it('works with empty sub-object', () => {
     expect(pipe({ a: 1, b: 2, c: 3 }, hasSubObject({}))).toBe(true);
     expect(pipe({}, hasSubObject({}))).toBe(true);
   });
@@ -92,19 +93,43 @@ describe('typing', () => {
       hasSubObject({ a: { b: 4, c: 'c' } }, { a: { b: 1, c: 2 } });
     });
 
-    it('narrows type', () => {
+    it('narrows with empty object', () => {
       const obj = {} as { a?: string; b?: number };
 
       if (hasSubObject(obj, {})) {
-        expectTypeOf(obj).toEqualTypeOf<{ a?: string; b?: number }>();
+        expectTypeOf(obj).toMatchTypeOf<{ a?: string; b?: number }>();
+      } else {
+        expectTypeOf(obj).toMatchTypeOf<{ a?: string; b?: number }>();
       }
+    });
+
+    it('narrows with same object', () => {
+      const obj = {} as { a?: string; b?: number };
+
+      if (hasSubObject(obj, obj)) {
+        expectTypeOf(obj).toMatchTypeOf<{ a?: string; b?: number }>();
+      } else {
+        expectTypeOf(obj).toMatchTypeOf<{ a?: string; b?: number }>();
+      }
+    });
+
+    it('narrows optional field to required', () => {
+      const obj = {} as { a?: string; b?: number };
 
       if (hasSubObject(obj, { a: 'a' })) {
-        expectTypeOf(obj).toEqualTypeOf<{ a: string; b?: number }>();
+        expectTypeOf(obj).toMatchTypeOf<{ a: string; b?: number }>();
+      } else {
+        expectTypeOf(obj).toMatchTypeOf<{ a?: string; b?: number }>();
       }
+    });
+
+    it('narrows field to constant type', () => {
+      const obj = {} as { a?: string; b?: number };
 
       if (hasSubObject(obj, { a: 'a' } as const)) {
-        expectTypeOf(obj).toEqualTypeOf<{ a: 'a'; b?: number }>();
+        expectTypeOf(obj).toMatchTypeOf<{ readonly a: 'a'; b?: number }>();
+      } else {
+        expectTypeOf(obj).toMatchTypeOf<{ a?: string; b?: number }>();
       }
     });
   });

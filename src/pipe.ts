@@ -329,7 +329,7 @@ function processItem(
             return true;
           }
         }
-        return false;
+        return isDone;
       }
       currentItem = lazyResult.next;
     }
