@@ -259,7 +259,7 @@ export const TEST_CASES: Array<[string, Result, ChangeCaseOptions?]> = [
       kebabCase: 'a-number-2-in',
       noCase: 'a number 2 in',
       pascalCase: 'ANumber_2In',
-      pascalSnakeCase: 'ANumber_2_In',
+      pascalSnakeCase: 'A_Number_2_In',
       pathCase: 'a/number/2/in',
       sentenceCase: 'A number 2 in',
       snakeCase: 'a_number_2_in',

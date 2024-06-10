@@ -3,7 +3,7 @@ import type { ChangeCaseOptions } from './helpers/case.types';
 import { splitPrefixSuffix } from './helpers/case.transform';
 
 /**
- * Convert a string to constant case.
+ * Convert a string to space separated lower case.
  *
  * @param input the string to convert
  * @param options - Optional configuration for the conversion.
@@ -15,24 +15,24 @@ import { splitPrefixSuffix } from './helpers/case.transform';
  * @param options.mergeAmbiguousCharacters - If true, merges ambiguous characters.
  *
  * @signature
- *   toConstantCase(str)
+ *   toNoCase(str)
  * @example
- *   toConstantCase('test'); // => 'TEST'
- *   toConstantCase('test string'); // => 'TEST_STRING'
- *   toConstantCase('test string', { delimiter: '$' }); // => 'TEST$STRING'
- *   toConstantCase('testV2', { separateNumbers: true }); // => 'TEST_V_2'
- *   toConstantCase('__typename', { prefixCharacters: '_' }); // => '__TYPENAME'
- *   toConstantCase('type__', { suffixCharacters: '_' }); // => 'TYPE__'
+ *   toNoCase('test'); // => 'test'
+ *   toNoCase('test string'); // => 'test string'
+ *   toNoCase('test string', { delimiter: '$' }); // => 'test$string'
+ *   toNoCase('testV2', { separateNumbers: true }); // => 'test v 2'
+ *   toNoCase('__typename', { prefixCharacters: '_' }); // => '__typename'
+ *   toNoCase('type__', { suffixCharacters: '_' }); // => 'type__'
  * @category String
  */
-export function toConstantCase(input: string, options?: ChangeCaseOptions): string {
+export function toNoCase(input: string, options?: ChangeCaseOptions): string {
   const [prefix, words, suffix] = splitPrefixSuffix(input, options);
 
   return (
     prefix
     + words
-      .map((word) => word.toUpperCase())
-      .join(options?.delimiter ?? '_')
+      .map((word) => word.toLowerCase())
+      .join(options?.delimiter ?? ' ')
       + suffix
   );
 }

@@ -3,7 +3,7 @@ import type { ChangeCaseOptions } from './helpers/case.types';
 import { capitalCaseTransformFactory, splitPrefixSuffix } from './helpers/case.transform';
 
 /**
- * Convert a string to capital case.
+ * Convert a string to sentence case.
  *
  * @param input the string to convert
  * @param options - Optional configuration for the conversion.
@@ -15,23 +15,31 @@ import { capitalCaseTransformFactory, splitPrefixSuffix } from './helpers/case.t
  * @param options.mergeAmbiguousCharacters - If true, merges ambiguous characters.
  *
  * @signature
- *   toCapitalCase(str)
+ *   toSentenceCase(str)
  * @example
- *   toCapitalCase('test'); // => 'Test'
- *   toCapitalCase('test string'); // => 'Test String'
- *   toCapitalCase('test string', { delimiter: '$' }); // => 'Test$String'
- *   toCapitalCase('testV2', { separateNumbers: true }); // => 'TEST V 2'
- *   toCapitalCase('__typename', { prefixCharacters: '_' }); // => '__Typename'
- *   toCapitalCase('type__', { suffixCharacters: '_' }); // => 'Type__'
+ *   toSentenceCase('test'); // => 'Test'
+ *   toSentenceCase('test string'); // => 'Test string'
+ *   toSentenceCase('test string', { delimiter: '$' }); // => 'Test$String'
+ *   toSentenceCase('testV2', { separateNumbers: true }); // => 'Test v 2'
+ *   toSentenceCase('__typename', { prefixCharacters: '_' }); // => '__Typename'
+ *   toSentenceCase('type__', { suffixCharacters: '_' }); // => 'Type__'
  * @category String
  */
-export function toCapitalCase(input: string, options?: ChangeCaseOptions): string {
+export function toSentenceCase(input: string, options?: ChangeCaseOptions): string {
   const [prefix, words, suffix] = splitPrefixSuffix(input, options);
+
+  const transform = capitalCaseTransformFactory();
 
   return (
     prefix
     + words
-      .map(capitalCaseTransformFactory())
+      .map((word, index) => {
+        if (index === 0) {
+          return transform(word);
+        }
+
+        return word.toLowerCase();
+      })
       .join(options?.delimiter ?? ' ')
       + suffix
   );
