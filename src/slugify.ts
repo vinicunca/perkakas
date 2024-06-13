@@ -2,12 +2,10 @@
  * Turn any string into a URL/DOM safe string.
  * @param str the string to slugify
  * @signature
- *  slugify(str)
+ *  P.slugify(str)
  * @example
- *  import { slugify } from '@vinicunca/perkakas';
- *
- *  slugify('FooBar'); // => 'foobar'
- *  slugify('This!-is*&%#@^up!'); // => 'this-is-up'
+ *  P.slugify('FooBar'); // => 'foobar'
+ *  P.slugify('This!-is*&%#@^up!'); // => 'this-is-up'
  * @category String
  */
 export function slugify(str: string): string {

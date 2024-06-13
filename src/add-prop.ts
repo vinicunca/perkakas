@@ -9,11 +9,9 @@ import { curry } from './curry';
  * @param prop the property name
  * @param value the property value
  * @signature
- *  addProp(obj, prop, value)
+ *  P.addProp(obj, prop, value)
  * @example
- *  import { addProp } from '@vinicunca/perkakas';
- *
- *  addProp({ firstName: 'john' }, 'lastName', 'doe'); // => {firstName: 'john', lastName: 'doe'}
+ *  P.addProp({ firstName: 'john' }, 'lastName', 'doe'); // => {firstName: 'john', lastName: 'doe'}
  * @dataFirst
  * @category Object
  */
@@ -29,11 +27,9 @@ export function addProp<T, K extends PropertyKey, V>(
  * @param prop the property name
  * @param value the property value
  * @signature
- *  addProp(prop, value)(obj)
+ *  P.addProp(prop, value)(obj)
  * @example
- *  import { addProp } from '@vinicunca/perkakas';
- *
- *  addProp('lastName', 'doe')({ firstName: 'john' }); // => {firstName: 'john', lastName: 'doe'}
+ *  P.addProp('lastName', 'doe')({ firstName: 'john' }); // => {firstName: 'john', lastName: 'doe'}
  * @dataLast
  * @category Object
  */

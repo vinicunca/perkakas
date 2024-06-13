@@ -25,8 +25,11 @@ type StringToPath<T extends string> = string extends T
  * access" functions like `pathOr` or `setPath`.
  *
  * @param path - A string path.
- * @signature P.stringToPathArray(path)
- * @example P.stringToPathArray('a.b[0].c') // => ['a', 'b', '0', 'c']
+ *
+ * @signature
+ *    P.stringToPathArray(path)
+ * @example
+ *    P.stringToPathArray('a.b[0].c') // => ['a', 'b', '0', 'c']
  * @dataFirst
  * @category Utility
  */

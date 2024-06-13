@@ -3,12 +3,10 @@
  * @param bytes the file size in bytes
  * @param base the base (1000 or 1024)
  * @signature
- *  humanReadableFileSize(bytes, base)
+ *  P.humanReadableFileSize(bytes, base)
  * @example
- *  import { humanReadableFileSize } from '@vinicunca/perkakas';
- *
- *  humanReadableFileSize(1000); // => '1.0 kB'
- *  humanReadableFileSize(2097152, 1024); // => '2.0 Mib'
+ *  P.humanReadableFileSize(1000); // => '1.0 kB'
+ *  P.humanReadableFileSize(2097152, 1024); // => '2.0 Mib'
  * @category String
  */
 export function humanReadableFileSize(bytes: number, base: 1000 | 1024 = 1000): string {

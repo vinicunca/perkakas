@@ -91,10 +91,10 @@ type ValueForKey<
  *
  * There are several other functions that could be used to build an object from
  * an array:
- * `fromKeys` - Builds an object from an array of *keys* and a mapper for values.
- * `indexBy` - Builds an object from an array of *values* and a mapper for keys.
- * `pullObject` - Builds an object from an array of items with mappers for *both* keys and values.
- * `mapToObj` - Builds an object from an array of items and a single mapper for key-value pairs.
+ * - `fromKeys`: Builds an object from an array of *keys* and a mapper for values.
+ * - `indexBy`: Builds an object from an array of *values* and a mapper for keys.
+ * - `pullObject`: Builds an object from an array of items with mappers for *both* keys and values.
+ * - `mapToObj`: Builds an object from an array of items and a single mapper for key-value pairs.
  * Refer to the docs for more details.
  *
  * @param entries - An array of key-value pairs.
