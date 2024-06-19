@@ -3,7 +3,7 @@ import type { IfNever, Simplify } from 'type-fest';
 import type {
   EnumerableStringKeyOf,
   EnumerableStringKeyedValueOf,
-  IfSimpleRecord,
+  IfBoundedRecord,
   ReconstructedRecord,
 } from './helpers/types';
 
@@ -22,12 +22,12 @@ type PickSymbolKeys<T extends object> = {
 // filtered out. This means that we effectively make all (enumerable) keys
 // optional.
 type PartialEnumerableKeys<T extends object> = Simplify<
-  IfSimpleRecord<
+  IfBoundedRecord<
     T,
-    ReconstructedRecord<T>,
     PickSymbolKeys<T> & {
       -readonly [P in keyof T as P extends symbol ? never : P]?: Required<T>[P];
-    }
+    },
+    ReconstructedRecord<T>
   >
 >;
 
