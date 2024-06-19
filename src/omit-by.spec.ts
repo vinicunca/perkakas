@@ -206,6 +206,20 @@ describe('typing', () => {
       const result = omitBy(data, constant(true));
       expectTypeOf(result).toEqualTypeOf<Record<string, string>>();
     });
+
+    it('union of records', () => {
+      const data = {} as Record<number, string> | Record<string, string>;
+
+      const dataFirst = omitBy(data, constant(true));
+      expectTypeOf(dataFirst).toEqualTypeOf<
+        Record<`${number}`, string> | Record<string, string>
+      >();
+
+      const dataLast = pipe(data, omitBy(constant(true)));
+      expectTypeOf(dataLast).toEqualTypeOf<
+        Record<`${number}`, string> | Record<string, string>
+      >();
+    });
   });
 });
 

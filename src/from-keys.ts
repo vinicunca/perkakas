@@ -1,6 +1,6 @@
 import type { Simplify } from 'type-fest';
 
-import type { IterableContainer } from './helpers/types';
+import type { ExactRecord, IterableContainer } from './helpers/types';
 
 import { curry } from './curry';
 
@@ -15,7 +15,7 @@ type FromKeys<T extends IterableContainer, V> = T extends readonly []
   : T extends readonly [infer Head, ...infer Rest]
     ? ExactlyOneKey<Head, V> & FromKeys<Rest, V>
     : T[number] extends PropertyKey
-      ? Partial<Record<T[number], V>>
+      ? ExactRecord<T[number], V>
       : never;
 
 /**

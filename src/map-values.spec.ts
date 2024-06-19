@@ -1,3 +1,5 @@
+import type { Branded } from './helpers/types';
+
 import { constant } from './constant';
 import { mapValues } from './map-values';
 import { pipe } from './pipe';
@@ -105,8 +107,7 @@ describe('typing', () => {
 
   describe('branded types', () => {
     it('should infer types correctly in the mapper', () => {
-      type Branded<K, T> = K & { _type: T };
-      type UserID = Branded<string, 'UserId'>;
+      type UserID = Branded<string, symbol>;
 
       const userValues: Record<UserID, number> = {
         ['U1' as UserID]: 1,
@@ -158,5 +159,19 @@ describe('typing', () => {
       c: boolean;
       d: boolean;
     }>();
+  });
+
+  it('unions of records', () => {
+    const data = {} as Record<number, unknown> | Record<string, unknown>;
+
+    const dataFirst = mapValues(data, constant('hello' as string));
+    expectTypeOf(dataFirst).toEqualTypeOf<
+      Record<`${number}`, string> | Record<string, string>
+    >();
+
+    const dataLast = pipe(data, mapValues(constant('hello' as string)));
+    expectTypeOf(dataLast).toEqualTypeOf<
+      Record<`${number}`, string> | Record<string, string>
+    >();
   });
 });

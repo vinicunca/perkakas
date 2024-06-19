@@ -1,4 +1,4 @@
-import type { IterableContainer } from './helpers/types';
+import type { ExactRecord, IterableContainer } from './helpers/types';
 
 import { curry } from './curry';
 
@@ -41,7 +41,7 @@ export function pullObject<
   data: T,
   keyExtractor: (item: T[number], index: number, data: T) => K,
   valueExtractor: (item: T[number], index: number, data: T) => V,
-): Partial<Record<K, V>>;
+): ExactRecord<K, V>;
 
 /**
  * Creates an object that maps the result of `valueExtractor` with a key
@@ -79,7 +79,7 @@ export function pullObject<
 >(
   keyExtractor: (item: T[number], index: number, data: T) => K,
   valueExtractor: (item: T[number], index: number, data: T) => V,
-): (data: T) => Partial<Record<K, V>>;
+): (data: T) => ExactRecord<K, V>;
 
 export function pullObject(...args: ReadonlyArray<unknown>): unknown {
   return curry(pullObjectImplementation, args);

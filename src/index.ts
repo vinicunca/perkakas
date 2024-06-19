@@ -117,6 +117,7 @@ export * from './sorted-index-with';
 export * from './sorted-last-index';
 export * from './sorted-last-index-by';
 export * from './splice';
+export * from './split';
 export * from './split-at';
 export * from './split-when';
 export * from './string-to-path';

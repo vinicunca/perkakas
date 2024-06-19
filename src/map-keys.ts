@@ -30,7 +30,7 @@ export function mapKeys<T extends {}, S extends PropertyKey>(
     value: EnumerableStringKeyedValueOf<T>,
     data: T,
   ) => S,
-): ExactRecord<S, T[keyof T]>;
+): ExactRecord<S, EnumerableStringKeyedValueOf<T>>;
 
 /**
  * Maps keys of `object` and keeps the same values.
@@ -49,7 +49,7 @@ export function mapKeys<T extends {}, S extends PropertyKey>(
     value: EnumerableStringKeyedValueOf<T>,
     data: T,
   ) => S,
-): (data: T) => ExactRecord<S, T[keyof T]>;
+): (data: T) => ExactRecord<S, EnumerableStringKeyedValueOf<T>>;
 
 export function mapKeys(...args: ReadonlyArray<unknown>): unknown {
   return curry(mapKeysImplementation, args);
