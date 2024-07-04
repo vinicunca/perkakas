@@ -1,3 +1,6 @@
+import type { Writable } from 'type-fest';
+
+import type { IterableContainer } from './helpers/types';
 import type { LazyEvaluator } from './pipe';
 
 import { curry } from './curry';
@@ -23,9 +26,9 @@ import { curry } from './curry';
  * @lazy
  * @category Array
  */
-export function forEach<T>(
-  data: ReadonlyArray<T>,
-  callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => void,
+export function forEach<T extends IterableContainer>(
+  data: T,
+  callbackfn: (value: T[number], index: number, data: T) => void,
 ): void;
 
 /**
@@ -51,9 +54,9 @@ export function forEach<T>(
  * @lazy
  * @category Array
  */
-export function forEach<T>(
-  callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => void,
-): (data: ReadonlyArray<T>) => Array<T>;
+export function forEach<T extends IterableContainer>(
+  callbackfn: (value: T[number], index: number, data: T) => void,
+): (data: T) => Writable<T>;
 
 export function forEach(...args: ReadonlyArray<unknown>): unknown {
   return curry(forEachImplementation, args, lazyImplementation);
