@@ -15,6 +15,7 @@ import { curry } from './curry';
  *   P.times(5, identity()); //=> [0, 1, 2, 3, 4]
  *
  * @dataFirst
+ * @category Array
  */
 export function times<T>(count: number, fn: (n: number) => T): Array<T>;
 
@@ -33,6 +34,7 @@ export function times<T>(count: number, fn: (n: number) => T): Array<T>;
  *   P.times(identity())(5); //=> [0, 1, 2, 3, 4]
  *
  * @dataLast
+ * @category Array
  */
 export function times<T>(fn: (n: number) => T): (count: number) => Array<T>;
 
