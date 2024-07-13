@@ -3,9 +3,7 @@ import { filter } from './filter';
 import { first } from './first';
 import { pipe } from './pipe';
 
-function defaultTo<T>(d: T) {
-  return (v: T | null | undefined) => v ?? d;
-}
+const assertIsDefined = <T>(v: T | null | undefined): T => v!;
 
 it('should return first', () => {
   expect(first([1, 2, 3] as const)).toEqual(1);
@@ -30,7 +28,7 @@ describe('pipe', () => {
       counter.fn(),
       filter((x) => x > 3),
       first(),
-      defaultTo(0),
+      assertIsDefined,
       (x) => x + 1,
     );
     expect(counter.count).toHaveBeenCalledTimes(3);
@@ -50,7 +48,7 @@ describe('pipe', () => {
       [[1, 2, 3], [4, 5], [6]] as const,
       counter.fn(),
       first(),
-      defaultTo<ReadonlyArray<number>>([]),
+      assertIsDefined,
       first(),
     );
     expect(counter.count).toHaveBeenCalledTimes(1);
@@ -65,7 +63,7 @@ describe('pipe', () => {
       counter1.fn(),
       filter((arr) => arr.length === 4),
       first(),
-      defaultTo<ReadonlyArray<number>>([]),
+      assertIsDefined<ReadonlyArray<number>>,
       counter2.fn(),
       filter((x) => x % 2 === 1),
       first(),
@@ -76,116 +74,98 @@ describe('pipe', () => {
   });
 });
 
-describe('typing', () => {
-  it('simple empty array', () => {
-    const arr: Array<number> = [];
-    const result = first(arr);
-    expectTypeOf(result).toEqualTypeOf<number | undefined>();
-    expect(result).toEqual(undefined);
-  });
+it('simple empty array', () => {
+  const arr: Array<number> = [];
+  const result = first(arr);
+  expect(result).toEqual(undefined);
+});
 
-  it('simple array', () => {
-    const arr: Array<number> = [1];
-    const result = first(arr);
-    expectTypeOf(result).toEqualTypeOf<number | undefined>();
-    expect(result).toEqual(1);
-  });
+it('simple array', () => {
+  const arr: Array<number> = [1];
+  const result = first(arr);
+  expect(result).toEqual(1);
+});
 
-  it('simple non-empty array', () => {
-    const arr: [number, ...Array<number>] = [1];
-    const result = first(arr);
-    expectTypeOf(result).toEqualTypeOf<number>();
-    expect(result).toEqual(1);
-  });
+it('simple non-empty array', () => {
+  const arr: [number, ...Array<number>] = [1];
+  const result = first(arr);
+  expect(result).toEqual(1);
+});
 
-  it('simple tuple', () => {
-    const arr: [number, string] = [1, 'a'];
-    const result = first(arr);
-    expectTypeOf(result).toEqualTypeOf<number>();
-    expect(result).toEqual(1);
-  });
+it('simple tuple', () => {
+  const arr: [number, string] = [1, 'a'];
+  const result = first(arr);
+  expect(result).toEqual(1);
+});
 
-  it('array with more than one item', () => {
-    const arr: [number, number, ...Array<number>] = [1, 2];
-    const result = first(arr);
-    expectTypeOf(result).toEqualTypeOf<number>();
-    expect(result).toEqual(1);
-  });
+it('array with more than one item', () => {
+  const arr: [number, number, ...Array<number>] = [1, 2];
+  const result = first(arr);
+  expect(result).toEqual(1);
+});
 
-  it('trivial empty array', () => {
-    const arr: [] = [];
-    const result = first(arr);
-    expectTypeOf(result).toEqualTypeOf(undefined);
-    expect(result).toEqual(undefined);
-  });
+it('trivial empty array', () => {
+  const arr: [] = [];
+  const result = first(arr);
+  expect(result).toEqual(undefined);
+});
 
-  it('array with last', () => {
-    const arr: [...Array<number>, number] = [1];
-    const result = first(arr);
-    expectTypeOf(result).toEqualTypeOf<number>();
-    expect(result).toEqual(1);
-  });
+it('array with last', () => {
+  const arr: [...Array<number>, number] = [1];
+  const result = first(arr);
+  expect(result).toEqual(1);
+});
 
-  it('tuple with last', () => {
-    const arr: [...Array<string>, number] = ['a', 1];
-    const result = first(arr);
-    expectTypeOf(result).toEqualTypeOf<number | string>();
-    expect(result).toEqual('a');
-  });
+it('tuple with last', () => {
+  const arr: [...Array<string>, number] = ['a', 1];
+  const result = first(arr);
+  expect(result).toEqual('a');
+});
 
-  it('simple empty readonly array', () => {
-    const arr: ReadonlyArray<number> = [];
-    const result = first(arr);
-    expectTypeOf(result).toEqualTypeOf<number | undefined>();
-    expect(result).toEqual(undefined);
-  });
+it('simple empty readonly array', () => {
+  const arr: ReadonlyArray<number> = [];
+  const result = first(arr);
+  expect(result).toEqual(undefined);
+});
 
-  it('simple readonly array', () => {
-    const arr: ReadonlyArray<number> = [1];
-    const result = first(arr);
-    expectTypeOf(result).toEqualTypeOf<number | undefined>();
-    expect(result).toEqual(1);
-  });
+it('simple readonly array', () => {
+  const arr: ReadonlyArray<number> = [1];
+  const result = first(arr);
+  expect(result).toEqual(1);
+});
 
-  it('simple non-empty readonly array', () => {
-    const arr: readonly [number, ...Array<number>] = [1];
-    const result = first(arr);
-    expectTypeOf(result).toEqualTypeOf<number>();
-    expect(result).toEqual(1);
-  });
+it('simple non-empty readonly array', () => {
+  const arr: readonly [number, ...Array<number>] = [1];
+  const result = first(arr);
+  expect(result).toEqual(1);
+});
 
-  it('simple readonly tuple', () => {
-    const arr: readonly [number, string] = [1, 'a'];
-    const result = first(arr);
-    expectTypeOf(result).toEqualTypeOf<number>();
-    expect(result).toEqual(1);
-  });
+it('simple readonly tuple', () => {
+  const arr: readonly [number, string] = [1, 'a'];
+  const result = first(arr);
+  expect(result).toEqual(1);
+});
 
-  it('readonly array with more than one item', () => {
-    const arr: readonly [number, number, ...Array<number>] = [1, 2];
-    const result = first(arr);
-    expectTypeOf(result).toEqualTypeOf<number>();
-    expect(result).toEqual(1);
-  });
+it('readonly array with more than one item', () => {
+  const arr: readonly [number, number, ...Array<number>] = [1, 2];
+  const result = first(arr);
+  expect(result).toEqual(1);
+});
 
-  it('readonly trivial empty array', () => {
-    const arr: readonly [] = [];
-    const result = first(arr);
-    expectTypeOf(result).toEqualTypeOf(undefined);
-    expect(result).toEqual(undefined);
-  });
+it('readonly trivial empty array', () => {
+  const arr: readonly [] = [];
+  const result = first(arr);
+  expect(result).toEqual(undefined);
+});
 
-  it('readonly array with last', () => {
-    const arr: readonly [...Array<number>, number] = [1];
-    const result = first(arr);
-    expectTypeOf(result).toEqualTypeOf<number>();
-    expect(result).toEqual(1);
-  });
+it('readonly array with last', () => {
+  const arr: readonly [...Array<number>, number] = [1];
+  const result = first(arr);
+  expect(result).toEqual(1);
+});
 
-  it('readonly tuple with last', () => {
-    const arr: readonly [...Array<string>, number] = ['a', 1];
-    const result = first(arr);
-    expectTypeOf(result).toEqualTypeOf<number | string>();
-    expect(result).toEqual('a');
-  });
+it('readonly tuple with last', () => {
+  const arr: readonly [...Array<string>, number] = ['a', 1];
+  const result = first(arr);
+  expect(result).toEqual('a');
 });

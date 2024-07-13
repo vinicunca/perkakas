@@ -36,7 +36,7 @@ export default vinicuncaESLint(
   },
 
   {
-    files: ['**/*.spec.ts'],
+    files: ['**/*.spec.ts', '**/*.spec-d.ts'],
     rules: {
       'perfectionist/sort-union-types': 'off',
       'sonar/no-duplicate-string': 'off',

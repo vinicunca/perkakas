@@ -45,24 +45,25 @@
     "lint": "eslint . --fix",
     "publish:ci": "pnpm publish --access public --no-git-checks",
     "release": "bumpp package.json",
-    "test": "vitest",
-    "test:coverage": "vitest run --coverage",
-    "typeCheck": "tsc",
-    "typeCheck:dist": "tsc --project tsconfig.dist.json"
+    "test": "tsc --project tsconfig.tests.json && vitest --typecheck.enabled --typecheck.ignoreSourceErrors",
+    "test:runtime": "tsc --project tsconfig.tests.json && vitest",
+    "test:typing": "vitest --typecheck.only --typecheck.ignoreSourceErrors",
+    "typecheck": "tsc --project tsconfig.source.json",
+    "typecheck:dist": "tsc --project tsconfig.dist.json"
   },
   "dependencies": {
-    "type-fest": "^4.19.0"
+    "type-fest": "^4.21.0"
   },
   "devDependencies": {
-    "@types/node": "^20.14.2",
-    "@vinicunca/eslint-config": "^2.6.1",
-    "@vitest/coverage-v8": "^1.6.0",
+    "@types/node": "^20.14.9",
+    "@vinicunca/eslint-config": "2.7.0-beta.1",
+    "@vitest/coverage-v8": "^2.0.2",
     "bumpp": "^9.4.1",
-    "eslint": "^9.4.0",
-    "prettier": "^3.3.1",
+    "eslint": "^9.6.0",
+    "prettier": "^3.3.2",
     "tsup": "^8.1.0",
-    "typedoc": "^0.25.13",
-    "typescript": "^5.4.5",
-    "vitest": "^1.6.0"
+    "typedoc": "^0.26.4",
+    "typescript": "^5.5.3",
+    "vitest": "^2.0.2"
   }
 }

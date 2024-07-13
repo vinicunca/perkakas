@@ -63,6 +63,8 @@ export * from './is-number';
 export * from './is-object-type';
 export * from './is-plain-object';
 export * from './is-promise';
+export * from './is-shallow-equal';
+export * from './is-strict-equal';
 export * from './is-string';
 export * from './is-symbol';
 export * from './is-truthy';

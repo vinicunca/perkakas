@@ -1,76 +1,81 @@
+import { constant } from './constant';
+import { identity } from './identity';
+import { multiply } from './multiply';
+import { pipe } from './pipe';
 import { times } from './times';
 
-const noop = (): undefined => undefined;
-const one = () => 1 as const;
-const mul1 = (idx: number): number => idx;
-const mul2 = (idx: number): number => idx * 2;
+describe('data_first', () => {
+  it('returns a trivial empty array for non-positive values', () => {
+    const zeroResult = times(0, identity());
+    expect(zeroResult).toStrictEqual([]);
 
-describe('times', () => {
-  describe('data_first', () => {
-    it('throws error on invalid idx', () => {
-      expect(() => times(-1, noop)).toThrow();
-      expect(() => times(-1000, noop)).toThrow();
-      expect(() => times(Number.MIN_SAFE_INTEGER, noop)).toThrow();
-    });
+    const negativeResult = times(-1000, identity());
+    expect(negativeResult).toStrictEqual([]);
 
-    it('returns empty array', () => {
-      const res = times(0, noop);
-      expect(res).toEqual([]);
-    });
+    // Make sure that the array returned is new, and not the same copy.
+    expect(zeroResult).not.toBe(negativeResult);
 
-    it('returns arr with fn result', () => {
-      expect(times(1, one)).toEqual([1]);
-      expect(times(5, one)).toEqual([1, 1, 1, 1, 1]);
-    });
-
-    it('passes idx to fn', () => {
-      const fn = vi.fn();
-      times(5, fn);
-      expect(fn).toHaveBeenCalledWith(0);
-      expect(fn).toHaveBeenCalledWith(1);
-      expect(fn).toHaveBeenCalledWith(2);
-      expect(fn).toHaveBeenCalledWith(3);
-      expect(fn).toHaveBeenCalledWith(4);
-    });
-
-    it('returns fn results as arr', () => {
-      expect(times(5, mul1)).toEqual([0, 1, 2, 3, 4]);
-      expect(times(5, mul2)).toEqual([0, 2, 4, 6, 8]);
-    });
+    expect(times(-5.5, identity())).toStrictEqual([]);
   });
 
-  describe('data_last', () => {
-    it('throws error on invalid idx', () => {
-      const noopTimes = times(noop);
-      expect(() => noopTimes(-1)).toThrow();
-      expect(() => noopTimes(-1000)).toThrow();
-      expect(() => noopTimes(Number.MIN_SAFE_INTEGER)).toThrow();
-    });
+  it('creates an array of the correct length', () => {
+    expect(times(123 as number, constant(1))).toHaveLength(123);
+  });
 
-    it('returns empty array', () => {
-      const res = times(noop)(0);
-      expect(res).toEqual([]);
-    });
+  it('passes idx to fn', () => {
+    const fn = vi.fn();
+    times(5, fn);
+    expect(fn).toHaveBeenCalledWith(0);
+    expect(fn).toHaveBeenCalledWith(1);
+    expect(fn).toHaveBeenCalledWith(2);
+    expect(fn).toHaveBeenCalledWith(3);
+    expect(fn).toHaveBeenCalledWith(4);
+  });
 
-    it('returns arr with fn result', () => {
-      const oneTime = times(one);
-      expect(oneTime(1)).toEqual([1]);
-      expect(oneTime(5)).toEqual([1, 1, 1, 1, 1]);
-    });
+  it('returns fn results as arr', () => {
+    expect(times(5, identity())).toStrictEqual([0, 1, 2, 3, 4]);
+    expect(times(5, multiply(2))).toStrictEqual([0, 2, 4, 6, 8]);
+  });
 
-    it('passes idx to fn', () => {
-      const fn = vi.fn();
-      times(fn)(5);
-      expect(fn).toHaveBeenCalledWith(0);
-      expect(fn).toHaveBeenCalledWith(1);
-      expect(fn).toHaveBeenCalledWith(2);
-      expect(fn).toHaveBeenCalledWith(3);
-      expect(fn).toHaveBeenCalledWith(4);
-    });
+  it('rounds down non-integer numbers', () => {
+    expect(times(5.5, identity())).toStrictEqual([0, 1, 2, 3, 4]);
+  });
+});
 
-    it('returns fn results as arr', () => {
-      expect(times(mul1)(5)).toEqual([0, 1, 2, 3, 4]);
-      expect(times(mul2)(5)).toEqual([0, 2, 4, 6, 8]);
-    });
+describe('data_last', () => {
+  it('returns a trivial empty array for non-positive values', () => {
+    const zeroResult = pipe(0, times(identity()));
+    expect(zeroResult).toStrictEqual([]);
+
+    const negativeResult = pipe(-1000, times(identity()));
+    expect(negativeResult).toStrictEqual([]);
+
+    // Make sure that the array returned is new, and not the same copy.
+    expect(zeroResult).not.toBe(negativeResult);
+
+    expect(pipe(-5.5, times(identity()))).toStrictEqual([]);
+  });
+
+  it('creates an array of the correct length', () => {
+    expect(pipe(123 as number, times(constant(1)))).toHaveLength(123);
+  });
+
+  it('passes idx to fn', () => {
+    const fn = vi.fn();
+    pipe(5, times(fn));
+    expect(fn).toHaveBeenCalledWith(0);
+    expect(fn).toHaveBeenCalledWith(1);
+    expect(fn).toHaveBeenCalledWith(2);
+    expect(fn).toHaveBeenCalledWith(3);
+    expect(fn).toHaveBeenCalledWith(4);
+  });
+
+  it('returns fn results as arr', () => {
+    expect(pipe(5, times(identity()))).toStrictEqual([0, 1, 2, 3, 4]);
+    expect(pipe(5, times(multiply(2)))).toStrictEqual([0, 2, 4, 6, 8]);
+  });
+
+  it('rounds down non-integer numbers', () => {
+    expect(pipe(5.5, times(identity()))).toStrictEqual([0, 1, 2, 3, 4]);
   });
 });
