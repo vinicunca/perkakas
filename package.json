@@ -52,18 +52,18 @@
     "typecheck:dist": "tsc --project tsconfig.dist.json"
   },
   "dependencies": {
-    "type-fest": "^4.21.0"
+    "type-fest": "^4.23.0"
   },
   "devDependencies": {
-    "@types/node": "^20.14.9",
-    "@vinicunca/eslint-config": "2.7.0-beta.1",
-    "@vitest/coverage-v8": "^2.0.2",
-    "bumpp": "^9.4.1",
-    "eslint": "^9.6.0",
-    "prettier": "^3.3.2",
-    "tsup": "^8.1.0",
-    "typedoc": "^0.26.4",
-    "typescript": "^5.5.3",
-    "vitest": "^2.0.2"
+    "@types/node": "^22.1.0",
+    "@vinicunca/eslint-config": "2.7.4",
+    "@vitest/coverage-v8": "^2.0.5",
+    "bumpp": "^9.4.2",
+    "eslint": "^9.8.0",
+    "prettier": "^3.3.3",
+    "tsup": "^8.2.4",
+    "typedoc": "^0.26.5",
+    "typescript": "^5.5.4",
+    "vitest": "^2.0.5"
   }
 }
