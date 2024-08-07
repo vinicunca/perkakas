@@ -1,3 +1,4 @@
+import type { Deduped, IterableContainer } from './helpers/types';
 import type { LazyEvaluator } from './pipe';
 
 import { curryFromLazy } from './helpers/curry-from-lazy';
@@ -7,7 +8,7 @@ import { SKIP_ITEM } from './helpers/utility-evaluators';
  * Returns a new array containing only one copy of each element in the original
  * list. Elements are compared by reference using Set.
  *
- * @param array - The array to filter.
+ * @param data - The array to filter.
  * @signature
  *    P.unique(array)
  * @example
@@ -16,7 +17,7 @@ import { SKIP_ITEM } from './helpers/utility-evaluators';
  * @lazy
  * @category Array
  */
-export function unique<T>(array: ReadonlyArray<T>): Array<T>;
+export function unique<T extends IterableContainer>(data: T): Deduped<T>;
 
 /**
  * Returns a new array containing only one copy of each element in the original
@@ -34,7 +35,7 @@ export function unique<T>(array: ReadonlyArray<T>): Array<T>;
  * @lazy
  * @category Array
  */
-export function unique<T>(): (array: ReadonlyArray<T>) => Array<T>;
+export function unique(): <T extends IterableContainer>(data: T) => Deduped<T>;
 
 export function unique(...args: ReadonlyArray<unknown>): unknown {
   return curryFromLazy(lazyImplementation, args);

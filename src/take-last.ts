@@ -1,3 +1,5 @@
+import type { IterableContainer } from './helpers/types';
+
 import { curry } from './curry';
 
 /**
@@ -12,8 +14,10 @@ import { curry } from './curry';
  * @dataFirst
  * @category Array
  */
-export function takeLast<T>(array: ReadonlyArray<T>, n: number): Array<T>;
-
+export function takeLast<T extends IterableContainer>(
+  array: T,
+  n: number,
+): Array<T[number]>;
 /**
  * Take the last `n` elements from the `array`.
  *
@@ -25,15 +29,17 @@ export function takeLast<T>(array: ReadonlyArray<T>, n: number): Array<T>;
  * @dataLast
  * @category Array
  */
-export function takeLast<T>(n: number): (array: ReadonlyArray<T>) => Array<T>;
+export function takeLast<T extends IterableContainer>(
+  n: number,
+): (array: T) => Array<T[number]>;
 
 export function takeLast(...args: ReadonlyArray<unknown>): unknown {
   return curry(takeLastImplementation, args);
 }
 
-function takeLastImplementation<T>(
-  array: ReadonlyArray<T>,
+function takeLastImplementation<T extends IterableContainer>(
+  array: T,
   n: number,
-): Array<T> {
-  return (n >= 0 ? array.slice(array.length - n) : []);
+): Array<T[number]> {
+  return n > 0 ? array.slice(Math.max(0, array.length - n)) : [];
 }

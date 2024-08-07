@@ -1,3 +1,4 @@
+import type { Deduped, IterableContainer } from './helpers/types';
 import type { LazyEvaluator } from './pipe';
 
 import { curryFromLazy } from './helpers/curry-from-lazy';
@@ -22,10 +23,10 @@ type IsEquals<T> = (a: T, b: T) => boolean;
  * @lazy
  * @category Array
  */
-export function uniqueWith<T>(
-  data: ReadonlyArray<T>,
-  isEquals: IsEquals<T>,
-): Array<T>;
+export function uniqueWith<T extends IterableContainer>(
+  data: T,
+  isEquals: IsEquals<T[number]>,
+): Deduped<T>;
 
 /**
  * Returns a new array containing only one copy of each element in the original
@@ -46,9 +47,9 @@ export function uniqueWith<T>(
  * @lazy
  * @category Array
  */
-export function uniqueWith<T>(
-  isEquals: IsEquals<T>,
-): (data: ReadonlyArray<T>) => Array<T>;
+export function uniqueWith<T extends IterableContainer>(
+  isEquals: IsEquals<T[number]>,
+): (data: T) => Deduped<T>;
 
 export function uniqueWith(...args: ReadonlyArray<unknown>): unknown {
   return curryFromLazy(lazyImplementation, args);

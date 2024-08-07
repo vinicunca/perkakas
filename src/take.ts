@@ -1,3 +1,4 @@
+import type { IterableContainer } from './helpers/types';
 import type { LazyEvaluator } from './pipe';
 
 import { curry } from './curry';
@@ -16,7 +17,10 @@ import { lazyEmptyEvaluator } from './helpers/utility-evaluators';
  * @lazy
  * @category Array
  */
-export function take<T>(array: ReadonlyArray<T>, n: number): Array<T>;
+export function take<T extends IterableContainer>(
+  array: T,
+  n: number,
+): Array<T[number]>;
 
 /**
  * Returns the first `n` elements of `array`.
@@ -30,13 +34,18 @@ export function take<T>(array: ReadonlyArray<T>, n: number): Array<T>;
  * @lazy
  * @category Array
  */
-export function take<T>(n: number): (array: ReadonlyArray<T>) => Array<T>;
+export function take(
+  n: number,
+): <T extends IterableContainer>(array: T) => Array<T[number]>;
 
 export function take(...args: ReadonlyArray<unknown>): unknown {
   return curry(takeImplementation, args, lazyImplementation);
 }
 
-function takeImplementation<T>(array: ReadonlyArray<T>, n: number): Array<T> {
+function takeImplementation<T extends IterableContainer>(
+  array: T,
+  n: number,
+): Array<T[number]> {
   return n < 0 ? [] : array.slice(0, n);
 }
 

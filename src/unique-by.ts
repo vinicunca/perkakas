@@ -1,3 +1,4 @@
+import type { Deduped, IterableContainer } from './helpers/types';
 import type { LazyEvaluator } from './pipe';
 
 import { curryFromLazy } from './helpers/curry-from-lazy';
@@ -20,10 +21,10 @@ import { SKIP_ITEM } from './helpers/utility-evaluators';
  * @lazy
  * @category Array
  */
-export function uniqueBy<T, K>(
-  data: ReadonlyArray<T>,
-  keyFunction: (item: T, index: number, data: ReadonlyArray<T>) => K,
-): Array<T>;
+export function uniqueBy<T extends IterableContainer, K>(
+  data: T,
+  keyFunction: (item: T[number], index: number, data: T) => K,
+): Deduped<T>;
 
 /**
  * Returns a new array containing only one copy of each element in the original
@@ -42,9 +43,9 @@ export function uniqueBy<T, K>(
  * @lazy
  * @category Array
  */
-export function uniqueBy<T, K>(
-  keyFunction: (item: T, index: number, data: ReadonlyArray<T>) => K,
-): (data: ReadonlyArray<T>) => Array<T>;
+export function uniqueBy<T extends IterableContainer, K>(
+  keyFunction: (item: T[number], index: number, data: T) => K,
+): (data: T) => Deduped<T>;
 
 export function uniqueBy(...args: ReadonlyArray<unknown>): unknown {
   return curryFromLazy(lazyImplementation, args);

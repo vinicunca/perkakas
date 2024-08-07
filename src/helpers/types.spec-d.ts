@@ -2,16 +2,21 @@ import type { EmptyObject } from 'type-fest';
 
 import type {
   Branded,
-  EnumerableStringKeyOf,
+  Deduped,
   EnumerableStringKeyedValueOf,
+  EnumerableStringKeyOf,
   IfBoundedRecord,
+  IterableContainer,
+  NTuple,
+  TupleParts,
 } from './types';
 
 declare const SymbolFoo: unique symbol;
+// eslint-disable-next-line unused-imports/no-unused-vars, ts/no-unused-vars
 declare const SymbolBar: unique symbol;
 
-describe('ifBoundedRecord', () => {
-  it('string', () => {
+describe('IfBoundedRecord', () => {
+  test('string', () => {
     expectTypeOf<
       IfBoundedRecord<Record<string, unknown>>
     >().toEqualTypeOf<false>();
@@ -21,7 +26,7 @@ describe('ifBoundedRecord', () => {
     >().toEqualTypeOf<false>();
   });
 
-  it('number', () => {
+  test('number', () => {
     expectTypeOf<
       IfBoundedRecord<Record<number, unknown>>
     >().toEqualTypeOf<false>();
@@ -31,7 +36,7 @@ describe('ifBoundedRecord', () => {
     >().toEqualTypeOf<false>();
   });
 
-  it('symbol', () => {
+  test('symbol', () => {
     expectTypeOf<
       IfBoundedRecord<Record<symbol, unknown>>
     >().toEqualTypeOf<false>();
@@ -41,7 +46,7 @@ describe('ifBoundedRecord', () => {
     >().toEqualTypeOf<false>();
   });
 
-  it('union of string, number, symbol', () => {
+  test('union of string, number, symbol', () => {
     expectTypeOf<
       IfBoundedRecord<Record<number | string, unknown>>
     >().toEqualTypeOf<false>();
@@ -51,7 +56,7 @@ describe('ifBoundedRecord', () => {
     >().toEqualTypeOf<false>();
   });
 
-  it('string literals and their union', () => {
+  test('string literals and their union', () => {
     expectTypeOf<IfBoundedRecord<Record<'a', unknown>>>().toEqualTypeOf<true>();
 
     expectTypeOf<
@@ -59,7 +64,7 @@ describe('ifBoundedRecord', () => {
     >().toEqualTypeOf<true>();
   });
 
-  it('number literals and their union', () => {
+  test('number literals and their union', () => {
     expectTypeOf<IfBoundedRecord<Record<1, unknown>>>().toEqualTypeOf<true>();
 
     expectTypeOf<
@@ -67,7 +72,7 @@ describe('ifBoundedRecord', () => {
     >().toEqualTypeOf<true>();
   });
 
-  it('symbol literals and their union', () => {
+  test('symbol literals and their union', () => {
     expectTypeOf<
       IfBoundedRecord<Record<typeof SymbolFoo, unknown>>
     >().toEqualTypeOf<true>();
@@ -77,21 +82,21 @@ describe('ifBoundedRecord', () => {
     >().toEqualTypeOf<true>();
   });
 
-  it('unions between string, number, symbol', () => {
+  test('unions between string, number, symbol', () => {
     expectTypeOf<
       IfBoundedRecord<Record<'a' | 1, unknown>>
     >().toEqualTypeOf<true>();
 
     expectTypeOf<
-      IfBoundedRecord<Record<'a' | typeof SymbolFoo, unknown>>
+      IfBoundedRecord<Record<typeof SymbolFoo | 'a', unknown>>
     >().toEqualTypeOf<true>();
 
     expectTypeOf<
-      IfBoundedRecord<Record<1 | typeof SymbolFoo, unknown>>
+      IfBoundedRecord<Record<typeof SymbolFoo | 1, unknown>>
     >().toEqualTypeOf<true>();
 
     expectTypeOf<
-      IfBoundedRecord<Record<'a' | 1 | typeof SymbolFoo, unknown>>
+      IfBoundedRecord<Record<typeof SymbolFoo | 'a' | 1, unknown>>
     >().toEqualTypeOf<true>();
 
     expectTypeOf<
@@ -103,13 +108,13 @@ describe('ifBoundedRecord', () => {
     >().toEqualTypeOf<true>();
   });
 
-  it('unions with unbounded types', () => {
+  test('unions with unbounded types', () => {
     expectTypeOf<
-      IfBoundedRecord<Record<'a' | number, unknown>>
+      IfBoundedRecord<Record<number | 'a', unknown>>
     >().toEqualTypeOf<false>();
 
     expectTypeOf<
-      IfBoundedRecord<Record<1 | string, unknown>>
+      IfBoundedRecord<Record<string | 1, unknown>>
     >().toEqualTypeOf<false>();
 
     expectTypeOf<
@@ -117,7 +122,7 @@ describe('ifBoundedRecord', () => {
     >().toEqualTypeOf<false>();
   });
 
-  it('branded types', () => {
+  test('branded types', () => {
     expectTypeOf<
       IfBoundedRecord<Record<Branded<string, symbol>, unknown>>
     >().toEqualTypeOf<false>();
@@ -127,7 +132,7 @@ describe('ifBoundedRecord', () => {
     >().toEqualTypeOf<false>();
   });
 
-  it('bounded template strings', () => {
+  test('bounded template strings', () => {
     expectTypeOf<
       IfBoundedRecord<Record<`a_${1 | 2}`, unknown>>
     >().toEqualTypeOf<true>();
@@ -143,7 +148,7 @@ describe('ifBoundedRecord', () => {
     >().toEqualTypeOf<true>();
   });
 
-  it('unbounded template strings', () => {
+  test('unbounded template strings', () => {
     expectTypeOf<
       IfBoundedRecord<Record<`a_${number}`, unknown>>
     >().toEqualTypeOf<false>();
@@ -164,20 +169,20 @@ describe('ifBoundedRecord', () => {
   });
 });
 
-describe('enumerableStringKeyOf', () => {
-  it('string keys', () => {
+describe('EnumerableStringKeyOf', () => {
+  test('string keys', () => {
     expectTypeOf<
       EnumerableStringKeyOf<Record<string, unknown>>
     >().toEqualTypeOf<string>();
   });
 
-  it('number keys', () => {
+  test('number keys', () => {
     expectTypeOf<
       EnumerableStringKeyOf<Record<number, unknown>>
     >().toEqualTypeOf<`${number}`>();
   });
 
-  it('union of records', () => {
+  test('union of records', () => {
     expectTypeOf<
       EnumerableStringKeyOf<
         Record<`prefix_${string}`, unknown> | Record<number, unknown>
@@ -185,13 +190,13 @@ describe('enumerableStringKeyOf', () => {
     >().toEqualTypeOf<`${number}` | `prefix_${string}`>();
   });
 
-  it('union keys', () => {
+  test('union keys', () => {
     expectTypeOf<
-      EnumerableStringKeyOf<Record<`prefix_${string}` | number, unknown>>
+      EnumerableStringKeyOf<Record<number | `prefix_${string}`, unknown>>
     >().toEqualTypeOf<`${number}` | `prefix_${string}`>();
   });
 
-  it('symbol keys', () => {
+  test('symbol keys', () => {
     expectTypeOf<
       EnumerableStringKeyOf<Record<string | symbol, unknown>>
     >().toEqualTypeOf<string>();
@@ -205,33 +210,33 @@ describe('enumerableStringKeyOf', () => {
     >().toEqualTypeOf<string>();
   });
 
-  it('optional keys', () => {
+  test('optional keys', () => {
     expectTypeOf<
       EnumerableStringKeyOf<{ a: unknown; b?: unknown }>
     >().toEqualTypeOf<'a' | 'b'>();
   });
 
-  it('branded types', () => {
+  test('branded types', () => {
     expectTypeOf<
       EnumerableStringKeyOf<Record<Branded<string, symbol>, unknown>>
     >().toEqualTypeOf<`${Branded<string, symbol>}`>();
   });
 });
 
-describe('enumerableStringKeyedValueOf', () => {
-  it('string values', () => {
+describe('EnumerableStringKeyedValueOf', () => {
+  test('string values', () => {
     expectTypeOf<
       EnumerableStringKeyedValueOf<Record<PropertyKey, string>>
     >().toEqualTypeOf<string>();
   });
 
-  it('number values', () => {
+  test('number values', () => {
     expectTypeOf<
       EnumerableStringKeyedValueOf<Record<PropertyKey, number>>
     >().toEqualTypeOf<number>();
   });
 
-  it('union of records', () => {
+  test('union of records', () => {
     expectTypeOf<
       EnumerableStringKeyedValueOf<
         Record<PropertyKey, 'cat'> | Record<PropertyKey, 'dog'>
@@ -245,13 +250,13 @@ describe('enumerableStringKeyedValueOf', () => {
     >().toEqualTypeOf<number | string>();
   });
 
-  it('union values', () => {
+  test('union values', () => {
     expectTypeOf<
       EnumerableStringKeyedValueOf<Record<PropertyKey, number | string>>
     >().toEqualTypeOf<number | string>();
   });
 
-  it('literal values', () => {
+  test('literal values', () => {
     expectTypeOf<EnumerableStringKeyedValueOf<{ a: 1 }>>().toEqualTypeOf<1>();
 
     expectTypeOf<
@@ -259,7 +264,7 @@ describe('enumerableStringKeyedValueOf', () => {
     >().toEqualTypeOf<'1' | '2' | 1>();
   });
 
-  it('optional values', () => {
+  test('optional values', () => {
     expectTypeOf<EnumerableStringKeyedValueOf<{ a: 1; b?: 4 }>>().toEqualTypeOf<
       1 | 4
     >();
@@ -269,23 +274,23 @@ describe('enumerableStringKeyedValueOf', () => {
     >().toEqualTypeOf<number | string>();
   });
 
-  it('nullish and undefined values', () => {
+  test('nullish and undefined values', () => {
     expectTypeOf<
       EnumerableStringKeyedValueOf<{
         a: string | undefined;
-        b: null | string;
+        b: string | null;
       }>
-    >().toEqualTypeOf<null | string | undefined>();
+    >().toEqualTypeOf<string | null | undefined>();
 
     expectTypeOf<
       EnumerableStringKeyedValueOf<{
-        a?: null | number;
-        b?: null | number | undefined;
+        a?: number | null;
+        b?: number | null | undefined;
       }>
-    >().toEqualTypeOf<null | number | undefined>();
+    >().toEqualTypeOf<number | null | undefined>();
   });
 
-  it('symbol keys', () => {
+  test('symbol keys', () => {
     expectTypeOf<
       EnumerableStringKeyedValueOf<{ [SymbolFoo]: string }>
     >().toEqualTypeOf<never>();
@@ -301,9 +306,268 @@ describe('enumerableStringKeyedValueOf', () => {
     >().toEqualTypeOf<string>();
   });
 
-  it('empty object', () => {
+  test('empty object', () => {
     expectTypeOf<
       EnumerableStringKeyedValueOf<EmptyObject>
     >().toEqualTypeOf<never>();
   });
 });
+
+describe('NTuple', () => {
+  test('size 0', () => {
+    const result = nTuple('foo', 0);
+    expectTypeOf(result).toEqualTypeOf<[]>();
+  });
+
+  test('non-trivial size', () => {
+    const result = nTuple('foo', 3);
+    expectTypeOf(result).toEqualTypeOf<[string, string, string]>();
+  });
+});
+
+describe('TupleParts', () => {
+  describe('mutable', () => {
+    test('empty array', () => {
+      const data = [] as [];
+      const result = tupleParts(data);
+      expectTypeOf(result).toEqualTypeOf<{
+        prefix: [];
+        item: never;
+        suffix: [];
+      }>();
+    });
+
+    test('regular array', () => {
+      const data = [] as Array<number>;
+      const result = tupleParts(data);
+      expectTypeOf(result).toEqualTypeOf<{
+        prefix: [];
+        item: number;
+        suffix: [];
+      }>();
+    });
+
+    test('fixed tuple', () => {
+      const data = [1, 2, 3] as [1, 2, 3];
+      const result = tupleParts(data);
+      expectTypeOf(result).toEqualTypeOf<{
+        prefix: [1, 2, 3];
+        item: never;
+        suffix: [];
+      }>();
+    });
+
+    test('array with prefix', () => {
+      const data = ['a'] as [string, ...Array<boolean>];
+      const result = tupleParts(data);
+      expectTypeOf(result).toEqualTypeOf<{
+        prefix: [string];
+        item: boolean;
+        suffix: [];
+      }>();
+    });
+
+    test('array with suffix', () => {
+      const data = ['a'] as [...Array<boolean>, string];
+      const result = tupleParts(data);
+      expectTypeOf(result).toEqualTypeOf<{
+        prefix: [];
+        item: boolean;
+        suffix: [string];
+      }>();
+    });
+
+    test('array with prefix and suffix', () => {
+      const data = [1, 'a'] as [number, ...Array<boolean>, string];
+      const result = tupleParts(data);
+      expectTypeOf(result).toEqualTypeOf<{
+        prefix: [number];
+        item: boolean;
+        suffix: [string];
+      }>();
+    });
+  });
+
+  describe('readonly', () => {
+    test('empty array', () => {
+      const data = [] as const;
+      const result = tupleParts(data);
+      expectTypeOf(result).toEqualTypeOf<{
+        prefix: [];
+        item: never;
+        suffix: [];
+      }>();
+    });
+
+    test('regular array', () => {
+      const data = [] as ReadonlyArray<number>;
+      const result = tupleParts(data);
+      expectTypeOf(result).toEqualTypeOf<{
+        prefix: [];
+        item: number;
+        suffix: [];
+      }>();
+    });
+
+    test('fixed tuple', () => {
+      const data = [1, 2, 3] as const;
+      const result = tupleParts(data);
+      expectTypeOf(result).toEqualTypeOf<{
+        prefix: [1, 2, 3];
+        item: never;
+        suffix: [];
+      }>();
+    });
+
+    test('array with prefix', () => {
+      const data = ['a'] as readonly [string, ...Array<boolean>];
+      const result = tupleParts(data);
+      expectTypeOf(result).toEqualTypeOf<{
+        prefix: [string];
+        item: boolean;
+        suffix: [];
+      }>();
+    });
+
+    test('array with suffix', () => {
+      const data = ['a'] as readonly [...Array<boolean>, string];
+      const result = tupleParts(data);
+      expectTypeOf(result).toEqualTypeOf<{
+        prefix: [];
+        item: boolean;
+        suffix: [string];
+      }>();
+    });
+
+    test('array with prefix and suffix', () => {
+      const data = [1, 'a'] as readonly [number, ...Array<boolean>, string];
+      const result = tupleParts(data);
+      expectTypeOf(result).toEqualTypeOf<{
+        prefix: [number];
+        item: boolean;
+        suffix: [string];
+      }>();
+    });
+  });
+
+  describe('unions', () => {
+    test('union of arrays', () => {
+      const data = [] as Array<boolean> | Array<number>;
+      const result = tupleParts(data);
+      expectTypeOf(result).toEqualTypeOf<
+        | { prefix: []; item: boolean; suffix: [] }
+        | { prefix: []; item: number; suffix: [] }
+      >();
+    });
+
+    test('mixed unions', () => {
+      const data = [] as Array<boolean> | [number, string];
+      const result = tupleParts(data);
+      expectTypeOf(result).toEqualTypeOf<
+        | { prefix: []; item: boolean; suffix: [] }
+        | { prefix: [number, string]; item: never; suffix: [] }
+      >();
+    });
+  });
+});
+
+describe('DeDupped', () => {
+  describe('mutable', () => {
+    test('empty array', () => {
+      const result = deduped([] as []);
+      expectTypeOf(result).toEqualTypeOf<[]>();
+    });
+
+    test('simple array', () => {
+      const result = deduped([1, 2, 3] as Array<number>);
+      expectTypeOf(result).toEqualTypeOf<Array<number>>();
+    });
+
+    test('array with prefix', () => {
+      const result = deduped(['a'] as [string, ...Array<number>]);
+      expectTypeOf(result).toEqualTypeOf<[string, ...Array<number>]>();
+    });
+
+    test('array with suffix', () => {
+      const result = deduped(['a'] as [...Array<number>, string]);
+      expectTypeOf(result).toEqualTypeOf<
+        [number | string, ...Array<number | string>]
+      >();
+    });
+
+    test('array with both prefix and suffix', () => {
+      const result = deduped(['a', true] as [
+        string,
+        ...Array<number>,
+        boolean,
+      ]);
+      expectTypeOf(result).toEqualTypeOf<
+        [string, ...Array<boolean | number>]
+      >();
+    });
+
+    test('union of arrays', () => {
+      const result = deduped(['a'] as
+        | [number, ...Array<number>]
+        | [string, ...Array<string>]);
+      expectTypeOf(result).toEqualTypeOf<
+        [number, ...Array<number>] | [string, ...Array<string>]
+      >();
+    });
+  });
+
+  describe('readonly', () => {
+    test('empty array', () => {
+      const result = deduped([] as const);
+      expectTypeOf(result).toEqualTypeOf<[]>();
+    });
+
+    test('simple array', () => {
+      const result = deduped([1, 2, 3] as ReadonlyArray<number>);
+      expectTypeOf(result).toEqualTypeOf<Array<number>>();
+    });
+
+    test('array with prefix', () => {
+      const result = deduped(['a'] as readonly [string, ...Array<number>]);
+      expectTypeOf(result).toEqualTypeOf<[string, ...Array<number>]>();
+    });
+
+    test('array with suffix', () => {
+      const result = deduped(['a'] as readonly [...Array<number>, string]);
+      expectTypeOf(result).toEqualTypeOf<
+        [number | string, ...Array<number | string>]
+      >();
+    });
+
+    test('array with both prefix and suffix', () => {
+      const result = deduped(['a', true] as readonly [
+        string,
+        ...Array<number>,
+        boolean,
+      ]);
+      expectTypeOf(result).toEqualTypeOf<
+        [string, ...Array<boolean | number>]
+      >();
+    });
+
+    test('union of arrays', () => {
+      const result = deduped(['a'] as
+        | readonly [number, ...Array<number>]
+        | readonly [string, ...Array<string>]);
+      expectTypeOf(result).toEqualTypeOf<
+        [number, ...Array<number>] | [string, ...Array<string>]
+      >();
+    });
+
+    test('constant tuple', () => {
+      const result = deduped([1, 2, 3] as const);
+      expectTypeOf(result).toEqualTypeOf<[1, ...Array<2 | 3>]>();
+    });
+  });
+});
+
+declare function nTuple<T, N extends number>(x: T, n: N): NTuple<T, N>;
+
+declare function tupleParts<T>(x: T): TupleParts<T>;
+
+declare function deduped<T extends IterableContainer>(data: T): Deduped<T>;

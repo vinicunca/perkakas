@@ -1,3 +1,5 @@
+import type { IterableContainer, ReorderedArray } from './helpers/types';
+
 import { curry } from './curry';
 
 /**
@@ -11,7 +13,9 @@ import { curry } from './curry';
  * @dataFirst
  * @category Array
  */
-export function shuffle<T>(items: ReadonlyArray<T>): Array<T>;
+export function shuffle<T extends IterableContainer>(
+  items: T,
+): ReorderedArray<T>;
 
 /**
  * Shuffles the input array, returning a new array with the same elements in a random order.
@@ -23,7 +27,9 @@ export function shuffle<T>(items: ReadonlyArray<T>): Array<T>;
  * @dataLast
  * @category Array
  */
-export function shuffle<T>(): (items: ReadonlyArray<T>) => Array<T>;
+export function shuffle(): <T extends IterableContainer>(
+  items: T,
+) => ReorderedArray<T>;
 
 export function shuffle(...args: ReadonlyArray<unknown>): unknown {
   return curry(shuffleImplementation, args);
