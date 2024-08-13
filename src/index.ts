@@ -98,6 +98,7 @@ export * from './piped';
 export * from './product';
 export * from './prop';
 export * from './pull-object';
+export * from './random-integer';
 export * from './random-string';
 export * from './range';
 export * from './rank-by';
