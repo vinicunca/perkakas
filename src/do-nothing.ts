@@ -20,12 +20,15 @@
  * @dataLast
  * @category Function
  */
-export const doNothing = (): typeof doesNothing =>
-  // Notice that the exported identity function is just the "factory" for the
-  // function. We do it this way so that all "Function" utilities have a similar
-  // API where the function is called, and not just used "headless". e.g.
-  // `doNothing()` and not `doNothing`, just like the API for `constant(1)`.
-  doesNothing;
+export function doNothing(): typeof doesNothing {
+  /**
+   * Notice that the exported identity function is just the "factory" for the
+   * function. We do it this way so that all "Function" utilities have a similar
+   * API where the function is called, and not just used "headless". e.g.
+   * `doNothing()` and not `doNothing`, just like the API for `constant(1)`.
+   */
+  return doesNothing;
+}
 
 function doesNothing<Args extends ReadonlyArray<unknown>>(
   ..._args: Args

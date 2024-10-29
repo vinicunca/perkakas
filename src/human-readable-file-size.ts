@@ -1,5 +1,6 @@
 /**
  * Returns human readable file size.
+ *
  * @param bytes the file size in bytes
  * @param base the base (1000 or 1024)
  * @signature

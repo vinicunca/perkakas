@@ -14,12 +14,15 @@
  *    P.map([1,2,3], P.identity()); // => [1,2,3]
  * @category Function
  */
-export const identity = (): typeof identityImplementation =>
-  // Notice that the exported identity function is just the "factory" for the
-  // identity function. We do it this way so that all "Function" utilities have
-  // a similar API where the function is called, and not just used "headless".
-  // e.g. `identity()` and not `identity`, just like the API for `constant(1)`.
-  identityImplementation;
+export function identity(): typeof identityImplementation {
+  /**
+   * Notice that the exported identity function is just the "factory" for the
+   * function. We do it this way so that all "Function" utilities have a similar
+   * API where the function is called, and not just used "headless". e.g.
+   * `doNothing()` and not `doNothing`, just like the API for `constant(1)`.
+   */
+  return identityImplementation;
+}
 
 function identityImplementation<T, Args extends ReadonlyArray<unknown>>(
   value: T,

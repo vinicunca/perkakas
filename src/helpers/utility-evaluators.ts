@@ -19,9 +19,10 @@ export function lazyEmptyEvaluator<T>(): LazyResult<T> {
  * A helper evaluator when we want to return a shallow clone of the input. It
  * memoizes both the evaluator itself to reduce memory usage.
  */
-export const lazyIdentityEvaluator = <T>(value: T) =>
-  ({
+export function lazyIdentityEvaluator<T>(value: T) {
+  return ({
     hasNext: true,
     next: value,
     done: false,
   }) as const;
+}
