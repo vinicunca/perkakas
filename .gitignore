@@ -146,3 +146,5 @@ temp/
 
 .output
 .firebase
+
+docs/.vitepress/cache

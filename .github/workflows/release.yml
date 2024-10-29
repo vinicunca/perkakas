@@ -15,11 +15,26 @@ jobs:
       - name: Set node
         uses: actions/setup-node@v4
         with:
-          node-version: 20.8.0
+          node-version: lts/*
           registry-url: 'https://registry.npmjs.org'
 
-      - name: Setup
-        run: npm i -g pnpm
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - uses: actions/cache@v4
+        name: Setup pnpm cache
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
 
       - name: Install Dependencies
         run: pnpm install
@@ -33,3 +48,14 @@ jobs:
         run: pnpm run publish:ci
         env:
           NODE_AUTH_TOKEN: ${{ secrets.VINICUNCA_NPM_TOKEN }}
+      
+      - name: Build docs
+        run: pnpm run build:docs
+
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_VINICUNCA_DOCS }}'
+          projectId: vinicunca-docs
+          channelId: live
+          target: perkakas

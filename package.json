@@ -40,7 +40,7 @@
   "scripts": {
     "build": "tsup",
     "prepublish": "pnpm run build",
-    "typedoc": "typedoc --json dist/metadata.json",
+    "typedoc": "typedoc --json docs/.vitepress/data/metadata.json",
     "dev": "pnpm build --watch",
     "lint": "eslint . --fix",
     "publish:ci": "pnpm publish --access public --no-git-checks",
@@ -49,7 +49,8 @@
     "test:runtime": "tsc --project tsconfig.tests.json && vitest",
     "test:typing": "vitest --typecheck.only --typecheck.ignoreSourceErrors",
     "typecheck": "tsc --project tsconfig.source.json",
-    "typecheck:dist": "tsc --project tsconfig.dist.json"
+    "typecheck:dist": "tsc --project tsconfig.dist.json",
+    "build:docs": "pnpm --filter @vinicunca/perkakas-docs build"
   },
   "dependencies": {
     "type-fest": "^4.26.1"

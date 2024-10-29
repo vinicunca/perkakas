@@ -6,7 +6,7 @@ export default vinicuncaESLint(
     react: false,
     typescript: {
       parserOptions: {
-        project: ['./tsconfig.json'],
+        project: ['./tsconfig.eslint.json'],
       },
     },
     unocss: false,
@@ -47,6 +47,14 @@ export default vinicuncaESLint(
     files: ['**/tsconfig.**'],
     rules: {
       'jsonc/sort-keys': 'off',
+    },
+  },
+
+  {
+    files: ['**/docs/**'],
+    rules: {
+      'ts/explicit-function-return-type': 'off',
+      'ts/explicit-module-boundary-types': 'off',
     },
   },
 );
