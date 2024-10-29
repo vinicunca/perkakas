@@ -50,7 +50,8 @@
     "test:typing": "vitest --typecheck.only --typecheck.ignoreSourceErrors",
     "typecheck": "tsc --project tsconfig.source.json",
     "typecheck:dist": "tsc --project tsconfig.dist.json",
-    "build:docs": "pnpm --filter @vinicunca/perkakas-docs build"
+    "build:docs": "pnpm --filter @vinicunca/perkakas-docs build",
+    "fb:deploy": "firebase deploy --only hosting:perkakas"
   },
   "dependencies": {
     "type-fest": "^4.26.1"

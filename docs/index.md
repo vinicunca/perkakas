@@ -14,8 +14,8 @@ hero:
       text: Getting Started
       link: /getting-started
     - theme: alt
-      text: Configs
-      link: /configs
+      text: Documentation
+      link: /docs
 
 features:
   - title: Wide range of utilities
