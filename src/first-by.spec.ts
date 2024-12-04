@@ -54,9 +54,10 @@ describe('runtime (dataFirst)', () => {
   });
 
   it('can compare valueOfs', () => {
-    expect(firstBy([new Date(), new Date(1), new Date(2)], identity())).toEqual(
-      new Date(1),
-    );
+    expect(firstBy([new Date(), new Date(1), new Date(2)], identity()))
+      .toStrictEqual(
+        new Date(1),
+      );
   });
 });
 
@@ -134,6 +135,6 @@ describe('runtime (dataLast)', () => {
   it('can compare valueOfs', () => {
     expect(
       pipe([new Date(), new Date(1), new Date(2)], firstBy(identity())),
-    ).toEqual(new Date(1));
+    ).toStrictEqual(new Date(1));
   });
 });

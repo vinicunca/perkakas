@@ -11,7 +11,7 @@ describe('to pascal case', () => {
   it('should merge ambiguous characters', () => {
     const input = 'version 1.2.10';
 
-    expect(toPascalCase(input, { mergeAmbiguousCharacters: true })).toEqual(
+    expect(toPascalCase(input, { mergeAmbiguousCharacters: true })).toBe(
       'Version1210',
     );
   });

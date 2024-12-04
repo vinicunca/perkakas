@@ -72,5 +72,5 @@ it('lazy', () => {
     take(2),
   );
   expect(mock).toHaveBeenCalledTimes(4);
-  expect(result).toEqual([1, 4]);
+  expect(result).toStrictEqual([1, 4]);
 });

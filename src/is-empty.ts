@@ -1,4 +1,4 @@
-import type { IterableContainer } from './helpers/types';
+import type { IterableContainer } from './internal/types/iterable-container';
 
 /**
  * A function that checks if the passed parameter is empty.

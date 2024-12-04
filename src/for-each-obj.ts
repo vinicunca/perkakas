@@ -1,8 +1,5 @@
-import type {
-  EnumerableStringKeyOf,
-  EnumerableStringKeyedValueOf,
-} from './helpers/types';
-
+import type { EnumerableStringKeyOf } from './internal/types/enumerable-string-key-of';
+import type { EnumerableStringKeyedValueOf } from './internal/types/enumerable-string-keyed-value-of';
 import { curry } from './curry';
 
 /**

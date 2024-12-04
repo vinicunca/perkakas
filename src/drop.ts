@@ -1,10 +1,13 @@
 import type { IsInteger, IsNegative, Subtract } from 'type-fest';
 
-import type { CoercedArray, IterableContainer, NTuple, TupleParts } from './helpers/types';
+import type { CoercedArray } from './internal/types/coerced-array';
+import type { IterableContainer } from './internal/types/iterable-container';
+import type { NTuple } from './internal/types/n-tuple';
+import type { TupleParts } from './internal/types/tuple-parts';
 import type { LazyEvaluator } from './pipe';
-
 import { curry } from './curry';
-import { lazyIdentityEvaluator, SKIP_ITEM } from './helpers/utility-evaluators';
+
+import { lazyIdentityEvaluator, SKIP_ITEM } from './internal/utility-evaluators';
 
 type Drop<T extends IterableContainer, N extends number> =
   IsNegative<N> extends true
@@ -42,18 +45,18 @@ type Drop<T extends IterableContainer, N extends number> =
         // type.
           CoercedArray<TupleParts<T>['item']>
           : // But if we have a suffix, the drop could remove items from it.
-          | [...Array<TupleParts<T>['item']>, ...TupleParts<T>['suffix']]
+            | [...Array<TupleParts<T>['item']>, ...TupleParts<T>['suffix']]
               // And because we have a rest component, we also need to
               // consider that all items were removed from that part, leaving
               // the suffix intact.
-          | DropUpTo<
-            TupleParts<T>['suffix'],
-            // If the suffix has any items dropped, it would be after all
-            // prefix items have been removed, so we need to take those
-            // into account when counting how many items to drop from the
-            // suffix.
-            Subtract<N, TupleParts<T>['prefix']['length']>
-          >;
+            | DropUpTo<
+              TupleParts<T>['suffix'],
+              // If the suffix has any items dropped, it would be after all
+              // prefix items have been removed, so we need to take those
+              // into account when counting how many items to drop from the
+              // suffix.
+              Subtract<N, TupleParts<T>['prefix']['length']>
+            >;
 
 /**
  * Arrays with a fixed suffix will result in any number of items being dropped,

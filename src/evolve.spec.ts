@@ -100,7 +100,7 @@ describe('data first', () => {
     const mySymbol = Symbol('a');
     // @ts-expect-error [ts2418] - We want to test the runtime even if the typing prevents it.
     evolve({ [mySymbol]: 'hello' }, { [mySymbol]: mock });
-    expect(mock).toBeCalledTimes(0);
+    expect(mock).toHaveBeenCalledTimes(0);
   });
 
   it('ignore transformers for non-object values', () => {

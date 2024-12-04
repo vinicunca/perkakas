@@ -1,8 +1,8 @@
 import {
   ALL_TYPES_DATA_PROVIDER,
   type AllTypesDataProviderTypes,
-  TYPES_DATA_PROVIDER,
   type TestClass,
+  TYPES_DATA_PROVIDER,
 } from '../test/types-data-provider';
 import { isNonNull } from './is-non-null';
 
@@ -18,7 +18,7 @@ test('should work as type guard', () => {
       | RegExp
       | Set<string>
       | TestClass
-      | Uint8Array
+      // | Uint8Array
       | boolean
       | number
       | string
@@ -44,7 +44,7 @@ test('should work as type guard in filter', () => {
       | RegExp
       | Set<string>
       | TestClass
-      | Uint8Array
+      // | Uint8Array
       | boolean
       | number
       | string

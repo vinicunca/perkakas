@@ -11,7 +11,7 @@ describe('to camel case', () => {
   it('should merge ambiguous characters', () => {
     const input = 'version 1.2.10';
 
-    expect(toCamelCase(input, { mergeAmbiguousCharacters: true })).toEqual(
+    expect(toCamelCase(input, { mergeAmbiguousCharacters: true })).toBe(
       'version1210',
     );
   });

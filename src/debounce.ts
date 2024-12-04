@@ -111,6 +111,7 @@ export function debounce<F extends (...args: any) => any>(
 
 export function debounce<F extends (...args: any) => any>(
   func: F,
+  // eslint-disable-next-line antfu/consistent-list-newline
   {
     waitMs,
     timing = 'trailing',

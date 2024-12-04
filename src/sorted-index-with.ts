@@ -1,5 +1,5 @@
 import { curry } from './curry';
-import { binarySearchCutoffIndex } from './helpers/binary-search-cutoff-index';
+import { binarySearchCutoffIndex } from './internal/binary-search-cutoff-index';
 
 /**
  * Performs a **binary search** for the index of the item at which the predicate

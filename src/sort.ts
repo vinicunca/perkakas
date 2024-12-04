@@ -1,5 +1,5 @@
-import type { IterableContainer, ReorderedArray } from './helpers/types';
-
+import type { IterableContainer } from './internal/types/iterable-container';
+import type { ReorderedArray } from './internal/types/reordered-array';
 import { curry } from './curry';
 
 /**

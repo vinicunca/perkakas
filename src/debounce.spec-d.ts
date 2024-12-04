@@ -50,7 +50,7 @@ test('argument typing to be good (all required)', () => {
 test('argument typing to be good (with optional)', () => {
   const debouncer = debounce(
     (a: string, b?: number, c?: boolean) =>
-      // eslint-disable-next-line no-nested-ternary
+      // eslint-disable-next-line no-nested-ternary, sonar/no-nested-conditional
       `${a}${b ?? 'undefined'}${c === undefined ? 'undefined' : c ? 'y' : 'n'}`,
     {},
   );

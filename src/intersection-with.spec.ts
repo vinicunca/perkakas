@@ -19,7 +19,9 @@ const expected = [
 describe('intersectionWith', () => {
   describe('data first', () => {
     it('returns the new array of intersecting values based on a custom comparator', () => {
-      expect(intersectionWith(source, other, (a, b) => a.id === b)).toEqual(
+      expect(
+        intersectionWith(source, other, (a, b) => a.id === b),
+      ).toStrictEqual(
         expected,
       );
     });
@@ -33,7 +35,7 @@ describe('intersectionWith', () => {
           // parameter in data last variant
           (a, b) => (a as (typeof source)[0]).id === b,
         )(source),
-      ).toEqual(expected);
+      ).toStrictEqual(expected);
     });
     it('checks if items are equal based on the imported util function as a comparator', () => {
       expect(
@@ -50,7 +52,7 @@ describe('intersectionWith', () => {
             isDeepEqual,
           ),
         ),
-      ).toEqual([{ x: 1, y: 2 }]);
+      ).toStrictEqual([{ x: 1, y: 2 }]);
     });
 
     it('evaluates lazily', () => {
@@ -62,7 +64,7 @@ describe('intersectionWith', () => {
         take(2),
       );
       expect(counter.count).toHaveBeenCalledTimes(3);
-      expect(result).toEqual([{ a: 2 }, { a: 3 }]);
+      expect(result).toStrictEqual([{ a: 2 }, { a: 3 }]);
     });
   });
 });

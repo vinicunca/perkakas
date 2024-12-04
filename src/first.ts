@@ -1,8 +1,7 @@
-import type { IterableContainer } from './helpers/types';
+import type { IterableContainer } from './internal/types/iterable-container';
 import type { LazyEvaluator } from './pipe';
-
 import { curry } from './curry';
-import { toSingle } from './helpers/to-single';
+import { toSingle } from './internal/to-single';
 
 type First<T extends IterableContainer> = T extends []
   ? undefined

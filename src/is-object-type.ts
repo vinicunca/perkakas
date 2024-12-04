@@ -1,4 +1,4 @@
-import type { NarrowedTo } from './helpers/types';
+import type { NarrowedTo } from './internal/types/narrowed-to';
 
 /**
  * Checks if the given parameter is of type `"object"` via `typeof`, excluding `null`.
@@ -28,7 +28,7 @@ import type { NarrowedTo } from './helpers/types';
  * @category Guard
  */
 export function isObjectType<T>(
-  data: T | object,
+  data: object | T,
 ): data is NarrowedTo<T, object> {
   return typeof data === 'object' && data !== null;
 }

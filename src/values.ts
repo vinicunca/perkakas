@@ -1,8 +1,5 @@
-import type {
-  EnumerableStringKeyedValueOf,
-  IterableContainer,
-} from './helpers/types';
-
+import type { EnumerableStringKeyedValueOf } from './internal/types/enumerable-string-keyed-value-of';
+import type { IterableContainer } from './internal/types/iterable-container';
 import { curry } from './curry';
 
 type Values<T extends object> = T extends IterableContainer

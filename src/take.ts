@@ -1,8 +1,8 @@
-import type { IterableContainer } from './helpers/types';
+import type { IterableContainer } from './internal/types/iterable-container';
 import type { LazyEvaluator } from './pipe';
 
 import { curry } from './curry';
-import { lazyEmptyEvaluator } from './helpers/utility-evaluators';
+import { lazyEmptyEvaluator } from './internal/utility-evaluators';
 
 /**
  * Returns the first `n` elements of `array`.

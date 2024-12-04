@@ -5,29 +5,34 @@ import { pipe } from './pipe';
 describe('runtime (dataFirst)', () => {
   it('works', () => {
     const data = [4, 5, 1, 6, 2, 3, 7];
-    expect(dropFirstBy(data, 2, identity())).toEqual([5, 6, 4, 3, 7]);
+
+    expect(dropFirstBy(data, 2, identity())).toStrictEqual([5, 6, 4, 3, 7]);
   });
 
   it('handles empty arrays gracefully', () => {
     const data: Array<number> = [];
+
     expect(dropFirstBy(data, 1, identity())).toHaveLength(0);
   });
 
   it('handles negative numbers gracefully', () => {
     const data = [4, 5, 1, 6, 2, 3, 7];
+
     expect(dropFirstBy(data, -3, identity())).toHaveLength(data.length);
   });
 
   it('handles overflowing numbers gracefully', () => {
     const data = [4, 5, 1, 6, 2, 3, 7];
+
     expect(dropFirstBy(data, 100, identity())).toHaveLength(0);
   });
 
   it('clones the input when needed', () => {
     const data = [4, 5, 1, 6, 2, 3, 7];
     const result = dropFirstBy(data, 0, identity());
+
     expect(result).not.toBe(data);
-    expect(result).toEqual(data);
+    expect(result).toStrictEqual(data);
   });
 
   it('works with complex compare rules', () => {
@@ -43,7 +48,7 @@ describe('runtime (dataFirst)', () => {
       'b',
       'aaaaa',
     ];
-    expect(dropFirstBy(data, 3, (x) => x.length, identity())).toEqual([
+    expect(dropFirstBy(data, 3, (x) => x.length, identity())).toStrictEqual([
       'bbbbb',
       'aaa',
       'bbb',
@@ -58,16 +63,18 @@ describe('runtime (dataFirst)', () => {
 describe('runtime (dataLast)', () => {
   it('works', () => {
     const data = [4, 5, 1, 6, 2, 3, 7];
+
     expect(
       pipe(
         data,
         dropFirstBy(2, (x) => x),
       ),
-    ).toEqual([5, 6, 4, 3, 7]);
+    ).toStrictEqual([5, 6, 4, 3, 7]);
   });
 
   it('handles empty arrays gracefully', () => {
     const data: Array<number> = [];
+
     expect(
       pipe(
         data,
@@ -78,6 +85,7 @@ describe('runtime (dataLast)', () => {
 
   it('handles negative numbers gracefully', () => {
     const data = [4, 5, 1, 6, 2, 3, 7];
+
     expect(
       pipe(
         data,
@@ -88,6 +96,7 @@ describe('runtime (dataLast)', () => {
 
   it('handles overflowing numbers gracefully', () => {
     const data = [4, 5, 1, 6, 2, 3, 7];
+
     expect(
       pipe(
         data,
@@ -102,8 +111,9 @@ describe('runtime (dataLast)', () => {
       data,
       dropFirstBy(0, (x) => x),
     );
+
     expect(result).not.toBe(data);
-    expect(result).toEqual(data);
+    expect(result).toStrictEqual(data);
   });
 
   it('works with complex compare rules', () => {
@@ -128,6 +138,6 @@ describe('runtime (dataLast)', () => {
           (x) => x,
         ),
       ),
-    ).toEqual(['bbbbb', 'aaa', 'bbb', 'bbbb', 'aaaa', 'bb', 'aaaaa']);
+    ).toStrictEqual(['bbbbb', 'aaa', 'bbb', 'bbbb', 'aaaa', 'bb', 'aaaaa']);
   });
 });

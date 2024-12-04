@@ -2,7 +2,7 @@
  * Heap related utilities.
  */
 
-import type { CompareFunction } from './types';
+import type { CompareFunction } from './types/compare-function';
 
 import { hasAtLeast } from '../has-at-least';
 import { swapInPlace } from './swap-in-place';

@@ -105,7 +105,9 @@ describe('legacy v1 replacements', () => {
   describe('difference', () => {
     describe('data_first', () => {
       it('should return difference', () => {
-        expect(filter([1, 2, 3, 4], isNot(isIncludedIn([2, 5, 3])))).toEqual([
+        expect(
+          filter([1, 2, 3, 4], isNot(isIncludedIn([2, 5, 3]))),
+        ).toStrictEqual([
           1,
           4,
         ]);
@@ -114,7 +116,9 @@ describe('legacy v1 replacements', () => {
 
     describe('data_last', () => {
       it('should return difference', () => {
-        expect(filter(isNot(isIncludedIn([2, 5, 3])))([1, 2, 3, 4])).toEqual([
+        expect(
+          filter(isNot(isIncludedIn([2, 5, 3])))([1, 2, 3, 4]),
+        ).toStrictEqual([
           1,
           4,
         ]);
@@ -132,7 +136,7 @@ describe('legacy v1 replacements', () => {
           take(2),
         );
         expect(count).toHaveBeenCalledTimes(4);
-        expect(result).toEqual([1, 4]);
+        expect(result).toStrictEqual([1, 4]);
       });
     });
   });
@@ -140,13 +144,13 @@ describe('legacy v1 replacements', () => {
   describe('intersection', () => {
     describe('data_first', () => {
       it('intersection', () => {
-        expect(filter([1, 2, 3], isIncludedIn([2, 3, 5]))).toEqual([2, 3]);
+        expect(filter([1, 2, 3], isIncludedIn([2, 3, 5]))).toStrictEqual([2, 3]);
       });
     });
 
     describe('data_last', () => {
       it('intersection', () => {
-        expect(filter(isIncludedIn([2, 3, 5]))([1, 2, 3])).toEqual([2, 3]);
+        expect(filter(isIncludedIn([2, 3, 5]))([1, 2, 3])).toStrictEqual([2, 3]);
       });
     });
   });

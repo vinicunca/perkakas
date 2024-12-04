@@ -3,18 +3,21 @@ import { pipe } from './pipe';
 
 it('dataFirst', () => {
   const result = omit({ a: 1, b: 2, c: 3, d: 4 }, ['a', 'd'] as const);
-  expect(result).toEqual({ b: 2, c: 3 });
+
+  expect(result).toStrictEqual({ b: 2, c: 3 });
 });
 
 it('single removed prop works', () => {
   const obj: { a: number } = { a: 1 };
   const result = omit(obj, ['a']);
-  expect(result).toEqual({});
+
+  expect(result).toStrictEqual({});
 });
 
 it('dataLast', () => {
   const result = pipe({ a: 1, b: 2, c: 3, d: 4 }, omit(['a', 'd'] as const));
-  expect(result).toEqual({ b: 2, c: 3 });
+
+  expect(result).toStrictEqual({ b: 2, c: 3 });
 });
 
 it('can omit symbol keys', () => {

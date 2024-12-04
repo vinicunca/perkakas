@@ -1,4 +1,4 @@
-import type { UpsertProp } from './helpers/types';
+import type { UpsertProp } from './internal/types/upsert-prop';
 
 import { curry } from './curry';
 

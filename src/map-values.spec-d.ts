@@ -1,4 +1,4 @@
-import type { Branded } from './helpers/types';
+import type { Tagged } from 'type-fest';
 
 import { constant } from './constant';
 import { mapValues } from './map-values';
@@ -21,22 +21,25 @@ describe('interface', () => {
 
 describe('mapped type', () => {
   test('should work with string keys', () => {
-    mapValues({} as { [K in string]: unknown }, (_, key) => {
+    mapValues({} as Record<string, unknown>, (_, key) => {
       expectTypeOf(key).toEqualTypeOf<string>();
     });
   });
+
   test('should work with number keys', () => {
-    mapValues({} as { [K in number]: unknown }, (_, key) => {
+    mapValues({} as Record<number, unknown>, (_, key) => {
       expectTypeOf(key).toEqualTypeOf<`${number}`>();
     });
   });
+
   test('should work with template literal string keys', () => {
-    mapValues({} as { [K in `prefix${string}`]: unknown }, (_, key) => {
+    mapValues({} as Record<`prefix${string}`, unknown>, (_, key) => {
       expectTypeOf(key).toEqualTypeOf<`prefix${string}`>();
     });
   });
+
   test('should not work with symbol keys', () => {
-    mapValues({} as { [K in symbol]: unknown }, (_, key) => {
+    mapValues({} as Record<symbol, unknown>, (_, key) => {
       expectTypeOf(key).toEqualTypeOf<never>();
     });
   });
@@ -48,16 +51,19 @@ describe('indexed signature', () => {
       expectTypeOf(key).toEqualTypeOf<string>();
     });
   });
+
   test('should work with number keys', () => {
     mapValues({} as Record<number, unknown>, (_, key) => {
       expectTypeOf(key).toEqualTypeOf<`${number}`>();
     });
   });
+
   test('should work with template literal string keys', () => {
     mapValues({} as Record<`prefix${string}`, unknown>, (_, key) => {
       expectTypeOf(key).toEqualTypeOf<`prefix${string}`>();
     });
   });
+
   test('should not work with symbol keys', () => {
     mapValues({} as Record<symbol, unknown>, (_, key) => {
       expectTypeOf(key).toEqualTypeOf<never>();
@@ -67,7 +73,7 @@ describe('indexed signature', () => {
 
 describe('branded types', () => {
   test('should infer types correctly in the mapper', () => {
-    type UserID = Branded<string, symbol>;
+    type UserID = Tagged<string, symbol>;
 
     const userValues: Record<UserID, number> = {
       ['U1' as UserID]: 1,

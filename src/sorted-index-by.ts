@@ -1,5 +1,5 @@
 import { curry } from './curry';
-import { binarySearchCutoffIndex } from './helpers/binary-search-cutoff-index';
+import { binarySearchCutoffIndex } from './internal/binary-search-cutoff-index';
 
 /**
  * Find the insertion position (index) of an item in an array with items sorted

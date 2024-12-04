@@ -1,5 +1,5 @@
 /* eslint-disable sonar/no-duplicate-string */
-import type { ChangeCaseOptions } from '../src/helpers/case.types';
+import type { ChangeCaseOptions } from '../src/internal/case.types';
 
 interface Result {
   camelCase: string;

@@ -1,7 +1,7 @@
 import type { LazyEvaluator } from './pipe';
 
-import { curryFromLazy } from './helpers/curry-from-lazy';
-import { SKIP_ITEM, lazyEmptyEvaluator } from './helpers/utility-evaluators';
+import { curryFromLazy } from './internal/curry-from-lazy';
+import { SKIP_ITEM, lazyEmptyEvaluator } from './internal/utility-evaluators';
 
 /**
  * Returns a list of elements that exist in both array. The output maintains the

@@ -1,9 +1,14 @@
-import type { UpsertProp } from './helpers/types';
-
+import type { UpsertProp } from './internal/types/upsert-prop';
 import { curry } from './curry';
 
 /**
  * Add a new property to an object.
+ *
+ * The function doesn't do any checks on the input object. If the property
+ * already exists it will be overwritten, and the type of the new value is not
+ * checked against the previous type.
+ *
+ * Use `set` to override values explicitly with better protections.
  *
  * @param obj the target object
  * @param prop the property name
@@ -23,6 +28,12 @@ export function addProp<T, K extends PropertyKey, V>(
 
 /**
  * Add a new property to an object.
+ *
+ * The function doesn't do any checks on the input object. If the property
+ * already exists it will be overwritten, and the type of the new value is not
+ * checked against the previous type.
+ *
+ * Use `set` to override values explicitly with better protections.
  *
  * @param prop the property name
  * @param value the property value

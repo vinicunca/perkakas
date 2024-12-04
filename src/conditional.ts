@@ -1,8 +1,7 @@
 /* eslint-disable jsdoc/check-param-names -- we don't document the case params, it'd be redundant */
 
-import type { GuardType } from './helpers/types';
-
-import { curryOn } from './helpers/curry-on';
+import type { GuardType } from './internal/types/guard-type';
+import { curryOn } from './internal/curry-on';
 
 type Case<
   In,
@@ -95,16 +94,16 @@ function conditional<
 ): (
   data: T,
 ) =>
-| Return0
-| Return1
-| Return2
-| Return3
-| Return4
-| Return5
-| Return6
-| Return7
-| Return8
-| Return9;
+  | Return0
+  | Return1
+  | Return2
+  | Return3
+  | Return4
+  | Return5
+  | Return6
+  | Return7
+  | Return8
+  | Return9;
 
 /**
  * Executes a transformer function based on the first matching predicate,

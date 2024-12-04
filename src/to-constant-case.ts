@@ -1,6 +1,6 @@
-import type { ChangeCaseOptions } from './helpers/case.types';
+import type { ChangeCaseOptions } from './internal/case.types';
 
-import { splitPrefixSuffix } from './helpers/case.transform';
+import { splitPrefixSuffix } from './internal/case.transform';
 
 /**
  * Convert a string to constant case.

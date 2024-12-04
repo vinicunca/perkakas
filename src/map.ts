@@ -1,4 +1,5 @@
-import type { IterableContainer, Mapped } from './helpers/types';
+import type { IterableContainer } from './internal/types/iterable-container';
+import type { Mapped } from './internal/types/mapped';
 import type { LazyEvaluator } from './pipe';
 
 import { curry } from './curry';

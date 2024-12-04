@@ -6,8 +6,10 @@ import type {
   Subtract,
   ValueOf,
 } from 'type-fest';
-
-import type { IterableContainer, NonEmptyArray, NTuple, TupleParts } from './helpers/types';
+import type { IterableContainer } from './internal/types/iterable-container';
+import type { NTuple } from './internal/types/n-tuple';
+import type { NonEmptyArray } from './internal/types/non-empty-array';
+import type { TupleParts } from './internal/types/tuple-parts';
 
 import { curry } from './curry';
 

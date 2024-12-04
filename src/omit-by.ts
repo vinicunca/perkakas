@@ -1,11 +1,9 @@
 import type { IfNever, Simplify } from 'type-fest';
 
-import type {
-  EnumerableStringKeyOf,
-  EnumerableStringKeyedValueOf,
-  IfBoundedRecord,
-  ReconstructedRecord,
-} from './helpers/types';
+import type { EnumerableStringKeyOf } from './internal/types/enumerable-string-key-of';
+import type { EnumerableStringKeyedValueOf } from './internal/types/enumerable-string-keyed-value-of';
+import type { IfBoundedRecord } from './internal/types/if-bounded-record';
+import type { ReconstructedRecord } from './internal/types/reconstructed-record';
 
 import { curry } from './curry';
 
@@ -26,16 +24,16 @@ type PartialEnumerableKeys<T extends object> =
   // union into a [distributive conditional type](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-8.html#distributive-conditional-types).
   T extends unknown
     ? Simplify<
-        IfBoundedRecord<
-          T,
-          PickSymbolKeys<T> & {
-            -readonly [P in keyof T as P extends symbol
-              ? never
-              : P]?: Required<T>[P];
-          },
-          ReconstructedRecord<T>
-        >
+      IfBoundedRecord<
+        T,
+        PickSymbolKeys<T> & {
+          -readonly [P in keyof T as P extends symbol
+            ? never
+            : P]?: Required<T>[P];
+        },
+        ReconstructedRecord<T>
       >
+    >
     : never;
 
 // When the predicate is a type-guard we have more information to work with when

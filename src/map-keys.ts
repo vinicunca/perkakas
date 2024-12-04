@@ -1,13 +1,11 @@
-/* eslint-disable ts/ban-types --
+/* eslint-disable ts/no-empty-object-type --
  * We want to match the typing of the built-in Object.entries as much as
  * possible!
  */
 
-import type {
-  EnumerableStringKeyOf,
-  EnumerableStringKeyedValueOf,
-  ExactRecord,
-} from './helpers/types';
+import type { EnumerableStringKeyOf } from './internal/types/enumerable-string-key-of';
+import type { EnumerableStringKeyedValueOf } from './internal/types/enumerable-string-keyed-value-of';
+import type { ExactRecord } from './internal/types/exact-record';
 
 import { curry } from './curry';
 

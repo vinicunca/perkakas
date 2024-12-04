@@ -1,5 +1,5 @@
 import { curry } from './curry';
-import { withPrecision } from './helpers/with-precision';
+import { withPrecision } from './internal/with-precision';
 
 /**
  * Rounds down a given number to a specific precision.

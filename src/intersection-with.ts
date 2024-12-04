@@ -1,7 +1,7 @@
 import type { LazyEvaluator } from './pipe';
 
-import { curryFromLazy } from './helpers/curry-from-lazy';
-import { SKIP_ITEM } from './helpers/utility-evaluators';
+import { curryFromLazy } from './internal/curry-from-lazy';
+import { SKIP_ITEM } from './internal/utility-evaluators';
 
 type Comparator<TFirst, TSecond> = (a: TFirst, b: TSecond) => boolean;
 

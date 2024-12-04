@@ -1,4 +1,5 @@
-import type { ExactRecord, NonEmptyArray } from './helpers/types';
+import type { ExactRecord } from './internal/types/exact-record';
+import type { NonEmptyArray } from './internal/types/non-empty-array';
 
 import { curry } from './curry';
 

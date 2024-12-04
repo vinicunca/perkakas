@@ -20,6 +20,12 @@ export default vinicuncaESLint(
       'perfectionist/sort-object-types': 'off',
       'perfectionist/sort-objects': 'off',
       'perfectionist/sort-interfaces': 'off',
+      'perfectionist/sort-modules': 'off',
+      'sonar/use-type-alias': 'off',
+      'sonar/no-nested-functions': 'off',
+      'sonar/cognitive-complexity': 'off',
+      'sonar/no-redundant-optional': 'off',
+      'sonar/no-nested-conditional': 'off',
       'vinicunca/cognitive-complexity': 'off',
       'vinicunca/consistent-list-newline': 'off',
 

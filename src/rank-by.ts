@@ -1,9 +1,9 @@
-import type { CompareFunction, NonEmptyArray } from './helpers/types';
-
+import type { CompareFunction } from './internal/types/compare-function';
+import type { NonEmptyArray } from './internal/types/non-empty-array';
 import {
-  type OrderRule,
   curryOrderRulesWithArgument,
-} from './helpers/curry-order-rules';
+  type OrderRule,
+} from './internal/curry-order-rules';
 
 /**
  * Calculates the rank of an item in an array based on `rules`. The rank is the position where the item would appear in the sorted array. This function provides an efficient way to determine the rank in *O(n)* time, compared to *O(nlogn)* for the equivalent `sortedIndex(sortBy(data, ...rules), item)`.

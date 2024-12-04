@@ -6,11 +6,11 @@ import { pipe } from './pipe';
 const assertIsDefined = <T>(v: T | null | undefined): T => v!;
 
 it('should return first', () => {
-  expect(first([1, 2, 3] as const)).toEqual(1);
+  expect(first([1, 2, 3] as const)).toBe(1);
 });
 
 it('empty array', () => {
-  expect(first([])).toEqual(undefined);
+  expect(first([])).toBe(undefined);
 });
 
 describe('pipe', () => {
@@ -18,7 +18,7 @@ describe('pipe', () => {
     const counter = createLazyInvocationCounter();
     const result = pipe([1, 2, 3, 4, 5, 6] as const, counter.fn(), first());
     expect(counter.count).toHaveBeenCalledTimes(1);
-    expect(result).toEqual(1);
+    expect(result).toBe(1);
   });
 
   it('with filter', () => {
@@ -32,14 +32,14 @@ describe('pipe', () => {
       (x) => x + 1,
     );
     expect(counter.count).toHaveBeenCalledTimes(3);
-    expect(result).toEqual(5);
+    expect(result).toBe(5);
   });
 
   it('empty array', () => {
     const counter = createLazyInvocationCounter();
     const result = pipe([] as const, counter.fn(), first());
     expect(counter.count).toHaveBeenCalledTimes(0);
-    expect(result).toEqual(undefined);
+    expect(result).toBe(undefined);
   });
 
   it('2 x first()', () => {
@@ -52,7 +52,7 @@ describe('pipe', () => {
       first(),
     );
     expect(counter.count).toHaveBeenCalledTimes(1);
-    expect(result).toEqual(1);
+    expect(result).toBe(1);
   });
 
   it('complex', () => {
@@ -70,102 +70,102 @@ describe('pipe', () => {
     );
     expect(counter1.count).toHaveBeenCalledTimes(3);
     expect(counter2.count).toHaveBeenCalledTimes(2);
-    expect(result).toEqual(5);
+    expect(result).toBe(5);
   });
 });
 
 it('simple empty array', () => {
   const arr: Array<number> = [];
   const result = first(arr);
-  expect(result).toEqual(undefined);
+  expect(result).toBe(undefined);
 });
 
 it('simple array', () => {
   const arr: Array<number> = [1];
   const result = first(arr);
-  expect(result).toEqual(1);
+  expect(result).toBe(1);
 });
 
 it('simple non-empty array', () => {
   const arr: [number, ...Array<number>] = [1];
   const result = first(arr);
-  expect(result).toEqual(1);
+  expect(result).toBe(1);
 });
 
 it('simple tuple', () => {
   const arr: [number, string] = [1, 'a'];
   const result = first(arr);
-  expect(result).toEqual(1);
+  expect(result).toBe(1);
 });
 
 it('array with more than one item', () => {
   const arr: [number, number, ...Array<number>] = [1, 2];
   const result = first(arr);
-  expect(result).toEqual(1);
+  expect(result).toBe(1);
 });
 
 it('trivial empty array', () => {
   const arr: [] = [];
   const result = first(arr);
-  expect(result).toEqual(undefined);
+  expect(result).toBe(undefined);
 });
 
 it('array with last', () => {
   const arr: [...Array<number>, number] = [1];
   const result = first(arr);
-  expect(result).toEqual(1);
+  expect(result).toBe(1);
 });
 
 it('tuple with last', () => {
   const arr: [...Array<string>, number] = ['a', 1];
   const result = first(arr);
-  expect(result).toEqual('a');
+  expect(result).toBe('a');
 });
 
 it('simple empty readonly array', () => {
   const arr: ReadonlyArray<number> = [];
   const result = first(arr);
-  expect(result).toEqual(undefined);
+  expect(result).toBe(undefined);
 });
 
 it('simple readonly array', () => {
   const arr: ReadonlyArray<number> = [1];
   const result = first(arr);
-  expect(result).toEqual(1);
+  expect(result).toBe(1);
 });
 
 it('simple non-empty readonly array', () => {
   const arr: readonly [number, ...Array<number>] = [1];
   const result = first(arr);
-  expect(result).toEqual(1);
+  expect(result).toBe(1);
 });
 
 it('simple readonly tuple', () => {
   const arr: readonly [number, string] = [1, 'a'];
   const result = first(arr);
-  expect(result).toEqual(1);
+  expect(result).toBe(1);
 });
 
 it('readonly array with more than one item', () => {
   const arr: readonly [number, number, ...Array<number>] = [1, 2];
   const result = first(arr);
-  expect(result).toEqual(1);
+  expect(result).toBe(1);
 });
 
 it('readonly trivial empty array', () => {
   const arr: readonly [] = [];
   const result = first(arr);
-  expect(result).toEqual(undefined);
+  expect(result).toBe(undefined);
 });
 
 it('readonly array with last', () => {
   const arr: readonly [...Array<number>, number] = [1];
   const result = first(arr);
-  expect(result).toEqual(1);
+  expect(result).toBe(1);
 });
 
 it('readonly tuple with last', () => {
   const arr: readonly [...Array<string>, number] = ['a', 1];
   const result = first(arr);
-  expect(result).toEqual('a');
+  expect(result).toBe('a');
 });

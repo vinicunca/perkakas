@@ -1,7 +1,7 @@
-import type { IterableContainer } from './helpers/types';
+import type { IterableContainer } from './internal/types/iterable-container';
 import type { LazyEvaluator } from './pipe';
 
-import { lazyDataLastImpl } from './helpers/lazy-data-last-impl';
+import { lazyDataLastImpl } from './internal/lazy-data-last-impl';
 
 type ZippingFunction<
   T1 extends IterableContainer = IterableContainer,

@@ -1,7 +1,6 @@
 import type { LazyEvaluator } from './pipe';
-
 import { curry } from './curry';
-import { SKIP_ITEM } from './helpers/utility-evaluators';
+import { SKIP_ITEM } from './internal/utility-evaluators';
 
 /**
  * Creates a shallow copy of a portion of a given array, filtered down to just

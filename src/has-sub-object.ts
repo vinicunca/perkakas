@@ -1,14 +1,12 @@
-import type { Simplify } from 'type-fest';
-
-import type { Branded } from './helpers/types';
-
+import type { Simplify, Tagged } from 'type-fest';
 import { curry } from './curry';
 import { isDeepEqual } from './is-deep-equal';
 
+// eslint-disable-next-line ts/no-unused-vars -- We want to confine the typing to a specific symbol
 declare const HAS_SUB_OBJECT_BRAND: unique symbol;
 
 type HasSubObjectGuard<T, S> = Simplify<
-  Branded<S & T, typeof HAS_SUB_OBJECT_BRAND>
+  Tagged<S & T, typeof HAS_SUB_OBJECT_BRAND>
 >;
 
 type HasSubObjectObjectValue<A, B> = Partial<{
@@ -32,7 +30,7 @@ type HasSubObjectData<
   RSubObject = Required<SubObject>,
 > = Partial<{
   [Key in keyof RData & keyof RSubObject]: RData[Key] &
-  RSubObject[Key] extends never
+    RSubObject[Key] extends never
     ? RSubObject[Key]
     : RData[Key] | RSubObject[Key] extends object
       ? HasSubObjectObjectValue<RData[Key], RSubObject[Key]>
@@ -50,16 +48,15 @@ type HasSubObjectSubObject<
   RData = Required<Data>,
 > = Partial<{
   [Key in keyof RData & keyof RSubObject]: RData[Key] &
-  RSubObject[Key] extends never
+    RSubObject[Key] extends never
     ? RData[Key]
     : RData[Key] | RSubObject[Key] extends object
       ? HasSubObjectObjectValue<RSubObject[Key], RData[Key]>
       : RData[Key] & RSubObject[Key] extends object
         ? RData[Key]
         : RSubObject[Key];
-}> & {
-  [Key in Exclude<keyof SubObject, keyof Data>]: never;
-};
+}> &
+Record<Exclude<keyof SubObject, keyof Data>, never>;
 
 /**
  * Checks if `subObject` is a sub-object of `object`, which means for every

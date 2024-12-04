@@ -4,8 +4,7 @@
  * @see https://en.wikipedia.org/wiki/Quickselect
  */
 
-import type { CompareFunction } from './types';
-
+import type { CompareFunction } from './types/compare-function';
 import { swapInPlace } from './swap-in-place';
 
 /**
@@ -20,22 +19,23 @@ import { swapInPlace } from './swap-in-place';
  * @returns The item at the given index, or `undefined` if the index is out-of-
  * bounds.
  */
-export const quickSelect = <T>(
+export function quickSelect<T>(
   data: ReadonlyArray<T>,
   index: number,
   compareFn: CompareFunction<T>,
-): T | undefined =>
-    index < 0 || index >= data.length
-      // Quickselect doesn't work with out-of-bound indices
-      ? undefined
-      : quickSelectImplementation(
-        // We need to clone the array because quickSelect mutates it in-place.
-        [...data],
-        0 /* left */,
-        data.length - 1 /* right */,
-        index,
-        compareFn,
-      );
+): T | undefined {
+  return index < 0 || index >= data.length
+  // Quickselect doesn't work with out-of-bound indices
+    ? undefined
+    : quickSelectImplementation(
+      // We need to clone the array because quickSelect mutates it in-place.
+      [...data],
+      0 /* left */,
+      data.length - 1 /* right */,
+      index,
+      compareFn,
+    );
+}
 
 /**
  * The actual implementation, called recursively.

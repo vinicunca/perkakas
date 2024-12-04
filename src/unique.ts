@@ -1,8 +1,8 @@
-import type { Deduped, IterableContainer } from './helpers/types';
+import type { Deduped } from './internal/types/deduped';
+import type { IterableContainer } from './internal/types/iterable-container';
 import type { LazyEvaluator } from './pipe';
-
-import { curryFromLazy } from './helpers/curry-from-lazy';
-import { SKIP_ITEM } from './helpers/utility-evaluators';
+import { curryFromLazy } from './internal/curry-from-lazy';
+import { SKIP_ITEM } from './internal/utility-evaluators';
 
 /**
  * Returns a new array containing only one copy of each element in the original

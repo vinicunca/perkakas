@@ -1,10 +1,10 @@
 import type { IsNumericLiteral } from 'type-fest';
 
-import type { IterableContainer } from './helpers/types';
+import type { IterableContainer } from './internal/types/iterable-container';
 import type { LazyEvaluator, LazyResult } from './pipe';
 
-import { lazyDataLastImpl } from './helpers/lazy-data-last-impl';
-import { lazyIdentityEvaluator } from './helpers/utility-evaluators';
+import { lazyDataLastImpl } from './internal/lazy-data-last-impl';
+import { lazyIdentityEvaluator } from './internal/utility-evaluators';
 
 // This is obvious and not likely to change, but it makes reading the code a
 // little easier as the constant has a name.

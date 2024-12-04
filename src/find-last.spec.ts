@@ -3,13 +3,13 @@ import { pipe } from './pipe';
 
 describe('data first', () => {
   it('findLast', () => {
-    expect(findLast([1, 2, 3, 4], (x) => x % 2 === 1)).toEqual(3);
+    expect(findLast([1, 2, 3, 4], (x) => x % 2 === 1)).toBe(3);
   });
   it('indexed', () => {
-    expect(findLast([1, 2, 3, 4], (x, i) => x === 3 && i === 2)).toEqual(3);
+    expect(findLast([1, 2, 3, 4], (x, i) => x === 3 && i === 2)).toBe(3);
   });
   it('findLast first value', () => {
-    expect(findLast([1, 2, 3, 4], (x) => x === 1)).toEqual(1);
+    expect(findLast([1, 2, 3, 4], (x) => x === 1)).toBe(1);
   });
   it('findLast no match', () => {
     expect(findLast([1, 2, 3, 4], (x) => x === 5)).toBeUndefined();
@@ -23,7 +23,7 @@ describe('data last', () => {
         [1, 2, 3, 4],
         findLast((x) => x % 2 === 1),
       ),
-    ).toEqual(3);
+    ).toBe(3);
   });
 
   it('indexed', () => {
@@ -32,6 +32,6 @@ describe('data last', () => {
         [1, 2, 3, 4],
         findLast((x, i) => x === 3 && i === 2),
       ),
-    ).toEqual(3);
+    ).toBe(3);
   });
 });

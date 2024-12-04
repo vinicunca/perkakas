@@ -1,4 +1,4 @@
-import type { ChangeCaseOptions } from './helpers/case.types';
+import type { ChangeCaseOptions } from './internal/case.types';
 
 import { toNoCase } from './to-no-case';
 

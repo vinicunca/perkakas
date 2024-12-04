@@ -1,10 +1,10 @@
-import type { CompareFunction, NonEmptyArray } from './helpers/types';
-
+import type { CompareFunction } from './internal/types/compare-function';
+import type { NonEmptyArray } from './internal/types/non-empty-array';
 import {
-  type OrderRule,
   curryOrderRulesWithArgument,
-} from './helpers/curry-order-rules';
-import { heapMaybeInsert, heapify } from './helpers/heap';
+  type OrderRule,
+} from './internal/curry-order-rules';
+import { heapify, heapMaybeInsert } from './internal/heap';
 
 /**
  * Drop the first `n` items from `data` based on the provided ordering criteria. This allows you to avoid sorting the array before dropping the items. The complexity of this function is *O(Nlogn)* where `N` is the length of the array.

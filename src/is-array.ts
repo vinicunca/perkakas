@@ -1,4 +1,4 @@
-import type { NarrowedTo } from './helpers/types';
+import type { NarrowedTo } from './internal/types/narrowed-to';
 
 /**
  * A function that checks if the passed parameter is an Array and narrows its type accordingly.

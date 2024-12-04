@@ -1,8 +1,11 @@
 import { curry } from './curry';
 
 /**
- * Creates a deep copy of the value. Supported types. Functions are assigned by
- * reference rather than copied.
+ * Creates a deep copy of the value. Supported types: [plain objects](#isPlainObject),
+ * `Array`, `number`, `string`, `boolean`, `Date`, and `RegExp`. Functions are
+ * assigned by reference rather than copied. Class instances or any other
+ * built-in type that isn't mentioned above are not supported (but might
+ * work).
  *
  * @param data - The object to clone.
  * @signature
@@ -15,8 +18,11 @@ import { curry } from './curry';
 export function clone<T>(data: T): T;
 
 /**
- * Creates a deep copy of the value. Supported types. Functions are assigned by
- * reference rather than copied.
+ * Creates a deep copy of the value. Supported types: [plain objects](#isPlainObject),
+ * `Array`, `number`, `string`, `boolean`, `Date`, and `RegExp`. Functions are
+ * assigned by reference rather than copied. Class instances or any other
+ * built-in type that isn't mentioned above are not supported (but might
+ * work).
  *
  * @signature
  *   P.clone()(data)

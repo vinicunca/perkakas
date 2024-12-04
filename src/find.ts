@@ -1,8 +1,8 @@
 import type { LazyEvaluator } from './pipe';
 
 import { curry } from './curry';
-import { toSingle } from './helpers/to-single';
-import { SKIP_ITEM } from './helpers/utility-evaluators';
+import { toSingle } from './internal/to-single';
+import { SKIP_ITEM } from './internal/utility-evaluators';
 
 /**
  * Returns the first element in the provided array that satisfies the provided

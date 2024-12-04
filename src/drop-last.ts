@@ -1,4 +1,4 @@
-import type { IterableContainer } from './helpers/types';
+import type { IterableContainer } from './internal/types/iterable-container';
 
 import { curry } from './curry';
 

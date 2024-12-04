@@ -5,11 +5,6 @@ interface Limits {
   readonly min?: number;
 }
 
-interface Limits {
-  readonly max?: number;
-  readonly min?: number;
-}
-
 /**
  * Clamp the given value within the inclusive min and max bounds.
  *

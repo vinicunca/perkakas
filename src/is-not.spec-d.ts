@@ -1,8 +1,8 @@
 import {
   ALL_TYPES_DATA_PROVIDER,
   type AllTypesDataProviderTypes,
-  TYPES_DATA_PROVIDER,
   type TestClass,
+  TYPES_DATA_PROVIDER,
 } from '../test/types-data-provider';
 import { isNot } from './is-not';
 import { isPromise } from './is-promise';
@@ -20,7 +20,7 @@ it('should work as type guard', () => {
       | RegExp
       | Set<string>
       | TestClass
-      | Uint8Array
+      // | Uint8Array
       | boolean
       | number
       | symbol
@@ -45,7 +45,7 @@ it('should work as type guard in filter', () => {
       | RegExp
       | Set<string>
       | TestClass
-      | Uint8Array
+      // | Uint8Array
       | boolean
       | number
       | string

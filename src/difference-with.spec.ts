@@ -10,19 +10,19 @@ const expected = [{ a: 1 }, { a: 4 }];
 
 describe('data_first', () => {
   it('should return difference', () => {
-    expect(differenceWith(source, other, isDeepEqual)).toEqual(expected);
+    expect(differenceWith(source, other, isDeepEqual)).toStrictEqual(expected);
   });
 
   it('should allow differencing different data types', () => {
     expect(
       differenceWith([1, 2, 3, 4], ['2', '3'], (a, b) => a.toString() === b),
-    ).toEqual([1, 4]);
+    ).toStrictEqual([1, 4]);
   });
 });
 
 describe('data_last', () => {
   it('should return difference', () => {
-    expect(differenceWith(other, isDeepEqual)(source)).toEqual(expected);
+    expect(differenceWith(other, isDeepEqual)(source)).toStrictEqual(expected);
   });
 
   it('should allow differencing different data types', () => {
@@ -31,7 +31,7 @@ describe('data_last', () => {
         [1, 2, 3, 4],
         differenceWith(['2', '3'], (a, b) => a.toString() === b),
       ),
-    ).toEqual([1, 4]);
+    ).toStrictEqual([1, 4]);
   });
 
   it('lazy', () => {
@@ -43,6 +43,6 @@ describe('data_last', () => {
       take(2),
     );
     expect(counter.count).toHaveBeenCalledTimes(4);
-    expect(result).toEqual([{ a: 1 }, { a: 4 }]);
+    expect(result).toStrictEqual([{ a: 1 }, { a: 4 }]);
   });
 });

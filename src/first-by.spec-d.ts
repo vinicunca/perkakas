@@ -1,4 +1,4 @@
-import type { NonEmptyArray } from './helpers/types';
+import type { NonEmptyArray } from "./internal/types/non-empty-array";
 
 import { firstBy } from './first-by';
 import { identity } from './identity';

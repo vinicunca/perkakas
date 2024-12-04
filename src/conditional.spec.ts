@@ -13,7 +13,7 @@ describe('runtime (dataFirst)', () => {
         'Jokic',
         conditional.defaultCase(() => 'hello'),
       ),
-    ).toEqual('hello');
+    ).toBe('hello');
   });
 
   it('works with a single case', () => {
@@ -44,9 +44,10 @@ describe('runtime (dataFirst)', () => {
 
   it('throws when no matching case', () => {
     expect(() =>
-      conditional('Jokic', [() => false, () => 'world'])).toThrowErrorMatchingInlineSnapshot(
-      '[Error: conditional: data failed for all cases]',
-    );
+      conditional('Jokic', [() => false, () => 'world']))
+      .toThrowErrorMatchingInlineSnapshot(
+        '[Error: conditional: data failed for all cases]',
+      );
   });
 });
 

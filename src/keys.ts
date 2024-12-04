@@ -1,7 +1,5 @@
-import type {
-  EnumerableStringKeyOf,
-  IterableContainer,
-} from './helpers/types';
+import type { EnumerableStringKeyOf } from './internal/types/enumerable-string-key-of';
+import type { IterableContainer } from './internal/types/iterable-container';
 
 import { curry } from './curry';
 

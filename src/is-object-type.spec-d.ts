@@ -1,8 +1,8 @@
 import {
   ALL_TYPES_DATA_PROVIDER,
   type AllTypesDataProviderTypes,
-  TYPES_DATA_PROVIDER,
   type TestClass,
+  TYPES_DATA_PROVIDER,
 } from '../test/types-data-provider';
 import { isObjectType } from './is-object-type';
 
@@ -25,7 +25,7 @@ test('should work as type guard', () => {
       | RegExp
       | Set<string>
       | TestClass
-      | Uint8Array
+      // | Uint8Array
       | (() => void)
       | { readonly a: 'asd' }
       | [number, number, number]
@@ -52,7 +52,7 @@ test('should work as type guard in filter', () => {
       | RegExp
       | Set<string>
       | TestClass
-      | Uint8Array
+      // | Uint8Array
       | (() => void)
       | { readonly a: 'asd' }
       | [number, number, number]
@@ -60,7 +60,7 @@ test('should work as type guard in filter', () => {
   >();
 });
 
-test('Can narrow down `any`', () => {
+test('can narrow down `any`', () => {
   // eslint-disable-next-line ts/no-explicit-any -- Explicitly testing `any`
   const data = { hello: 'world' } as any;
   if (isObjectType(data)) {

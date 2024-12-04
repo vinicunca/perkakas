@@ -14,7 +14,7 @@ describe('data first', () => {
         ],
         prop('a'),
       ),
-    ).toEqual({
+    ).toStrictEqual({
       1: [
         { a: 1, b: 1 },
         { a: 1, b: 2 },
@@ -37,7 +37,7 @@ describe('data last', () => {
         ],
         groupBy(prop('a')),
       ),
-    ).toEqual({
+    ).toStrictEqual({
       1: [
         { a: 1, b: 1 },
         { a: 1, b: 2 },
@@ -58,7 +58,7 @@ describe('filtering on undefined grouper result', () => {
     const result = groupBy([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], (x) =>
       x % 2 === 0 ? 'even' : undefined);
     expect(Object.values(result)).toHaveLength(1);
-    expect(result.even).toEqual([0, 2, 4, 6, 8]);
+    expect(result.even).toStrictEqual([0, 2, 4, 6, 8]);
   });
 
   it('regular indexed', () => {
@@ -67,6 +67,6 @@ describe('filtering on undefined grouper result', () => {
       (_, index) => (index % 2 === 0 ? 'even' : undefined),
     );
     expect(Object.values(result)).toHaveLength(1);
-    expect(result.even).toEqual(['a', 'c', 'e', 'g', 'i']);
+    expect(result.even).toStrictEqual(['a', 'c', 'e', 'g', 'i']);
   });
 });

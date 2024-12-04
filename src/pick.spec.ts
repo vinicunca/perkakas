@@ -4,12 +4,14 @@ import { pipe } from './pipe';
 
 it('dataFirst', () => {
   const result = pick({ a: 1, b: 2, c: 3, d: 4 }, ['a', 'd']);
+
   expect(result).toStrictEqual({ a: 1, d: 4 });
 });
 
 it('dataLast', () => {
   const result = pipe({ a: 1, b: 2, c: 3, d: 4 }, pick(['a', 'd']));
-  expect(result).toEqual({ a: 1, d: 4 });
+
+  expect(result).toStrictEqual({ a: 1, d: 4 });
 });
 
 it('read only', () => {

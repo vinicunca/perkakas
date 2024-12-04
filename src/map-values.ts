@@ -1,10 +1,6 @@
 import type { Simplify } from 'type-fest';
-
-import type {
-  EnumerableStringKeyOf,
-  EnumerableStringKeyedValueOf,
-} from './helpers/types';
-
+import type { EnumerableStringKeyOf } from './internal/types/enumerable-string-key-of';
+import type { EnumerableStringKeyedValueOf } from './internal/types/enumerable-string-keyed-value-of';
 import { curry } from './curry';
 
 type MappedValues<T extends object, Value> = Simplify<{
@@ -63,11 +59,11 @@ export function mapValues(...args: ReadonlyArray<unknown>): unknown {
   return curry(mapValuesImplementation, args);
 }
 
-function mapValuesImplementation<T extends Record<string, unknown>, S>(
+function mapValuesImplementation<T extends object, Value>(
   data: T,
-  valueMapper: (value: unknown, key: string, data: T) => S,
-): Record<string, unknown> {
-  const out: Record<string, unknown> = {};
+  valueMapper: (value: unknown, key: string, data: T) => Value,
+): Record<string, Value> {
+  const out: Record<string, Value> = {};
 
   for (const [key, value] of Object.entries(data)) {
     const mappedValue = valueMapper(value, key, data);

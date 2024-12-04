@@ -1,4 +1,4 @@
-import type { ExactRecord } from './helpers/types';
+import type { ExactRecord } from './internal/types/exact-record';
 
 import { curry } from './curry';
 

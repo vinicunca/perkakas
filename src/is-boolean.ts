@@ -1,4 +1,4 @@
-import type { NarrowedTo } from './helpers/types';
+import type { NarrowedTo } from './internal/types/narrowed-to';
 
 /**
  * A function that checks if the passed parameter is a boolean and narrows its type accordingly.
@@ -14,7 +14,7 @@ import type { NarrowedTo } from './helpers/types';
  * @category Guard
  */
 export function isBoolean<T>(
-  data: T | boolean,
+  data: boolean | T,
 ): data is NarrowedTo<T, boolean> {
   return typeof data === 'boolean';
 }

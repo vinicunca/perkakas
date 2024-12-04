@@ -1,4 +1,5 @@
-import type { ExactRecord, IterableContainer } from './helpers/types';
+import type { ExactRecord } from './internal/types/exact-record';
+import type { IterableContainer } from './internal/types/iterable-container';
 
 import { curry } from './curry';
 

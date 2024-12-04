@@ -1,5 +1,5 @@
 export class TestClass {
-  get foo(): string {
+  public get foo(): string {
     return 'a';
   }
 }
@@ -15,7 +15,6 @@ export const TYPES_DATA_PROVIDER = {
   },
   instance: new TestClass(),
   map: new Map<string, string>(),
-
   null: null,
   number: 5 as number,
   object: { a: 'asd' },
@@ -25,7 +24,6 @@ export const TYPES_DATA_PROVIDER = {
   string: 'text' as string,
   symbol: Symbol('symbol'),
   tuple: [1, 2, 3] as [number, number, number],
-  typedArray: new Uint8Array(1),
   undefined,
 } as const;
 

@@ -1,7 +1,8 @@
-import type { IterableContainer, Mapped } from './helpers/types';
+import type { IterableContainer } from './internal/types/iterable-container';
+import type { Mapped } from './internal/types/mapped';
 import type { LazyEvaluator } from './pipe';
 
-import { curryFromLazy } from './helpers/curry-from-lazy';
+import { curryFromLazy } from './internal/curry-from-lazy';
 
 /**
  * Applies a function on each element of the array, using the result of the

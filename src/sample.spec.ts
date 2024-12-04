@@ -1,5 +1,4 @@
-import type { NonEmptyArray } from './helpers/types';
-
+import type { NonEmptyArray } from './internal/types/non-empty-array';
 import { sample } from './sample';
 import { times } from './times';
 import { unique } from './unique';

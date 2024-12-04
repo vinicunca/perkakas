@@ -7,26 +7,31 @@ import { pipe } from './pipe';
 describe('dataFirst', () => {
   it('flatMap', () => {
     const result = flatMap([1, 2] as const, (x) => [x * 2, x * 3]);
-    expect(result).toEqual([2, 3, 4, 6]);
+
+    expect(result).toStrictEqual([2, 3, 4, 6]);
   });
 
   it('should accept fn returning a readonly array', () => {
     const result = flatMap([1, 2] as const, (x) => [x * 2, x * 3] as const);
-    expect(result).toEqual([2, 3, 4, 6]);
+
+    expect(result).toStrictEqual([2, 3, 4, 6]);
   });
 });
 
 describe('dataLast', () => {
   it('flatMap', () => {
     const result = flatMap((x: number) => [x * 2, x * 3])([1, 2]);
-    expect(result).toEqual([2, 3, 4, 6]);
+
+    expect(result).toStrictEqual([2, 3, 4, 6]);
   });
 
   it('should accept fn returning a readonly array', () => {
     const result = flatMap((x: number) => [x * 2, x * 3] as const)([
-      1, 2,
+      1,
+      2,
     ] as const);
-    expect(result).toEqual([2, 3, 4, 6]);
+
+    expect(result).toStrictEqual([2, 3, 4, 6]);
   });
 
   it('works with non array outputs', () => {
@@ -46,7 +51,8 @@ describe('dataLast', () => {
       );
       expect(counter1.count).toHaveBeenCalledTimes(2);
       expect(counter2.count).toHaveBeenCalledTimes(7);
-      expect(result).toEqual(22);
+
+      expect(result).toStrictEqual(22);
     });
   });
 });

@@ -1,11 +1,8 @@
-import type {
-  CompareFunction,
-  IterableContainer,
-  NonEmptyArray,
-  ReorderedArray,
-} from './helpers/types';
-
-import { type OrderRule, curryOrderRules } from './helpers/curry-order-rules';
+import type { CompareFunction } from './internal/types/compare-function';
+import type { IterableContainer } from './internal/types/iterable-container';
+import type { NonEmptyArray } from './internal/types/non-empty-array';
+import type { ReorderedArray } from './internal/types/reordered-array';
+import { curryOrderRules, type OrderRule } from './internal/curry-order-rules';
 
 /**
  * Sorts `data` using the provided ordering rules. The `sort` is done via the

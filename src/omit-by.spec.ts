@@ -35,6 +35,6 @@ it('symbols are not passed to the predicate', () => {
   const mock = vi.fn();
   const data = { [Symbol('mySymbol')]: 1, a: 'hello' };
   omitBy(data, mock);
-  expect(mock).toBeCalledTimes(1);
+  expect(mock).toHaveBeenCalledTimes(1);
   expect(mock).toBeCalledWith('hello', 'a', data);
 });

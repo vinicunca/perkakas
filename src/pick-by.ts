@@ -1,11 +1,9 @@
 import type { IfNever, Simplify } from 'type-fest';
 
-import type {
-  EnumerableStringKeyOf,
-  EnumerableStringKeyedValueOf,
-  IfBoundedRecord,
-  ReconstructedRecord,
-} from './helpers/types';
+import type { EnumerableStringKeyOf } from './internal/types/enumerable-string-key-of';
+import type { EnumerableStringKeyedValueOf } from './internal/types/enumerable-string-keyed-value-of';
+import type { IfBoundedRecord } from './internal/types/if-bounded-record';
+import type { ReconstructedRecord } from './internal/types/reconstructed-record';
 
 import { curry } from './curry';
 
@@ -19,14 +17,14 @@ type EnumerableKey<T> = `${T extends number | string ? T : never}`;
 // whole object to a Partial of the input.
 type EnumeratedPartial<T> = T extends unknown
   ? Simplify<
-      IfBoundedRecord<
-        T,
-        {
-          -readonly [P in keyof T as EnumerableKey<P>]?: Required<T>[P];
-        },
-        ReconstructedRecord<T>
-      >
+    IfBoundedRecord<
+      T,
+      {
+        -readonly [P in keyof T as EnumerableKey<P>]?: Required<T>[P];
+      },
+      ReconstructedRecord<T>
     >
+  >
   : never;
 
 // When the predicate is a type-guard we have more information to work with when
@@ -82,17 +80,17 @@ type IsPartialProp<T, P extends keyof T, S> =
   IsExactProp<T, P, S> extends true
     ? false
     : IfNever<
-        Extract<T[P], S>,
-        S extends T[P]
-          ? // If the result of extracting S from T[P] is never but S still
+      Extract<T[P], S>,
+      S extends T[P]
+        ? // If the result of extracting S from T[P] is never but S still
         // extends it, it means that T[P] is too wide and S can't be
         // extracted from it: e.g. if T[P] is `number` S is `1` then
         // `Extract<number, 1> === never`, but `1` extends `number`. We need
         // to handle these cases when we extract the value too (see above).
-          true
-          : false,
         true
-      >;
+        : false,
+      true
+    >;
 
 /**
  * Iterates over the entries of `data` and reconstructs the object using only

@@ -1,4 +1,4 @@
-import type { NarrowedTo } from './helpers/types';
+import type { NarrowedTo } from './internal/types/narrowed-to';
 
 /**
  * A function that checks if the passed parameter is either `null` or
@@ -16,7 +16,7 @@ import type { NarrowedTo } from './helpers/types';
  * @category Guard
  */
 export function isNullish<T>(
-  data: T | null | undefined,
+  data: null | T | undefined,
 ): data is NarrowedTo<T, null | undefined> {
   return data === null || data === undefined;
 }

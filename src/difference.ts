@@ -1,7 +1,7 @@
 import type { LazyEvaluator } from './pipe';
 
-import { curryFromLazy } from './helpers/curry-from-lazy';
-import { SKIP_ITEM, lazyIdentityEvaluator } from './helpers/utility-evaluators';
+import { curryFromLazy } from './internal/curry-from-lazy';
+import { SKIP_ITEM, lazyIdentityEvaluator } from './internal/utility-evaluators';
 
 /**
  * Excludes the values from `other` array. The output maintains the same order

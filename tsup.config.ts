@@ -5,25 +5,26 @@ import { defineConfig } from 'tsup';
 const SOURCE_DIRECTORY = 'src';
 
 export default defineConfig(async () => ({
+  entry: await getEntries(SOURCE_DIRECTORY),
+
+  format: ['esm', 'cjs'],
+
   clean: true,
 
   // Add types to the bundle
   dts: true,
 
-  entry: await getEntries(SOURCE_DIRECTORY),
-
-  format: ['esm', 'cjs'],
-
-  // ~40%!
-  minify: true,
-
-  // Make CJS output more efficient by putting common CommonJS "infra" in chunks
   // We want to stay generic, not building for node or the browser.
   platform: 'neutral',
 
-  // For CJS this reduces ~29% of the size of the output, for ESM it reduces
+  // Make CJS output more efficient by putting common CommonJS "infra" in chunks
   // outside of the utility.
+
   splitting: true,
+
+  // For CJS this reduces ~29% of the size of the output, for ESM it reduces ~40%!
+  minify: true,
+
 }));
 
 /**
@@ -39,7 +40,10 @@ async function getEntries(sourceDirectory: string): Promise<Array<string>> {
   const files = await ts.readdir(sourceDirectory);
   return files
     .filter(
-      (fileName) => fileName.endsWith('.ts') && !fileName.endsWith('.spec.ts'),
+      (fileName) =>
+        fileName.endsWith('.ts')
+        && !fileName.endsWith('.spec.ts')
+        && !fileName.endsWith('.spec-d.ts'),
     )
     .map((fileName) => path.join(sourceDirectory, fileName));
 }

@@ -1,7 +1,7 @@
 /* eslint-disable ts/no-explicit-any */
 /* eslint-disable jsdoc/check-param-names -- we don't document the op params, it'd be redundant */
 
-import { SKIP_ITEM } from './helpers/utility-evaluators';
+import { SKIP_ITEM } from './internal/utility-evaluators';
 
 export type LazyEvaluator<T = unknown, R = T> = (
   item: T,
@@ -13,22 +13,22 @@ export type LazyResult<T> = LazyEmpty | LazyMany<T> | LazyNext<T>;
 
 interface LazyEmpty {
   done: boolean;
-  hasMany?: false | undefined;
   hasNext: false;
+  hasMany?: false | undefined;
   next?: undefined;
 }
 
 interface LazyNext<T> {
   done: boolean;
-  hasMany?: false | undefined;
   hasNext: true;
+  hasMany?: false | undefined;
   next: T;
 }
 
 interface LazyMany<T> {
   done: boolean;
-  hasMany: true;
   hasNext: true;
+  hasMany: true;
   next: ReadonlyArray<T>;
 }
 
@@ -298,9 +298,7 @@ export function pipe(
 
 function processItem(
   item: unknown,
-
   accumulator: Array<unknown>,
-
   lazySequence: ReadonlyArray<PreparedLazyOperation>,
 ): boolean {
   if (lazySequence.length === 0) {
@@ -365,7 +363,7 @@ function isIterable(something: unknown): something is Iterable<unknown> {
   return (
     typeof something === 'string'
     || (typeof something === 'object'
-    && something !== null
-    && Symbol.iterator in something)
+      && something !== null
+      && Symbol.iterator in something)
   );
 }

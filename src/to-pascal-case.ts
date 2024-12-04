@@ -1,6 +1,6 @@
-import type { ChangeCaseOptions } from './helpers/case.types';
+import type { ChangeCaseOptions } from './internal/case.types';
 
-import { capitalCaseTransformFactory, pascalCaseTransformFactory, splitPrefixSuffix } from './helpers/case.transform';
+import { capitalCaseTransformFactory, pascalCaseTransformFactory, splitPrefixSuffix } from './internal/case.transform';
 
 /**
  * Convert a string to pascal case.

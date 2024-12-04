@@ -1,8 +1,7 @@
 /* eslint-disable ts/no-explicit-any */
 
 import type { LazyEvaluator } from './pipe';
-
-import { lazyDataLastImpl } from './helpers/lazy-data-last-impl';
+import { lazyDataLastImpl } from './internal/lazy-data-last-impl';
 
 /**
  * Creates a function with `dataFirst` and `dataLast` signatures.
