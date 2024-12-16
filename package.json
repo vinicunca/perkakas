@@ -2,7 +2,7 @@
   "name": "@vinicunca/perkakas",
   "type": "module",
   "version": "1.1.0",
-  "packageManager": "pnpm@9.1.4",
+  "packageManager": "pnpm@9.15.0",
   "description": "Utility for JavaScript and Typescript.",
   "author": "praburangki<https://github.com/praburangki>",
   "license": "MIT",
@@ -45,6 +45,7 @@
     "lint": "eslint . --fix",
     "publish:ci": "pnpm publish --access public --no-git-checks",
     "release": "bumpp package.json",
+    "taze": "taze major -wIr",
     "test": "tsc --project tsconfig.tests.json && vitest --typecheck.enabled --typecheck.ignoreSourceErrors",
     "test:runtime": "tsc --project tsconfig.tests.json && vitest",
     "test:typing": "vitest --typecheck.only --typecheck.ignoreSourceErrors",
@@ -54,18 +55,19 @@
     "fb:deploy": "firebase deploy --only hosting:perkakas"
   },
   "dependencies": {
-    "type-fest": "^4.30.0"
+    "type-fest": "catalog:"
   },
   "devDependencies": {
-    "@types/node": "^22.10.1",
-    "@vinicunca/eslint-config": "2.15.1",
-    "@vitest/coverage-v8": "^2.1.8",
-    "bumpp": "^9.8.1",
-    "eslint": "^9.16.0",
-    "prettier": "^3.4.1",
-    "tsup": "^8.3.5",
-    "typedoc": "^0.27.2",
-    "typescript": "^5.7.2",
-    "vitest": "^2.1.8"
+    "@types/node": "catalog:",
+    "@vinicunca/eslint-config": "catalog:",
+    "@vitest/coverage-v8": "catalog:",
+    "bumpp": "catalog:",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "taze": "catalog:",
+    "tsup": "catalog:",
+    "typedoc": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   }
 }

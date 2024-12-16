@@ -309,11 +309,9 @@ describe('data-last', () => {
     );
   });
 
-  // it('allows const types', () => {
-  //   // ok - const value
-  //   hasSubObject({ a: 1 } as const)({ a: 2, b: 2 });
-  //   pipe({ a: 2, b: 2 }, hasSubObject({ a: 1 } as const));
-  // });
+  it('allows const types', () => {
+    pipe({ a: 2, b: 2 }, hasSubObject({ a: 1 } as const));
+  });
 
   it('only allows valid objects to be passed', () => {
     // @ts-expect-error [ts2345] - only allow valid objects to be passed

@@ -1,12 +1,12 @@
 import type {
   GreaterThan,
   GreaterThanOrEqual,
-  IntRange,
   IsEqual,
   IsNever,
   NonNegativeInteger,
   Or,
 } from 'type-fest';
+import type { IntRangeInclusive } from './internal/types/int-range-inclusive';
 
 type RandomInteger<From extends number, To extends number> =
   Or<
@@ -20,7 +20,7 @@ type RandomInteger<From extends number, To extends number> =
         ? never
         : GreaterThanOrEqual<To, 1000> extends true
           ? number
-          : IntRange<From, To> | To;
+          : IntRangeInclusive<From, To>;
 
 /**
  * Generate a random integer between `from` and `to` (inclusive).

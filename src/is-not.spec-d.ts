@@ -2,6 +2,7 @@ import {
   ALL_TYPES_DATA_PROVIDER,
   type AllTypesDataProviderTypes,
   type TestClass,
+  type TypedArray,
   TYPES_DATA_PROVIDER,
 } from '../test/types-data-provider';
 import { isNot } from './is-not';
@@ -20,7 +21,7 @@ it('should work as type guard', () => {
       | RegExp
       | Set<string>
       | TestClass
-      // | Uint8Array
+      | TypedArray
       | boolean
       | number
       | symbol
@@ -45,7 +46,7 @@ it('should work as type guard in filter', () => {
       | RegExp
       | Set<string>
       | TestClass
-      // | Uint8Array
+      | TypedArray
       | boolean
       | number
       | string

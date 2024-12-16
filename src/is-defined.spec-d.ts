@@ -2,6 +2,7 @@ import {
   ALL_TYPES_DATA_PROVIDER,
   type AllTypesDataProviderTypes,
   type TestClass,
+  type TypedArray,
   TYPES_DATA_PROVIDER,
 } from '../test/types-data-provider';
 import { isDefined } from './is-defined';
@@ -18,7 +19,7 @@ it('should work as type guard', () => {
       | RegExp
       | Set<string>
       | TestClass
-      // | Uint8Array
+      | TypedArray
       | boolean
       | number
       | string
@@ -44,7 +45,7 @@ it('should work as type guard in filter', () => {
       | RegExp
       | Set<string>
       | TestClass
-      // | Uint8Array
+      | TypedArray
       | boolean
       | number
       | string

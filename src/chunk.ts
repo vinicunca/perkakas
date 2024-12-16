@@ -6,11 +6,12 @@ import type {
   Subtract,
   ValueOf,
 } from 'type-fest';
+import type { IntRangeInclusive } from './internal/types/int-range-inclusive';
 import type { IterableContainer } from './internal/types/iterable-container';
 import type { NTuple } from './internal/types/n-tuple';
 import type { NonEmptyArray } from './internal/types/non-empty-array';
-import type { TupleParts } from './internal/types/tuple-parts';
 
+import type { TupleParts } from './internal/types/tuple-parts';
 import { curry } from './curry';
 
 /**
@@ -193,13 +194,6 @@ type GenericChunk<T extends IterableContainer> = T extends
 | readonly [unknown, ...Array<unknown>]
   ? NonEmptyArray<NonEmptyArray<T[number]>>
   : Array<NonEmptyArray<T[number]>>;
-
-/**
- * Type-fest's IntRange doesn't include the `To` value, but we need it!
- */
-type IntRangeInclusive<From extends number, To extends number> =
-  | IntRange<From, To>
-  | To;
 
 /**
  * Split an array into groups the length of `size`. If `array` can't be split evenly, the final chunk will be the remaining elements.

@@ -55,6 +55,9 @@ it('aLL_TYPES_DATA_PROVIDER', () => {
         2,
         3,
       ],
+      Uint8Array [
+        0,
+      ],
     ]
   `);
 });

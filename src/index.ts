@@ -9,6 +9,7 @@ export * from './clone';
 export * from './concat';
 export * from './conditional';
 export * from './constant';
+export * from './count-by';
 export * from './curry';
 export * from './debounce';
 export * from './difference';
