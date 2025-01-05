@@ -5,16 +5,19 @@ import { takeWhile } from './take-while';
 describe('data-first', () => {
   test('empty array', () => {
     const result = takeWhile([] as [], constant(true));
+
     expectTypeOf(result).toEqualTypeOf<Array<never>>();
   });
 
   test('regular array', () => {
     const result = takeWhile([] as Array<number>, constant(true));
+
     expectTypeOf(result).toEqualTypeOf<Array<number>>();
   });
 
   test('regular array with union type', () => {
     const result = takeWhile([] as Array<number | string>, constant(true));
+
     expectTypeOf(result).toEqualTypeOf<Array<number | string>>();
   });
 
@@ -23,6 +26,7 @@ describe('data-first', () => {
       [1] as [number, ...Array<boolean>],
       constant(true),
     );
+
     expectTypeOf(result).toEqualTypeOf<Array<boolean | number>>();
   });
 
@@ -31,6 +35,7 @@ describe('data-first', () => {
       [1] as [...Array<boolean>, number],
       constant(true),
     );
+
     expectTypeOf(result).toEqualTypeOf<Array<boolean | number>>();
   });
 
@@ -39,11 +44,13 @@ describe('data-first', () => {
       [1, 'a'] as [number, ...Array<boolean>, string],
       constant(true),
     );
+
     expectTypeOf(result).toEqualTypeOf<Array<boolean | number | string>>();
   });
 
   test('tuple', () => {
     const result = takeWhile([1, 'a', true] as const, constant(true));
+
     expectTypeOf(result).toEqualTypeOf<Array<'a' | 1 | true>>();
   });
 
@@ -52,6 +59,7 @@ describe('data-first', () => {
       [] as Array<boolean> | Array<string>,
       constant(true),
     );
+
     expectTypeOf(result).toEqualTypeOf<Array<boolean | string>>();
   });
 });
@@ -59,11 +67,13 @@ describe('data-first', () => {
 describe('data-last', () => {
   test('empty array', () => {
     const result = pipe([] as [], takeWhile(constant(true)));
+
     expectTypeOf(result).toEqualTypeOf<Array<never>>();
   });
 
   test('regular array', () => {
     const result = pipe([] as Array<number>, takeWhile(constant(true)));
+
     expectTypeOf(result).toEqualTypeOf<Array<number>>();
   });
 
@@ -72,6 +82,7 @@ describe('data-last', () => {
       [] as Array<number | string>,
       takeWhile(constant(true)),
     );
+
     expectTypeOf(result).toEqualTypeOf<Array<number | string>>();
   });
 
@@ -80,6 +91,7 @@ describe('data-last', () => {
       [1] as [number, ...Array<boolean>],
       takeWhile(constant(true)),
     );
+
     expectTypeOf(result).toEqualTypeOf<Array<boolean | number>>();
   });
 
@@ -88,6 +100,7 @@ describe('data-last', () => {
       [1] as [...Array<boolean>, number],
       takeWhile(constant(true)),
     );
+
     expectTypeOf(result).toEqualTypeOf<Array<boolean | number>>();
   });
 
@@ -96,11 +109,13 @@ describe('data-last', () => {
       [1, 'a'] as [number, ...Array<boolean>, string],
       takeWhile(constant(true)),
     );
+
     expectTypeOf(result).toEqualTypeOf<Array<boolean | number | string>>();
   });
 
   test('tuple', () => {
     const result = pipe([1, 'a', true] as const, takeWhile(constant(true)));
+
     expectTypeOf(result).toEqualTypeOf<Array<'a' | 1 | true>>();
   });
 
@@ -109,6 +124,7 @@ describe('data-last', () => {
       [] as Array<boolean> | Array<string>,
       takeWhile(constant(true)),
     );
+
     expectTypeOf(result).toEqualTypeOf<Array<boolean | string>>();
   });
 
@@ -118,7 +134,9 @@ describe('data-last', () => {
         [] as [],
         takeWhile((item, index, array) => {
           expectTypeOf(item).toEqualTypeOf<never>();
+
           expectTypeOf(index).toEqualTypeOf<number>();
+
           expectTypeOf(array).toEqualTypeOf<[]>();
           return true;
         }),
@@ -130,7 +148,9 @@ describe('data-last', () => {
         [] as Array<number>,
         takeWhile((item, index, array) => {
           expectTypeOf(item).toEqualTypeOf<number>();
+
           expectTypeOf(index).toEqualTypeOf<number>();
+
           expectTypeOf(array).toEqualTypeOf<Array<number>>();
           return true;
         }),
@@ -142,7 +162,9 @@ describe('data-last', () => {
         [] as Array<number | string>,
         takeWhile((item, index, array) => {
           expectTypeOf(item).toEqualTypeOf<number | string>();
+
           expectTypeOf(index).toEqualTypeOf<number>();
+
           expectTypeOf(array).toEqualTypeOf<Array<number | string>>();
           return true;
         }),
@@ -154,7 +176,9 @@ describe('data-last', () => {
         [1] as [number, ...Array<boolean>],
         takeWhile((item, index, array) => {
           expectTypeOf(item).toEqualTypeOf<boolean | number>();
+
           expectTypeOf(index).toEqualTypeOf<number>();
+
           expectTypeOf(array).toEqualTypeOf<[number, ...Array<boolean>]>();
           return true;
         }),
@@ -166,7 +190,9 @@ describe('data-last', () => {
         [1] as [...Array<boolean>, number],
         takeWhile((item, index, array) => {
           expectTypeOf(item).toEqualTypeOf<boolean | number>();
+
           expectTypeOf(index).toEqualTypeOf<number>();
+
           expectTypeOf(array).toEqualTypeOf<[...Array<boolean>, number]>();
           return true;
         }),
@@ -178,7 +204,9 @@ describe('data-last', () => {
         [1, 'a'] as [number, ...Array<boolean>, string],
         takeWhile((item, index, array) => {
           expectTypeOf(item).toEqualTypeOf<boolean | number | string>();
+
           expectTypeOf(index).toEqualTypeOf<number>();
+
           expectTypeOf(array).toEqualTypeOf<
             [number, ...Array<boolean>, string]
           >();
@@ -192,7 +220,9 @@ describe('data-last', () => {
         [1, 'a', true] as const,
         takeWhile((item, index, array) => {
           expectTypeOf(item).toEqualTypeOf<'a' | 1 | true>();
+
           expectTypeOf(index).toEqualTypeOf<number>();
+
           expectTypeOf(array).toEqualTypeOf<readonly [1, 'a', true]>();
           return true;
         }),
@@ -204,7 +234,9 @@ describe('data-last', () => {
         [] as Array<boolean> | Array<string>,
         takeWhile((item, index, array) => {
           expectTypeOf(item).toEqualTypeOf<boolean | string>();
+
           expectTypeOf(index).toEqualTypeOf<number>();
+
           expectTypeOf(array).toEqualTypeOf<Array<boolean> | Array<string>>();
           return true;
         }),

@@ -145,8 +145,7 @@ test('Works well with nullish type-guards', () => {
   }>();
 });
 
-// @see https://github.com/remeda/remeda/issues/696
-describe('Records with non-narrowing predicates (Issue #696)', () => {
+describe('Records with non-narrowing predicates', () => {
   test('string keys', () => {
     const data = {} as Record<string, string>;
     const result = omitBy(data, constant(true));

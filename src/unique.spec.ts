@@ -22,7 +22,6 @@ describe('pipe', () => {
   });
 
   it('take before unique', () => {
-    // bug from https://github.com/remeda/remeda/issues/14
     const counter = createLazyInvocationCounter();
     const result = pipe(
       [1, 2, 2, 5, 1, 6, 7] as const,

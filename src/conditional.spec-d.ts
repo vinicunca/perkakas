@@ -46,7 +46,6 @@ describe('data-first', () => {
     );
   });
 
-  // https://github.com/remeda/remeda/issues/675
   it('narrows types when using `isNullish`/`isNonNullish` with complex data', () => {
     const data = firstBy(
       [{ x: 10 }, { x: 20 }] as Array<{ x: number }>,
@@ -132,7 +131,6 @@ describe('data-last', () => {
     );
   });
 
-  // https://github.com/remeda/remeda/issues/675
   it('narrows types when using `isNullish`/`isNonNullish` with complex data', () => {
     pipe(
       [{ x: 10 }, { x: 20 }],

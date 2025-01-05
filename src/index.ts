@@ -37,6 +37,7 @@ export * from './for-each';
 export * from './for-each-obj';
 export * from './from-entries';
 export * from './from-keys';
+export * from './funnel';
 export * from './group-by';
 export * from './has-at-least';
 export * from './has-sub-object';

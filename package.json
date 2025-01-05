@@ -2,7 +2,7 @@
   "name": "@vinicunca/perkakas",
   "type": "module",
   "version": "1.2.0",
-  "packageManager": "pnpm@9.15.0",
+  "packageManager": "pnpm@9.15.2",
   "description": "Utility for JavaScript and Typescript.",
   "author": "praburangki<https://github.com/praburangki>",
   "license": "MIT",
