@@ -1,23 +1,29 @@
 {
-  "$schema": "http://json.schemastore.org/tsconfig",
-
-  "extends": "../tsconfig.json",
-
-  "include": [
-    ".vitepress/**/*",
-    "components.d.ts"
-  ],
-
-  "exclude": [
-    "**/node_modules/**",
-    "**/dist/**",
-    "template",
-    "bin",
-    "docs/snippets",
-    "scripts"
-  ],
-
   "compilerOptions": {
-    "allowArbitraryExtensions": true
+    "verbatimModuleSyntax": true,
+    "baseUrl": ".",
+    "module": "esnext",
+    "target": "esnext",
+    "lib": ["DOM", "ESNext"],
+    "strict": true,
+    "jsx": "preserve",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "moduleResolution": "Bundler",
+    "resolveJsonModule": true,
+    "noUnusedLocals": true,
+    "strictNullChecks": true,
+    "forceConsistentCasingInFileNames": true,
+    "allowArbitraryExtensions": true,
+    "types": ["vitepress/client"]
+  },
+  "include": [
+    "**/.vitepress/**/*.ts",
+    "**/.vitepress/**/*.mts",
+    "**/.vitepress/**/*.vue"
+  ],
+  "exclude": ["node_modules"],
+  "vueCompilerOptions": {
+    "vitePressExtensions": [".md"]
   }
 }

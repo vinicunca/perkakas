@@ -15,6 +15,7 @@
     "postcss-nested": "catalog:",
     "radix-vue": "catalog:",
     "tiny-invariant": "catalog:",
+    "typedoc": "catalog:",
     "unocss": "catalog:",
     "unplugin-vue-components": "catalog:",
     "vitepress": "catalog:"

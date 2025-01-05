@@ -40,7 +40,6 @@
   "scripts": {
     "build": "tsup",
     "prepublish": "pnpm run build",
-    "typedoc": "typedoc --json docs/.vitepress/data/metadata.json",
     "dev": "pnpm build --watch",
     "lint": "eslint . --fix",
     "publish:ci": "pnpm publish --access public --no-git-checks",
@@ -66,7 +65,6 @@
     "prettier": "catalog:",
     "taze": "catalog:",
     "tsup": "catalog:",
-    "typedoc": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   }

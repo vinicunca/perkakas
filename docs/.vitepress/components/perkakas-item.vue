@@ -40,6 +40,7 @@ const data = page.value.functions.find((fun) => fun.name === props.name);
         target="_blank"
         class="inline-flex items-center justify-center vpi-social-github"
         title="View source on Github"
+        style="--icon: url(https://api.iconify.design/simple-icons/github.svg)"
       >
         <span class="sr-only">View source on GitHub</span>
       </a>

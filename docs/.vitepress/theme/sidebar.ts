@@ -1,29 +1,20 @@
-import { entries, groupBy, map, pipe } from '@vinicunca/perkakas';
+import { map, pipe } from '@vinicunca/perkakas';
 
-import { PERKAKAS_METHODS } from '../data/perkakas.metadata';
+import { CATEGORIZED } from '../data/perkakas.metadata';
 import { getTags } from '../data/perkakas.utils';
 
-const grouped = pipe(
-  PERKAKAS_METHODS,
-  groupBy(
-    ({ category }) =>
-      category
-      ?? 'Other',
+export const NAVBAR_ENTRIES = pipe(
+  CATEGORIZED,
+  map(
+    ([category, funcs]) => {
+      return {
+        items: funcs.map((func) => ({
+          link: `/docs#${func.name}`,
+          tags: getTags(func),
+          text: func.name,
+        })),
+        text: category as string,
+      };
+    },
   ),
-);
-
-const groupedEntries = entries(grouped);
-
-export const NAVBAR_ENTRIES = map(
-  groupedEntries,
-  ([category, funcs]) => {
-    return {
-      items: funcs.map((func) => ({
-        link: `/docs#${func.name.toLowerCase()}`,
-        tags: getTags(func),
-        text: func.name,
-      })),
-      text: category as string,
-    };
-  },
 );

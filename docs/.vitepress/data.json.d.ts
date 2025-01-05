@@ -1,4 +1,4 @@
-import type { DocumentedFunction } from './perkakas/perkakas.transform';
+import type { DocumentedFunction } from './data/perkakas.transform';
 
 declare module 'vitepress' {
   interface PageData {

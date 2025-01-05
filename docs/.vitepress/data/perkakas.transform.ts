@@ -1,10 +1,10 @@
 import type { SetRequired } from 'type-fest';
 
-import { hasAtLeast, isDefined } from '@vinicunca/perkakas';
-import invariant from 'tiny-invariant';
-import { type JSONOutput, ReflectionKind } from 'typedoc';
-
 import type PERKAKAS_METADATA from './metadata.json';
+import { hasAtLeast, isDefined, uniqueBy } from '@vinicunca/perkakas';
+import invariant from 'tiny-invariant';
+
+import { type JSONOutput, ReflectionKind } from 'typedoc';
 
 export type DocumentedFunction = ReturnType<typeof transformProject>[number];
 export type FunctionSignature = ReturnType<typeof transformSignature>;
@@ -55,10 +55,13 @@ function transformFunction(
     = summary.length === 0
       ? undefined
       : summary
-        .map((part) => transformCommentDisplayPart(part, functionNames))
-        .join('');
+          .map((part) => transformCommentDisplayPart(part, functionNames))
+          .join('');
 
-  const methods = signaturesWithComments.map(transformSignature);
+  const methods = uniqueBy(
+    signaturesWithComments.map(transformSignature),
+    ({ signature }) => signature,
+  );
 
   const sourceUrl = sources?.[0]?.url;
 

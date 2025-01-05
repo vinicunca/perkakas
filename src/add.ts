@@ -10,7 +10,6 @@ import { curry } from './curry';
  * @example
  *    P.add(10, 5) // => 15
  *    P.add(10, -5) // => 5
- *    P.reduce([1, 2, 3, 4], P.add, 0) // => 10
  * @dataFirst
  * @category Number
  */

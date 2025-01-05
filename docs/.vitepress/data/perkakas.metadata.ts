@@ -1,4 +1,4 @@
-import { groupBy, pipe } from '@vinicunca/perkakas';
+import { entries, groupBy, pipe } from '@vinicunca/perkakas';
 
 import PERKAKAS_METADATA from './metadata.json';
 import { transformProject } from './perkakas.transform';
@@ -11,4 +11,5 @@ export const CATEGORIZED = pipe(
     ({ category }) =>
       category ?? 'Other',
   ),
+  entries(),
 );

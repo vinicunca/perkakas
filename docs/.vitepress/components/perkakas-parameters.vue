@@ -24,7 +24,7 @@ const buttonTitle = computed(() => isOpen.value ? 'Hide parameters' : 'Show para
     <CollapsibleTrigger
       class="group flex items-center border border-solid border-base rounded-2 px-3 py-1 text-sm font-500 leading-6 transition-colors-280 data-[state=open]:text-$vp-c-brand-1 hover:text-$vp-c-brand-1"
     >
-      {{ buttonTitle }}
+      <span class="min-w-30">{{ buttonTitle }}</span>
 
       <i class="i-radix-icons:chevron-right ml-1 transition-transform-280 group-data-[state=open]:rotate-90" />
     </CollapsibleTrigger>
