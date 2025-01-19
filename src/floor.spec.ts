@@ -12,6 +12,10 @@ describe('data-first', () => {
     expect(floor(8123.4317, -4)).toBe(0);
   });
 
+  it('does not output floating point number for negative precision', () => {
+    expect(floor(123_456, -5)).toBe(100_000);
+  });
+
   it('should work with precision = 0', () => {
     expect(floor(8123.4317, 0)).toBe(8123);
   });
