@@ -1,7 +1,7 @@
 import type { Writable } from 'type-fest';
 
 import type { IterableContainer } from './internal/types/iterable-container';
-import type { LazyEvaluator } from './pipe';
+import type { LazyEvaluator } from './internal/types/lazy-evaluator';
 
 import { curry } from './curry';
 

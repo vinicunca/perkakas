@@ -1,10 +1,10 @@
 /* eslint-disable ts/no-explicit-any */
 
-import type { LazyEvaluator } from '../pipe';
+import type { LazyEvaluator } from './types/lazy-evaluator';
 
 /**
  * Use this helper function to build the data last implementation together with
- * a lazy implementation. Use this when you need to build your own purrying
+ * a lazy implementation. Use this when you need to build your own currying
  * logic when you want to decide between dataFirst and dataLast on something
  * that isn't the number of arguments provided. This is useful for implementing
  * functions with optional or variadic arguments.

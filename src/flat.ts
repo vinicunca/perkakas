@@ -1,14 +1,11 @@
 import type { IsNumericLiteral } from 'type-fest';
 
 import type { IterableContainer } from './internal/types/iterable-container';
-import type { LazyEvaluator, LazyResult } from './pipe';
+import type { LazyEvaluator } from './internal/types/lazy-evaluator';
+import type { LazyResult } from './internal/types/lazy-result';
 
 import { lazyDataLastImpl } from './internal/lazy-data-last-impl';
 import { lazyIdentityEvaluator } from './internal/utility-evaluators';
-
-// This is obvious and not likely to change, but it makes reading the code a
-// little easier as the constant has a name.
-const DEFAULT_DEPTH = 1;
 
 type FlatArray<
   T,
@@ -50,13 +47,13 @@ type FlatSimpleArrayItems<
   done: T;
   recur: T extends ReadonlyArray<infer InnerArr>
     ? FlatSimpleArrayItems<
-        InnerArr,
-        Depth,
-        [...Iteration, unknown],
-        // This trick allows us to continue 1 iteration more than the depth,
-        // which is required to flatten the array up to depth.
-        Iteration['length'] extends Depth ? true : false
-      >
+      InnerArr,
+      Depth,
+      [...Iteration, unknown],
+      // This trick allows us to continue 1 iteration more than the depth,
+      // which is required to flatten the array up to depth.
+      Iteration['length'] extends Depth ? true : false
+    >
     : T;
 }[IsDone extends true ? 'done' : 'recur'];
 
@@ -84,7 +81,7 @@ type FlatSimpleArrayItems<
  */
 export function flat<
   T extends IterableContainer,
-  Depth extends number = typeof DEFAULT_DEPTH,
+  Depth extends number = 1,
 >(
   data: T,
   depth?: IsNumericLiteral<Depth> extends true ? Depth : never,
@@ -107,7 +104,7 @@ export function flat<
  * @lazy
  * @category Array
  */
-export function flat<Depth extends number = typeof DEFAULT_DEPTH>(
+export function flat<Depth extends number = 1>(
   depth?: IsNumericLiteral<Depth> extends true ? Depth : never,
 ): <T extends IterableContainer>(data: T) => FlatArray<T, Depth>;
 

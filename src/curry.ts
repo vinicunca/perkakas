@@ -1,6 +1,6 @@
 /* eslint-disable ts/no-explicit-any */
 
-import type { LazyEvaluator } from './pipe';
+import type { LazyEvaluator } from './internal/types/lazy-evaluator';
 import { lazyDataLastImpl } from './internal/lazy-data-last-impl';
 
 /**

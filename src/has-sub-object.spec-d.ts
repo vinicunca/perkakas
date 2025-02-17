@@ -122,6 +122,21 @@ describe('data-first', () => {
     );
   });
 
+  it('allows interfaces', () => {
+    interface AB {
+      a: number;
+      b: number;
+    }
+
+    interface A {
+      a: number;
+    }
+
+    expectTypeOf(
+      hasSubObject({ a: 1, b: 2 } as AB, { a: 1 } as A),
+    ).toEqualTypeOf<boolean>();
+  });
+
   it('narrows with empty object', () => {
     const obj = {} as { a?: string; b?: number };
 

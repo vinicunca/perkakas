@@ -1,6 +1,6 @@
 import type { IterableContainer } from './internal/types/iterable-container';
+import type { LazyEvaluator } from './internal/types/lazy-evaluator';
 import type { Mapped } from './internal/types/mapped';
-import type { LazyEvaluator } from './pipe';
 
 import { curry } from './curry';
 

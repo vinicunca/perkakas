@@ -1,8 +1,7 @@
 import { pipe } from './pipe';
 import { setPath } from './set-path';
 
-// eslint-disable-next-line ts/consistent-type-definitions
-type TestType = {
+declare const TEST_OBJECT: {
   a: {
     b: { c: number; d?: number };
     e: Array<{ f: { g: number } }>;
@@ -10,11 +9,6 @@ type TestType = {
   };
   x?: number;
   y?: number;
-};
-
-const TEST_OBJECT: TestType = {
-  a: { b: { c: 1 }, e: [{ f: { g: 1 } }, { f: { g: 1 } }] },
-  y: 10,
 };
 
 describe('data first', () => {

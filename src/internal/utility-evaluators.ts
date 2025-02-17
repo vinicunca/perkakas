@@ -1,4 +1,4 @@
-import type { LazyResult } from '../pipe';
+import type { LazyResult } from './types/lazy-result';
 
 const EMPTY_PIPE = { done: true, hasNext: false } as const;
 
@@ -19,7 +19,7 @@ export function lazyEmptyEvaluator<T>(): LazyResult<T> {
  * A helper evaluator when we want to return a shallow clone of the input. It
  * memoizes both the evaluator itself to reduce memory usage.
  */
-export function lazyIdentityEvaluator<T>(value: T) {
+export function lazyIdentityEvaluator<T>(value: T): LazyResult<T> {
   return ({
     hasNext: true,
     next: value,

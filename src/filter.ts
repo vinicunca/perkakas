@@ -1,4 +1,4 @@
-import type { LazyEvaluator } from './pipe';
+import type { LazyEvaluator } from './internal/types/lazy-evaluator';
 import { curry } from './curry';
 import { SKIP_ITEM } from './internal/utility-evaluators';
 

@@ -1,36 +1,10 @@
 /* eslint-disable ts/no-explicit-any */
 /* eslint-disable jsdoc/check-param-names -- we don't document the op params, it'd be redundant */
 
+import type { LazyDefinition } from './internal/types/lazy-definition';
+import type { LazyEvaluator } from './internal/types/lazy-evaluator';
+import type { LazyResult } from './internal/types/lazy-result';
 import { SKIP_ITEM } from './internal/utility-evaluators';
-
-export type LazyEvaluator<T = unknown, R = T> = (
-  item: T,
-  index: number,
-  data: ReadonlyArray<T>,
-) => LazyResult<R>;
-
-export type LazyResult<T> = LazyEmpty | LazyMany<T> | LazyNext<T>;
-
-interface LazyEmpty {
-  done: boolean;
-  hasNext: false;
-  hasMany?: false | undefined;
-  next?: undefined;
-}
-
-interface LazyNext<T> {
-  done: boolean;
-  hasNext: true;
-  hasMany?: false | undefined;
-  next: T;
-}
-
-interface LazyMany<T> {
-  done: boolean;
-  hasNext: true;
-  hasMany: true;
-  next: ReadonlyArray<T>;
-}
 
 type PreparedLazyOperation = LazyEvaluator & {
   readonly isSingle: boolean;
@@ -39,21 +13,6 @@ type PreparedLazyOperation = LazyEvaluator & {
   index: number;
   items: Array<unknown>;
 };
-
-type LazyFn = (
-  value: unknown,
-  index: number,
-  items: ReadonlyArray<unknown>,
-) => LazyResult<unknown>;
-
-interface LazyMeta {
-  readonly single?: boolean;
-}
-
-export interface LazyDefinition {
-  readonly lazy: LazyMeta & ((...args: any) => LazyFn);
-  readonly lazyArgs: ReadonlyArray<unknown>;
-}
 
 type LazyOp = LazyDefinition & ((input: unknown) => unknown);
 

@@ -3,8 +3,7 @@
  * to write the tests.
  */
 
-import type { LazyEvaluator } from '../pipe';
-
+import type { LazyEvaluator } from './types/lazy-evaluator';
 import { curryFromLazy } from './curry-from-lazy';
 
 it('throws on wrong number of arguments', () => {

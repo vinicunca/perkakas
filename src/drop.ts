@@ -2,9 +2,9 @@ import type { IsInteger, IsNegative, Subtract } from 'type-fest';
 
 import type { CoercedArray } from './internal/types/coerced-array';
 import type { IterableContainer } from './internal/types/iterable-container';
+import type { LazyEvaluator } from './internal/types/lazy-evaluator';
 import type { NTuple } from './internal/types/n-tuple';
 import type { TupleParts } from './internal/types/tuple-parts';
-import type { LazyEvaluator } from './pipe';
 import { curry } from './curry';
 
 import { lazyIdentityEvaluator, SKIP_ITEM } from './internal/utility-evaluators';

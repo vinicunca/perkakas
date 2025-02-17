@@ -19,15 +19,8 @@ describe('data_first', () => {
   it('should return uniq', () => {
     expect(uniqueWith(source, isDeepEqual)).toStrictEqual(expected);
   });
-});
-
-describe('data_last', () => {
-  it('should return uniq', () => {
-    expect(uniqueWith(isDeepEqual)(source)).toStrictEqual(expected);
-  });
 
   it('should return items that are not equal to themselves', () => {
-    // test case based on https://github.com/remeda/remeda/issues/999
     const data = [
       { id: 1, reason: 'No name' },
       { id: 1, reason: 'No name' },
@@ -39,6 +32,7 @@ describe('data_last', () => {
       { reason: 'No name' },
       { reason: 'No name' },
     ];
+
     const result = uniqueWith(data, (errorA, errorB) => {
       // the objects with no ids should effectively be ignored from removal of duplicates
       if (errorA.id === undefined || errorB.id === undefined) {
@@ -46,7 +40,14 @@ describe('data_last', () => {
       }
       return errorA.id === errorB.id;
     });
+
     expect(result).toStrictEqual(expectedResult);
+  });
+});
+
+describe('data_last', () => {
+  it('should return uniq', () => {
+    expect(uniqueWith(isDeepEqual)(source)).toStrictEqual(expected);
   });
 
   it('lazy', () => {

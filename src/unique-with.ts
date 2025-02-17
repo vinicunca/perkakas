@@ -1,7 +1,6 @@
 import type { Deduped } from './internal/types/deduped';
 import type { IterableContainer } from './internal/types/iterable-container';
-import type { LazyEvaluator } from './pipe';
-
+import type { LazyEvaluator } from './internal/types/lazy-evaluator';
 import { curryFromLazy } from './internal/curry-from-lazy';
 import { SKIP_ITEM } from './internal/utility-evaluators';
 
@@ -60,7 +59,7 @@ function lazyImplementation<T>(isEquals: IsEquals<T>): LazyEvaluator<T> {
   return (value, index, data) => {
     const firstEqualIndex = data.findIndex(
       (otherValue, otherIndex) =>
-        index === otherIndex && isEquals(value, otherValue),
+        index === otherIndex || isEquals(value, otherValue),
     );
 
     // skip items that aren't at the first equal index.
