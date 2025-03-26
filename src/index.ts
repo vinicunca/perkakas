@@ -148,6 +148,7 @@ export * from './to-pascal-snake-case';
 export * from './to-sentence-case';
 export * from './to-snake-case';
 export * from './to-train-case';
+export * from './type.helpers';
 export * from './unique';
 export * from './unique-by';
 export * from './unique-with';
