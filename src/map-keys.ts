@@ -3,10 +3,10 @@
  * possible!
  */
 
+import type { BoundedPartial } from './internal/types/bounded-partial';
 import type { EnumerableStringKeyOf } from './internal/types/enumerable-string-key-of';
-import type { EnumerableStringKeyedValueOf } from './internal/types/enumerable-string-keyed-value-of';
-import type { ExactRecord } from './internal/types/exact-record';
 
+import type { EnumerableStringKeyedValueOf } from './internal/types/enumerable-string-keyed-value-of';
 import { curry } from './curry';
 
 /**
@@ -28,7 +28,7 @@ export function mapKeys<T extends {}, S extends PropertyKey>(
     value: EnumerableStringKeyedValueOf<T>,
     data: T,
   ) => S,
-): ExactRecord<S, EnumerableStringKeyedValueOf<T>>;
+): BoundedPartial<Record<S, EnumerableStringKeyedValueOf<T>>>;
 
 /**
  * Maps keys of `object` and keeps the same values.
@@ -47,7 +47,7 @@ export function mapKeys<T extends {}, S extends PropertyKey>(
     value: EnumerableStringKeyedValueOf<T>,
     data: T,
   ) => S,
-): (data: T) => ExactRecord<S, EnumerableStringKeyedValueOf<T>>;
+): (data: T) => BoundedPartial<Record<S, EnumerableStringKeyedValueOf<T>>>;
 
 export function mapKeys(...args: ReadonlyArray<unknown>): unknown {
   return curry(mapKeysImplementation, args);

@@ -1,8 +1,8 @@
 import type { Simplify } from 'type-fest';
 
-import type { ExactRecord } from './internal/types/exact-record';
-import type { IterableContainer } from './internal/types/iterable-container';
+import type { BoundedPartial } from './internal/types/bounded-partial';
 
+import type { IterableContainer } from './internal/types/iterable-container';
 import { curry } from './curry';
 
 // Takes a union of literals and creates a union of records with the value V for
@@ -16,7 +16,7 @@ type FromKeys<T extends IterableContainer, V> = T extends readonly []
   : T extends readonly [infer Head, ...infer Rest]
     ? ExactlyOneKey<Head, V> & FromKeys<Rest, V>
     : T[number] extends PropertyKey
-      ? ExactRecord<T[number], V>
+      ? BoundedPartial<Record<T[number], V>>
       : never;
 
 /**

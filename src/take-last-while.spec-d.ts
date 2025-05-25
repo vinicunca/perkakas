@@ -1,4 +1,5 @@
 import { constant } from './constant';
+import { isNumber } from './is-number';
 import { pipe } from './pipe';
 import { takeLastWhile } from './take-last-while';
 
@@ -51,7 +52,7 @@ describe('data-first', () => {
   test('tuple', () => {
     const result = takeLastWhile([1, 'a', true] as const, constant(true));
 
-    expectTypeOf(result).toEqualTypeOf<Array<1 | 'a' | true>>();
+    expectTypeOf(result).toEqualTypeOf<Array<'a' | 1 | true>>();
   });
 
   test('union of arrays', () => {
@@ -61,6 +62,12 @@ describe('data-first', () => {
     );
 
     expectTypeOf(result).toEqualTypeOf<Array<boolean | string>>();
+  });
+
+  test('assert type using predicate', () => {
+    const result = takeLastWhile([1, 'a'], isNumber);
+
+    expectTypeOf(result).toEqualTypeOf<Array<number>>();
   });
 });
 
@@ -116,7 +123,7 @@ describe('data-last', () => {
   test('tuple', () => {
     const result = pipe([1, 'a', true] as const, takeLastWhile(constant(true)));
 
-    expectTypeOf(result).toEqualTypeOf<Array<1 | 'a' | true>>();
+    expectTypeOf(result).toEqualTypeOf<Array<'a' | 1 | true>>();
   });
 
   test('union of arrays', () => {
@@ -128,16 +135,21 @@ describe('data-last', () => {
     expectTypeOf(result).toEqualTypeOf<Array<boolean | string>>();
   });
 
+  test('assert type using predicate', () => {
+    const result = pipe([1, 'a'], takeLastWhile(isNumber));
+
+    expectTypeOf(result).toEqualTypeOf<Array<number>>();
+  });
+
   describe('predicate is typed correctly', () => {
     test('empty array', () => {
       pipe(
         [] as [],
         takeLastWhile((item, index, array) => {
           expectTypeOf(item).toEqualTypeOf<never>();
-
           expectTypeOf(index).toEqualTypeOf<number>();
-
           expectTypeOf(array).toEqualTypeOf<[]>();
+
           return true;
         }),
       );
@@ -148,10 +160,9 @@ describe('data-last', () => {
         [] as Array<number>,
         takeLastWhile((item, index, array) => {
           expectTypeOf(item).toEqualTypeOf<number>();
-
           expectTypeOf(index).toEqualTypeOf<number>();
-
           expectTypeOf(array).toEqualTypeOf<Array<number>>();
+
           return true;
         }),
       );
@@ -162,10 +173,9 @@ describe('data-last', () => {
         [] as Array<number | string>,
         takeLastWhile((item, index, array) => {
           expectTypeOf(item).toEqualTypeOf<number | string>();
-
           expectTypeOf(index).toEqualTypeOf<number>();
-
           expectTypeOf(array).toEqualTypeOf<Array<number | string>>();
+
           return true;
         }),
       );
@@ -176,10 +186,9 @@ describe('data-last', () => {
         [1] as [number, ...Array<boolean>],
         takeLastWhile((item, index, array) => {
           expectTypeOf(item).toEqualTypeOf<boolean | number>();
-
           expectTypeOf(index).toEqualTypeOf<number>();
-
           expectTypeOf(array).toEqualTypeOf<[number, ...Array<boolean>]>();
+
           return true;
         }),
       );
@@ -190,10 +199,9 @@ describe('data-last', () => {
         [1] as [...Array<boolean>, number],
         takeLastWhile((item, index, array) => {
           expectTypeOf(item).toEqualTypeOf<boolean | number>();
-
           expectTypeOf(index).toEqualTypeOf<number>();
-
           expectTypeOf(array).toEqualTypeOf<[...Array<boolean>, number]>();
+
           return true;
         }),
       );
@@ -204,12 +212,11 @@ describe('data-last', () => {
         [1, 'a'] as [number, ...Array<boolean>, string],
         takeLastWhile((item, index, array) => {
           expectTypeOf(item).toEqualTypeOf<boolean | number | string>();
-
           expectTypeOf(index).toEqualTypeOf<number>();
-
           expectTypeOf(array).toEqualTypeOf<
             [number, ...Array<boolean>, string]
           >();
+
           return true;
         }),
       );
@@ -219,11 +226,10 @@ describe('data-last', () => {
       pipe(
         [1, 'a', true] as const,
         takeLastWhile((item, index, array) => {
-          expectTypeOf(item).toEqualTypeOf<1 | 'a' | true>();
-
+          expectTypeOf(item).toEqualTypeOf<'a' | 1 | true>();
           expectTypeOf(index).toEqualTypeOf<number>();
-
           expectTypeOf(array).toEqualTypeOf<readonly [1, 'a', true]>();
+
           return true;
         }),
       );
@@ -234,10 +240,9 @@ describe('data-last', () => {
         [] as Array<boolean> | Array<string>,
         takeLastWhile((item, index, array) => {
           expectTypeOf(item).toEqualTypeOf<boolean | string>();
-
           expectTypeOf(index).toEqualTypeOf<number>();
-
           expectTypeOf(array).toEqualTypeOf<Array<boolean> | Array<string>>();
+
           return true;
         }),
       );

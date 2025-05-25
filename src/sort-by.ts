@@ -1,8 +1,9 @@
+import type { OrderRule } from './internal/curry-order-rules';
 import type { CompareFunction } from './internal/types/compare-function';
 import type { IterableContainer } from './internal/types/iterable-container';
 import type { NonEmptyArray } from './internal/types/non-empty-array';
 import type { ReorderedArray } from './internal/types/reordered-array';
-import { curryOrderRules, type OrderRule } from './internal/curry-order-rules';
+import { curryOrderRules } from './internal/curry-order-rules';
 
 /**
  * Sorts `data` using the provided ordering rules. The `sort` is done via the
@@ -97,6 +98,6 @@ function sortByImplementation<T>(
   data: ReadonlyArray<T>,
   compareFn: CompareFunction<T>,
 ): Array<T> {
-  // TODO [2025-05-01]: When node 18 reaches end-of-life bump target lib to ES2023+ and use `Array.prototype.toSorted` here.
+  // TODO: When node 18 reaches end-of-life bump target lib to ES2023+ and use `Array.prototype.toSorted` here.
   return [...data].sort(compareFn);
 }
