@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { objOf } from './obj-of';
 
 describe('data first', () => {

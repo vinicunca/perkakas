@@ -2,7 +2,13 @@ import type { Simplify } from 'type-fest';
 
 import type { IterableContainer } from './internal/types/iterable-container';
 
+import type { PerkakasTypeError } from './internal/types/perkakas-type-error';
 import { curry } from './curry';
+
+type FromEntriesError<Message extends string> = PerkakasTypeError<
+  'fromEntries',
+  Message
+>;
 
 type Entry<Key extends PropertyKey = PropertyKey, Value = unknown> = readonly [
   key: Key,
@@ -25,14 +31,14 @@ type FromEntries<Entries> = Entries extends readonly [
     ? FromEntriesTuple<Last, Head>
     : Entries extends IterableContainer<Entry>
       ? FromEntriesArray<Entries>
-      : 'ERROR: Entries array-like could not be inferred';
+      : FromEntriesError<'Entries array-like could not be inferred'>;
 
 // For strict tuples we build the result by intersecting each entry as a record
 // between it's key and value, recursively. The recursion goes through our main
 // type so that we support tuples which also contain rest parts.
 type FromEntriesTuple<E, Rest> = E extends Entry
   ? FromEntries<Rest> & Record<E[0], E[1]>
-  : 'ERROR: Array-like contains a non-entry element';
+  : FromEntriesError<'Array-like contains a non-entry element'>;
 
 // For the array case we also need to handle what kind of keys it defines:
 // 1. If it defines a *broad* key (one that has an infinite set of values, like
@@ -44,8 +50,8 @@ type FromEntriesTuple<E, Rest> = E extends Entry
 // Note that this destination between keys is the result of how typescript
 // considers Record<string, unknown> to be **implicitly** partial, whereas
 // Record<"a", unknown> is not.
-type FromEntriesArray<Entries extends IterableContainer<Entry>> =
-  string extends AllKeys<Entries>
+type FromEntriesArray<Entries extends IterableContainer<Entry>>
+  = string extends AllKeys<Entries>
     ? Record<string, Entries[number][1]>
     : number extends AllKeys<Entries>
       ? Record<number, Entries[number][1]>
@@ -58,8 +64,8 @@ type FromEntriesArray<Entries extends IterableContainer<Entry>> =
 // which is more correct because we can't assure that an entry will exist for
 // every possible prop/key of the input.
 // @see https://github.com/sindresorhus/ts-extras/blob/44f57392c5f027268330771996c4fdf9260b22d6/source/object-from-entries.ts)
-type FromEntriesArrayWithLiteralKeys<Entries extends IterableContainer<Entry>> =
-  {
+type FromEntriesArrayWithLiteralKeys<Entries extends IterableContainer<Entry>>
+  = {
     [P in AllKeys<Entries>]?: ValueForKey<Entries, P>;
   };
 

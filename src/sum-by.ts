@@ -88,7 +88,7 @@ function sumByImplementation<T>(
   const iter = array.entries();
 
   const firstEntry = iter.next();
-  if (firstEntry.done ?? false) {
+  if ('done' in firstEntry && firstEntry.done) {
     return 0;
   }
 

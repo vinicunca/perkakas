@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { TEST_CASES } from '../test/transform-case-provider';
 import { toPascalCase } from './to-pascal-case';
 

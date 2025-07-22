@@ -30,20 +30,20 @@ const COMPARATORS = {
  * projection function and therefore no guarantee that it would only be called
  * once.
  */
-export type OrderRule<T> =
-  | Projection<T>
-  | readonly [projection: Projection<T>, direction: keyof typeof COMPARATORS];
+export type OrderRule<T>
+  = | Projection<T>
+    | readonly [projection: Projection<T>, direction: keyof typeof COMPARATORS];
 
 type Projection<T> = (x: T) => Comparable;
 
 // We define the Comparable based on how JS coerces values into primitives when
 // used with the `<` and `>` operators.
 // @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#type_coercion
-type Comparable =
-  | ComparablePrimitive
-  | { [Symbol.toPrimitive]: (hint: string) => ComparablePrimitive }
-  | { toString: () => string }
-  | { valueOf: () => ComparablePrimitive };
+type Comparable
+  = | ComparablePrimitive
+    | { [Symbol.toPrimitive]: (hint: string) => ComparablePrimitive }
+    | { toString: () => string }
+    | { valueOf: () => ComparablePrimitive };
 
 //  Notice that `boolean` is special in that it is coerced as a number (0 for
 // `false`, 1 for `true`) implicitly.

@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { isDeepEqual } from './is-deep-equal';
 
 describe('scalars', () => {

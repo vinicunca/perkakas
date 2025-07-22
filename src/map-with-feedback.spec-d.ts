@@ -1,3 +1,4 @@
+import { expectTypeOf, it } from 'vitest';
 import { mapWithFeedback } from './map-with-feedback';
 import { pipe } from './pipe';
 

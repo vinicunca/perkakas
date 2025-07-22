@@ -1,3 +1,4 @@
+import { describe, expectTypeOf, it } from 'vitest';
 import { hasAtLeast } from './has-at-least';
 
 describe('dataFirst', () => {

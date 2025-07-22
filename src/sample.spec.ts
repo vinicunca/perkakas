@@ -1,4 +1,5 @@
 import type { NonEmptyArray } from './internal/types/non-empty-array';
+import { describe, expect, it } from 'vitest';
 import { sample } from './sample';
 import { times } from './times';
 import { unique } from './unique';

@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { sliceString } from './slice-string';
 
 const ALPHABET = 'abcdefghijklmnopqrstuvwxyz';

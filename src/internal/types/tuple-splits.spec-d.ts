@@ -1,10 +1,11 @@
 import type { IterableContainer } from './iterable-container';
 import type { TupleSplits } from './tuple-splits';
+import { describe, expectTypeOf, it } from 'vitest';
 
 declare function tupleSplits<T extends IterableContainer>(x: T): TupleSplits<T>;
 
 describe('all tuple shapes', () => {
-  test('empty tuple', () => {
+  it('empty tuple', () => {
     expectTypeOf(tupleSplits([])).toEqualTypeOf<{ left: []; right: [] }>();
 
     expectTypeOf(tupleSplits([] as const)).toEqualTypeOf<{
@@ -13,7 +14,7 @@ describe('all tuple shapes', () => {
     }>();
   });
 
-  test('fixed tuple', () => {
+  it('fixed tuple', () => {
     expectTypeOf(tupleSplits([1, 2, 3] as [1, 2, 3])).toEqualTypeOf<
       | { left: [1, 2, 3]; right: [] }
       | { left: [1, 2]; right: [3] }
@@ -29,7 +30,7 @@ describe('all tuple shapes', () => {
     >();
   });
 
-  test('optional tuple', () => {
+  it('optional tuple', () => {
     expectTypeOf(tupleSplits([] as [1?, 2?, 3?])).toEqualTypeOf<
       | { left: [1?, 2?, 3?]; right: [] }
       | { left: [1?, 2?]; right: [3?] }
@@ -45,7 +46,7 @@ describe('all tuple shapes', () => {
     >();
   });
 
-  test('mixed tuple', () => {
+  it('mixed tuple', () => {
     expectTypeOf(tupleSplits([1, 2] as [1, 2, 3?, 4?])).toEqualTypeOf<
       | { left: [1, 2, 3?, 4?]; right: [] }
       | { left: [1, 2, 3?]; right: [4?] }
@@ -63,7 +64,7 @@ describe('all tuple shapes', () => {
     >();
   });
 
-  test('array', () => {
+  it('array', () => {
     expectTypeOf(tupleSplits([] as Array<number>)).toEqualTypeOf<
       | { left: Array<number>; right: [] }
       | { left: Array<number>; right: Array<number> }
@@ -77,7 +78,7 @@ describe('all tuple shapes', () => {
     >();
   });
 
-  test('fixed-prefix array', () => {
+  it('fixed-prefix array', () => {
     expectTypeOf(tupleSplits([1, 2] as [1, 2, ...Array<3>])).toEqualTypeOf<
       | { left: [1, 2, ...Array<3>]; right: [] }
       | { left: [1, 2, ...Array<3>]; right: Array<3> }
@@ -97,7 +98,7 @@ describe('all tuple shapes', () => {
     >();
   });
 
-  test('optional-prefix array', () => {
+  it('optional-prefix array', () => {
     expectTypeOf(tupleSplits([] as [1?, 2?, ...Array<3>])).toEqualTypeOf<
       | { left: [1?, 2?, ...Array<3>]; right: [] }
       | { left: [1?, 2?, ...Array<3>]; right: Array<3> }
@@ -117,7 +118,7 @@ describe('all tuple shapes', () => {
     >();
   });
 
-  test('mixed-prefix array', () => {
+  it('mixed-prefix array', () => {
     expectTypeOf(
       tupleSplits([1, 2] as [1, 2, 3?, 4?, ...Array<5>]),
     ).toEqualTypeOf<
@@ -143,7 +144,7 @@ describe('all tuple shapes', () => {
     >();
   });
 
-  test('fixed-suffix array', () => {
+  it('fixed-suffix array', () => {
     expectTypeOf(tupleSplits([2, 3] as [...Array<1>, 2, 3])).toEqualTypeOf<
       | { left: [...Array<1>, 2, 3]; right: [] }
       | { left: [...Array<1>, 2]; right: [3] }
@@ -163,7 +164,7 @@ describe('all tuple shapes', () => {
     >();
   });
 
-  test('fixed-elements array', () => {
+  it('fixed-elements array', () => {
     expectTypeOf(
       tupleSplits([1, 2, 4, 5] as [1, 2, ...Array<3>, 4, 5]),
     ).toEqualTypeOf<
@@ -191,7 +192,7 @@ describe('all tuple shapes', () => {
 });
 
 describe('unions', () => {
-  test('union of arrays', () => {
+  it('union of arrays', () => {
     expectTypeOf(
       tupleSplits([] as Array<boolean> | Array<number>),
     ).toEqualTypeOf<
@@ -204,7 +205,7 @@ describe('unions', () => {
     >();
   });
 
-  test('mixed unions', () => {
+  it('mixed unions', () => {
     expectTypeOf(
       tupleSplits([] as Array<boolean> | [number, string]),
     ).toEqualTypeOf<

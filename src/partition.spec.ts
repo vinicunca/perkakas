@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { isNumber } from './is-number';
 import { partition } from './partition';
 import { pipe } from './pipe';

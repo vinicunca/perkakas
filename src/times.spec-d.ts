@@ -1,3 +1,4 @@
+import { expectTypeOf, it } from 'vitest';
 import { identity } from './identity';
 import { times } from './times';
 
@@ -74,7 +75,7 @@ it('could be \'disabled\' with large literals', () => {
   // The result is a tuple of our max length supported for a literal, with an
   // array tail for the rest of the items...
 
-  expectTypeOf(result).toMatchTypeOf<Array<number>>();
+  expectTypeOf(result).toExtend<Array<number>>();
 
   expectTypeOf(result[0]).toEqualTypeOf<number>();
 

@@ -29,8 +29,8 @@ type HasSubObjectData<
   RData = Required<Data>,
   RSubObject = Required<SubObject>,
 > = Partial<{
-  [Key in keyof RData & keyof RSubObject]: RData[Key] &
-    RSubObject[Key] extends never
+  [Key in keyof RData & keyof RSubObject]: RData[Key]
+    & RSubObject[Key] extends never
     ? RSubObject[Key]
     : RData[Key] | RSubObject[Key] extends object
       ? HasSubObjectObjectValue<RData[Key], RSubObject[Key]>
@@ -47,16 +47,16 @@ type HasSubObjectSubObject<
   RSubObject = Required<SubObject>,
   RData = Required<Data>,
 > = Partial<{
-  [Key in keyof RData & keyof RSubObject]: RData[Key] &
-    RSubObject[Key] extends never
+  [Key in keyof RData & keyof RSubObject]: RData[Key]
+    & RSubObject[Key] extends never
     ? RData[Key]
     : RData[Key] | RSubObject[Key] extends object
       ? HasSubObjectObjectValue<RSubObject[Key], RData[Key]>
       : RData[Key] & RSubObject[Key] extends object
         ? RData[Key]
         : RSubObject[Key];
-}> &
-Record<Exclude<keyof SubObject, keyof Data>, never>;
+}>
+& Record<Exclude<keyof SubObject, keyof Data>, never>;
 
 /**
  * Checks if `subObject` is a sub-object of `object`, which means for every

@@ -1,3 +1,4 @@
+import { expect, it } from 'vitest';
 import { isTruthy } from './is-truthy';
 
 it('isTruthy', () => {

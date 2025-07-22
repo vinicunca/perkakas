@@ -1,3 +1,4 @@
+import { it } from 'vitest';
 import { doNothing } from './do-nothing';
 
 it('works', () => {

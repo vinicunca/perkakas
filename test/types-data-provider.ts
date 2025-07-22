@@ -32,5 +32,5 @@ export const TYPES_DATA_PROVIDER = {
 } as const;
 
 export const ALL_TYPES_DATA_PROVIDER = Object.values(TYPES_DATA_PROVIDER);
-export type AllTypesDataProviderTypes =
-  (typeof ALL_TYPES_DATA_PROVIDER)[number];
+export type AllTypesDataProviderTypes
+  = (typeof ALL_TYPES_DATA_PROVIDER)[number];

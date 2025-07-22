@@ -1,3 +1,4 @@
+import { expect, it } from 'vitest';
 import { mergeAll } from './merge-all';
 
 it('merge objects', () => {

@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { pipe } from './pipe';
 import { takeLastWhile } from './take-last-while';
 
@@ -12,7 +13,9 @@ describe('data first', () => {
 
   it('should return rest of the items when first item fails the predicate', () => {
     expect(takeLastWhile([1, 2, 3, 4], (n) => n !== 1)).toStrictEqual([
-      2, 3, 4,
+      2,
+      3,
+      4,
     ]);
   });
 

@@ -1,10 +1,11 @@
 import type { IterableContainer } from './iterable-container';
 import type { TupleParts } from './tuple-parts';
+import { describe, expectTypeOf, it } from 'vitest';
 
 declare function tupleParts<T extends IterableContainer>(x: T): TupleParts<T>;
 
 describe('all tuple/array shapes (mutable and readonly)', () => {
-  test('empty tuples', () => {
+  it('empty tuples', () => {
     expectTypeOf(tupleParts([] as [])).toEqualTypeOf<{
       required: [];
       optional: [];
@@ -20,7 +21,7 @@ describe('all tuple/array shapes (mutable and readonly)', () => {
     }>();
   });
 
-  test('arrays', () => {
+  it('arrays', () => {
     expectTypeOf(tupleParts([] as Array<number>)).toEqualTypeOf<{
       required: [];
       optional: [];
@@ -36,7 +37,7 @@ describe('all tuple/array shapes (mutable and readonly)', () => {
     }>();
   });
 
-  test('fixed tuples', () => {
+  it('fixed tuples', () => {
     expectTypeOf(
       tupleParts([1, 'hello', true, new Date()] as [
         number,
@@ -66,7 +67,7 @@ describe('all tuple/array shapes (mutable and readonly)', () => {
     }>();
   });
 
-  test('fixed-prefix arrays', () => {
+  it('fixed-prefix arrays', () => {
     expectTypeOf(
       tupleParts([1, 'hello', true] as [
         number,
@@ -96,7 +97,7 @@ describe('all tuple/array shapes (mutable and readonly)', () => {
     }>();
   });
 
-  test('fixed-suffix arrays', () => {
+  it('fixed-suffix arrays', () => {
     expectTypeOf(
       tupleParts(['a', true, new Date()] as [
         ...Array<number>,
@@ -126,7 +127,7 @@ describe('all tuple/array shapes (mutable and readonly)', () => {
     }>();
   });
 
-  test('fixed-elements arrays', () => {
+  it('fixed-elements arrays', () => {
     expectTypeOf(
       tupleParts([1, 'a', new Date()] as [
         number,
@@ -156,7 +157,7 @@ describe('all tuple/array shapes (mutable and readonly)', () => {
     }>();
   });
 
-  test('optional tuples', () => {
+  it('optional tuples', () => {
     expectTypeOf(
       tupleParts([] as [number?, string?, boolean?, Date?]),
     ).toEqualTypeOf<{
@@ -186,7 +187,7 @@ describe('all tuple/array shapes (mutable and readonly)', () => {
     }>();
   });
 
-  test('optional-prefix arrays', () => {
+  it('optional-prefix arrays', () => {
     expectTypeOf(
       tupleParts([] as [number?, string?, boolean?, ...Array<Date>]),
     ).toEqualTypeOf<{
@@ -206,7 +207,7 @@ describe('all tuple/array shapes (mutable and readonly)', () => {
     }>();
   });
 
-  test('mixed tuples', () => {
+  it('mixed tuples', () => {
     expectTypeOf(
       tupleParts([1, 'a'] as [number, string, boolean?, Date?]),
     ).toEqualTypeOf<{
@@ -226,7 +227,7 @@ describe('all tuple/array shapes (mutable and readonly)', () => {
     }>();
   });
 
-  test('mixed-prefix arrays', () => {
+  it('mixed-prefix arrays', () => {
     expectTypeOf(
       tupleParts([1, 'a'] as [number, string, boolean?, ...Array<Date>]),
     ).toEqualTypeOf<{
@@ -253,7 +254,7 @@ describe('all tuple/array shapes (mutable and readonly)', () => {
 });
 
 describe('unions', () => {
-  test('union of arrays', () => {
+  it('union of arrays', () => {
     expectTypeOf(
       tupleParts([] as Array<boolean> | Array<number>),
     ).toEqualTypeOf<
@@ -262,7 +263,7 @@ describe('unions', () => {
     >();
   });
 
-  test('mixed unions', () => {
+  it('mixed unions', () => {
     expectTypeOf(
       tupleParts([] as Array<boolean> | [number, string]),
     ).toEqualTypeOf<
@@ -276,7 +277,7 @@ describe('unions', () => {
     >();
   });
 
-  test('looks like an optional tuple', () => {
+  it('looks like an optional tuple', () => {
     expectTypeOf(tupleParts([] as [] | [string | undefined])).toEqualTypeOf<
       | { required: []; optional: []; item: never; suffix: [] }
       | {
@@ -288,7 +289,7 @@ describe('unions', () => {
     >();
   });
 
-  test('union of equivalent optional tuples', () => {
+  it('union of equivalent optional tuples', () => {
     expectTypeOf(
       tupleParts([] as [string?] | [(string | undefined)?]),
     ).toEqualTypeOf<{
@@ -301,7 +302,7 @@ describe('unions', () => {
 });
 
 describe('handling of undefined values', () => {
-  test('undefined required item', () => {
+  it('undefined required item', () => {
     expectTypeOf(
       tupleParts([undefined] as [number | undefined]),
     ).toEqualTypeOf<{
@@ -312,7 +313,7 @@ describe('handling of undefined values', () => {
     }>();
   });
 
-  test('undefined optional item', () => {
+  it('undefined optional item', () => {
     expectTypeOf(
       tupleParts([undefined] as [(number | undefined)?]),
     ).toEqualTypeOf<{
@@ -323,7 +324,7 @@ describe('handling of undefined values', () => {
     }>();
   });
 
-  test('undefined rest item', () => {
+  it('undefined rest item', () => {
     expectTypeOf(
       tupleParts([undefined] as Array<number | undefined>),
     ).toEqualTypeOf<{
@@ -334,7 +335,7 @@ describe('handling of undefined values', () => {
     }>();
   });
 
-  test('undefined suffix and rest items', () => {
+  it('undefined suffix and rest items', () => {
     expectTypeOf(
       tupleParts([undefined] as [
         ...Array<number | undefined>,
@@ -348,7 +349,7 @@ describe('handling of undefined values', () => {
     }>();
   });
 
-  test('undefined tuple with options', () => {
+  it('undefined tuple with options', () => {
     expectTypeOf(
       tupleParts([undefined] as [number | undefined, (string | undefined)?]),
     ).toEqualTypeOf<{
@@ -359,7 +360,7 @@ describe('handling of undefined values', () => {
     }>();
   });
 
-  test('undefined prefix items', () => {
+  it('undefined prefix items', () => {
     expectTypeOf(
       tupleParts([undefined] as [
         number | undefined,
@@ -374,7 +375,7 @@ describe('handling of undefined values', () => {
     }>();
   });
 
-  test('undefined fixed and rest elements', () => {
+  it('undefined fixed and rest elements', () => {
     expectTypeOf(
       tupleParts([undefined, undefined] as [
         number | undefined,

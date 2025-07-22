@@ -3,9 +3,9 @@ import type { LazyEvaluator } from './internal/types/lazy-evaluator';
 
 import { curry } from './curry';
 
-type Zipped<Left extends IterableContainer, Right extends IterableContainer> =
+type Zipped<Left extends IterableContainer, Right extends IterableContainer>
   // If the array is empty the output is empty, no surprises
-  Left extends readonly []
+  = Left extends readonly []
     ? []
     : Right extends readonly []
       ? []

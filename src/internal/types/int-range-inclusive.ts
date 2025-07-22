@@ -7,6 +7,6 @@ import type { IntRange } from 'type-fest';
  * instantiation is excessively deep and possibly infinite') errors when the
  * integers are large (even when the range itself is not).
  */
-export type IntRangeInclusive<From extends number, To extends number> =
-  | IntRange<From, To>
-  | To;
+export type IntRangeInclusive<From extends number, To extends number>
+  = | IntRange<From, To>
+    | To;

@@ -33,14 +33,14 @@ type Chunk<
     ? LessThan<N, 1> extends true
       ? never
       : LessThan<N, MAX_LITERAL_SIZE> extends true
-        ? // The spread here is used as a form of "Simplify" for arrays; without
-          // it our return type isn't useful.
-          [...LiteralChunk<T, N>]
+        // The spread here is used as a form of "Simplify" for arrays; without
+        // it our return type isn't useful.
+        ? [...LiteralChunk<T, N>]
         : GenericChunk<T>
     : GenericChunk<T>;
 
-type LiteralChunk<T extends IterableContainer, N extends number> =
-  | ChunkRestElement<
+type LiteralChunk<T extends IterableContainer, N extends number>
+  = | ChunkRestElement<
     // Our result will always have the prefix tuple chunked the same way, so
     // we compute it once here and send it to the main logic below
     ChunkFixedTuple<TuplePrefix<T>, N>,
@@ -66,31 +66,31 @@ type ChunkFixedTuple<
   // because the result of `chunk` on an empty array is `[]` and not `[[]]`.
   Result = [],
 > = T extends readonly [infer Head, ...infer Rest]
-  ? // We continue consuming the input tuple recursively item by item.
-  ChunkFixedTuple<
+  // We continue consuming the input tuple recursively item by item.
+  ? ChunkFixedTuple<
     Rest,
     N,
     Result extends [
       ...infer Previous extends Array<Array<unknown>>,
       infer Current extends Array<unknown>,
     ]
-      ? // We take a look at the last chunk in the result, this is the
-    // "current" chunk where new items would be added, all chunks before
-    // it are already full.
-      Current['length'] extends N
-        ? // The current chunk is full, create a new chunk and put Head in it.
-          [...Previous, Current, [Head]]
-        : // The current chunk is not full yet, so we add Head to it.
-          [...Previous, [...Current, Head]]
-      : // This would only happen on the first iteration, when result is
-    // still empty. In this case we create the first chunk and put Head
-    // in it.
-        [[Head]]
+      // We take a look at the last chunk in the result, this is the
+      // "current" chunk where new items would be added, all chunks before
+      // it are already full.
+      ? Current['length'] extends N
+        // The current chunk is full, create a new chunk and put Head in it.
+        ? [...Previous, Current, [Head]]
+        // The current chunk is not full yet, so we add Head to it.
+        : [...Previous, [...Current, Head]]
+      // This would only happen on the first iteration, when result is
+      // still empty. In this case we create the first chunk and put Head
+      // in it.
+      : [[Head]]
   >
-  : // We know T is a finite tuple, so the only case where we would reach this
-// is when T is empty, and in that case our results array contains the whole
-// input chunked by N.
-  Result;
+  // We know T is a finite tuple, so the only case where we would reach this
+  // is when T is empty, and in that case our results array contains the whole
+  // input chunked by N.
+  : Result;
 
 /**
  * Here lies the main complexity of building the chunk type. It takes the prefix
@@ -113,10 +113,10 @@ type ChunkRestElement<
     ...infer PrefixFullChunks extends Array<Array<unknown>>,
     infer LastPrefixChunk extends Array<unknown>,
   ]
-    ? // When our prefix chunks are not empty it means we need to look at all
-  // combinations of mixing the prefix, the suffix, and different counts of
-  // the rest param until we cover all possible scenarios.
-    | ValueOf<{
+    // When our prefix chunks are not empty it means we need to look at all
+    // combinations of mixing the prefix, the suffix, and different counts of
+    // the rest param until we cover all possible scenarios.
+    ? | ValueOf<{
       // We want to iterate over all possible padding sizes we can add to
       // the last prefix chunk until we reach N
       // (`0..N-LastPrefixChunk.length`). We need to do this because until
@@ -150,8 +150,8 @@ type ChunkRestElement<
       ...Array<NTuple<Item, N>>,
       ...SuffixChunk<Suffix, Item, N>,
     ]
-    : // When our prefix chunks are empty we only need to handle the suffix
-      [...Array<NTuple<Item, N>>, ...SuffixChunk<Suffix, Item, N>]
+    // When our prefix chunks are empty we only need to handle the suffix
+    : [...Array<NTuple<Item, N>>, ...SuffixChunk<Suffix, Item, N>]
 >;
 
 /**
@@ -165,9 +165,9 @@ type SuffixChunk<
   Item,
   N extends number,
 > = T extends readonly []
-  ? // If we don't have a suffix we simply create a single chunk with all
-    // possible non-empty sub-arrays of `Item` up to size `N`.
-    [ValueOf<{ [K in IntRangeInclusive<1, N>]: NTuple<Item, K> }>]
+  // If we don't have a suffix we simply create a single chunk with all
+  // possible non-empty sub-arrays of `Item` up to size `N`.
+  ? [ValueOf<{ [K in IntRangeInclusive<1, N>]: NTuple<Item, K> }>]
   : ValueOf<{
     // When suffix isn't empty we pad the head of the suffix and compute it's
     // chunks for all possible padding sizes.

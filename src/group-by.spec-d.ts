@@ -1,9 +1,9 @@
-import type { NonEmptyArray } from "./internal/types/non-empty-array";
-
+import type { NonEmptyArray } from './internal/types/non-empty-array';
+import { describe, expectTypeOf, it } from 'vitest';
 import { groupBy } from './group-by';
 import { prop } from './prop';
 
-test('Union of string literals', () => {
+it('Union of string literals', () => {
   const data = groupBy(
     [
       { a: 'cat', b: 123 },
@@ -25,7 +25,7 @@ test('Union of string literals', () => {
   >();
 });
 
-test('Union of number literals', () => {
+it('Union of number literals', () => {
   const data = groupBy(
     [
       { a: 'cat', b: 123 },
@@ -46,7 +46,7 @@ test('Union of number literals', () => {
   >();
 });
 
-test('string', () => {
+it('string', () => {
   const data = groupBy(
     [
       { a: 'cat', b: 123 },
@@ -65,7 +65,7 @@ test('string', () => {
   >();
 });
 
-test('number', () => {
+it('number', () => {
   const data = groupBy(
     [
       { a: 'cat', b: 123 },
@@ -84,7 +84,7 @@ test('number', () => {
   >();
 });
 
-test('string | number', () => {
+it('string | number', () => {
   const data = groupBy(
     [
       { a: 'cat', b: 123 },
@@ -104,13 +104,13 @@ test('string | number', () => {
 });
 
 describe('Filtering on undefined grouper result', () => {
-  test('regular', () => {
+  it('regular', () => {
     const { even, ...rest } = groupBy([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], (x) =>
       x % 2 === 0 ? 'even' : undefined);
     expectTypeOf(rest).toEqualTypeOf({} as const);
   });
 
-  test('indexed', () => {
+  it('indexed', () => {
     const { even, ...rest } = groupBy(
       ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'],
       (_, index) => (index % 2 === 0 ? 'even' : undefined),

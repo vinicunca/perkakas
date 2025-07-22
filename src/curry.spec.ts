@@ -1,3 +1,4 @@
+import { expect, it } from 'vitest';
 import { curry } from './curry';
 
 function sub(a: number, b: number): number {

@@ -1,3 +1,4 @@
+import { expectTypeOf, it } from 'vitest';
 import { differenceWith } from './difference-with';
 import { isStrictEqual } from './is-strict-equal';
 

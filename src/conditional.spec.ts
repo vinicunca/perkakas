@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { conditional } from './conditional';
 import { isDeepEqual } from './is-deep-equal';
 import { pipe } from './pipe';

@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { firstBy } from './first-by';
 import { identity } from './identity';
 import { pipe } from './pipe';

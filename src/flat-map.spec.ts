@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { createLazyInvocationCounter } from '../test/lazy-invocation-counter';
 import { add } from './add';
 import { find } from './find';

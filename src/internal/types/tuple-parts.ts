@@ -33,12 +33,12 @@ export type TupleParts<
   T extends IterableContainer,
   Prefix extends Array<unknown> = [],
 > = T extends readonly [infer Head, ...infer Tail]
-  ? // The first step to building the tuple parts is to remove the extract (and
-// remove) the required prefix from the tuple.
-  TupleParts<Tail, [...Prefix, Head]>
-  : // We wrap everything with `Simplify` to flatten all the intersections we
-// use to construct the type.
-  Simplify<
+  // The first step to building the tuple parts is to remove the extract (and
+  // remove) the required prefix from the tuple.
+  ? TupleParts<Tail, [...Prefix, Head]>
+  // We wrap everything with `Simplify` to flatten all the intersections we
+  // use to construct the type.
+  : Simplify<
     {
       /**
        * A fixed tuple that defines the part of the tuple where all its
@@ -56,24 +56,24 @@ type TuplePartsWithoutRequired<
   T extends IterableContainer,
   Suffix extends Array<unknown> = [],
 > = T extends readonly [...infer Head, infer Tail]
-  ? // Our tuple has no required prefix, now we extract (and remove) the
-// required suffix from the tuple.
-  TuplePartsWithoutRequired<Head, [Tail, ...Suffix]>
+  // Our tuple has no required prefix, now we extract (and remove) the
+  // required suffix from the tuple.
+  ? TuplePartsWithoutRequired<Head, [Tail, ...Suffix]>
   : (Suffix extends readonly []
-    ? // By definition the tuple can only have an optional part when the
-  // suffix is *empty*.
-    TuplePartsWithoutFixed<T>
-    : // When the suffix is not empty we can skip the optional part and go
-        // directly to the rest part.
-        { optional: [] } & TuplePartsRest<T>) & {
-          /**
-           * A *fixed* tuple that defines the part of a tuple **after** a non-never
-           * rest parameter. These could never be optional elements, and could
-           * never contain another rest element. When the array doesn't have a
-           * required part this will be an empty tuple (`[]`).
-           */
-          suffix: Suffix;
-        };
+    // By definition the tuple can only have an optional part when the
+    // suffix is *empty*.
+    ? TuplePartsWithoutFixed<T>
+    // When the suffix is not empty we can skip the optional part and go
+    // directly to the rest part.
+    : { optional: [] } & TuplePartsRest<T>) & {
+      /**
+       * A *fixed* tuple that defines the part of a tuple **after** a non-never
+       * rest parameter. These could never be optional elements, and could
+       * never contain another rest element. When the array doesn't have a
+       * required part this will be an empty tuple (`[]`).
+       */
+      suffix: Suffix;
+    };
 
 // This is an internal type and assumes that the tuple has no required parts
 // (neither prefix nor suffix).
@@ -81,11 +81,11 @@ type TuplePartsWithoutFixed<
   T extends IterableContainer,
   Optional extends Array<unknown> = [],
 > = T extends readonly [(infer Head)?, ...infer Tail]
-  ? // Optional elements behave differently than required ones, and TypeScript
-// has a hard time telling which is which based on inference alone. This
-// requires we do additional checks on the inferred types in order to
-// determine if the optional part has been fully extracted yet or not.
-  Or<
+  // Optional elements behave differently than required ones, and TypeScript
+  // has a hard time telling which is which based on inference alone. This
+  // requires we do additional checks on the inferred types in order to
+  // determine if the optional part has been fully extracted yet or not.
+  ? Or<
     // The first check is obvious and allows us to stop the recursion when
     // dealing with tuples that don't have a rest element.
     T extends readonly [] ? true : false,

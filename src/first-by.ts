@@ -1,16 +1,17 @@
+import type { OrderRule } from './internal/curry-order-rules';
 import type { CompareFunction } from './internal/types/compare-function';
 import type { IterableContainer } from './internal/types/iterable-container';
 import type { NonEmptyArray } from './internal/types/non-empty-array';
 import { hasAtLeast } from './has-at-least';
-import { curryOrderRules, type OrderRule } from './internal/curry-order-rules';
+import { curryOrderRules } from './internal/curry-order-rules';
 
-type FirstBy<T extends IterableContainer> =
-  | T[number]
-  | (T extends readonly [unknown, ...ReadonlyArray<unknown>]
-    ? never
-    : T extends readonly [...ReadonlyArray<unknown>, unknown]
+type FirstBy<T extends IterableContainer>
+  = | T[number]
+    | (T extends readonly [unknown, ...ReadonlyArray<unknown>]
       ? never
-      : undefined);
+      : T extends readonly [...ReadonlyArray<unknown>, unknown]
+        ? never
+        : undefined);
 
 /**
  * Find the first element in the array that adheres to the order rules provided. This is a superset of what a typical `maxBy` or `minBy` function would do as it allows defining "tie-breaker" rules when values are equal, and allows comparing items using any logic. This function is equivalent to calling `P.first(P.sortBy(...))` but runs at *O(n)* instead of *O(nlogn)*.

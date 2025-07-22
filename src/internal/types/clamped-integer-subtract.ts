@@ -10,19 +10,19 @@ export type ClampedIntegerSubtract<
   SubtrahendBag extends Array<unknown> = [],
   ResultBag extends Array<unknown> = [],
 > = [...SubtrahendBag, ...ResultBag]['length'] extends Minuend
-  ? // than Minuend, or 0 if it is larger (or equal).
-  ResultBag['length']
+  // than Minuend, or 0 if it is larger (or equal).
+  ? ResultBag['length']
   : SubtrahendBag['length'] extends Subtrahend
-    ? // "removing" items from Minuend and we now start "counting up" from 0 the
-  // remainder via the ResultBag.
-    ClampedIntegerSubtract<
+    // "removing" items from Minuend and we now start "counting up" from 0 the
+    // remainder via the ResultBag.
+    ? ClampedIntegerSubtract<
       Minuend,
       Subtrahend,
       SubtrahendBag,
       [...ResultBag, unknown]
     >
-    : // allows us to "skip" items while we count up to Minuend.
-    ClampedIntegerSubtract<
+    // allows us to "skip" items while we count up to Minuend.
+    : ClampedIntegerSubtract<
       Minuend,
       Subtrahend,
       [...SubtrahendBag, unknown],

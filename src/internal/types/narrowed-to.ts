@@ -7,8 +7,8 @@ import type { IsAny } from 'type-fest';
  * @example
  *   function isMyType<T>(data: T | MyType): data is NarrowedTo<T, MyType> { ... }
  */
-export type NarrowedTo<T, Base> =
-  Extract<T, Base> extends never
+export type NarrowedTo<T, Base>
+  = Extract<T, Base> extends never
     ? Base
     : IsAny<T> extends true
       ? Base

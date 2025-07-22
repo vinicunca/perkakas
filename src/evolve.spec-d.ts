@@ -1,3 +1,4 @@
+import { describe, expectTypeOf, it } from 'vitest';
 import { add } from './add';
 import { evolve } from './evolve';
 import { identity } from './identity';
@@ -9,7 +10,6 @@ import { reduce } from './reduce';
 import { set } from './set';
 
 const sum = reduce((a, b: number) => add(a, b), 0);
-
 describe('data first', () => {
   it('creates a new object by evolving the `data` according to the `transformation` functions', () => {
     const result = evolve(

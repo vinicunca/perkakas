@@ -1,3 +1,4 @@
+import { expect, it, vi } from 'vitest';
 import { forEachObj } from './for-each-obj';
 import { pipe } from './pipe';
 

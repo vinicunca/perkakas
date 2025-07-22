@@ -2,6 +2,7 @@
  * These aren't useful for a reference implementation for a legacy library!
  */
 
+import { describe, expect, it, vi } from 'vitest';
 import { funnel } from './funnel';
 import { sleep } from './sleep';
 
@@ -97,7 +98,7 @@ const UT = 16;
 
 describe('https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L22768', () => {
   it('should throttle a function', async () => {
-    const mockFn = vi.fn();
+    const mockFn = vi.fn<() => void>();
     const throttled = throttle(mockFn, UT);
     throttled();
     throttled();
@@ -112,7 +113,7 @@ describe('https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L22768', ()
   });
 
   it('should clear timeout when `func` is called', async () => {
-    const mockFn = vi.fn();
+    const mockFn = vi.fn<() => void>();
     const throttled = throttle(mockFn, UT);
     throttled();
 
@@ -126,7 +127,7 @@ describe('https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L22768', ()
   });
 
   it('should not trigger a trailing call when invoked once', async () => {
-    const mockFn = vi.fn();
+    const mockFn = vi.fn<() => void>();
     const throttled = throttle(mockFn, UT);
     throttled();
 
@@ -138,7 +139,7 @@ describe('https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L22768', ()
   });
 
   it('should trigger a call when invoked repeatedly', () => {
-    const mockFn = vi.fn();
+    const mockFn = vi.fn<() => void>();
 
     const throttled = throttle(mockFn, UT);
 
@@ -151,7 +152,7 @@ describe('https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L22768', ()
   });
 
   it('should trigger a call when invoked repeatedly and `leading` is `false`', async () => {
-    const mockFn = vi.fn();
+    const mockFn = vi.fn<() => void>();
     const throttled = throttle(mockFn, UT, { leading: false });
     const end = Date.now() + 10 * UT;
     while (Date.now() < end) {
@@ -164,7 +165,7 @@ describe('https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L22768', ()
   });
 
   it('should trigger a second throttled call as soon as possible', async () => {
-    const mockFn = vi.fn();
+    const mockFn = vi.fn<() => void>();
     const throttled = throttle(mockFn, 4 * UT, { leading: false });
     throttled();
     await sleep(6 * UT);
@@ -182,7 +183,7 @@ describe('https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L22768', ()
   });
 
   it('should apply default options', async () => {
-    const mockFn = vi.fn();
+    const mockFn = vi.fn<() => void>();
     const throttled = throttle(mockFn, UT, {});
     throttled();
     throttled();
@@ -195,8 +196,8 @@ describe('https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L22768', ()
   });
 
   it('should support a `leading` option', () => {
-    const mockWith = vi.fn();
-    const mockWithout = vi.fn();
+    const mockWith = vi.fn<() => void>();
+    const mockWithout = vi.fn<() => void>();
     const withLeading = throttle(mockWith, UT, { leading: true });
     const withoutLeading = throttle(mockWithout, UT, { leading: false });
 
@@ -208,8 +209,8 @@ describe('https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L22768', ()
   });
 
   it('should support a `trailing` option', async () => {
-    const mockWith = vi.fn();
-    const mockWithout = vi.fn();
+    const mockWith = vi.fn<(x: string) => void>();
+    const mockWithout = vi.fn<(x: string) => void>();
     const withTrailing = throttle(mockWith, 2 * UT, { trailing: true });
     const withoutTrailing = throttle(mockWithout, 2 * UT, { trailing: false });
     withTrailing('a');
@@ -229,7 +230,7 @@ describe('https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L22768', ()
   });
 
   it('should not update `lastCalled`, at the end of the timeout, when `trailing` is `false`', async () => {
-    const mockFn = vi.fn();
+    const mockFn = vi.fn<() => void>();
     const throttled = throttle(mockFn, 64, { trailing: false });
     throttled();
     throttled();
@@ -244,7 +245,7 @@ describe('https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L22768', ()
 
 describe('https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L23038', () => {
   it('should use a default `wait` of `0`', async () => {
-    const mockFn = vi.fn();
+    const mockFn = vi.fn<() => void>();
     const throttled = throttle(mockFn);
     throttled();
     await sleep(UT);
@@ -273,7 +274,7 @@ describe('https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L23038', ()
   });
 
   it('should support cancelling delayed calls', async () => {
-    const mockFn = vi.fn();
+    const mockFn = vi.fn<() => void>();
     const throttled = throttle(mockFn, UT, { leading: false });
     throttled();
     throttled.cancel();
@@ -283,7 +284,7 @@ describe('https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L23038', ()
   });
 
   it('should reset `lastCalled` after cancelling', async () => {
-    const mockFn = vi.fn();
+    const mockFn = vi.fn<() => void>();
     const throttled = throttle(mockFn, UT, { leading: true });
     throttled();
 
@@ -301,7 +302,7 @@ describe('https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L23038', ()
   });
 
   it('should support flushing delayed calls', async () => {
-    const mockFn = vi.fn();
+    const mockFn = vi.fn<() => void>();
     const throttled = throttle(mockFn, UT, { leading: false });
     throttled();
     throttled.flush();
@@ -314,7 +315,7 @@ describe('https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L23038', ()
   });
 
   it('should noop `cancel` and `flush` when nothing is queued', async () => {
-    const mockFn = vi.fn();
+    const mockFn = vi.fn<() => void>();
     const throttled = throttle(mockFn, UT);
     throttled.cancel();
     throttled.flush();
@@ -329,7 +330,7 @@ describe('https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L23038', ()
 
 describe('not tested by Lodash', () => {
   it('should do nothing when `leading` and `trailing` are both `disabled`', async () => {
-    const mockFn = vi.fn();
+    const mockFn = vi.fn<() => void>();
     const throttled = throttle(mockFn, UT, { leading: false, trailing: false });
     throttled();
     throttled();

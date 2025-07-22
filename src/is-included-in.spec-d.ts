@@ -1,4 +1,5 @@
 /* eslint-disable sonar/no-all-duplicated-branches */
+import { describe, expectTypeOf, it } from 'vitest';
 import { isIncludedIn } from './is-included-in';
 
 it('throws on bad value types', () => {
@@ -13,7 +14,7 @@ it('throws on non-overlapping (e.g. typo-proof)', () => {
 });
 
 describe('narrowing', () => {
-  test('data is single literal, container is pure tuple === NARROWED', () => {
+  it('data is single literal, container is pure tuple === NARROWED', () => {
     const data = 1 as const;
     if (isIncludedIn(data, [1] as const)) {
       expectTypeOf(data).toEqualTypeOf<1>();
@@ -22,7 +23,7 @@ describe('narrowing', () => {
     }
   });
 
-  test('data is literal union, container is pure tuple === NARROWED', () => {
+  it('data is literal union, container is pure tuple === NARROWED', () => {
     const data = 1 as 1 | 2 | 3;
     if (isIncludedIn(data, [1] as const)) {
       expectTypeOf(data).toEqualTypeOf<1>();
@@ -31,7 +32,7 @@ describe('narrowing', () => {
     }
   });
 
-  test('data is single literal, container is array === NOT NARROWED', () => {
+  it('data is single literal, container is array === NOT NARROWED', () => {
     const data = 1 as const;
     if (isIncludedIn(data, [1] as Array<1>)) {
       expectTypeOf(data).toEqualTypeOf<1>();
@@ -40,7 +41,7 @@ describe('narrowing', () => {
     }
   });
 
-  test('data is literal union, container is array === NOT NARROWED', () => {
+  it('data is literal union, container is array === NOT NARROWED', () => {
     const data = 1 as 1 | 2 | 3;
     if (isIncludedIn(data, [1] as Array<1>)) {
       expectTypeOf(data).toEqualTypeOf<1 | 2 | 3>();
@@ -49,7 +50,7 @@ describe('narrowing', () => {
     }
   });
 
-  test('data is primitive, container is pure tuple of typeof data === NOT NARROWED', () => {
+  it('data is primitive, container is pure tuple of typeof data === NOT NARROWED', () => {
     const data = 1 as number;
     if (isIncludedIn(data, [1] as [number])) {
       expectTypeOf(data).toEqualTypeOf<number>();
@@ -58,7 +59,7 @@ describe('narrowing', () => {
     }
   });
 
-  test('data is primitive, container is array of typeof data === NOT NARROWED', () => {
+  it('data is primitive, container is array of typeof data === NOT NARROWED', () => {
     const data = 1 as number;
     if (isIncludedIn(data, [1] as Array<number>)) {
       expectTypeOf(data).toEqualTypeOf<number>();
@@ -67,7 +68,7 @@ describe('narrowing', () => {
     }
   });
 
-  test('data is primitive, container is pure tuple of literals === NARROWED', () => {
+  it('data is primitive, container is pure tuple of literals === NARROWED', () => {
     const data = 1 as number;
     if (isIncludedIn(data, [1] as const)) {
       expectTypeOf(data).toEqualTypeOf<1>();
@@ -76,7 +77,7 @@ describe('narrowing', () => {
     }
   });
 
-  test('data is primitive, container is array of literals === NARROWED', () => {
+  it('data is primitive, container is array of literals === NARROWED', () => {
     const data = 1 as number;
     if (isIncludedIn(data, [1] as Array<1>)) {
       expectTypeOf(data).toEqualTypeOf<1>();
@@ -85,7 +86,7 @@ describe('narrowing', () => {
     }
   });
 
-  test('data is primitive union, container is pure tuple of literals === NARROWED', () => {
+  it('data is primitive union, container is pure tuple of literals === NARROWED', () => {
     const data = 1 as number | string;
     if (isIncludedIn(data, [1] as const)) {
       expectTypeOf(data).toEqualTypeOf<1>();
@@ -94,7 +95,7 @@ describe('narrowing', () => {
     }
   });
 
-  test('data is primitive union, container is pure tuple of primitives === NOT NARROWED', () => {
+  it('data is primitive union, container is pure tuple of primitives === NOT NARROWED', () => {
     const data = 1 as number | string;
     if (isIncludedIn(data, [1] as [number])) {
       expectTypeOf(data).toEqualTypeOf<number | string>();
@@ -103,7 +104,7 @@ describe('narrowing', () => {
     }
   });
 
-  test('data is primitive union, container is array of primitives === NOT NARROWED', () => {
+  it('data is primitive union, container is array of primitives === NOT NARROWED', () => {
     const data = 1 as number | string;
     if (isIncludedIn(data, [1] as Array<number>)) {
       expectTypeOf(data).toEqualTypeOf<number | string>();
@@ -112,7 +113,7 @@ describe('narrowing', () => {
     }
   });
 
-  test('pure tuples with literal unions', () => {
+  it('pure tuples with literal unions', () => {
     const data = 1 as 1 | 2 | 3;
     if (isIncludedIn(data, [1] as [1 | 2])) {
       expectTypeOf(data).toEqualTypeOf<1 | 2 | 3>();

@@ -1,4 +1,6 @@
+import { describe, expect, it } from 'vitest';
 import { TEST_CASES } from '../test/transform-case-provider';
+
 import { toPascalSnakeCase } from './to-pascal-snake-case';
 
 describe('to pascal snake case', () => {

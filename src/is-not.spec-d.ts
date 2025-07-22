@@ -1,8 +1,8 @@
+/* eslint-disable style/indent */
+import type { AllTypesDataProviderTypes, TestClass, TypedArray } from '../test/types-data-provider';
+import { expectTypeOf, it } from 'vitest';
 import {
   ALL_TYPES_DATA_PROVIDER,
-  type AllTypesDataProviderTypes,
-  type TestClass,
-  type TypedArray,
   TYPES_DATA_PROVIDER,
 } from '../test/types-data-provider';
 import { isNot } from './is-not';

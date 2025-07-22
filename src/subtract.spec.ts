@@ -1,3 +1,4 @@
+import { expect, it } from 'vitest';
 import { subtract } from './subtract';
 
 it('data-first', () => {

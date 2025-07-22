@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { mapToObj } from './map-to-obj';
 import { pipe } from './pipe';
 

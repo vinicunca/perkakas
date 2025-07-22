@@ -1,7 +1,10 @@
-/* eslint-disable no-nested-ternary, function-paren-newline, ts/explicit-function-return-type, ts/no-explicit-any --
+/* eslint-disable no-nested-ternary */
+/* eslint-disable antfu/consistent-list-newline */
+/* eslint-disable ts/explicit-function-return-type, ts/no-explicit-any --
  * These aren't useful for a reference implementation for a legacy library!
  */
 
+import { describe, expect, it, vi } from 'vitest';
 import { constant } from './constant';
 import { funnel } from './funnel';
 import { identity } from './identity';
@@ -46,8 +49,7 @@ function debounceWithCachedValue<F extends (...args: any) => any>(
     readonly leading?: boolean;
     readonly trailing?: boolean;
     readonly maxWait?: number;
-  } = {},
-) {
+  } = {}) {
   let cachedValue: ReturnType<F> | undefined;
 
   const { call, flush, cancel } = funnel(
@@ -120,7 +122,7 @@ const UT = 16;
 
 describe('https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L4187', () => {
   it('should debounce a function', async () => {
-    const mockFn = vi.fn(identity());
+    const mockFn = vi.fn<(x: string) => string>(identity());
     const debounced = debounceWithCachedValue(mockFn, UT);
 
     expect(debounced('a')).toBeUndefined();
@@ -170,7 +172,7 @@ describe('https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L4187', () 
 
   it('should invoke the trailing call with the correct arguments and `this` binding', async () => {
     const DATA = {};
-    const mockFn = vi.fn(constant(false));
+    const mockFn = vi.fn<(a: object, b: string) => boolean>(constant(false));
 
     /**
      * In Lodash the test uses both `leading` and `trailing` timing options
@@ -239,7 +241,7 @@ describe('https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L23038', ()
   });
 
   it('should noop `cancel` and `flush` when nothing is queued', async () => {
-    const mockFn = vi.fn(constant('hello'));
+    const mockFn = vi.fn<() => string>(constant('hello'));
     const debounced = debounceWithCachedValue(mockFn, UT);
     debounced.cancel();
 

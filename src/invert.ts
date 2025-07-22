@@ -1,5 +1,6 @@
 import type { Simplify } from 'type-fest';
 
+import type { ToString } from './internal/types/to-string';
 import { curry } from './curry';
 
 type Inverted<T extends object> = Simplify<{
@@ -7,7 +8,7 @@ type Inverted<T extends object> = Simplify<{
     ? Required<T>[K] extends PropertyKey
       ? Required<T>[K]
       : never
-    : never]: `${K extends number | string ? K : never}`;
+    : never]: ToString<K>;
 }>;
 
 /**

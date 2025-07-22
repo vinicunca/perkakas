@@ -1,13 +1,12 @@
+import type { AllTypesDataProviderTypes, TestClass, TypedArray } from '../test/types-data-provider';
+import { expectTypeOf, it } from 'vitest';
 import {
   ALL_TYPES_DATA_PROVIDER,
-  type AllTypesDataProviderTypes,
-  type TestClass,
-  type TypedArray,
   TYPES_DATA_PROVIDER,
 } from '../test/types-data-provider';
 import { isNonNull } from './is-non-null';
 
-test('should work as type guard', () => {
+it('should work as type guard', () => {
   const data = TYPES_DATA_PROVIDER.date as AllTypesDataProviderTypes;
   if (isNonNull(data)) {
     expectTypeOf(data).toEqualTypeOf<
@@ -33,7 +32,7 @@ test('should work as type guard', () => {
   }
 });
 
-test('should work as type guard in filter', () => {
+it('should work as type guard in filter', () => {
   const data = ALL_TYPES_DATA_PROVIDER.filter(isNonNull);
   expectTypeOf(data).toEqualTypeOf<
     Array<
@@ -56,5 +55,5 @@ test('should work as type guard in filter', () => {
       | [number, number, number]
       | undefined
     >
-  >(data);
+        >(data);
 });

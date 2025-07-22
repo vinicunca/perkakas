@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { add } from './add';
 import { fromKeys } from './from-keys';
 import { pipe } from './pipe';

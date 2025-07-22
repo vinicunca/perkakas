@@ -1,3 +1,4 @@
+import { describe, expect, it, vi } from 'vitest';
 import { first } from './first';
 import { identity } from './identity';
 import { map } from './map';

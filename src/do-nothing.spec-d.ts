@@ -1,6 +1,7 @@
+import { it } from 'vitest';
 import { doNothing } from './do-nothing';
 
-test('supported in any api', () => {
+it('supported in any api', () => {
   mockApi({
     onMixOfParams: doNothing(),
     onNoParams: doNothing(),

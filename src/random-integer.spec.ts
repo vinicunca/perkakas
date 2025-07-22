@@ -1,3 +1,4 @@
+import { expect, it } from 'vitest';
 import { randomInteger } from './random-integer';
 
 const ITERATIONS = 1000;

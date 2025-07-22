@@ -1,13 +1,14 @@
+import { describe, expectTypeOf, it } from 'vitest';
 import { omit } from './omit';
 import { pipe } from './pipe';
 
 describe('data first', () => {
-  test('non existing prop', () => {
+  it('non existing prop', () => {
     // @ts-expect-error [ts2322] -- should not allow non existing props
     omit({ a: 1, b: 2, c: 3, d: 4 }, ['not', 'in'] as const);
   });
 
-  test('complex type', () => {
+  it('complex type', () => {
     const obj = { a: 1 } as { a: number } | { a?: number; b: string };
     const result = omit(obj, ['a']);
     expectTypeOf(result).toEqualTypeOf<
@@ -17,7 +18,7 @@ describe('data first', () => {
 });
 
 describe('data last', () => {
-  test('non existing prop', () => {
+  it('non existing prop', () => {
     pipe(
       { a: 1, b: 2, c: 3, d: 4 },
       // @ts-expect-error [ts2345] -- should not allow non existing props
@@ -25,7 +26,7 @@ describe('data last', () => {
     );
   });
 
-  test('complex type', () => {
+  it('complex type', () => {
     const obj = { a: 1 } as { a: number } | { a?: number; b: string };
     const result = pipe(obj, omit(['a']));
     expectTypeOf(result).toEqualTypeOf<
@@ -34,7 +35,7 @@ describe('data last', () => {
   });
 });
 
-test('multiple keys', () => {
+it('multiple keys', () => {
   interface Data {
     aProp: string;
     bProp: string;

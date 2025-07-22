@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { hasSubObject } from './has-sub-object';
 import { pipe } from './pipe';
 

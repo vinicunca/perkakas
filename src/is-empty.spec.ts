@@ -1,3 +1,4 @@
+import { expect, it } from 'vitest';
 import { isEmpty } from './is-empty';
 
 it('returns true for an empty array', () => {

@@ -1,3 +1,4 @@
+import { expect, it } from 'vitest';
 import { indexBy } from './index-by';
 import { pipe } from './pipe';
 import { prop } from './prop';

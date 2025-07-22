@@ -56,8 +56,8 @@ function swapPropsImplementation<
   key1: K1,
   key2: K2,
 ): {
-    [K in PropertyKey]: unknown;
-  } {
+  [K in PropertyKey]: unknown;
+} {
   const { [key1]: value1, [key2]: value2 } = obj;
   return {
     ...obj,

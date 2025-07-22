@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { isStrictEqual } from './is-strict-equal';
 
 describe('primitives', () => {

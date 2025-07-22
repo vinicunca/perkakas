@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { length } from './length';
 import { pipe } from './pipe';
 
@@ -9,7 +10,7 @@ describe('data first', () => {
   it('iterable', () => {
     expect(
       length({
-        *[Symbol.iterator]() {
+        * [Symbol.iterator]() {
           yield 0;
           yield 1;
           yield 2;
@@ -29,7 +30,7 @@ describe('curried', () => {
     expect(
       pipe(
         {
-          *[Symbol.iterator]() {
+          * [Symbol.iterator]() {
             yield 0;
             yield 1;
             yield 2;

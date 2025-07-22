@@ -1,3 +1,4 @@
+import { expectTypeOf, it } from 'vitest';
 import { merge } from './merge';
 
 interface FooInterface {
@@ -7,7 +8,7 @@ interface FooInterface {
   bar: symbol;
 }
 
-test('source type overrides destination type', () => {
+it('source type overrides destination type', () => {
   expectTypeOf(merge({ a: 1, b: 'hello' }, { b: 2 })).toEqualTypeOf<{
     a: number;
     b: number;
@@ -35,7 +36,7 @@ it('works with interfaces', () => {
   }>();
 });
 
-test('a property can be replaced by another property that is not of the same type', () => {
+it('a property can be replaced by another property that is not of the same type', () => {
   expectTypeOf(
     merge(
       { stripUndefinedValues: false } as { stripUndefinedValues: false },
@@ -44,7 +45,7 @@ test('a property can be replaced by another property that is not of the same typ
   ).toEqualTypeOf<{ stripUndefinedValues: true }>();
 });
 
-test('optional keys are enforced', () => {
+it('optional keys are enforced', () => {
   expectTypeOf(
     merge(
       {} as {
@@ -81,7 +82,7 @@ test('optional keys are enforced', () => {
   }>();
 });
 
-test('indexed key type can be overwritten', () => {
+it('indexed key type can be overwritten', () => {
   expectTypeOf(
     merge(
       {} as {
@@ -109,7 +110,7 @@ test('indexed key type can be overwritten', () => {
   }>();
 });
 
-test('destination with any', () => {
+it('destination with any', () => {
   /* eslint-disable ts/no-explicit-any -- Intentional! */
   expectTypeOf(merge({} as { foo?: any }, {} as { bar: true })).toEqualTypeOf<{
     foo?: any;
@@ -118,7 +119,7 @@ test('destination with any', () => {
   /* eslint-enable ts/no-explicit-any */
 });
 
-test('source with any', () => {
+it('source with any', () => {
   /* eslint-disable ts/no-explicit-any -- Intentional! */
   expectTypeOf(merge({} as { foo: true }, {} as { bar?: any })).toEqualTypeOf<{
     foo: true;
@@ -127,7 +128,7 @@ test('source with any', () => {
   /* eslint-enable ts/no-explicit-any */
 });
 
-test('Type-fest issue #601?', () => {
+it('Type-fest issue #601?', () => {
   // Test for issue https://github.com/sindresorhus/type-fest/issues/601
   expectTypeOf(
     merge(

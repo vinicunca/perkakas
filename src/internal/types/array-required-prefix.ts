@@ -12,18 +12,18 @@ import type { IterableContainer } from './iterable-container';
 import type { PerkakasTypeError } from './perkakas-type-error';
 import type { TupleParts } from './tuple-parts';
 
-export type ArrayRequiredPrefix<T extends IterableContainer, N extends number> =
-  IsLiteral<N> extends true
-    ? // Distribute T to support union types
-    T extends unknown
+export type ArrayRequiredPrefix<T extends IterableContainer, N extends number>
+  = IsLiteral<N> extends true
+    // Distribute T to support union types
+    ? T extends unknown
       ? ClampedIntegerSubtract<
         N,
         [...TupleParts<T>['required'], ...TupleParts<T>['suffix']]['length']
       > extends infer Remainder extends number
         ? Remainder extends 0
-          ? // The array already has enough required items in it's prefix or
-        // suffix so it satisfies the requirement without modifications.
-          T
+          // The array already has enough required items in it's prefix or
+          // suffix so it satisfies the requirement without modifications.
+          ? T
           : And<
             // We need more items than the optional part of the tuple can
             // provide
@@ -39,11 +39,11 @@ export type ArrayRequiredPrefix<T extends IterableContainer, N extends number> =
                 metadata: [T, N];
               }
             >
-            : // This is the crux of the type, there are two important things to
-          // note here:
-          // 1. We need to make sure we don't remove the readonly modifier
-          // from the output so we copy it from the input, if it exists.
-            WithSameReadonly<
+            // This is the crux of the type, there are two important things to
+            // note here:
+            // 1. We need to make sure we don't remove the readonly modifier
+            // from the output so we copy it from the input, if it exists.
+            : WithSameReadonly<
               T,
               [
                 // We recreate the array by largely copying the input tuple to
@@ -103,8 +103,8 @@ export type ArrayRequiredPrefix<T extends IterableContainer, N extends number> =
 
 // A trivial utility that makes the output Readonly if T is also readonly.
 // Notice that we make the decision based on T, but output the type based on U.
-type WithSameReadonly<Source, Destination> =
-  IsEqual<Source, Readonly<Source>> extends true
+type WithSameReadonly<Source, Destination>
+  = IsEqual<Source, Readonly<Source>> extends true
     ? Readonly<Destination>
     : Destination;
 
@@ -117,14 +117,14 @@ type OptionalTupleRequiredPrefix<
   N,
   Prefix extends Array<unknown> = [],
 > = Prefix['length'] extends N
-  ? // This case happens when N is smaller than the number of items in T, it
-    // means that Prefix contains the required part of the optional part, and
-    // anything items that haven't been processed yet need to be added to the
-    // prefix as optional items.
-    [...Prefix, ...Partial<T>]
+  // This case happens when N is smaller than the number of items in T, it
+  // means that Prefix contains the required part of the optional part, and
+  // anything items that haven't been processed yet need to be added to the
+  // prefix as optional items.
+  ? [...Prefix, ...Partial<T>]
   : T extends readonly [infer Head, ...infer Rest]
     ? OptionalTupleRequiredPrefix<Rest, N, [...Prefix, Head]>
-    : // This case happens when N is equal to or larger than the number of
-  // items in T, it means that we made all items required and we don't have
-  // any remainder that needs to be spread as optional items.
-    Prefix;
+    // This case happens when N is equal to or larger than the number of
+    // items in T, it means that we made all items required and we don't have
+    // any remainder that needs to be spread as optional items.
+    : Prefix;

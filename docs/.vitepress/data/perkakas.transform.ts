@@ -1,10 +1,11 @@
 import type { SetRequired } from 'type-fest';
 
+import type { JSONOutput } from 'typedoc';
 import type PERKAKAS_METADATA from './metadata.json';
 import { hasAtLeast, isDefined, uniqueBy } from '@vinicunca/perkakas';
-import invariant from 'tiny-invariant';
 
-import { type JSONOutput, ReflectionKind } from 'typedoc';
+import invariant from 'tiny-invariant';
+import { ReflectionKind } from 'typedoc';
 
 export type DocumentedFunction = ReturnType<typeof transformProject>[number];
 export type FunctionSignature = ReturnType<typeof transformSignature>;

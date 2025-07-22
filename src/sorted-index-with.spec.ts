@@ -2,7 +2,7 @@
  * This utility function simply delegates the call to `binarySearchCutoffIndex`,
  * so we test it mainly via the tests for that function.
  */
-
+import { expect, it } from 'vitest';
 import { sortedIndexWith } from './sorted-index-with';
 
 it('regular', () => {

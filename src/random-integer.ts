@@ -8,8 +8,8 @@ import type {
 } from 'type-fest';
 import type { IntRangeInclusive } from './internal/types/int-range-inclusive';
 
-type RandomInteger<From extends number, To extends number> =
-  Or<
+type RandomInteger<From extends number, To extends number>
+  = Or<
     IsNever<NonNegativeInteger<From>>,
     IsNever<NonNegativeInteger<To>>
   > extends true

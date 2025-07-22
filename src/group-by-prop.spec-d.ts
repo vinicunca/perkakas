@@ -1,9 +1,9 @@
+import { describe, expectTypeOf, it } from 'vitest';
 import { groupByProp } from './group-by-prop';
 
 const SYMBOL = Symbol('sym');
-
 describe('grouping prop types', () => {
-  test('primitive strings', () => {
+  it('primitive strings', () => {
     expectTypeOf(
       groupByProp([] as Array<{ a: string }>, 'a'),
     ).branded.toEqualTypeOf<{
@@ -11,7 +11,7 @@ describe('grouping prop types', () => {
     }>();
   });
 
-  test('literal strings', () => {
+  it('literal strings', () => {
     expectTypeOf(
       groupByProp(
         [
@@ -34,7 +34,7 @@ describe('grouping prop types', () => {
     }>();
   });
 
-  test('literal numbers', () => {
+  it('literal numbers', () => {
     expectTypeOf(
       groupByProp(
         [
@@ -49,7 +49,7 @@ describe('grouping prop types', () => {
     }>();
   });
 
-  test('symbol', () => {
+  it('symbol', () => {
     expectTypeOf(
       groupByProp(
         [
@@ -65,7 +65,7 @@ describe('grouping prop types', () => {
   });
 });
 
-test('values which might not exist in the input are optional in the output', () => {
+it('values which might not exist in the input are optional in the output', () => {
   expectTypeOf(
     groupByProp(
       [{ a: 'cat' }] as [{ a: 'cat' }, { a: 'mouse' }?, ...Array<{ a: 'dog' }>],
@@ -79,7 +79,7 @@ test('values which might not exist in the input are optional in the output', () 
 });
 
 describe('enforces strong typing on the grouping prop', () => {
-  test('typo in prop name', () => {
+  it('typo in prop name', () => {
     groupByProp(
       [{ a: 'hello' }] as const,
       // @ts-expect-error [ts2345] -- "typo" isn't a valid prop name
@@ -87,7 +87,7 @@ describe('enforces strong typing on the grouping prop', () => {
     );
   });
 
-  test('prop is not groupable', () => {
+  it('prop is not groupable', () => {
     groupByProp(
       [{ a: new Date() }] as const,
       // @ts-expect-error [ts2345] -- "a" can't be used to group the array
@@ -95,7 +95,7 @@ describe('enforces strong typing on the grouping prop', () => {
     );
   });
 
-  test('prop is only groupable for some of the elements', () => {
+  it('prop is only groupable for some of the elements', () => {
     groupByProp(
       [{ a: 'hello' }, { a: new Date() }] as const,
       // @ts-expect-error [ts2345] -- "a" cannot be used to group the array
@@ -104,23 +104,23 @@ describe('enforces strong typing on the grouping prop', () => {
     );
   });
 
-  test('allows grouping on a prop that isn\'t in all elements', () => {
+  it('allows grouping on a prop that isn\'t in all elements', () => {
     groupByProp([{ a: 'hello' }, { b: 123 }] as const, 'a');
   });
 
-  test('allows grouping on possibly undefined props', () => {
+  it('allows grouping on possibly undefined props', () => {
     groupByProp([] as Array<{ a: string | undefined }>, 'a');
   });
 });
 
-test('group by prop that doesn\'t exist on all items', () => {
+it('group by prop that doesn\'t exist on all items', () => {
   expectTypeOf(
     groupByProp([{ a: 'cat' }, { b: 'dog' }] as const, 'a'),
   ).toEqualTypeOf<{ cat: [{ readonly a: 'cat' }] }>();
 });
 
 describe('union of array types', () => {
-  test('when they share the grouping prop', () => {
+  it('when they share the grouping prop', () => {
     expectTypeOf(
       groupByProp(
         [] as
@@ -144,7 +144,7 @@ describe('union of array types', () => {
     >();
   });
 
-  test('when they don\'t share the grouping prop', () => {
+  it('when they don\'t share the grouping prop', () => {
     expectTypeOf(
       groupByProp([] as Array<{ a: string }> | Array<{ b: number }>, 'a'),
     ).branded.toEqualTypeOf<
@@ -155,14 +155,14 @@ describe('union of array types', () => {
     >();
   });
 
-  test('empty tuple', () => {
+  it('empty tuple', () => {
     expectTypeOf(groupByProp([] as [{ a: string }] | [], 'a')).toEqualTypeOf<
       Record<PropertyKey, never> | { [x: string]: [{ a: string }] }
     >();
   });
 });
 
-test('all values are undefined', () => {
+it('all values are undefined', () => {
   expectTypeOf(groupByProp([] as Array<{ a: undefined }>, 'a')).toEqualTypeOf<
     Record<PropertyKey, never>
   >();

@@ -1,4 +1,3 @@
-/* eslint-disable sonar/no-duplicate-string */
 import type { ChangeCaseOptions } from '../src/internal/case.types';
 
 interface Result {

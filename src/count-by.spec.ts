@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { countBy } from './count-by';
 import { pipe } from './pipe';
 import { prop } from './prop';

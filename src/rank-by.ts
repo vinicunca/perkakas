@@ -1,8 +1,9 @@
+import type { OrderRule } from './internal/curry-order-rules';
 import type { CompareFunction } from './internal/types/compare-function';
 import type { NonEmptyArray } from './internal/types/non-empty-array';
 import {
   curryOrderRulesWithArgument,
-  type OrderRule,
+
 } from './internal/curry-order-rules';
 
 /**

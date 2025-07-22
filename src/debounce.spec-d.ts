@@ -1,3 +1,4 @@
+import { expectTypeOf, it } from 'vitest';
 import { debounce } from './debounce';
 import { identity } from './identity';
 
@@ -28,7 +29,7 @@ it('doesn\'t return undefined on \'both\' timing', () => {
   expectTypeOf(result).toEqualTypeOf<string>();
 });
 
-test('argument typing to be good (all required)', () => {
+it('argument typing to be good (all required)', () => {
   const debouncer = debounce(
     (a: string, b: number, c: boolean) => `${a}${b}${c ? 'y' : 'n'}`,
     {},
@@ -47,10 +48,10 @@ test('argument typing to be good (all required)', () => {
   debouncer.call('a', 1, true);
 });
 
-test('argument typing to be good (with optional)', () => {
+it('argument typing to be good (with optional)', () => {
   const debouncer = debounce(
     (a: string, b?: number, c?: boolean) =>
-      // eslint-disable-next-line no-nested-ternary, sonar/no-nested-conditional
+      // eslint-disable-next-line no-nested-ternary
       `${a}${b ?? 'undefined'}${c === undefined ? 'undefined' : c ? 'y' : 'n'}`,
     {},
   );
@@ -66,7 +67,7 @@ test('argument typing to be good (with optional)', () => {
   debouncer.call('a', 1, true);
 });
 
-test('argument typing to be good (with defaults)', () => {
+it('argument typing to be good (with defaults)', () => {
   const debouncer = debounce(
     (a: string, b: number = 2, c: boolean = true) => `${a}${b}${c ? 'y' : 'n'}`,
     {},
@@ -83,7 +84,7 @@ test('argument typing to be good (with defaults)', () => {
   debouncer.call('a', 1, true);
 });
 
-test('argument typing to be good (with rest param)', () => {
+it('argument typing to be good (with rest param)', () => {
   const debouncer = debounce(
     (a: string, ...flags: ReadonlyArray<boolean>) =>
       `${a}${flags.map((flag) => (flag ? 'y' : 'n')).join(',')}`,

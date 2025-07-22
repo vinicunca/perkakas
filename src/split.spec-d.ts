@@ -1,126 +1,127 @@
+import { expectTypeOf, it } from 'vitest';
 import { split } from './split';
 
-test('non-literals', () => {
+it('non-literals', () => {
   const result = split('' as string, '' as string);
 
   expectTypeOf(result).toEqualTypeOf<Array<string>>();
 });
 
-test('non-literal data', () => {
+it('non-literal data', () => {
   const result = split('' as string, ',');
 
   expectTypeOf(result).toEqualTypeOf<Array<string>>();
 });
 
-test('non-literal separator', () => {
+it('non-literal separator', () => {
   const result = split('', ',' as string);
 
   expectTypeOf(result).toEqualTypeOf<Array<string>>();
 });
 
-test('non-literal limit', () => {
+it('non-literal limit', () => {
   const result = split('', '', 1 as number);
 
   expectTypeOf(result).toEqualTypeOf<Array<string>>();
 });
 
-test('literal empty strings', () => {
+it('literal empty strings', () => {
   const result = split('', '');
 
   expectTypeOf(result).toEqualTypeOf<[]>();
 });
 
-test('trivial literals', () => {
+it('trivial literals', () => {
   const result = split('a', ',');
 
   expectTypeOf(result).toEqualTypeOf<['a']>();
 });
 
-test('trivial literals', () => {
+it('trivial literals', () => {
   const result = split('a', ',');
 
   expectTypeOf(result).toEqualTypeOf<['a']>();
 });
 
-test('string contains separator', () => {
+it('string contains separator', () => {
   const result = split(',', ',');
 
   expectTypeOf(result).toEqualTypeOf<['', '']>();
 });
 
-test('useful split', () => {
+it('useful split', () => {
   const result = split('a,b,c', ',');
 
   expectTypeOf(result).toEqualTypeOf<['a', 'b', 'c']>();
 });
 
-test('regex split', () => {
+it('regex split', () => {
   const result = split('a,b,c', /,/u);
 
   expectTypeOf(result).toEqualTypeOf<Array<string>>();
 });
 
-test('limited split', () => {
+it('limited split', () => {
   const result = split('a,b,c', ',', 2);
 
   expectTypeOf(result).toEqualTypeOf<['a', 'b']>();
 });
 
-test('limit is higher than splits', () => {
+it('limit is higher than splits', () => {
   const result = split('a,b,c', ',', 5);
 
   expectTypeOf(result).toEqualTypeOf<['a', 'b', 'c']>();
 });
 
-test('undefined limit', () => {
+it('undefined limit', () => {
   const result = split('a,b,c', ',');
 
   expectTypeOf(result).toEqualTypeOf<['a', 'b', 'c']>();
 });
 
-test('multiple consecutive separators', () => {
+it('multiple consecutive separators', () => {
   const result = split('a,,b', ',');
 
   expectTypeOf(result).toEqualTypeOf<['a', '', 'b']>();
 });
 
-test('separator at the start and end', () => {
+it('separator at the start and end', () => {
   const result = split(',a,b,', ',');
 
   expectTypeOf(result).toEqualTypeOf<['', 'a', 'b', '']>();
 });
 
-test('empty string separator', () => {
+it('empty string separator', () => {
   const result = split('abcdef', '');
 
   expectTypeOf(result).toEqualTypeOf<['a', 'b', 'c', 'd', 'e', 'f']>();
 });
 
-test('empty everything', () => {
+it('empty everything', () => {
   const result = split('', '');
 
   expectTypeOf(result).toEqualTypeOf<[]>();
 });
 
-test('literal string with multiple character separator', () => {
+it('literal string with multiple character separator', () => {
   const result = split('a--b--c', '--');
 
   expectTypeOf(result).toEqualTypeOf<['a', 'b', 'c']>();
 });
 
-test('negative limit', () => {
+it('negative limit', () => {
   const result = split('a,b,c', ',', -1);
 
   expectTypeOf(result).toEqualTypeOf<['a', 'b', 'c']>();
 });
 
-test('fractional limits', () => {
+it('fractional limits', () => {
   const result = split('a,b,c', ',', 1.5);
 
   expectTypeOf(result).toEqualTypeOf<Array<string>>();
 });
 
-test('0 limit', () => {
+it('0 limit', () => {
   const result = split('a,b,c', ',', 0);
 
   expectTypeOf(result).toEqualTypeOf<[]>();

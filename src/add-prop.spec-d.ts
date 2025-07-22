@@ -1,3 +1,4 @@
+import { expectTypeOf, it } from 'vitest';
 import { addProp } from './add-prop';
 
 it('allows redefining prop types', () => {

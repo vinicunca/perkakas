@@ -1,5 +1,5 @@
-import 'uno.css';
 import DefaultTheme from 'vitepress/theme';
+import 'uno.css';
 
 import './styles/vars.css';
 import './styles/override.css';

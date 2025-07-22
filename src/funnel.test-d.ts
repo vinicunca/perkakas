@@ -1,10 +1,11 @@
 /* eslint-disable ts/no-unused-vars -- We just want to build types, we don't care about using the params... */
 
+import { describe, expectTypeOf, it } from 'vitest';
 import { doNothing } from './do-nothing';
 import { funnel } from './funnel';
 
 describe('\'call\' method args', () => {
-  test('no args', () => {
+  it('no args', () => {
     const foo = funnel(doNothing(), {
       reducer: (_: 'test' | undefined) => 'test' as const,
       triggerAt: 'start',
@@ -13,7 +14,7 @@ describe('\'call\' method args', () => {
     expectTypeOf(foo.call).parameters.toEqualTypeOf<[]>();
   });
 
-  test('non-optional args', () => {
+  it('non-optional args', () => {
     const foo = funnel(doNothing(), {
       // @ts-expect-error [ts(6133)] -- We want to use explicit names, not prefixed with _
       reducer: (_: 'test' | undefined, a: string, b: number, c: boolean) =>
@@ -27,7 +28,7 @@ describe('\'call\' method args', () => {
     >();
   });
 
-  test('optional args', () => {
+  it('optional args', () => {
     const foo = funnel(doNothing(), {
       // @ts-expect-error [ts(6133)] -- We want to use explicit names, not prefixed with _
       reducer: (_: 'test' | undefined, a?: string) => 'test' as const,
@@ -37,7 +38,7 @@ describe('\'call\' method args', () => {
     expectTypeOf(foo.call).parameters.toEqualTypeOf<[a?: string | undefined]>();
   });
 
-  test('rest args', () => {
+  it('rest args', () => {
     const foo = funnel(doNothing(), {
       reducer:
         // @ts-expect-error [ts(6133)] -- We want to use explicit names, not prefixed with _
@@ -51,7 +52,7 @@ describe('\'call\' method args', () => {
 });
 
 describe('derive the reducer accumulator type from the executor param', () => {
-  test('simple types', () => {
+  it('simple types', () => {
     funnel(
       (_: number) => {
         // do nothing
@@ -67,7 +68,7 @@ describe('derive the reducer accumulator type from the executor param', () => {
     );
   });
 
-  test('arrays', () => {
+  it('arrays', () => {
     funnel(
       (_: ReadonlyArray<number>) => {
         // do nothing,
@@ -85,7 +86,7 @@ describe('derive the reducer accumulator type from the executor param', () => {
     );
   });
 
-  test('objects', () => {
+  it('objects', () => {
     funnel(
       (_: { readonly a: number }) => {
         // do nothing
@@ -105,7 +106,7 @@ describe('derive the reducer accumulator type from the executor param', () => {
 });
 
 describe('prevent bad options', () => {
-  test('minGapMs cannot be the only option with timing: end', () => {
+  it('minGapMs cannot be the only option with timing: end', () => {
     funnel(
       doNothing(),
       // @ts-expect-error [ts(2345)] -- minGapMs cannot be set alone]

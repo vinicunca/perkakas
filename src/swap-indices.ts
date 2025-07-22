@@ -7,18 +7,18 @@ import { curry } from './curry';
 /**
  * @see https://github.com/sindresorhus/type-fest/blob/main/source/is-equal.d.ts
  */
-type isEqual<A, B> =
-  (<G>() => G extends A ? 1 : 2) extends <G>() => G extends B ? 1 : 2
+type isEqual<A, B>
+  = (<G>() => G extends A ? 1 : 2) extends <G>() => G extends B ? 1 : 2
     ? true
     : false;
 
-type Difference<A extends number, B extends number> =
-  TupleOfLength<A> extends [...infer U, ...TupleOfLength<B>]
+type Difference<A extends number, B extends number>
+  = TupleOfLength<A> extends [...infer U, ...TupleOfLength<B>]
     ? U['length']
     : never;
 
-type isLessThan<A extends number, B extends number> =
-  isEqual<A, B> extends true
+type isLessThan<A extends number, B extends number>
+  = isEqual<A, B> extends true
     ? false
     : 0 extends A
       ? true
@@ -75,14 +75,14 @@ type SwapArray<
   T extends IterableContainer,
   K1 extends number,
   K2 extends number,
-> =
+>
   // TODO: Because of limitations on the typescript version used, we
   // can't build a proper Absolute number type so we can't implement proper
   // typing for negative indices and have to opt for a less- strict type
   // instead.
   // Check out the history for the PR that introduced this TODO to see how it
   // could be implemented.
-  IsNonNegative<K1> extends false
+  = IsNonNegative<K1> extends false
     ? Array<T[number]>
     : IsNonNegative<K2> extends false
       ? Array<T[number]>

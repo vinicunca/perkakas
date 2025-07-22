@@ -1,3 +1,4 @@
+import { expect, it, vi } from 'vitest';
 import { difference } from './difference';
 import { identity } from './identity';
 import { map } from './map';

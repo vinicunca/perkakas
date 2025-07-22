@@ -1,4 +1,5 @@
 import type { DisjointUnionFields } from './disjoint-union-fields';
+import { expectTypeOf, it } from 'vitest';
 
 it('should have the complement of SharedUnionFields', () => {
   expectTypeOf<

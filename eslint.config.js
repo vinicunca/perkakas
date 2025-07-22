@@ -26,6 +26,7 @@ export default vinicuncaESLint(
       'sonar/cognitive-complexity': 'off',
       'sonar/no-redundant-optional': 'off',
       'sonar/no-nested-conditional': 'off',
+      'sonar/assertions-in-tests': 'off',
       'vinicunca/cognitive-complexity': 'off',
       'vinicunca/consistent-list-newline': 'off',
 

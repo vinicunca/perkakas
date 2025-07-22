@@ -1,28 +1,29 @@
+import { describe, expectTypeOf, it } from 'vitest';
 import { constant } from './constant';
 import { isNumber } from './is-number';
 import { pipe } from './pipe';
 import { takeLastWhile } from './take-last-while';
 
 describe('data-first', () => {
-  test('empty array', () => {
+  it('empty array', () => {
     const result = takeLastWhile([] as [], constant(true));
 
     expectTypeOf(result).toEqualTypeOf<Array<never>>();
   });
 
-  test('regular array', () => {
+  it('regular array', () => {
     const result = takeLastWhile([] as Array<number>, constant(true));
 
     expectTypeOf(result).toEqualTypeOf<Array<number>>();
   });
 
-  test('regular array with union type', () => {
+  it('regular array with union type', () => {
     const result = takeLastWhile([] as Array<number | string>, constant(true));
 
     expectTypeOf(result).toEqualTypeOf<Array<number | string>>();
   });
 
-  test('prefix array', () => {
+  it('prefix array', () => {
     const result = takeLastWhile(
       [1] as [number, ...Array<boolean>],
       constant(true),
@@ -31,7 +32,7 @@ describe('data-first', () => {
     expectTypeOf(result).toEqualTypeOf<Array<boolean | number>>();
   });
 
-  test('suffix array', () => {
+  it('suffix array', () => {
     const result = takeLastWhile(
       [1] as [...Array<boolean>, number],
       constant(true),
@@ -40,7 +41,7 @@ describe('data-first', () => {
     expectTypeOf(result).toEqualTypeOf<Array<boolean | number>>();
   });
 
-  test('array with suffix and prefix', () => {
+  it('array with suffix and prefix', () => {
     const result = takeLastWhile(
       [1, 'a'] as [number, ...Array<boolean>, string],
       constant(true),
@@ -49,13 +50,13 @@ describe('data-first', () => {
     expectTypeOf(result).toEqualTypeOf<Array<boolean | number | string>>();
   });
 
-  test('tuple', () => {
+  it('tuple', () => {
     const result = takeLastWhile([1, 'a', true] as const, constant(true));
 
     expectTypeOf(result).toEqualTypeOf<Array<'a' | 1 | true>>();
   });
 
-  test('union of arrays', () => {
+  it('union of arrays', () => {
     const result = takeLastWhile(
       [] as Array<boolean> | Array<string>,
       constant(true),
@@ -64,7 +65,7 @@ describe('data-first', () => {
     expectTypeOf(result).toEqualTypeOf<Array<boolean | string>>();
   });
 
-  test('assert type using predicate', () => {
+  it('assert type using predicate', () => {
     const result = takeLastWhile([1, 'a'], isNumber);
 
     expectTypeOf(result).toEqualTypeOf<Array<number>>();
@@ -72,19 +73,19 @@ describe('data-first', () => {
 });
 
 describe('data-last', () => {
-  test('empty array', () => {
+  it('empty array', () => {
     const result = pipe([] as [], takeLastWhile(constant(true)));
 
     expectTypeOf(result).toEqualTypeOf<Array<never>>();
   });
 
-  test('regular array', () => {
+  it('regular array', () => {
     const result = pipe([] as Array<number>, takeLastWhile(constant(true)));
 
     expectTypeOf(result).toEqualTypeOf<Array<number>>();
   });
 
-  test('regular array with union type', () => {
+  it('regular array with union type', () => {
     const result = pipe(
       [] as Array<number | string>,
       takeLastWhile(constant(true)),
@@ -93,7 +94,7 @@ describe('data-last', () => {
     expectTypeOf(result).toEqualTypeOf<Array<number | string>>();
   });
 
-  test('prefix array', () => {
+  it('prefix array', () => {
     const result = pipe(
       [1] as [number, ...Array<boolean>],
       takeLastWhile(constant(true)),
@@ -102,7 +103,7 @@ describe('data-last', () => {
     expectTypeOf(result).toEqualTypeOf<Array<boolean | number>>();
   });
 
-  test('suffix array', () => {
+  it('suffix array', () => {
     const result = pipe(
       [1] as [...Array<boolean>, number],
       takeLastWhile(constant(true)),
@@ -111,7 +112,7 @@ describe('data-last', () => {
     expectTypeOf(result).toEqualTypeOf<Array<boolean | number>>();
   });
 
-  test('array with suffix and prefix', () => {
+  it('array with suffix and prefix', () => {
     const result = pipe(
       [1, 'a'] as [number, ...Array<boolean>, string],
       takeLastWhile(constant(true)),
@@ -120,13 +121,13 @@ describe('data-last', () => {
     expectTypeOf(result).toEqualTypeOf<Array<boolean | number | string>>();
   });
 
-  test('tuple', () => {
+  it('tuple', () => {
     const result = pipe([1, 'a', true] as const, takeLastWhile(constant(true)));
 
     expectTypeOf(result).toEqualTypeOf<Array<'a' | 1 | true>>();
   });
 
-  test('union of arrays', () => {
+  it('union of arrays', () => {
     const result = pipe(
       [] as Array<boolean> | Array<string>,
       takeLastWhile(constant(true)),
@@ -135,14 +136,14 @@ describe('data-last', () => {
     expectTypeOf(result).toEqualTypeOf<Array<boolean | string>>();
   });
 
-  test('assert type using predicate', () => {
+  it('assert type using predicate', () => {
     const result = pipe([1, 'a'], takeLastWhile(isNumber));
 
     expectTypeOf(result).toEqualTypeOf<Array<number>>();
   });
 
   describe('predicate is typed correctly', () => {
-    test('empty array', () => {
+    it('empty array', () => {
       pipe(
         [] as [],
         takeLastWhile((item, index, array) => {
@@ -155,7 +156,7 @@ describe('data-last', () => {
       );
     });
 
-    test('regular array', () => {
+    it('regular array', () => {
       pipe(
         [] as Array<number>,
         takeLastWhile((item, index, array) => {
@@ -168,7 +169,7 @@ describe('data-last', () => {
       );
     });
 
-    test('regular array with union type', () => {
+    it('regular array with union type', () => {
       pipe(
         [] as Array<number | string>,
         takeLastWhile((item, index, array) => {
@@ -181,7 +182,7 @@ describe('data-last', () => {
       );
     });
 
-    test('prefix array', () => {
+    it('prefix array', () => {
       pipe(
         [1] as [number, ...Array<boolean>],
         takeLastWhile((item, index, array) => {
@@ -194,7 +195,7 @@ describe('data-last', () => {
       );
     });
 
-    test('suffix array', () => {
+    it('suffix array', () => {
       pipe(
         [1] as [...Array<boolean>, number],
         takeLastWhile((item, index, array) => {
@@ -207,7 +208,7 @@ describe('data-last', () => {
       );
     });
 
-    test('array with suffix and prefix', () => {
+    it('array with suffix and prefix', () => {
       pipe(
         [1, 'a'] as [number, ...Array<boolean>, string],
         takeLastWhile((item, index, array) => {
@@ -222,7 +223,7 @@ describe('data-last', () => {
       );
     });
 
-    test('tuple', () => {
+    it('tuple', () => {
       pipe(
         [1, 'a', true] as const,
         takeLastWhile((item, index, array) => {
@@ -235,7 +236,7 @@ describe('data-last', () => {
       );
     });
 
-    test('union of arrays', () => {
+    it('union of arrays', () => {
       pipe(
         [] as Array<boolean> | Array<string>,
         takeLastWhile((item, index, array) => {

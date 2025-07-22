@@ -107,7 +107,7 @@ export function debounce<F extends (...args: any) => any>(
   options:
     | (DebounceOptions & { readonly timing: 'both' })
     | (Omit<DebounceOptions, 'maxWaitMs'> & { readonly timing: 'leading' }),
-): Debouncer<F, false /* call CAN'T return null */>;
+): Debouncer<F, false>;
 
 export function debounce<F extends (...args: any) => any>(
   func: F,

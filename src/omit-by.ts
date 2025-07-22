@@ -1,10 +1,8 @@
 import type { IfNever, Simplify } from 'type-fest';
-
 import type { EnumerableStringKeyOf } from './internal/types/enumerable-string-key-of';
 import type { EnumerableStringKeyedValueOf } from './internal/types/enumerable-string-keyed-value-of';
-import type { IfBoundedRecord } from './internal/types/if-bounded-record';
-import type { ReconstructedRecord } from './internal/types/reconstructed-record';
-
+import type { If } from './internal/types/if';
+import type { IsBoundedRecord } from './internal/types/is-bounded-record';
 import { curry } from './curry';
 
 // Symbols are not passed to the predicate (because they can't be enumerated
@@ -19,21 +17,23 @@ type PickSymbolKeys<T extends object> = {
 // would be omitted from the output, so we need to assume any of them could be
 // filtered out. This means that we effectively make all (enumerable) keys
 // optional.
-type PartialEnumerableKeys<T extends object> =
+type PartialEnumerableKeys<T extends object>
   // `extends unknown` is always going to be the case and is used to convert any
   // union into a [distributive conditional type](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-8.html#distributive-conditional-types).
-  T extends unknown
+  = T extends unknown
     ? Simplify<
-      IfBoundedRecord<
-        T,
-        PickSymbolKeys<T> & {
-          -readonly [P in keyof T as P extends symbol
-            ? never
-            : P]?: Required<T>[P];
-        },
-        ReconstructedRecord<T>
+        If<
+          IsBoundedRecord<T>,
+          PickSymbolKeys<T> & {
+            -readonly [P in keyof T as P extends symbol
+              ? never
+              : P]?: Required<T>[P];
+          },
+          // This is the type you'd get from doing:
+          // `Object.fromEntries(Object.entries(x))`.
+          Record<EnumerableStringKeyOf<T>, EnumerableStringKeyedValueOf<T>>
+        >
       >
-    >
     : never;
 
 // When the predicate is a type-guard we have more information to work with when
@@ -69,15 +69,15 @@ type PartialProps<T, S> = {
 // excluded from it we can safely assume that the predicate would always return
 // `false` for any value of that property.
 type IsExactProp<T, P extends keyof T, S> = P extends symbol
-  ? // Symbols are passed through via the PickSymbolKeys type
-  false
+  // Symbols are passed through via the PickSymbolKeys type
+  ? false
   : T[P] extends Exclude<T[P], S>
     ? S extends T[P]
-      ? // If S extends the T[P] it means the type the predicate is narrowing to
-    // can't narrow the rejected value any further, so we can't say what
-    // would happen for a concrete value in runtime (e.g. if T[P] is
-    // `number` and S is `1`: `Exclude<number, 1> === number`.
-      false
+      // If S extends the T[P] it means the type the predicate is narrowing to
+      // can't narrow the rejected value any further, so we can't say what
+      // would happen for a concrete value in runtime (e.g. if T[P] is
+      // `number` and S is `1`: `Exclude<number, 1> === number`.
+      ? false
       : true
     : false;
 
@@ -87,8 +87,8 @@ type IsExactProp<T, P extends keyof T, S> = P extends symbol
 // false when passed to the predicate, hence it should be optional in the
 // output.
 type IsPartialProp<T, P extends keyof T, S> = P extends symbol
-  ? // Symbols are passed through via the PickSymbolKeys type
-  false
+  // Symbols are passed through via the PickSymbolKeys type
+  ? false
   : IsExactProp<T, P, S> extends true
     ? false
     : IfNever<Exclude<Required<T>[P], S>, false, true>;

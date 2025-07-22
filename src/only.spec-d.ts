@@ -1,101 +1,102 @@
+import { expectTypeOf, it } from 'vitest';
 import { only } from './only';
 
-test('simple array', () => {
+it('simple array', () => {
   const result = only([] as Array<number>);
   expectTypeOf(result).toEqualTypeOf<number | undefined>();
 });
 
-test('simple non-empty array', () => {
+it('simple non-empty array', () => {
   const result = only([1] as [number, ...Array<number>]);
   expectTypeOf(result).toEqualTypeOf<number | undefined>();
 });
 
-test('simple tuple', () => {
+it('simple tuple', () => {
   const result = only([1, 'a'] as [number, string]);
   expectTypeOf(result).toEqualTypeOf<undefined>();
 });
 
-test('array with more than one item', () => {
+it('array with more than one item', () => {
   const result = only([1, 2] as [number, number, ...Array<number>]);
   expectTypeOf(result).toEqualTypeOf<undefined>();
 });
 
-test('trivial empty array', () => {
+it('trivial empty array', () => {
   const result = only([] as []);
   expectTypeOf(result).toEqualTypeOf<undefined>();
 });
 
-test('array with last', () => {
+it('array with last', () => {
   const result = only([1] as [...Array<number>, number]);
   expectTypeOf(result).toEqualTypeOf<number | undefined>();
 });
 
-test('tuple with last', () => {
+it('tuple with last', () => {
   const result = only(['a', 1] as [...Array<string>, number]);
   expectTypeOf(result).toEqualTypeOf<number | string | undefined>();
 });
 
-test('tuple with two last', () => {
+it('tuple with two last', () => {
   const result = only(['a', 1, 2] as [...Array<string>, number, number]);
   expectTypeOf(result).toEqualTypeOf<undefined>();
 });
 
-test('tuple with first and last', () => {
+it('tuple with first and last', () => {
   const result = only([1, 'a', 2] as [number, ...Array<string>, number]);
   expectTypeOf(result).toEqualTypeOf<undefined>();
 });
 
-test('tuple with optional and array', () => {
+it('tuple with optional and array', () => {
   const result = only(['a', 1] as [string?, ...Array<number>]);
   expectTypeOf(result).toEqualTypeOf<number | string | undefined>();
 });
 
-test('tuple with all optional', () => {
+it('tuple with all optional', () => {
   const result = only(['a', 1] as [string?, number?]);
   expectTypeOf(result).toEqualTypeOf<number | string | undefined>();
 });
 
-test('simple readonly array', () => {
+it('simple readonly array', () => {
   const result = only([] as ReadonlyArray<number>);
   expectTypeOf(result).toEqualTypeOf<number | undefined>();
 });
 
-test('simple non-empty readonly array', () => {
+it('simple non-empty readonly array', () => {
   const result = only([1] as readonly [number, ...Array<number>]);
   expectTypeOf(result).toEqualTypeOf<number | undefined>();
 });
 
-test('simple readonly tuple', () => {
+it('simple readonly tuple', () => {
   const result = only([1, 'a'] as readonly [number, string]);
   expectTypeOf(result).toEqualTypeOf<undefined>();
 });
 
-test('readonly array with more than one item', () => {
+it('readonly array with more than one item', () => {
   const result = only([1, 2] as readonly [number, number, ...Array<number>]);
   expectTypeOf(result).toEqualTypeOf<undefined>();
 });
 
-test('readonly trivial empty array', () => {
+it('readonly trivial empty array', () => {
   const result = only([] as const);
   expectTypeOf(result).toEqualTypeOf(undefined);
 });
 
-test('readonly array with last', () => {
+it('readonly array with last', () => {
   const result = only([1] as readonly [...Array<number>, number]);
   expectTypeOf(result).toEqualTypeOf<number | undefined>();
 });
 
-test('readonly tuple with last', () => {
+it('readonly tuple with last', () => {
   const result = only(['a', 1] as readonly [...Array<string>, number]);
   expectTypeOf(result).toEqualTypeOf<number | string | undefined>();
 });
 
-test('readonly tuple with optional and array', () => {
+it('readonly tuple with optional and array', () => {
   const result = only(['a', 1] as readonly [string?, ...Array<number>]);
   expectTypeOf(result).toEqualTypeOf<number | string | undefined>();
 });
 
-test('readonly tuple with all optional', () => {
+it('readonly tuple with all optional', () => {
   const result = only(['a', 1] as readonly [string?, number?]);
   expectTypeOf(result).toEqualTypeOf<number | string | undefined>();
 });

@@ -1,3 +1,4 @@
+import { expect, it } from 'vitest';
 import { constant } from './constant';
 import { mapKeys } from './map-keys';
 import { pipe } from './pipe';

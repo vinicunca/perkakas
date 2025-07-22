@@ -1,3 +1,4 @@
+import { expectTypeOf, it } from 'vitest';
 import { mergeDeep } from './merge-deep';
 
 it('trivially merges disjoint objects', () => {

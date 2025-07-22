@@ -1,39 +1,40 @@
+import { describe, expectTypeOf, it } from 'vitest';
 import { drop } from './drop';
 import { pipe } from './pipe';
 
 describe('data-first', () => {
-  test('empty array', () => {
+  it('empty array', () => {
     const result = drop([] as [], 2);
 
     expectTypeOf(result).toEqualTypeOf<[]>();
   });
 
-  test('regular array', () => {
+  it('regular array', () => {
     const result = drop([] as Array<number>, 2);
 
     expectTypeOf(result).toEqualTypeOf<Array<number>>();
   });
 
-  test('regular array with union type', () => {
+  it('regular array with union type', () => {
     const result = drop([] as Array<number | string>, 2);
 
     expectTypeOf(result).toEqualTypeOf<Array<number | string>>();
   });
 
-  test('prefixed array', () => {
+  it('prefixed array', () => {
     const result = drop([1] as [number, ...Array<boolean>], 2);
 
     expectTypeOf(result).toEqualTypeOf<Array<boolean>>();
   });
 
-  test('suffixed array', () => {
+  it('suffixed array', () => {
     const result = drop([1] as [...Array<boolean>, number], 2);
 
     expectTypeOf(result).toEqualTypeOf<[...Array<boolean>, number] | []>();
   });
 
   describe('arrays with a prefix (2) and a suffix (2)', () => {
-    test('n === 0 (no drop)', () => {
+    it('n === 0 (no drop)', () => {
       const result = drop(
         [1, 2, 'a', 'b'] as [number, number, ...Array<boolean>, string, string],
         0,
@@ -44,7 +45,7 @@ describe('data-first', () => {
       >();
     });
 
-    test('n === 1 (drop from the prefix)', () => {
+    it('n === 1 (drop from the prefix)', () => {
       const result = drop(
         [1, 2, 'a', 'b'] as [number, number, ...Array<boolean>, string, string],
         1,
@@ -55,7 +56,7 @@ describe('data-first', () => {
       >();
     });
 
-    test('n === 2 (remove the prefix)', () => {
+    it('n === 2 (remove the prefix)', () => {
       const result = drop(
         [1, 2, 'a', 'b'] as [number, number, ...Array<boolean>, string, string],
         2,
@@ -64,7 +65,7 @@ describe('data-first', () => {
       expectTypeOf(result).toEqualTypeOf<[...Array<boolean>, string, string]>();
     });
 
-    test('n === 3 (drop the whole prefix, remove from the suffix)', () => {
+    it('n === 3 (drop the whole prefix, remove from the suffix)', () => {
       const result = drop(
         [1, 2, 'a', 'b'] as [number, number, ...Array<boolean>, string, string],
         3,
@@ -75,7 +76,7 @@ describe('data-first', () => {
       >();
     });
 
-    test('n === 4 (drop the whole prefix, drop the whole suffix)', () => {
+    it('n === 4 (drop the whole prefix, drop the whole suffix)', () => {
       const result = drop(
         [1, 2, 'a', 'b'] as [number, number, ...Array<boolean>, string, string],
         4,
@@ -86,7 +87,7 @@ describe('data-first', () => {
       >();
     });
 
-    test('n > 4 (drop more than the constant parts of the array)', () => {
+    it('n > 4 (drop more than the constant parts of the array)', () => {
       const result = drop(
         [1, 2, 'a', 'b'] as [number, number, ...Array<boolean>, string, string],
         5,
@@ -98,73 +99,73 @@ describe('data-first', () => {
     });
   });
 
-  test('tuple', () => {
+  it('tuple', () => {
     const result = drop([1, 'a', true] as const, 2);
 
     expectTypeOf(result).toEqualTypeOf<[true]>();
   });
 
-  test('union of arrays', () => {
+  it('union of arrays', () => {
     const result = drop([] as Array<boolean> | Array<string>, 2);
 
     expectTypeOf(result).toEqualTypeOf<Array<boolean | string>>();
   });
 
-  test('negative count', () => {
+  it('negative count', () => {
     const result = drop([] as Array<number>, -1);
 
     expectTypeOf(result).toEqualTypeOf<Array<number>>();
   });
 
-  test('generalized typed count', () => {
+  it('generalized typed count', () => {
     const result = drop(['a', 1, true] as const, 1 as number);
 
     expectTypeOf(result).toEqualTypeOf<Array<'a' | 1 | true>>();
   });
 
-  test('union of tuples of different length', () => {
+  it('union of tuples of different length', () => {
     expectTypeOf(
       drop([1, 'a'] as [number, string] | [boolean, boolean, number], 1),
     ).toEqualTypeOf<[string] | [boolean, number]>();
   });
 
-  test('dropping more than available', () => {
+  it('dropping more than available', () => {
     expectTypeOf(drop([1, 2, 3] as const, 10)).toEqualTypeOf<[]>();
   });
 });
 
 describe('data-last', () => {
-  test('empty array', () => {
+  it('empty array', () => {
     const result = pipe([] as [], drop(2));
 
     expectTypeOf(result).toEqualTypeOf<[]>();
   });
 
-  test('regular array', () => {
+  it('regular array', () => {
     const result = pipe([] as Array<number>, drop(2));
 
     expectTypeOf(result).toEqualTypeOf<Array<number>>();
   });
 
-  test('regular array with union type', () => {
+  it('regular array with union type', () => {
     const result = pipe([] as Array<number | string>, drop(2));
 
     expectTypeOf(result).toEqualTypeOf<Array<number | string>>();
   });
 
-  test('prefix array', () => {
+  it('prefix array', () => {
     const result = pipe([1] as [number, ...Array<boolean>], drop(2));
 
     expectTypeOf(result).toEqualTypeOf<Array<boolean>>();
   });
 
-  test('suffix array', () => {
+  it('suffix array', () => {
     const result = pipe([1] as [...Array<boolean>, number], drop(2));
 
     expectTypeOf(result).toEqualTypeOf<[...Array<boolean>, number] | []>();
   });
 
-  test('array with suffix and prefix', () => {
+  it('array with suffix and prefix', () => {
     const result = pipe(
       [1, 'a'] as [number, ...Array<boolean>, string],
       drop(2),
@@ -173,25 +174,25 @@ describe('data-last', () => {
     expectTypeOf(result).toEqualTypeOf<[...Array<boolean>, string] | []>();
   });
 
-  test('tuple', () => {
+  it('tuple', () => {
     const result = pipe([1, 'a', true] as const, drop(2));
 
     expectTypeOf(result).toEqualTypeOf<[true]>();
   });
 
-  test('union of arrays', () => {
+  it('union of arrays', () => {
     const result = pipe([] as Array<boolean> | Array<string>, drop(2));
 
     expectTypeOf(result).toEqualTypeOf<Array<boolean | string>>();
   });
 
-  test('negative count', () => {
+  it('negative count', () => {
     const result = pipe([] as Array<number>, drop(-1));
 
     expectTypeOf(result).toEqualTypeOf<Array<number>>();
   });
 
-  test('generalized typed count', () => {
+  it('generalized typed count', () => {
     const result = pipe([] as Array<number>, drop(1 as number));
 
     expectTypeOf(result).toEqualTypeOf<Array<number>>();

@@ -7,18 +7,18 @@ import type { TupleParts } from './tuple-parts';
 /**
  * The union of all possible ways to write a tuple as [...left, ...right].
  */
-export type TupleSplits<T extends IterableContainer> =
+export type TupleSplits<T extends IterableContainer>
   // Use a distributive conditional type, in case T is a union.
-  T extends unknown
-    ? // The complete set of all splits is the union of splitting each part of
-      // the tuple individually.
-      SplitPrefix<T> | SplitOptional<T> | SplitRest<T> | SplitSuffix<T>
+  = T extends unknown
+    // The complete set of all splits is the union of splitting each part of
+    // the tuple individually.
+    ? SplitPrefix<T> | SplitOptional<T> | SplitRest<T> | SplitSuffix<T>
     : never;
 
-type SplitPrefix<T extends IterableContainer> =
+type SplitPrefix<T extends IterableContainer>
   // This distributes the union, which is needed to allow us to "iterate" over
   // the splits.
-  FixedTupleSplits<TupleParts<T>['required']> extends infer Req
+  = FixedTupleSplits<TupleParts<T>['required']> extends infer Req
     ? Req extends {
       left: infer Left;
       right: infer Right extends Array<unknown>;
@@ -41,10 +41,10 @@ type SplitPrefix<T extends IterableContainer> =
       >
     : never;
 
-type SplitOptional<T extends IterableContainer> =
+type SplitOptional<T extends IterableContainer>
   // This distributes the union, which is needed to allow us to "iterate" over
   // the splits.
-  FixedTupleSplits<TupleParts<T>['optional']> extends infer Optional
+  = FixedTupleSplits<TupleParts<T>['optional']> extends infer Optional
     ? Optional extends {
       left: infer Left extends Array<unknown>;
       right: infer Right extends Array<unknown>;
@@ -81,10 +81,10 @@ interface SplitRest<T extends IterableContainer> {
   right: [...CoercedArray<TupleParts<T>['item']>, ...TupleParts<T>['suffix']];
 }
 
-type SplitSuffix<T extends IterableContainer> =
+type SplitSuffix<T extends IterableContainer>
   // This distributes the union, which is needed to allow us to "iterate" over
   // the splits.
-  FixedTupleSplits<TupleParts<T>['suffix']> extends infer Suffix
+  = FixedTupleSplits<TupleParts<T>['suffix']> extends infer Suffix
     ? Suffix extends {
       left: infer Left extends Array<unknown>;
       right: infer Right;
@@ -108,8 +108,8 @@ type SplitSuffix<T extends IterableContainer> =
       >
     : never;
 
-type FixedTupleSplits<L, R extends Array<unknown> = []> =
-  | { left: L; right: R }
-  | (L extends readonly [...infer Head, infer Tail]
-    ? FixedTupleSplits<Head, [Tail, ...R]>
-    : never);
+type FixedTupleSplits<L, R extends Array<unknown> = []>
+  = | { left: L; right: R }
+    | (L extends readonly [...infer Head, infer Tail]
+      ? FixedTupleSplits<Head, [Tail, ...R]>
+      : never);

@@ -1,5 +1,5 @@
-import type { NonEmptyArray } from "./internal/types/non-empty-array";
-
+import type { NonEmptyArray } from './internal/types/non-empty-array';
+import { expectTypeOf, it } from 'vitest';
 import { firstBy } from './first-by';
 import { identity } from './identity';
 

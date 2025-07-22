@@ -1,4 +1,6 @@
+import { describe, expect, it } from 'vitest';
 import { TEST_CASES } from '../test/transform-case-provider';
+
 import { toNoCase } from './to-no-case';
 
 describe('to no case', () => {

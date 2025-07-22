@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { dropLastWhile } from './drop-last-while';
 import { pipe } from './pipe';
 

@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { concat } from './concat';
 import { pipe } from './pipe';
 

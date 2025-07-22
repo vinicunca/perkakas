@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { findIndex } from './find-index';
 import { pipe } from './pipe';
 

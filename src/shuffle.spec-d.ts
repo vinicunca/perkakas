@@ -1,22 +1,23 @@
+import { expectTypeOf, it } from 'vitest';
 import { pipe } from './pipe';
 import { shuffle } from './shuffle';
 
-test('regular array', () => {
+it('regular array', () => {
   const result = shuffle([] as Array<string>);
   expectTypeOf(result).toEqualTypeOf<Array<string>>();
 });
 
-test('non-empty tail-rest array', () => {
+it('non-empty tail-rest array', () => {
   const result = shuffle([1] as [number, ...Array<number>]);
   expectTypeOf(result).toEqualTypeOf<[number, ...Array<number>]>();
 });
 
-test('non-empty head-rest array', () => {
+it('non-empty head-rest array', () => {
   const result = shuffle([1] as [...Array<number>, number]);
   expectTypeOf(result).toEqualTypeOf<[...Array<number>, number]>();
 });
 
-test('fixed size tuple', () => {
+it('fixed size tuple', () => {
   const result = shuffle([1, 'a', true] as [number, string, boolean]);
   expectTypeOf(result).toEqualTypeOf<
     [

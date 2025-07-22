@@ -1,4 +1,5 @@
 /* eslint-disable ts/no-explicit-any */
+import { describe, expect, it } from 'vitest';
 import { clone } from './clone';
 
 describe('primitive types', () => {

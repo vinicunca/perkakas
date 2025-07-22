@@ -1,5 +1,5 @@
-import type { NonEmptyArray } from "./internal/types/non-empty-array";
-
+import type { NonEmptyArray } from './internal/types/non-empty-array';
+import { expectTypeOf, it } from 'vitest';
 import { flat } from './flat';
 
 it('works on empty arrays', () => {

@@ -4,6 +4,7 @@
  */
 
 import type { LazyEvaluator } from './types/lazy-evaluator';
+import { expect, it } from 'vitest';
 import { curryFromLazy } from './curry-from-lazy';
 
 it('throws on wrong number of arguments', () => {

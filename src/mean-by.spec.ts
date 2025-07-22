@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { identity } from './identity';
 import { meanBy } from './mean-by';
 import { pipe } from './pipe';

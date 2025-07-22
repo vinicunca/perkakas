@@ -1,5 +1,15 @@
-/* eslint-disable ts/no-use-before-define */
 import type { RequireAtLeastOne } from 'type-fest';
+
+/**
+ * We use the value provided by the reducer to also determine if a call
+ * was done during a timeout period. This means that even when no reducer
+ * is provided, we still need a dummy reducer that would return something
+ * other than `undefined`. It is safe to cast this to R (which might be
+ * anything) because the callback would never use it as it would be typed
+ * as a zero-args function.
+ */
+const VOID_REDUCER_SYMBOL = Symbol('funnel/voidReducer');
+const voidReducer = <R>(): R => VOID_REDUCER_SYMBOL as R;
 
 type FunnelOptions<Args extends RestArguments, R> = {
   readonly reducer?: (accumulator: R | undefined, ...params: Args) => R;
@@ -10,14 +20,8 @@ type FunnelOptions<Args extends RestArguments, R> = {
  * between them to ensure users can't configure the funnel in a way which would
  * cause it to never trigger.
  */
-type FunnelTimingOptions =
-  | {
-    readonly triggerAt: 'both' | 'start';
-    readonly minQuietPeriodMs?: number;
-    readonly maxBurstDurationMs?: number;
-    readonly minGapMs?: number;
-  }
-  | ({ readonly triggerAt?: 'end' } & (
+type FunnelTimingOptions
+  = | ({ readonly triggerAt?: 'end' } & (
       | ({ readonly minGapMs: number } & RequireAtLeastOne<{
         readonly minQuietPeriodMs: number;
         readonly maxBurstDurationMs: number;
@@ -27,7 +31,13 @@ type FunnelTimingOptions =
         readonly maxBurstDurationMs?: number;
         readonly minGapMs?: never;
       }
-    ));
+    ))
+    | {
+      readonly triggerAt: 'start' | 'both';
+      readonly minQuietPeriodMs?: number;
+      readonly maxBurstDurationMs?: number;
+      readonly minGapMs?: number;
+    };
 
 // eslint-disable-next-line ts/no-explicit-any -- TypeScript has some quirks with generic function types, and works best with `any` and not `unknown`. This follows the typing of built-in utilities like `ReturnType` and `Parameters`.
 type RestArguments = Array<any>;
@@ -193,7 +203,15 @@ export function funnel<Args extends RestArguments = [], R = never>(
     // Make sure the args aren't accidentally used again
     preparedData = undefined;
 
-    callback(param);
+    // eslint-disable-next-line sonar/different-types-comparison
+    if (param === VOID_REDUCER_SYMBOL) {
+      // @ts-expect-error [ts2554] -- R is typed as `never` because we hide the
+      // symbol that `voidReducer` returns; there's no way to make TypeScript
+      // aware of this.
+      callback();
+    } else {
+      callback(param);
+    }
 
     if (minGapMs !== undefined) {
       intervalTimeoutId = setTimeout(handleIntervalEnd, minGapMs);
@@ -247,8 +265,7 @@ export function funnel<Args extends RestArguments = [], R = never>(
        * We act based on the initial state of the timeouts before the call is
        * handled and causes the timeouts to change.
        */
-      const wasIdle
-        = burstTimeoutId === undefined && intervalTimeoutId === undefined;
+      const wasIdle = burstTimeoutId === undefined && intervalTimeoutId === undefined;
 
       if (triggerAt !== 'start' || wasIdle) {
         preparedData = reducer(preparedData, ...args);
@@ -319,13 +336,3 @@ export function funnel<Args extends RestArguments = [], R = never>(
     },
   };
 }
-
-/**
- * We use the value provided by the reducer to also determine if a call
- * was done during a timeout period. This means that even when no reducer
- * is provided, we still need a dummy reducer that would return something
- * other than `undefined`. It is safe to cast this to R (which might be
- * anything) because the callback would never use it as it would be typed
- * as a zero-args function.
- */
-const voidReducer = <R>(): R => '' as R;

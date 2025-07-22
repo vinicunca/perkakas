@@ -1,3 +1,5 @@
+import type { ToString } from './to-string';
+
 /**
  * A union of all keys of T which are not symbols, and where number keys are
  * converted to strings, following the definition of `Object.keys` and
@@ -7,7 +9,4 @@
  *
  * @see EnumerableStringKeyedValueOf
  */
-export type EnumerableStringKeyOf<T> =
-  Required<T> extends Record<infer K, unknown>
-    ? `${Exclude<K, symbol>}`
-    : never;
+export type EnumerableStringKeyOf<T> = Required<T> extends Record<infer K, unknown> ? ToString<K> : never;

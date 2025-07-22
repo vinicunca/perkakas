@@ -1,9 +1,10 @@
+import { expectTypeOf, it } from 'vitest';
 import { constant } from './constant';
 import { identity } from './identity';
 import { pipe } from './pipe';
 import { pullObject } from './pull-object';
 
-test('string keys', () => {
+it('string keys', () => {
   const data = ['a', 'b'];
 
   const dataFirst = pullObject(data, identity(), constant('value'));
@@ -13,7 +14,7 @@ test('string keys', () => {
   expectTypeOf(dataLast).toEqualTypeOf<Record<string, string>>();
 });
 
-test('number keys', () => {
+it('number keys', () => {
   const data = [1, 2];
 
   const dataFirst = pullObject(data, identity(), constant(3));
@@ -23,7 +24,7 @@ test('number keys', () => {
   expectTypeOf(dataLast).toEqualTypeOf<Record<number, number>>();
 });
 
-test('symbol keys', () => {
+it('symbol keys', () => {
   const data = [Symbol('a'), Symbol('b')];
 
   const dataFirst = pullObject(data, identity(), constant(Symbol('c')));
@@ -33,7 +34,7 @@ test('symbol keys', () => {
   expectTypeOf(dataLast).toEqualTypeOf<Record<symbol, symbol>>();
 });
 
-test('number constants', () => {
+it('number constants', () => {
   const data = [1, 2] as const;
 
   const dataFirst = pullObject(data, identity(), constant(3 as const));
@@ -43,7 +44,7 @@ test('number constants', () => {
   expectTypeOf(dataLast).toEqualTypeOf<Partial<Record<1 | 2, 3>>>();
 });
 
-test('string constants', () => {
+it('string constants', () => {
   const data = ['a', 'b'] as const;
 
   const dataFirst = pullObject(data, identity(), constant('c' as const));
@@ -53,7 +54,7 @@ test('string constants', () => {
   expectTypeOf(dataLast).toEqualTypeOf<Partial<Record<'a' | 'b', 'c'>>>();
 });
 
-test('literal unions keys', () => {
+it('literal unions keys', () => {
   const data = [1, 2];
 
   const dataFirst = pullObject(
@@ -74,7 +75,7 @@ test('literal unions keys', () => {
   >();
 });
 
-test('template string keys', () => {
+it('template string keys', () => {
   const data = [1, 2];
 
   const dataFirst = pullObject(

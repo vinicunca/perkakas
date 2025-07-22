@@ -2,9 +2,9 @@ import type { CoercedArray } from './coerced-array';
 import type { IterableContainer } from './iterable-container';
 import type { TupleParts } from './tuple-parts';
 
-export type FilteredArray<T extends IterableContainer, Condition> =
+export type FilteredArray<T extends IterableContainer, Condition>
   // We distribute the array type to support unions of arrays/tuples.
-  T extends unknown
+  = T extends unknown
     ? // Reconstruct the array from its parts, but with each part being
       // filtered on the condition.
       [

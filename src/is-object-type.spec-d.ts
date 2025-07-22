@@ -1,20 +1,19 @@
+import type { AllTypesDataProviderTypes, TestClass, TypedArray } from '../test/types-data-provider';
+import { expectTypeOf, it } from 'vitest';
 import {
   ALL_TYPES_DATA_PROVIDER,
-  type AllTypesDataProviderTypes,
-  type TestClass,
-  type TypedArray,
   TYPES_DATA_PROVIDER,
 } from '../test/types-data-provider';
 import { isObjectType } from './is-object-type';
 
-test('narrows nullable types', () => {
+it('narrows nullable types', () => {
   const data: { a: string } | null = { a: 'hello' };
   if (isObjectType(data)) {
     expectTypeOf(data).toEqualTypeOf<{ a: string }>();
   }
 });
 
-test('should work as type guard', () => {
+it('should work as type guard', () => {
   const data = TYPES_DATA_PROVIDER.object as AllTypesDataProviderTypes;
   if (isObjectType(data)) {
     expectTypeOf(data).toEqualTypeOf<
@@ -34,14 +33,14 @@ test('should work as type guard', () => {
   }
 });
 
-test('should work even if data type is unknown', () => {
+it('should work even if data type is unknown', () => {
   const data = TYPES_DATA_PROVIDER.object as unknown;
   if (isObjectType(data)) {
     expectTypeOf(data).toEqualTypeOf<object>();
   }
 });
 
-test('should work as type guard in filter', () => {
+it('should work as type guard in filter', () => {
   const data = ALL_TYPES_DATA_PROVIDER.filter(isObjectType);
   expectTypeOf(data).toEqualTypeOf<
     Array<
@@ -61,7 +60,7 @@ test('should work as type guard in filter', () => {
   >();
 });
 
-test('can narrow down `any`', () => {
+it('can narrow down `any`', () => {
   // eslint-disable-next-line ts/no-explicit-any -- Explicitly testing `any`
   const data = { hello: 'world' } as any;
   if (isObjectType(data)) {

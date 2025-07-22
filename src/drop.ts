@@ -8,27 +8,27 @@ import type { TupleParts } from './internal/types/tuple-parts';
 import { curry } from './curry';
 import { lazyIdentityEvaluator, SKIP_ITEM } from './internal/utility-evaluators';
 
-type Drop<T extends IterableContainer, N extends number> =
-  IsNegative<N> extends true
-    ? // Negative numbers result in nothing being dropped, we return a shallow
-  // clone of the array.
-    Writable<T>
+type Drop<T extends IterableContainer, N extends number>
+  = IsNegative<N> extends true
+    // Negative numbers result in nothing being dropped, we return a shallow
+    // clone of the array.
+    ? Writable<T>
     : IsInteger<N> extends false
-      ? // We can't compute accurate types for non-integer numbers so we
-    // fallback to the "legacy" typing where we convert our output to a
-    // simple array. This is also the case when N is not a literal value
-    // (e.g. it is `number`).
-    // TODO: We can improve this type by returning a union of all possible dropped shapes (e.g. the equivalent of Drop<T, 1> | Drop<T, 2> | Drop<T, 3> | ...).
-      Array<T[number]>
+      // We can't compute accurate types for non-integer numbers so we
+      // fallback to the "legacy" typing where we convert our output to a
+      // simple array. This is also the case when N is not a literal value
+      // (e.g. it is `number`).
+      // TODO: We can improve this type by returning a union of all possible dropped shapes (e.g. the equivalent of Drop<T, 1> | Drop<T, 2> | Drop<T, 3> | ...).
+      ? Array<T[number]>
       : ClampedIntegerSubtract<
         N,
         TupleParts<T>['required']['length']
       > extends infer RemainingPrefix extends number
         ? RemainingPrefix extends 0
-          ? // The drop will occur within the required part of the tuple, we
-            // simply remove those elements from it and reconstruct the rest of
-            // the tuple.
-            [
+          // The drop will occur within the required part of the tuple, we
+          // simply remove those elements from it and reconstruct the rest of
+          // the tuple.
+          ? [
               ...DropFixedTuple<TupleParts<T>['required'], N>,
               ...PartialArray<TupleParts<T>['optional']>,
               ...CoercedArray<TupleParts<T>['item']>,
@@ -39,28 +39,28 @@ type Drop<T extends IterableContainer, N extends number> =
             TupleParts<T>['optional']['length']
           > extends infer RemainingOptional extends number
             ? RemainingOptional extends 0
-              ? // The drop will occur within the optional part of the tuple, we
-                // completely remove the required part, remove enough elements
-                // from the optional part, and reconstruct the rest of the
-                // tuple.
-                [
+              // The drop will occur within the optional part of the tuple, we
+              // completely remove the required part, remove enough elements
+              // from the optional part, and reconstruct the rest of the
+              // tuple.
+              ? [
                   ...PartialArray<
                     DropFixedTuple<TupleParts<T>['optional'], RemainingPrefix>
                   >,
                   ...CoercedArray<TupleParts<T>['item']>,
                   ...TupleParts<T>['suffix'],
                 ]
-              : // The drop will occur within the rest element or the suffix.
-                // Because the suffix can contain any number of elements this
-                // case adds more complexity as we need to consider all possible
-                // (relevant) lengths. We start by considering the case where
-                // there are enough elements within the rest param; this means
-                // we still maintain the rest element as it could contain even
-                // more elements, and we add the suffix untouched.
-                | [
-                  ...CoercedArray<TupleParts<T>['item']>,
-                  ...TupleParts<T>['suffix'],
-                ]
+              // The drop will occur within the rest element or the suffix.
+              // Because the suffix can contain any number of elements this
+              // case adds more complexity as we need to consider all possible
+              // (relevant) lengths. We start by considering the case where
+              // there are enough elements within the rest param; this means
+              // we still maintain the rest element as it could contain even
+              // more elements, and we add the suffix untouched.
+              : | [
+                ...CoercedArray<TupleParts<T>['item']>,
+                ...TupleParts<T>['suffix'],
+              ]
                   // Additionally, we need to consider the case where the rest
                   // element has up to the same number of elements as the
                   // suffix; this will result in removing the rest element
@@ -68,7 +68,7 @@ type Drop<T extends IterableContainer, N extends number> =
                   // for all possible values from 0 to N where N is the
                   // remaining value after we handled the prefix. We can exclude
                   // the 0 case because it is contained in the previous case.
-                | Exclude<
+              | Exclude<
                   DropFixedTuple<
                     TupleParts<T>['suffix'],
                     RemainingOptional,
@@ -89,8 +89,7 @@ type DropFixedTuple<
 > = Dropped['length'] extends N
   ? T
   : T extends readonly [unknown, ...infer Rest]
-    ?
-    | DropFixedTuple<Rest, N, IncludePrefixes, [...Dropped, unknown]>
+    ? | DropFixedTuple<Rest, N, IncludePrefixes, [...Dropped, unknown]>
     | (true extends IncludePrefixes ? T : never)
     : [];
 

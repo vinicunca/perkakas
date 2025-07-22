@@ -12,23 +12,23 @@ type TimesArray<
   N extends number,
   Iteration extends ReadonlyArray<unknown> = [],
 > = number extends N
-  ? // N is not a literal number, we can't deduce the type
-  Array<T>
+  // N is not a literal number, we can't deduce the type
+  ? Array<T>
   : `${N}` extends `-${number}`
-    ? // N is non-positive, the mapper will never run
-      []
+    // N is non-positive, the mapper will never run
+    ? []
     : `${N}` extends `${infer K extends number}.${number}`
-      ? // N is not an integer, we "floor" the number.
-      TimesArray<T, K, Iteration>
+      // N is not an integer, we "floor" the number.
+      ? TimesArray<T, K, Iteration>
       : GreaterThan<N, MAX_LITERAL_SIZE> extends true
-        ? // We can't build a literal tuple beyond this size, after that we
-          // can't add more items to the tuple so we add a rest element instead.
-          [...TimesArray<T, MAX_LITERAL_SIZE, Iteration>, ...Array<T>]
+        // We can't build a literal tuple beyond this size, after that we
+        // can't add more items to the tuple so we add a rest element instead.
+        ? [...TimesArray<T, MAX_LITERAL_SIZE, Iteration>, ...Array<T>]
         : N extends Iteration['length']
-          ? // We finished building the output tuple
-            []
-          : // Add another item to the tuple and recurse.
-            [T, ...TimesArray<T, N, [unknown, ...Iteration]>];
+          // We finished building the output tuple
+          ? []
+          // Add another item to the tuple and recurse.
+          : [T, ...TimesArray<T, N, [unknown, ...Iteration]>];
 
 /**
  * Calls an input function `n` times, returning an array containing the results

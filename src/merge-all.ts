@@ -30,9 +30,9 @@ type MergeUnion<T extends object> = Simplify<
   SharedUnionFields<T> & Partial<DisjointUnionFields<T>>
 >;
 
-type MergeAll<T extends IterableContainer<object>> =
+type MergeAll<T extends IterableContainer<object>>
   // determine if it's a tuple or array
-  TupleParts<T> extends { item: never }
+  = TupleParts<T> extends { item: never }
     ? T extends readonly []
       ? EmptyObject
       : MergeTuple<T>

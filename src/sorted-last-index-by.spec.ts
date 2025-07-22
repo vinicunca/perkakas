@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { sortedLastIndexBy } from './sorted-last-index-by';
 
 describe('runtime correctness', () => {

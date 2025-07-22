@@ -1,6 +1,7 @@
+import { it } from 'vitest';
 import { constant } from './constant';
 
-test('supported in any api', () => {
+it('supported in any api', () => {
   mockApi({
     onMixOfParams: constant(1),
     onNoParams: constant(true),
@@ -8,7 +9,7 @@ test('supported in any api', () => {
   });
 });
 
-test('doesn\'t break return typing', () => {
+it('doesn\'t break return typing', () => {
   mockApi({
     // @ts-expect-error [ts2322] - string is not a number.
     onMixOfParams: constant('hello'),

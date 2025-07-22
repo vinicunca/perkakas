@@ -53,20 +53,20 @@ type IsConstantTuple<T extends IterableContainer> = T extends readonly []
  *   }
  * }
  */
-type IsNarrowable<T, S extends IterableContainer<T>> =
-  IsLiteral<T> extends true
-    ? // When T is literal (i.g. it isn't a primitive type like `string` or
-  // `number`) then the criteria for narrowing is that the container is a
-  // "pure" tuple because we *assume* that S represents a constant set of
-  // values, and that it's typing also represents it's runtime content 1-
-  // for-1. If S isn't a pure tuple it means we can't tell from the typing
-  // which of it's values are actually present in runtime so can't use them
-  // to narrow correctly.
-    IsConstantTuple<S>
-    : // When T isn't a literal type but the items in S are we can narrow the
-  // type because it won't affect the negated side (`Exclude<number, 3>`
-  // is still `number`).
-    IsLiteral<S[number]>;
+type IsNarrowable<T, S extends IterableContainer<T>>
+  = IsLiteral<T> extends true
+    // When T is literal (i.g. it isn't a primitive type like `string` or
+    // `number`) then the criteria for narrowing is that the container is a
+    // "pure" tuple because we *assume* that S represents a constant set of
+    // values, and that it's typing also represents it's runtime content 1-
+    // for-1. If S isn't a pure tuple it means we can't tell from the typing
+    // which of it's values are actually present in runtime so can't use them
+    // to narrow correctly.
+    ? IsConstantTuple<S>
+    // When T isn't a literal type but the items in S are we can narrow the
+    // type because it won't affect the negated side (`Exclude<number, 3>`
+    // is still `number`).
+    : IsLiteral<S[number]>;
 
 /**
  * Checks if the item is included in the container. This is a wrapper around

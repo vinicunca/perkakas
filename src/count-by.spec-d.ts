@@ -1,8 +1,9 @@
+import { describe, expectTypeOf, it } from 'vitest';
 import { countBy } from './count-by';
 import { pipe } from './pipe';
 
 describe('dataFirst', () => {
-  test('countBy', () => {
+  it('countBy', () => {
     const data = ['a', 'b', 'c', 'B', 'A', 'a'];
     const result = countBy(data, (x) => x.toLowerCase());
 
@@ -11,7 +12,7 @@ describe('dataFirst', () => {
 });
 
 describe('dataLast', () => {
-  test('countBy', () => {
+  it('countBy', () => {
     const data = ['a', 'b', 'c', 'B', 'A', 'a'];
     const result = pipe(
       data,
@@ -22,7 +23,7 @@ describe('dataLast', () => {
   });
 });
 
-test('callback function type', () => {
+it('callback function type', () => {
   const data = [1, 2, 3];
   countBy(data, (x) => {
     expectTypeOf(x).toEqualTypeOf<number>();
@@ -30,7 +31,7 @@ test('callback function type', () => {
   });
 });
 
-test('literal unions', () => {
+it('literal unions', () => {
   const data = [] as Array<'cat' | 'dog'>;
   const result = countBy(data, (x) => x);
 

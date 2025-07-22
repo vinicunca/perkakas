@@ -1,30 +1,31 @@
 import type { IfNever, Simplify } from 'type-fest';
-
 import type { EnumerableStringKeyOf } from './internal/types/enumerable-string-key-of';
 import type { EnumerableStringKeyedValueOf } from './internal/types/enumerable-string-keyed-value-of';
-import type { IfBoundedRecord } from './internal/types/if-bounded-record';
-import type { ReconstructedRecord } from './internal/types/reconstructed-record';
-
+import type { If } from './internal/types/if';
+import type { IsBoundedRecord } from './internal/types/is-bounded-record';
+import type { ToString } from './internal/types/to-string';
 import { curry } from './curry';
-
-// Because pickBy needs to iterate over all entries of the object, only
-// enumerable keys (those returned by `Object.entries`) could be part of the
-// output object. Any symbol keys would be skipped and filtered out.
-type EnumerableKey<T> = `${T extends number | string ? T : never}`;
 
 // When the predicate isn't a type-guard we don't know which properties would be
 // part of the output and which wouldn't so we can only safely downgrade the
 // whole object to a Partial of the input.
 type EnumeratedPartial<T> = T extends unknown
   ? Simplify<
-    IfBoundedRecord<
-      T,
-      {
-        -readonly [P in keyof T as EnumerableKey<P>]?: Required<T>[P];
-      },
-      ReconstructedRecord<T>
+      If<
+        IsBoundedRecord<T>,
+        {
+          // Object.entries returns keys as strings.
+          -readonly [P in keyof T as ToString<P>]?: Required<T>[P];
+        },
+        // For unbounded records (a simple Record with primitive `string` or
+        // `number` keys) the return type here could technically be T; but for
+        // cases where the record is unbounded but is more complex (like
+        // `symbol` keys) we want to "reconstruct" the record from just its
+        // enumerable components (which are the ones accessible via
+        // `Object.entries`).
+        Record<EnumerableStringKeyOf<T>, EnumerableStringKeyedValueOf<T>>
+      >
     >
-  >
   : never;
 
 // When the predicate is a type-guard we have more information to work with when
@@ -37,13 +38,26 @@ type EnumeratedPartial<T> = T extends unknown
 // are the "matches", which would not change the "optionality" of the input
 // object's props, and one for partial matches which would also make the props
 // optional (as they could have a value that would be filtered out).
-type EnumeratedPartialNarrowed<T, S> = Simplify<
-  ExactProps<T, S> & PartialProps<T, S>
->;
+type EnumeratedPartialNarrowed<T, S> = T extends unknown
+  ? Simplify<
+      If<
+        IsBoundedRecord<T>,
+        ExactProps<T, S> & PartialProps<T, S>,
+        // For unbounded records we need to "reconstruct" the record and narrow
+        // the value types. Similar to the non-narrowed case, we need to also
+        // ignore `symbol` keys and any values that are only relevant to them.
+        Record<
+          EnumerableStringKeyOf<T>,
+          Extract<EnumerableStringKeyedValueOf<T>, S>
+        >
+      >
+    >
+  : never;
 
 // The exact case, props here would always be part of the output object
 type ExactProps<T, S> = {
-  -readonly [P in keyof T as EnumerableKey<
+  // Object.entries returns keys as strings.
+  -readonly [P in keyof T as ToString<
     IsExactProp<T, P, S> extends true ? P : never
   >]: Extract<Required<T>[P], S>;
 };
@@ -51,7 +65,8 @@ type ExactProps<T, S> = {
 // The partial case, props here might be part of the output object, but might
 // not be, hence they are optional.
 type PartialProps<T, S> = {
-  -readonly [P in keyof T as EnumerableKey<
+  // Object.entries returns keys as strings.
+  -readonly [P in keyof T as ToString<
     IsPartialProp<T, P, S> extends true ? P : never
   >]?: IfNever<
     Extract<T[P], S>,
@@ -68,29 +83,29 @@ type PartialProps<T, S> = {
 // If the input object's value type extends itself when the type-guard is
 // extracted from it we can safely assume that the predicate would always return
 // true for any value of that property.
-type IsExactProp<T, P extends keyof T, S> =
-  T[P] extends Extract<T[P], S> ? true : false;
+type IsExactProp<T, P extends keyof T, S>
+  = T[P] extends Extract<T[P], S> ? true : false;
 
 // ...and if the input object's value type isn't an exact match, but still has
 // some partial match (i.g. the extracted type-guard isn't completely disjoint)
 // then we can assume that the property can sometimes return true, and sometimes
 // false when passed to the predicate, hence it should be optional in the
 // output.
-type IsPartialProp<T, P extends keyof T, S> =
-  IsExactProp<T, P, S> extends true
+type IsPartialProp<T, P extends keyof T, S>
+  = IsExactProp<T, P, S> extends true
     ? false
     : IfNever<
-      Extract<T[P], S>,
-      S extends T[P]
-        ? // If the result of extracting S from T[P] is never but S still
-        // extends it, it means that T[P] is too wide and S can't be
-        // extracted from it: e.g. if T[P] is `number` S is `1` then
-        // `Extract<number, 1> === never`, but `1` extends `number`. We need
-        // to handle these cases when we extract the value too (see above).
+        Extract<T[P], S>,
+        S extends T[P]
+          // If the result of extracting S from T[P] is never but S still
+          // extends it, it means that T[P] is too wide and S can't be
+          // extracted from it: e.g. if T[P] is `number` S is `1` then
+          // `Extract<number, 1> === never`, but `1` extends `number`. We need
+          // to handle these cases when we extract the value too (see above).
+          ? true
+          : false,
         true
-        : false,
-      true
-    >;
+      >;
 
 /**
  * Iterates over the entries of `data` and reconstructs the object using only

@@ -1,3 +1,4 @@
+import { describe, expectTypeOf, it } from 'vitest';
 import { constant } from './constant';
 import { identity } from './identity';
 import { pipe } from './pipe';
@@ -30,26 +31,26 @@ const DATA = [
 ];
 
 describe('dataFirst', () => {
-  test('SortProjection', () => {
+  it('SortProjection', () => {
     const items = [{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }] as const;
     const actual = sortBy(items, prop('a'));
-    expectTypeOf(actual).toMatchTypeOf<Array<(typeof items)[number]>>();
+    expectTypeOf(actual).toExtend<Array<(typeof items)[number]>>();
   });
 
-  test('SortPair', () => {
+  it('SortPair', () => {
     const actual = sortBy(DATA, [(x) => x.active, 'desc']);
     expectTypeOf(actual).toEqualTypeOf<Array<(typeof DATA)[number]>>();
   });
 });
 
 describe('dataLast', () => {
-  test('SortProjection', () => {
+  it('SortProjection', () => {
     const items = [{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }] as const;
     const actual = pipe(items, sortBy(prop('a')));
-    expectTypeOf(actual).toMatchTypeOf<Array<(typeof items)[number]>>();
+    expectTypeOf(actual).toExtend<Array<(typeof items)[number]>>();
   });
 
-  test('SortPair', () => {
+  it('SortPair', () => {
     const actual = pipe(
       DATA,
       sortBy([prop('weight'), 'asc'], [prop('color'), 'desc']),
@@ -98,7 +99,7 @@ it('on readonly tuple with rest tail', () => {
   expectTypeOf(result).toEqualTypeOf<[number, ...Array<number>]>();
 });
 
-test('on tuple with rest middle', () => {
+it('on tuple with rest middle', () => {
   const result = sortBy(
     [3, 2, 1] as [number, ...Array<number>, number],
     identity,
@@ -106,7 +107,7 @@ test('on tuple with rest middle', () => {
   expectTypeOf(result).toEqualTypeOf<[number, ...Array<number>, number]>();
 });
 
-test('on readonly tuple with rest middle', () => {
+it('on readonly tuple with rest middle', () => {
   const result = sortBy(
     [3, 2, 1] as readonly [number, ...Array<number>, number],
     identity,
@@ -124,12 +125,12 @@ it('on readonly tuple with rest head', () => {
   expectTypeOf(result).toEqualTypeOf<[...Array<number>, number]>();
 });
 
-test('on tuple with optional values', () => {
+it('on tuple with optional values', () => {
   const result = sortBy([] as [number?, number?, number?], constant(0));
   expectTypeOf(result).toEqualTypeOf<[number?, number?, number?]>();
 });
 
-test('on readonly tuple with optional values', () => {
+it('on readonly tuple with optional values', () => {
   const result = sortBy(
     [] as readonly [number?, number?, number?],
     constant(0),

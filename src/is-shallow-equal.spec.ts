@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { isShallowEqual } from './is-shallow-equal';
 
 describe('primitives', () => {

@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest';
 import { sortedIndex } from './sorted-index';
 
 it('empty array', () => {

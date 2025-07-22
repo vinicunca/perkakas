@@ -1,8 +1,9 @@
+import { expectTypeOf, it } from 'vitest';
 import { indexBy } from './index-by';
 import { pipe } from './pipe';
 import { prop } from './prop';
 
-test('dataFirst', () => {
+it('dataFirst', () => {
   const result = indexBy(
     [
       { dir: 'left', code: 97 },
@@ -15,7 +16,7 @@ test('dataFirst', () => {
   >(result);
 });
 
-test('dataLast', () => {
+it('dataLast', () => {
   const result = pipe(
     [
       { dir: 'left', code: 97 },

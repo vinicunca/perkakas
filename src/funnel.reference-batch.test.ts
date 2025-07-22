@@ -2,6 +2,7 @@
  * These aren't useful for a reference implementation!
  */
 
+import { describe, expect, it, vi } from 'vitest';
 import { doNothing } from './do-nothing';
 import { fromKeys } from './from-keys';
 import { funnel } from './funnel';
@@ -102,13 +103,13 @@ function batch<Params extends Array<any>, BatchResponse, Result>(
 
 describe('showcase', () => {
   it('results as object', async () => {
-    const mockApi = vi.fn(
-      async (words: ReadonlyArray<string>): Promise<Record<string, number>> =>
-        fromKeys(words, (word) => word.length),
-    );
+    const mockApi = vi.fn<
+      (words: ReadonlyArray<string>) => Promise<Record<string, number>>
+        >(async (words) => fromKeys(words, (word) => word.length));
 
     const countLettersApi = batch(
-      // We only need to type the `requests` param of the `executor` callback. All other types are derived from it.
+      // We only need to type the `requests` param of the `executor` callback.
+      // All other types are derived from it.
       async (requests: ReadonlyArray<[word: string]>) =>
         await mockApi(requests.flat()),
       (response, _, word) => response[word],
@@ -141,13 +142,13 @@ describe('showcase', () => {
   });
 
   it('results as array', async () => {
-    const mockApi = vi.fn(
-      async (words: ReadonlyArray<string>): Promise<ReadonlyArray<number>> =>
-        words.map((word) => word.length),
-    );
+    const mockApi = vi.fn<
+      (words: ReadonlyArray<string>) => Promise<ReadonlyArray<number>>
+        >(async (words) => words.map((word) => word.length));
 
     const countLettersApi = batch(
-      // We only need to type the `requests` param of the `executor` callback. All other types are derived from it.
+      // We only need to type the `requests` param of the `executor` callback.
+      // All other types are derived from it.
       async (requests: ReadonlyArray<[word: string]>) =>
         await mockApi(requests.flat()),
       (response, index) => response[index],
@@ -177,7 +178,8 @@ describe('showcase', () => {
 
   it('error handling', async () => {
     const failingApi = batch(
-      // We only need to type the `requests` param of the `executor` callback. All other types are derived from it.
+      // We only need to type the `requests` param of the `executor` callback.
+      // All other types are derived from it.
       async (requests: ReadonlyArray<[id: string]>) => {
         if (requests.length > 1) {
           throw new Error(`Batch too big! ${JSON.stringify(requests)}`);

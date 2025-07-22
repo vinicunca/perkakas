@@ -1,6 +1,7 @@
+import type { AllTypesDataProviderTypes } from '../test/types-data-provider';
+import { expect, it } from 'vitest';
 import {
   ALL_TYPES_DATA_PROVIDER,
-  type AllTypesDataProviderTypes,
   TYPES_DATA_PROVIDER,
 } from '../test/types-data-provider';
 import { isArray } from './is-array';

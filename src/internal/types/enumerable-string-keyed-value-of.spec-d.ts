@@ -1,90 +1,115 @@
 import type { EmptyObject } from 'type-fest';
 import type { EnumerableStringKeyedValueOf } from './enumerable-string-keyed-value-of';
+import { expectTypeOf, it } from 'vitest';
 
-declare const SymbolFoo: unique symbol;
+declare function enumerableStringKeyedValueOf<const T>(
+  data: T,
+): EnumerableStringKeyedValueOf<T>;
 
-test('string values', () => {
-  expectTypeOf<
-    EnumerableStringKeyedValueOf<Record<PropertyKey, string>>
-  >().toEqualTypeOf<string>();
+const SymbolFoo = Symbol('foo');
+
+it('string values', () => {
+  expectTypeOf(
+    enumerableStringKeyedValueOf({} as Record<PropertyKey, string>),
+  ).toEqualTypeOf<string>();
 });
 
-test('number values', () => {
-  expectTypeOf<
-    EnumerableStringKeyedValueOf<Record<PropertyKey, number>>
-  >().toEqualTypeOf<number>();
+it('number values', () => {
+  expectTypeOf(
+    enumerableStringKeyedValueOf({} as Record<PropertyKey, number>),
+  ).toEqualTypeOf<number>();
 });
 
-test('union of records', () => {
-  expectTypeOf<
-    EnumerableStringKeyedValueOf<
-      Record<PropertyKey, 'cat'> | Record<PropertyKey, 'dog'>
-    >
-  >().toEqualTypeOf<'cat' | 'dog'>();
+it('union of records', () => {
+  expectTypeOf(
+    enumerableStringKeyedValueOf(
+      {} as Record<PropertyKey, 'cat'> | Record<PropertyKey, 'dog'>,
+    ),
+  ).toEqualTypeOf<'cat' | 'dog'>();
 
-  expectTypeOf<
-    EnumerableStringKeyedValueOf<
-      Record<PropertyKey, number> | Record<PropertyKey, string>
-    >
-  >().toEqualTypeOf<number | string>();
+  expectTypeOf(
+    enumerableStringKeyedValueOf(
+      {} as Record<PropertyKey, number> | Record<PropertyKey, string>,
+    ),
+  ).toEqualTypeOf<number | string>();
 });
 
-test('union values', () => {
-  expectTypeOf<
-    EnumerableStringKeyedValueOf<Record<PropertyKey, number | string>>
-  >().toEqualTypeOf<number | string>();
+it('union values', () => {
+  expectTypeOf(
+    enumerableStringKeyedValueOf({} as Record<PropertyKey, number | string>),
+  ).toEqualTypeOf<number | string>();
 });
 
-test('literal values', () => {
-  expectTypeOf<EnumerableStringKeyedValueOf<{ a: 1 }>>().toEqualTypeOf<1>();
+it('literal values', () => {
+  expectTypeOf(
+    enumerableStringKeyedValueOf({ a: 1 } as const),
+  ).toEqualTypeOf<1>();
 
-  expectTypeOf<
-    EnumerableStringKeyedValueOf<{ a: '1' | '2' | 1 }>
-  >().toEqualTypeOf<'1' | '2' | 1>();
+  expectTypeOf(
+    enumerableStringKeyedValueOf({ a: 1 } as { a: '1' | '2' | 1 }),
+  ).toEqualTypeOf<'1' | '2' | 1>();
 });
 
-test('optional values', () => {
-  expectTypeOf<EnumerableStringKeyedValueOf<{ a: 1; b?: 4 }>>().toEqualTypeOf<
-    1 | 4
-  >();
+it('optional values', () => {
+  expectTypeOf(
+    enumerableStringKeyedValueOf({ a: 1 } as { a: 1; b?: 4 }),
+  ).toEqualTypeOf<1 | 4>();
 
-  expectTypeOf<
-    EnumerableStringKeyedValueOf<{ a: string; b?: number }>
-  >().toEqualTypeOf<number | string>();
+  expectTypeOf(
+    enumerableStringKeyedValueOf({ a: 'hello' } as { a: string; b?: number }),
+  ).toEqualTypeOf<number | string>();
 });
 
-test('nullish and undefined values', () => {
-  expectTypeOf<
-    EnumerableStringKeyedValueOf<{
+it('nullish and undefined values', () => {
+  expectTypeOf(
+    enumerableStringKeyedValueOf({ a: 'hello', b: 'world' } as {
       a: string | undefined;
       b: string | null;
-    }>
-  >().toEqualTypeOf<string | null | undefined>();
+    }),
+  ).toEqualTypeOf<string | null | undefined>();
 
-  expectTypeOf<
-    EnumerableStringKeyedValueOf<{
-      a?: number | null;
-      b?: number | null | undefined;
-    }>
-  >().toEqualTypeOf<number | null | undefined>();
+  expectTypeOf(
+    enumerableStringKeyedValueOf(
+      {} as {
+        a?: number | null;
+        b?: number | null | undefined;
+      },
+    ),
+  ).toEqualTypeOf<number | null | undefined>();
 });
 
-test('symbol keys', () => {
-  expectTypeOf<
-    EnumerableStringKeyedValueOf<{ [SymbolFoo]: string }>
-  >().toEqualTypeOf<never>();
+it('symbol keys', () => {
+  expectTypeOf(
+    enumerableStringKeyedValueOf({ [SymbolFoo]: 'hello' } as const),
+  ).toEqualTypeOf<never>();
 
-  expectTypeOf<
-    EnumerableStringKeyedValueOf<{ [SymbolFoo]: string; b: '1' }>
-  >().toEqualTypeOf<'1'>();
+  expectTypeOf(
+    enumerableStringKeyedValueOf({ [SymbolFoo]: 'hello', b: '1' } as const),
+  ).toEqualTypeOf<'1'>();
 
-  expectTypeOf<
-    EnumerableStringKeyedValueOf<Record<PropertyKey | typeof SymbolFoo, string>>
-  >().toEqualTypeOf<string>();
+  expectTypeOf(
+    enumerableStringKeyedValueOf(
+      {} as Record<PropertyKey | typeof SymbolFoo, string>,
+    ),
+  ).toEqualTypeOf<string>();
 });
 
-test('empty object', () => {
-  expectTypeOf<
-    EnumerableStringKeyedValueOf<EmptyObject>
-  >().toEqualTypeOf<never>();
+it('empty object', () => {
+  expectTypeOf(
+    enumerableStringKeyedValueOf({} as EmptyObject),
+  ).toEqualTypeOf<never>();
+});
+
+it('parameterized record key (Issue #1122)', () => {
+  // @ts-expect-error [ts6133] -- Only functions allow us to define a parametrized record (I think...)
+  // eslint-disable-next-line ts/no-unused-vars, unused-imports/no-unused-vars, sonar/no-dead-store -- The function inside this test IS the main point of the test and can't be pulled out or used.
+  const foo = <K extends string>(data: Record<K, { a: 'hello' }>): void => {
+    // TypeScript/Vitest (?!) is failing to infer the result of our function
+    // on this type directly, but still manages to typecheck it once we
+    // destructure the result and only test the type of the property. I don't
+    // know why that is and if there's any better more idiomatic way to do this.
+    const { a } = enumerableStringKeyedValueOf(data);
+
+    expectTypeOf(a).toEqualTypeOf<'hello'>();
+  };
 });

@@ -29,12 +29,12 @@ export function quickSelect<T>(
     ? undefined
     : quickSelectImplementation(
       // We need to clone the array because quickSelect mutates it in-place.
-      [...data],
-      0 /* left */,
-      data.length - 1 /* right */,
-      index,
-      compareFn,
-    );
+        [...data],
+        0 /* left */,
+        data.length - 1 /* right */,
+        index,
+        compareFn,
+      );
 }
 
 /**
@@ -58,13 +58,13 @@ function quickSelectImplementation<T>(
     // index we found out item!
     ? data[index]!
     : quickSelectImplementation(
-      data,
-      // We continue by recursing into the partition where index would be
-      index < pivotIndex ? left : pivotIndex + 1,
-      index < pivotIndex ? pivotIndex - 1 : right,
-      index,
-      compareFn,
-    );
+        data,
+        // We continue by recursing into the partition where index would be
+        index < pivotIndex ? left : pivotIndex + 1,
+        index < pivotIndex ? pivotIndex - 1 : right,
+        index,
+        compareFn,
+      );
 }
 
 function partition<T>(

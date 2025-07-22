@@ -1,3 +1,4 @@
+import { describe, expect, it, vi } from 'vitest';
 import { debounce } from './debounce';
 import { identity } from './identity';
 
