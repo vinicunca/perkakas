@@ -49,8 +49,9 @@ it('number keys are converted to strings', () => {
 });
 
 it('numbers returned from the mapper are used as-is', () => {
-  const result = mapKeys({ a: 'b' }, constant(123));
-  expectTypeOf(result).toEqualTypeOf<Partial<Record<123, string>>>();
+  expectTypeOf(mapKeys({ a: 'b' }, constant(123 as const))).toEqualTypeOf<
+    Partial<Record<123, string>>
+  >();
 });
 
 it('union of records', () => {

@@ -17,7 +17,7 @@ catalog:
   tsup: ^8.5.0
   type-fest: ^4.41.0
   typedoc: ^0.28.9
-  typescript: ^5.8.3
+  typescript: ^5.9.2
   unocss: ^66.3.3
   unplugin-vue-components: ^28.8.0
   vitepress: ^1.6.3
