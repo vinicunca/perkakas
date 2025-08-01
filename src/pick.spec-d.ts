@@ -584,8 +584,7 @@ describe('bounded object types', () => {
   });
 });
 
-// @see https://github.com/remeda/remeda/issues/1128
-describe('unbounded record types (Issue #1128)', () => {
+describe('unbounded record types', () => {
   const DATA = {} as Record<string, 'required'>;
   const UNDEFINABLE = {} as Record<string, 'undefinable' | undefined>;
 
@@ -1119,8 +1118,7 @@ it('result is mutable', () => {
   ).toEqualTypeOf<Record<string, 'something'>>();
 });
 
-// @see https://github.com/remeda/remeda/issues/886
-describe('key type inference (issue #886)', () => {
+describe('key type inference', () => {
   it('base', () => {
     expectTypeOf(pick({ foo: 'hello', bar: 'world' }, ['foo'])).toEqualTypeOf<{
       foo: string;
