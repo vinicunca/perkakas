@@ -1,7 +1,7 @@
-import { it } from 'vitest';
+import { describe, expectTypeOf, test } from 'vitest';
 import { constant } from './constant';
 
-it('supported in any api', () => {
+test('supported in any api', () => {
   mockApi({
     onMixOfParams: constant(1),
     onNoParams: constant(true),
@@ -9,7 +9,7 @@ it('supported in any api', () => {
   });
 });
 
-it('doesn\'t break return typing', () => {
+test('doesn\'t break return typing', () => {
   mockApi({
     // @ts-expect-error [ts2322] - string is not a number.
     onMixOfParams: constant('hello'),
@@ -17,6 +17,32 @@ it('doesn\'t break return typing', () => {
     onNoParams: constant(123),
     // @ts-expect-error [ts2322] - "mouse" is not a cat or a dog.
     onVariadicParams: constant('mouse'),
+  });
+});
+
+describe('returns narrow types on literals', () => {
+  test('strings', () => {
+    expectTypeOf(constant('hello')).returns.toEqualTypeOf<'hello'>();
+  });
+
+  test('objects', () => {
+    expectTypeOf(constant({ a: 1, b: 2 })).returns.toEqualTypeOf<{
+      readonly a: 1;
+      readonly b: 2;
+    }>();
+  });
+
+  test('arrays', () => {
+    expectTypeOf(constant([1, 2, 3])).returns.toEqualTypeOf<
+      readonly [1, 2, 3]
+    >();
+  });
+
+  test('doesn\'t narrow explicitly defined types', () => {
+    expectTypeOf(constant({ a: 1 as number, b: 2 })).returns.toEqualTypeOf<{
+      readonly a: number;
+      readonly b: 2;
+    }>();
   });
 });
 

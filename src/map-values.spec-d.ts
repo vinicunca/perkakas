@@ -89,9 +89,10 @@ describe('branded types', () => {
 
 it('symbols are filtered out', () => {
   const mySymbol = Symbol('mySymbol');
-  const result = mapValues({ [mySymbol]: 1, a: 'hello' }, constant(true));
 
-  expectTypeOf(result).toEqualTypeOf<{ a: boolean }>();
+  expectTypeOf(
+    mapValues({ [mySymbol]: 1, a: 'hello' }, constant(true)),
+  ).toEqualTypeOf<{ a: true }>();
 });
 
 it('symbols are ignored by the mapper', () => {
@@ -120,27 +121,21 @@ it('number keys are converted to string in the mapper', () => {
 it('number keys are preserved in the resulting object', () => {
   const data = {} as Record<number, unknown>;
 
-  const dataFirst = mapValues(data, constant(true));
-
-  expectTypeOf(dataFirst).toEqualTypeOf<Record<number, boolean>>();
-
-  const dataLast = pipe(data, mapValues(constant(true)));
-
-  expectTypeOf(dataLast).toEqualTypeOf<Record<number, boolean>>();
+  expectTypeOf(mapValues(data, constant(true))).toEqualTypeOf<
+    Record<number, true>
+  >();
+  expectTypeOf(pipe(data, mapValues(constant(true)))).toEqualTypeOf<
+    Record<number, true>
+  >();
 });
 
 it('maintains partiality', () => {
-  const result = mapValues(
-    {} as { a?: number; b?: string; c: number; d: string },
-    constant(true),
-  );
-
-  expectTypeOf(result).toEqualTypeOf<{
-    a?: boolean;
-    b?: boolean;
-    c: boolean;
-    d: boolean;
-  }>();
+  expectTypeOf(
+    mapValues(
+      {} as { a?: number; b?: string; c: number; d: string },
+      constant(true),
+    ),
+  ).toEqualTypeOf<{ a?: true; b?: true; c: true; d: true }>();
 });
 
 it('unions of records', () => {
@@ -149,12 +144,12 @@ it('unions of records', () => {
   const dataFirst = mapValues(data, constant('hello' as string));
 
   expectTypeOf(dataFirst).toEqualTypeOf<
-    Record<`${number}`, string> | Record<string, string>
+    Record<number, string> | Record<string, string>
   >();
 
   const dataLast = pipe(data, mapValues(constant('hello' as string)));
 
   expectTypeOf(dataLast).toEqualTypeOf<
-    Record<`${number}`, string> | Record<string, string>
+    Record<number, string> | Record<string, string>
   >();
 });

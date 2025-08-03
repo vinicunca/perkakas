@@ -4,7 +4,7 @@ import type { EnumerableStringKeyedValueOf } from './internal/types/enumerable-s
 import { curry } from './curry';
 
 type MappedValues<T extends object, Value> = Simplify<{
-  -readonly [P in keyof T as `${P extends number | string ? P : never}`]: Value;
+  -readonly [P in keyof T as P extends number | string ? P : never]: Value;
 }>;
 
 /**

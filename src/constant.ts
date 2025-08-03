@@ -25,7 +25,7 @@
  * @dataLast
  * @category Function
  */
-export function constant<T>(
+export function constant<const T>(
   value: T,
 ): <Args extends ReadonlyArray<unknown>>(...args: Args) => T {
   return () => value;

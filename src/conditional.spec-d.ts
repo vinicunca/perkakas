@@ -94,11 +94,7 @@ describe('data-first', () => {
 
   it('passes the defaultCase\'s type to the output', () => {
     expectTypeOf(
-      conditional(
-        'Jokic',
-        [isString, () => 'hello' as const],
-        constant(123 as const),
-      ),
+      conditional('Jokic', [isString, () => 'hello' as const], constant(123)),
     ).toEqualTypeOf<'hello' | 123>();
 
     expectTypeOf(
@@ -200,7 +196,7 @@ describe('data-last', () => {
     expectTypeOf(
       pipe(
         'Jokic',
-        conditional([isString, () => 'hello' as const], constant(123 as const)),
+        conditional([isString, () => 'hello' as const], constant(123)),
       ),
     ).toEqualTypeOf<'hello' | 123>();
 
