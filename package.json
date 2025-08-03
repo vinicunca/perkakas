@@ -1,7 +1,7 @@
 {
   "name": "@vinicunca/perkakas",
   "type": "module",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "packageManager": "pnpm@10.14.0",
   "description": "Utility for JavaScript and Typescript.",
   "author": "praburangki<https://github.com/praburangki>",
