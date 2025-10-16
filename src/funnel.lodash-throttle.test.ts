@@ -148,7 +148,7 @@ describe('https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L22768', ()
       throttled();
     }
 
-    expect(mockFn).toHaveBeenCalledWith();
+    expect(mockFn).toHaveBeenCalledExactlyOnceWith();
   });
 
   it('should trigger a call when invoked repeatedly and `leading` is `false`', async () => {
@@ -161,7 +161,7 @@ describe('https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L22768', ()
     // Yield execution to allow timeouts to run
     await sleep(0);
 
-    expect(mockFn).toHaveBeenCalledWith();
+    expect(mockFn).toHaveBeenCalledExactlyOnceWith();
   });
 
   it('should trigger a second throttled call as soon as possible', async () => {
@@ -218,10 +218,8 @@ describe('https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L22768', ()
     withoutTrailing('a');
     withoutTrailing('b');
 
-    expect(mockWith).toHaveBeenCalledTimes(1);
-    expect(mockWith).toHaveBeenCalledWith('a');
-    expect(mockWithout).toHaveBeenCalledTimes(1);
-    expect(mockWithout).toHaveBeenCalledWith('a');
+    expect(mockWith).toHaveBeenCalledExactlyOnceWith('a');
+    expect(mockWithout).toHaveBeenCalledExactlyOnceWith('a');
 
     await sleep(8 * UT);
 
@@ -239,7 +237,7 @@ describe('https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L22768', ()
     throttled();
     await sleep(3 * UT);
 
-    expect(mockFn).toHaveBeenCalledWith();
+    expect(mockFn).toHaveBeenCalledExactlyOnceWith();
   });
 });
 

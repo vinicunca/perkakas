@@ -2,7 +2,7 @@
   "name": "@vinicunca/perkakas",
   "type": "module",
   "version": "1.7.1",
-  "packageManager": "pnpm@10.14.0",
+  "packageManager": "pnpm@10.18.3",
   "description": "Utility for JavaScript and Typescript.",
   "author": "praburangki<https://github.com/praburangki>",
   "license": "MIT",
@@ -38,13 +38,13 @@
     "node": ">=20.0.0"
   },
   "scripts": {
-    "build": "tsup",
+    "build": "tsdown",
     "prepublish": "pnpm run build",
     "dev": "pnpm build --watch",
     "lint": "eslint . --fix",
     "publish:ci": "pnpm publish --access public --no-git-checks",
     "release": "bumpp package.json",
-    "taze": "taze major -wIr",
+    "taze": "taze major -wIrl",
     "test": "tsc --project tsconfig.tests.json && vitest --typecheck.enabled --typecheck.ignoreSourceErrors",
     "test:runtime": "tsc --project tsconfig.tests.json && vitest",
     "test:typing": "vitest --typecheck.only --typecheck.ignoreSourceErrors",
@@ -57,13 +57,16 @@
     "type-fest": "catalog:"
   },
   "devDependencies": {
+    "@arethetypeswrong/core": "catalog:",
     "@types/node": "catalog:",
     "@vinicunca/eslint-config": "catalog:",
     "@vitest/coverage-v8": "catalog:",
     "bumpp": "catalog:",
     "eslint": "catalog:",
     "prettier": "catalog:",
+    "publint": "catalog:",
     "taze": "catalog:",
+    "tsdown": "catalog:",
     "tsup": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"

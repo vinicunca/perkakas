@@ -1,4 +1,4 @@
-import type { IfNever, Simplify } from 'type-fest';
+import type { IsNever, Simplify } from 'type-fest';
 import type { EnumerableStringKeyOf } from './internal/types/enumerable-string-key-of';
 import type { EnumerableStringKeyedValueOf } from './internal/types/enumerable-string-keyed-value-of';
 import type { IsBoundedRecord } from './internal/types/is-bounded-record';
@@ -64,16 +64,16 @@ type PartialProps<T, S> = {
   // Object.entries returns keys as strings.
   -readonly [P in keyof T as ToString<
     IsPartialProp<T, P, S> extends true ? P : never
-  >]?: IfNever<
-    Extract<T[P], S>,
+  >]?: IsNever<Extract<T[P], S>> extends true
     // If the result of extracting S from T[P] is never but S still extends
     // it, it means that T[P] is too wide and S can't be extracted from it:
     // e.g. if T[P] is `number` S is `1` then `Extract<number, 1> === never`.
     // For these cases we can return S directly as the type as it's already
     // very narrowed compared to T[P].
-    S extends T[P] ? S : never,
-    Extract<T[P], S>
-  >;
+    ? S extends T[P]
+      ? S
+      : never
+    : Extract<T[P], S>;
 };
 
 // If the input object's value type extends itself when the type-guard is
@@ -90,18 +90,16 @@ type IsExactProp<T, P extends keyof T, S>
 type IsPartialProp<T, P extends keyof T, S>
   = IsExactProp<T, P, S> extends true
     ? false
-    : IfNever<
-        Extract<T[P], S>,
-        S extends T[P]
-          // If the result of extracting S from T[P] is never but S still
-          // extends it, it means that T[P] is too wide and S can't be
-          // extracted from it: e.g. if T[P] is `number` S is `1` then
-          // `Extract<number, 1> === never`, but `1` extends `number`. We need
-          // to handle these cases when we extract the value too (see above).
-          ? true
-          : false,
-        true
-      >;
+    : IsNever<Extract<T[P], S>> extends true
+      ? S extends T[P]
+        // If the result of extracting S from T[P] is never but S still
+        // extends it, it means that T[P] is too wide and S can't be
+        // extracted from it: e.g. if T[P] is `number` S is `1` then
+        // `Extract<number, 1> === never`, but `1` extends `number`. We need
+        // to handle these cases when we extract the value too (see above).
+        ? true
+        : false
+      : true;
 
 /**
  * Iterates over the entries of `data` and reconstructs the object using only

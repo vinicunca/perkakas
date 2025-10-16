@@ -12,9 +12,9 @@ it('dataFirst', () => {
 
   forEachObj(data, cb);
 
-  expect(cb).toHaveBeenCalledWith(1, 'a', data);
-  expect(cb).toHaveBeenCalledWith(2, 'b', data);
-  expect(cb).toHaveBeenCalledWith(3, 'c', data);
+  expect(cb).toHaveBeenNthCalledWith(1, 1, 'a', data);
+  expect(cb).toHaveBeenNthCalledWith(2, 2, 'b', data);
+  expect(cb).toHaveBeenNthCalledWith(3, 3, 'c', data);
 });
 
 it('doesn\'t run on symbol keys', () => {
@@ -39,7 +39,7 @@ it('dataLast', () => {
   const cb = vi.fn();
 
   expect(pipe(data, forEachObj(cb))).toBe(data);
-  expect(cb).toHaveBeenCalledWith(1, 'a', data);
-  expect(cb).toHaveBeenCalledWith(2, 'b', data);
-  expect(cb).toHaveBeenCalledWith(3, 'c', data);
+  expect(cb).toHaveBeenNthCalledWith(1, 1, 'a', data);
+  expect(cb).toHaveBeenNthCalledWith(2, 2, 'b', data);
+  expect(cb).toHaveBeenNthCalledWith(3, 3, 'c', data);
 });

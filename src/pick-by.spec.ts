@@ -28,5 +28,5 @@ it('symbols are not passed to the predicate', () => {
   const data = { [Symbol('mySymbol')]: 1, a: 'hello' };
   pickBy(data, mock);
   expect(mock).toHaveBeenCalledTimes(1);
-  expect(mock).toBeCalledWith('hello', 'a', data);
+  expect(mock).toHaveBeenCalledExactlyOnceWith('hello', 'a', data);
 });

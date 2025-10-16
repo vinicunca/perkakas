@@ -9,9 +9,9 @@ it('dataFirst', () => {
 
   forEach(data, cb);
 
-  expect(cb).toHaveBeenCalledWith(1, 0, data);
-  expect(cb).toHaveBeenCalledWith(2, 1, data);
-  expect(cb).toHaveBeenCalledWith(3, 2, data);
+  expect(cb).toHaveBeenNthCalledWith(1, 1, 0, data);
+  expect(cb).toHaveBeenNthCalledWith(2, 2, 1, data);
+  expect(cb).toHaveBeenNthCalledWith(3, 3, 2, data);
 });
 
 it('dataLast', () => {
@@ -22,9 +22,9 @@ it('dataLast', () => {
   // explicitly tell it the how to type the `data` param..
   const result = forEach<typeof data>(cb)(data);
 
-  expect(cb).toHaveBeenCalledWith(1, 0, data);
-  expect(cb).toHaveBeenCalledWith(2, 1, data);
-  expect(cb).toHaveBeenCalledWith(3, 2, data);
+  expect(cb).toHaveBeenNthCalledWith(1, 1, 0, data);
+  expect(cb).toHaveBeenNthCalledWith(2, 2, 1, data);
+  expect(cb).toHaveBeenNthCalledWith(3, 3, 2, data);
 
   // dataLast used directly, we return the same reference.
   expect(result).toBe(data);
@@ -39,9 +39,9 @@ it('pipe', () => {
 
   const result = pipe(data, forEach(cb));
 
-  expect(cb).toHaveBeenCalledWith(1, 0, data);
-  expect(cb).toHaveBeenCalledWith(2, 1, data);
-  expect(cb).toHaveBeenCalledWith(3, 2, data);
+  expect(cb).toHaveBeenNthCalledWith(1, 1, 0, data);
+  expect(cb).toHaveBeenNthCalledWith(2, 2, 1, data);
+  expect(cb).toHaveBeenNthCalledWith(3, 3, 2, data);
 
   expect(result).toStrictEqual(data);
   // The pipe reconstructs the array because it runs lazily.

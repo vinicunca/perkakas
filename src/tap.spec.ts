@@ -11,8 +11,7 @@ describe('data first', () => {
   it('should call function with input value', () => {
     const fn = vi.fn();
     tap(DATA, fn);
-    expect(fn).toBeCalledWith(DATA);
-    expect(fn).toHaveBeenCalledOnce();
+    expect(fn).toHaveBeenCalledExactlyOnceWith(DATA);
   });
 
   it('should return input value', () => {
@@ -24,8 +23,7 @@ describe('data last', () => {
   it('should call function with input value', () => {
     const fn = vi.fn();
     pipe(DATA, tap(fn));
-    expect(fn).toBeCalledWith(DATA);
-    expect(fn).toHaveBeenCalledOnce();
+    expect(fn).toHaveBeenCalledExactlyOnceWith(DATA);
   });
 
   it('should return input value', () => {
