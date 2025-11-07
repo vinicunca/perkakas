@@ -55,6 +55,7 @@ export * from './is-date';
 export * from './is-deep-equal';
 export * from './is-defined';
 export * from './is-empty';
+export * from './is-emptyish';
 export * from './is-error';
 export * from './is-function';
 export * from './is-included-in';
