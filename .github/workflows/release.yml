@@ -7,56 +7,9 @@ on:
 
 jobs:
   release:
-    runs-on: ubuntu-latest
-    steps:
-      - name: ⬇️ Checkout repo
-        uses: actions/checkout@v5.0.0
-        with:
-          fetch-depth: 0
-      - name: ⎔ Setup node
-        uses: actions/setup-node@v5.0.0
-        with:
-          node-version: lts/*
-          registry-url: 'https://registry.npmjs.org'
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          run_install: false
-
-      - name: Get pnpm store directory
-        shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
-
-      - uses: actions/cache@v4
-        name: Setup pnpm cache
-        with:
-          path: ${{ env.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
-
-      - name: Install Dependencies
-        run: pnpm install
-
-      - name: Generate Changelog
-        run: pnpm dlx changelogithub
-        env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-
-      - name: Publish to NPM
-        run: pnpm run publish:ci
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.VINICUNCA_NPM_TOKEN }}
-
-      - name: Build docs
-        run: pnpm run build:docs
-
-      - uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_VINICUNCA_DOCS }}'
-          projectId: vinicunca-docs
-          channelId: live
-          target: perkakas
+    uses: sxzz/workflows/.github/workflows/release.yml@v1
+    with:
+      publish: true
+    permissions:
+      contents: write
+      id-token: write

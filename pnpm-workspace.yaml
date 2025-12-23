@@ -1,27 +1,17 @@
-packages:
-  - docs
+catalogMode: prefer
+shellEmulator: true
+trustPolicy: no-downgrade
+
 catalog:
   '@arethetypeswrong/core': ^0.18.2
-  '@iconify/json': ^2.2.395
-  '@types/node': ^22.17.0
-  '@vinicunca/eslint-config': ^3.28.0
-  '@vinicunca/unocss-preset': ^1.29.2
+  '@types/node': ^25.0.3
+  '@vinicunca/eslint-config': ^4.1.0
   '@vitest/coverage-v8': ^3.2.4
-  bumpp: ^10.3.1
-  eslint: ^9.37.0
-  fuse.js: ^7.1.0
-  postcss-nested: ^7.0.2
-  prettier: ^3.6.2
+  bumpp: ^10.3.2
+  eslint: ^9.39.2
   publint: ^0.3.14
-  radix-vue: ^1.9.17
-  taze: ^19.7.0
-  tiny-invariant: ^1.3.3
+  taze: ^19.9.2
   tsdown: ^0.15.7
-  tsup: ^8.5.0
   type-fest: ^4.41.0
-  typedoc: ^0.28.9
   typescript: ^5.9.3
-  unocss: ^66.5.4
-  unplugin-vue-components: ^28.8.0
-  vitepress: ^1.6.4
   vitest: ^3.2.4

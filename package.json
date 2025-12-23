@@ -2,7 +2,7 @@
   "name": "@vinicunca/perkakas",
   "type": "module",
   "version": "1.10.0",
-  "packageManager": "pnpm@10.18.3",
+  "packageManager": "pnpm@10.26.1",
   "description": "Utility for JavaScript and Typescript.",
   "author": "praburangki<https://github.com/praburangki>",
   "license": "MIT",
@@ -63,11 +63,9 @@
     "@vitest/coverage-v8": "catalog:",
     "bumpp": "catalog:",
     "eslint": "catalog:",
-    "prettier": "catalog:",
     "publint": "catalog:",
     "taze": "catalog:",
     "tsdown": "catalog:",
-    "tsup": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   }
