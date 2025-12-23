@@ -1,6 +1,7 @@
 catalogMode: prefer
 shellEmulator: true
 trustPolicy: no-downgrade
+shamefully-hoist: true
 
 catalog:
   '@arethetypeswrong/core': ^0.18.2
@@ -11,7 +12,7 @@ catalog:
   eslint: ^9.39.2
   publint: ^0.3.14
   taze: ^19.9.2
-  tsdown: ^0.15.7
+  tsdown: ^0.18.2
   type-fest: ^4.41.0
   typescript: ^5.9.3
   vitest: ^3.2.4
