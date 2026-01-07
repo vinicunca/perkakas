@@ -133,7 +133,7 @@ it('Works well with nullish type-guards', () => {
   }>();
 });
 
-describe('Records with non-narrowing predicates (Issue #696)', () => {
+describe('Records with non-narrowing predicates', () => {
   it('string keys', () => {
     const data = {} as Record<string, string>;
     const result = pickBy(data, constant(true));

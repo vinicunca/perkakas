@@ -156,7 +156,7 @@ it('handles undefined as optional elements', () => {
   ).toStrictEqual({ cat: [{ a: 'cat' }] });
 });
 
-it('grouping value is a key of object.prototype (issue #1049)', () => {
+it('grouping value is a key of object.prototype', () => {
   expect(
     groupByProp(
       [

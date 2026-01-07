@@ -165,3 +165,12 @@ it('all values are undefined', () => {
     groupByProp([] as Array<{ a: undefined }>, 'a'),
   ).toEqualTypeOf<EmptyObject>();
 });
+
+it('grouping on a prop with literal union values', () => {
+  expectTypeOf(
+    groupByProp([] as Array<{ a: 'cat' | 'dog'; b: string }>, 'a' as const),
+  ).branded.toEqualTypeOf<{
+    cat?: [{ a: 'cat'; b: string }, ...Array<{ a: 'cat'; b: string }>];
+    dog?: [{ a: 'dog'; b: string }, ...Array<{ a: 'dog'; b: string }>];
+  }>();
+});

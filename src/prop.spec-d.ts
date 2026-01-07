@@ -408,7 +408,7 @@ describe('optional props', () => {
     ).toEqualTypeOf<1 | undefined>();
   });
 
-  test('discriminated unions (Issue #830)', () => {
+  test('discriminated unions', () => {
     expectTypeOf(
       prop(
         {} as {

@@ -872,3 +872,19 @@ it('null filtering', () => {
     filteredArray([] as Array<string | undefined>, '' as string),
   ).toEqualTypeOf<Array<string>>();
 });
+
+it('prop with literal union value filtered by overlapping value', () => {
+  expectTypeOf(
+    filteredArray([] as Array<{ a: 'cat' | 'dog'; b: string }>, {
+      a: 'cat' as const,
+    }),
+  ).branded.toEqualTypeOf<Array<{ a: 'cat'; b: string }>>();
+});
+
+it('prop with literal union value filtered by disjoint value', () => {
+  expectTypeOf(
+    filteredArray([] as Array<{ a: 'cat' | 'dog'; b: string }>, {
+      a: 'bird' as const,
+    }),
+  ).toEqualTypeOf<[]>();
+});

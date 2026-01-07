@@ -100,7 +100,7 @@ it('empty object', () => {
   ).toEqualTypeOf<never>();
 });
 
-it('parameterized record key (Issue #1122)', () => {
+it('parameterized record key', () => {
   // @ts-expect-error [ts6133] -- Only functions allow us to define a parametrized record (I think...)
   // eslint-disable-next-line ts/no-unused-vars, unused-imports/no-unused-vars, sonar/no-dead-store -- The function inside this test IS the main point of the test and can't be pulled out or used.
   const foo = <K extends string>(data: Record<K, { a: 'hello' }>): void => {
