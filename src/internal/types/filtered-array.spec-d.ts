@@ -815,13 +815,13 @@ describe('tuples with optional elements', () => {
   it('removes the partialness once filtered', () => {
     expectTypeOf(
       filteredArray([] as [number?, string?], '' as string),
-    ).toEqualTypeOf<[] | [string]>();
+    ).toEqualTypeOf<[string?]>();
   });
 
   it('multiple matches', () => {
     expectTypeOf(
       filteredArray([] as [number?, string?, number?, string?], '' as string),
-    ).toEqualTypeOf<[] | [string] | [string, string]>();
+    ).toEqualTypeOf<[string?, string?]>();
   });
 
   it('literal unions, primitive condition', () => {
@@ -831,15 +831,10 @@ describe('tuples with optional elements', () => {
         '' as string,
       ),
     ).toEqualTypeOf<
-      | []
-      | ['hello']
-      | ['world']
-      | ['foo']
-      | ['hello', 'foo']
-      | ['world', 'foo']
-      | ['bar']
-      | ['hello', 'bar']
-      | ['world', 'bar']
+      | ['hello'?, 'foo'?]
+      | ['world'?, 'foo'?]
+      | ['hello'?, 'bar'?]
+      | ['world'?, 'bar'?]
     >();
   });
 
@@ -849,20 +844,20 @@ describe('tuples with optional elements', () => {
         [] as [('hello' | 'world')?, ('foo' | 'bar')?],
         'hello' as 'hello' | 'foo',
       ),
-    ).toEqualTypeOf<[] | ['hello'] | ['foo'] | ['hello', 'foo']>();
+    ).toEqualTypeOf<[] | ['hello'?, 'foo'?] | ['hello'?] | ['foo'?]>();
   });
 
   it('primitive items, literal union condition', () => {
     expectTypeOf(
       filteredArray([] as [string?, string?], 'hello' as 'hello' | 'foo'),
     ).toEqualTypeOf<
+      | ['hello'?, 'foo'?]
       | []
-      | ['hello']
-      | ['foo']
-      | ['hello', 'foo']
-      | ['hello', 'hello']
-      | ['foo', 'hello']
-      | ['foo', 'foo']
+      | ['hello'?]
+      | ['foo'?]
+      | ['hello'?, 'hello'?]
+      | ['foo'?, 'hello'?]
+      | ['foo'?, 'foo'?]
     >();
   });
 });
@@ -873,7 +868,8 @@ it('null filtering', () => {
   ).toEqualTypeOf<Array<string>>();
 });
 
-it('prop with literal union value filtered by overlapping value', () => {
+// @see https://github.com/remeda/remeda/issues/1231
+it('prop with literal union value filtered by overlapping value (issue #1231)', () => {
   expectTypeOf(
     filteredArray([] as Array<{ a: 'cat' | 'dog'; b: string }>, {
       a: 'cat' as const,

@@ -34,8 +34,8 @@ catalogs:
       specifier: ^0.18.2
       version: 0.18.4
     type-fest:
-      specifier: ^4.41.0
-      version: 4.41.0
+      specifier: ^5.3.1
+      version: 5.3.1
     typescript:
       specifier: ^5.9.3
       version: 5.9.3
@@ -46,10 +46,6 @@ catalogs:
 importers:
 
   .:
-    dependencies:
-      type-fest:
-        specifier: 'catalog:'
-        version: 4.41.0
     devDependencies:
       '@arethetypeswrong/core':
         specifier: 'catalog:'
@@ -78,6 +74,9 @@ importers:
       tsdown:
         specifier: 'catalog:'
         version: 0.18.4(@arethetypeswrong/core@0.18.2)(publint@0.3.16)(synckit@0.11.11)(typescript@5.9.3)
+      type-fest:
+        specifier: 'catalog:'
+        version: 5.3.1
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
@@ -2088,6 +2087,10 @@ packages:
     resolution: {integrity: sha512-MeQTA1r0litLUf0Rp/iisCaL8761lKAZHaimlbGK4j0HysC4PLfqygQj9srcs0m2RdtDYnF8UuYyKpbjHYp7Jw==}
     engines: {node: ^14.18.0 || >=16.0.0}
 
+  tagged-tag@1.0.0:
+    resolution: {integrity: sha512-yEFYrVhod+hdNyx7g5Bnkkb0G6si8HJurOoOEgC8B/O0uXLHlaey/65KRv6cuWBNhBgHKAROVpc7QyYqE5gFng==}
+    engines: {node: '>=20'}
+
   tapable@2.3.0:
     resolution: {integrity: sha512-g9ljZiwki/LfxmQADO3dEY1CbpmXT5Hm2fJ+QaGKwSXUylMybePR7/67YW7jOrrvjEgL1Fmz5kzyAjWVWLlucg==}
     engines: {node: '>=6'}
@@ -2166,9 +2169,9 @@ packages:
     resolution: {integrity: sha512-XleUoc9uwGXqjWwXaUTZAmzMcFZ5858QA2vvx1Ur5xIcixXIP+8LnFDgRplU30us6teqdlskFfu+ae4K79Ooew==}
     engines: {node: '>= 0.8.0'}
 
-  type-fest@4.41.0:
-    resolution: {integrity: sha512-TeTSQ6H5YHvpqVwBRcnLDCBnDOHWYu7IvGbHT6N8AOymcr9PJGjc1GTtiWZTYg0NCgYwvnYWEkVChQAr9bjfwA==}
-    engines: {node: '>=16'}
+  type-fest@5.3.1:
+    resolution: {integrity: sha512-VCn+LMHbd4t6sF3wfU/+HKT63C9OoyrSIf4b+vtWHpt2U7/4InZG467YDNMFMR70DdHjAdpPWmw2lzRdg0Xqqg==}
+    engines: {node: '>=20'}
 
   typescript@5.6.1-rc:
     resolution: {integrity: sha512-E3b2+1zEFu84jB0YQi9BORDjz9+jGbwwy1Zi3G0LUNw7a7cePUrHMRNy8aPh53nXpkFGVHSxIZo5vKTfYaFiBQ==}
@@ -4458,6 +4461,8 @@ snapshots:
     dependencies:
       '@pkgr/core': 0.2.9
 
+  tagged-tag@1.0.0: {}
+
   tapable@2.3.0: {}
 
   taze@19.9.2:
@@ -4542,7 +4547,9 @@ snapshots:
     dependencies:
       prelude-ls: 1.2.1
 
-  type-fest@4.41.0: {}
+  type-fest@5.3.1:
+    dependencies:
+      tagged-tag: 1.0.0
 
   typescript@5.6.1-rc: {}
 

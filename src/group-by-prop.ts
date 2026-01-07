@@ -126,9 +126,9 @@ type CoercedNonEmptyValues<T extends Record<PropertyKey, IterableContainer>> = {
  * @param data - The items to group.
  * @param prop - The property name to group by.
  * @signature
- *    P.groupByProp(data, prop)
+ *    R.groupByProp(data, prop)
  * @example
- *    const result = P.groupByProp(
+ *    const result = R.groupByProp(
  *      //  ^? { cat: [{ a: 'cat' }], dog: [{ a: 'dog' }] }
  *      [{ a: 'cat' }, { a: 'dog' }] as const,
  *      'a',
@@ -163,12 +163,12 @@ export function groupByProp<
  *
  * @param prop - The property name to group by.
  * @signature
- *    P.groupByProp(prop)(data);
+ *    R.groupByProp(prop)(data);
  * @example
- *    const result = P.pipe(
+ *    const result = R.pipe(
  *      //  ^? { cat: [{ a: 'cat' }], dog: [{ a: 'dog' }] }
  *      [{ a: 'cat' }, { a: 'dog' }] as const,
- *      P.groupByProp('a'),
+ *      R.groupByProp('a'),
  *    );
  * @dataLast
  * @category Array
@@ -191,13 +191,10 @@ function groupByPropImplementation<
   > = Object.create(null);
 
   for (const item of data) {
-    // @ts-expect-error [ts18046] -- `item` should be typed `T[number]` but TypeScript isn't inferring that correctly here, in fact, the item could also be typed as ItemsSuperObject<T> because it extends from it. When item is typed as such this error goes away, maybe in the future TypeScript would be able to infer this by itself.
-
     const key = item?.[prop];
     if (key !== undefined) {
       // Once the prototype chain is fixed, it is safe to access the prop
       // directly without needing to check existence or types.
-      // @ts-expect-error [ts7053] -- `key` should be typed `AllPropValues<T, Prop>` but TypeScript isn't inferring that correctly, causing an error when we try to access this prop on the output object.
       const items = output[key];
 
       if (items === undefined) {
@@ -211,6 +208,7 @@ function groupByPropImplementation<
         // It is more performant to add the items to an existing array instead
         // of creating a new array via spreading every time we add an item to
         // it (e.g., `[...current, item]`).
+        // @ts-expect-error [ts2339] -- `items` is still `never`.
         items.push(item);
       }
     }

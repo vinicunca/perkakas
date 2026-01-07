@@ -53,9 +53,6 @@
     "build:docs": "pnpm --filter @vinicunca/perkakas-docs build",
     "fb:deploy": "firebase deploy --only hosting:perkakas"
   },
-  "dependencies": {
-    "type-fest": "catalog:"
-  },
   "devDependencies": {
     "@arethetypeswrong/core": "catalog:",
     "@types/node": "catalog:",
@@ -66,6 +63,7 @@
     "publint": "catalog:",
     "taze": "catalog:",
     "tsdown": "catalog:",
+    "type-fest": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   }

@@ -1,6 +1,7 @@
 import type { IsNever } from 'type-fest';
 import type { CoercedArray } from './coerced-array';
 import type { IterableContainer } from './iterable-container';
+import type { PartialArray } from './partial-array';
 import type { TupleParts } from './tuple-parts';
 
 export type FilteredArray<T extends IterableContainer, Condition>
@@ -11,12 +12,9 @@ export type FilteredArray<T extends IterableContainer, Condition>
     ? [
         ...FilteredFixedTuple<TupleParts<T>['required'], Condition>,
 
-        // The optional elements are added as if they were required instead.
-        // This is because when building the filtered fixed tuples we create
-        // unions of possible outcomes, simulating the way optional elements
-        // work.
-        ...FilteredFixedTuple<TupleParts<T>['optional'], Condition>,
-
+        ...PartialArray<
+          FilteredFixedTuple<TupleParts<T>['optional'], Condition>
+        >,
         ...CoercedArray<SymmetricRefine<TupleParts<T>['item'], Condition>>,
         ...FilteredFixedTuple<TupleParts<T>['suffix'], Condition>,
       ]

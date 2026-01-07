@@ -13,6 +13,6 @@ catalog:
   publint: ^0.3.14
   taze: ^19.9.2
   tsdown: ^0.18.2
-  type-fest: ^4.41.0
+  type-fest: ^5.3.1
   typescript: ^5.9.3
   vitest: 4.0.16

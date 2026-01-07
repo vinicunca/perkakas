@@ -12,7 +12,6 @@ import type {
   ValueOf,
 } from 'type-fest';
 import type { HasWritableKeys } from './internal/types/has-writable-keys';
-import type { NoInfer } from './internal/types/no-infer';
 import type { TupleParts } from './internal/types/tuple-parts';
 
 // eslint-disable-next-line ts/no-unused-vars -- we use a non-exported unique symbol to prevent users from faking our return type.
