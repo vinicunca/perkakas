@@ -10,19 +10,19 @@ import { curry } from './curry';
 // whole object to a Partial of the input.
 type EnumeratedPartial<T> = T extends unknown
   ? Simplify<
-      IsBoundedRecord<T> extends true
-        ? {
-            // Object.entries returns keys as strings.
-            -readonly [P in keyof T as ToString<P>]?: Required<T>[P];
-          }
+    IsBoundedRecord<T> extends true
+      ? {
+          // Object.entries returns keys as strings.
+          -readonly [P in keyof T as ToString<P>]?: Required<T>[P];
+        }
         // For unbounded records (a simple Record with primitive `string` or
         // `number` keys) the return type here could technically be T; but for
         // cases where the record is unbounded but is more complex (like
         // `symbol` keys) we want to "reconstruct" the record from just its
         // enumerable components (which are the ones accessible via
         // `Object.entries`).
-        : Record<EnumerableStringKeyOf<T>, EnumerableStringKeyedValueOf<T>>
-    >
+      : Record<EnumerableStringKeyOf<T>, EnumerableStringKeyedValueOf<T>>
+  >
   : never;
 
 // When the predicate is a type-guard we have more information to work with when
@@ -37,17 +37,17 @@ type EnumeratedPartial<T> = T extends unknown
 // optional (as they could have a value that would be filtered out).
 type EnumeratedPartialNarrowed<T, S> = T extends unknown
   ? Simplify<
-      IsBoundedRecord<T> extends true
-        ? ExactProps<T, S> & PartialProps<T, S>
-        // For unbounded records we need to "reconstruct" the record and
-        // narrow the value types. Similar to the non-narrowed case, we need
-        // to also ignore `symbol` keys and any values that are only relevant
-        // to them.
-        : Record<
-            EnumerableStringKeyOf<T>,
-            Extract<EnumerableStringKeyedValueOf<T>, S>
-          >
-    >
+    IsBoundedRecord<T> extends true
+      ? ExactProps<T, S> & PartialProps<T, S>
+    // For unbounded records we need to "reconstruct" the record and
+    // narrow the value types. Similar to the non-narrowed case, we need
+    // to also ignore `symbol` keys and any values that are only relevant
+    // to them.
+      : Record<
+        EnumerableStringKeyOf<T>,
+        Extract<EnumerableStringKeyedValueOf<T>, S>
+      >
+  >
   : never;
 
 // The exact case, props here would always be part of the output object

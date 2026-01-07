@@ -74,8 +74,8 @@ describe('dataFirst', () => {
   it('guaranteed to run on each item', () => {
     const data = ['a', 'a', 'a', 'a', 'a', 'a'];
 
-    const keyFn = vi.fn(identity());
-    const valueFn = vi.fn(identity());
+    const keyFn = vi.fn<(x: string) => string>();
+    const valueFn = vi.fn<(x: string) => string>();
 
     pullObject(data, keyFn, valueFn);
 
@@ -156,8 +156,8 @@ describe('dataLast', () => {
   it('guaranteed to run on each item', () => {
     const data = ['a', 'a', 'a', 'a', 'a', 'a'];
 
-    const keyFn = vi.fn(identity());
-    const valueFn = vi.fn(identity());
+    const keyFn = vi.fn<(x: string) => string>();
+    const valueFn = vi.fn<(x: string) => string>();
 
     pipe(data, pullObject(keyFn, valueFn));
 
