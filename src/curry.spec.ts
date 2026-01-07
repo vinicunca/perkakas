@@ -19,5 +19,5 @@ it('1 missing', () => {
 });
 
 it('wrong number of arguments', () => {
-  expect(() => fn(5, 10, 40)).toThrow('Wrong number of arguments');
+  expect(() => fn(5, 10, 40)).toThrowError('Wrong number of arguments');
 });

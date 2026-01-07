@@ -105,7 +105,7 @@ describe('showcase', () => {
   it('results as object', async () => {
     const mockApi = vi.fn<
       (words: ReadonlyArray<string>) => Promise<Record<string, number>>
-        >(async (words) => fromKeys(words, (word) => word.length));
+    >(async (words) => fromKeys(words, (word) => word.length));
 
     const countLettersApi = batch(
       // We only need to type the `requests` param of the `executor` callback.
@@ -144,7 +144,7 @@ describe('showcase', () => {
   it('results as array', async () => {
     const mockApi = vi.fn<
       (words: ReadonlyArray<string>) => Promise<ReadonlyArray<number>>
-        >(async (words) => words.map((word) => word.length));
+    >(async (words) => words.map((word) => word.length));
 
     const countLettersApi = batch(
       // We only need to type the `requests` param of the `executor` callback.
@@ -192,6 +192,6 @@ describe('showcase', () => {
 
     await expect(
       Promise.all([failingApi.call('hello'), failingApi.call('world')]),
-    ).rejects.toThrow('Batch too big! [["hello"],["world"]]');
+    ).rejects.toThrowError('Batch too big! [["hello"],["world"]]');
   });
 });

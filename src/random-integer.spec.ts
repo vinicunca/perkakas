@@ -4,13 +4,13 @@ import { randomInteger } from './random-integer';
 const ITERATIONS = 1000;
 
 it('from is greater than to', () => {
-  expect(() => randomInteger(10, 0)).toThrow(
+  expect(() => randomInteger(10, 0)).toThrowError(
     new RangeError('randomInt: The range [10,0] contains no integer'),
   );
 });
 
 it('from and to are decimals with same whole number', () => {
-  expect(() => expect(randomInteger(1.5, 1.6))).toThrow(
+  expect(() => expect(randomInteger(1.5, 1.6))).toThrowError(
     new RangeError('randomInt: The range [1.5,1.6] contains no integer'),
   );
 });

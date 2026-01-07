@@ -24,23 +24,23 @@ describe('data-first', () => {
   it.each([Number.NaN, Number.POSITIVE_INFINITY])(
     'should throw for %d precision',
     (val) => {
-      expect(() => floor(1, val)).toThrow(
+      expect(() => floor(1, val)).toThrowError(
         `precision must be an integer: ${val}`,
       );
     },
   );
 
   it('should throw for non integer precision', () => {
-    expect(() => floor(1, 21.37)).toThrow(
+    expect(() => floor(1, 21.37)).toThrowError(
       'precision must be an integer: 21.37',
     );
   });
 
   it('should throw for precision higher than 15 and lower than -15', () => {
-    expect(() => floor(1, 16)).toThrow(
+    expect(() => floor(1, 16)).toThrowError(
       'precision must be between -15 and 15',
     );
-    expect(() => floor(1, -16)).toThrow(
+    expect(() => floor(1, -16)).toThrowError(
       'precision must be between -15 and 15',
     );
   });
@@ -74,23 +74,23 @@ describe('data-last', () => {
   it.each([Number.NaN, Number.POSITIVE_INFINITY])(
     'should throw for %d precision',
     (val) => {
-      expect(() => floor(val)(1)).toThrow(
+      expect(() => floor(val)(1)).toThrowError(
         `precision must be an integer: ${val}`,
       );
     },
   );
 
   it('should throw for non integer precision', () => {
-    expect(() => floor(21.37)(1)).toThrow(
+    expect(() => floor(21.37)(1)).toThrowError(
       'precision must be an integer: 21.37',
     );
   });
 
   it('should throw for precision higher than 15 and lower than -15', () => {
-    expect(() => floor(16)(1)).toThrow(
+    expect(() => floor(16)(1)).toThrowError(
       'precision must be between -15 and 15',
     );
-    expect(() => floor(-16)(1)).toThrow(
+    expect(() => floor(-16)(1)).toThrowError(
       'precision must be between -15 and 15',
     );
   });

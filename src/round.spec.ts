@@ -24,21 +24,21 @@ describe('data-first', () => {
   it.each([Number.NaN, Number.POSITIVE_INFINITY])(
     'should throw for %d precision',
     (val) => {
-      expect(() => round(1, val)).toThrow(
+      expect(() => round(1, val)).toThrowError(
         `precision must be an integer: ${val}`,
       );
     },
   );
 
   it('should throw for non integer precision', () => {
-    expect(() => round(1, 21.37)).toThrow(
+    expect(() => round(1, 21.37)).toThrowError(
       'precision must be an integer: 21.37',
     );
   });
 
   it('should throw for precision higher than 15 and lower than -15', () => {
-    expect(() => round(1, 16)).toThrow('precision must be between -15 and 15');
-    expect(() => round(1, -16)).toThrow('precision must be between -15 and 15');
+    expect(() => round(1, 16)).toThrowError('precision must be between -15 and 15');
+    expect(() => round(1, -16)).toThrowError('precision must be between -15 and 15');
   });
 
   it.each([Number.NaN, Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY])(
@@ -70,21 +70,21 @@ describe('data-last', () => {
   it.each([Number.NaN, Number.POSITIVE_INFINITY])(
     'should throw for %d precision',
     (val) => {
-      expect(() => round(val)(1)).toThrow(
+      expect(() => round(val)(1)).toThrowError(
         `precision must be an integer: ${val}`,
       );
     },
   );
 
   it('should throw for non integer precision', () => {
-    expect(() => round(21.37)(1)).toThrow(
+    expect(() => round(21.37)(1)).toThrowError(
       'precision must be an integer: 21.37',
     );
   });
 
   it('should throw for precision higher than 15 and lower than -15', () => {
-    expect(() => round(16)(1)).toThrow('precision must be between -15 and 15');
-    expect(() => round(-16)(1)).toThrow('precision must be between -15 and 15');
+    expect(() => round(16)(1)).toThrowError('precision must be between -15 and 15');
+    expect(() => round(-16)(1)).toThrowError('precision must be between -15 and 15');
   });
 
   it.each([Number.NaN, Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY])(

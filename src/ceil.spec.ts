@@ -81,16 +81,16 @@ describe('data-last', () => {
   );
 
   it('should throw for non integer precision', () => {
-    expect(() => ceil(21.37)(1)).toThrow(
+    expect(() => ceil(21.37)(1)).toThrowError(
       'precision must be an integer: 21.37',
     );
   });
 
   it('should throw for precision higher than 15 and lower than -15', () => {
-    expect(() => ceil(-16)(1)).toThrow(
+    expect(() => ceil(-16)(1)).toThrowError(
       'precision must be between -15 and 15',
     );
-    expect(() => ceil(16)(1)).toThrow(
+    expect(() => ceil(16)(1)).toThrowError(
       'precision must be between -15 and 15',
     );
   });
