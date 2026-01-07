@@ -15,19 +15,19 @@ type Split<
     ? Array<string>
     : number extends N
       ? Array<string>
-      : // TODO: We need a way to "floor" non-integer numbers, until then we return a lower fidelity type instead.
-      IsFloat<N> extends true
+      // TODO: We need a way to "floor" non-integer numbers, until then we return a lower fidelity type instead.
+      : IsFloat<N> extends true
         ? Array<string>
         : ArraySlice<
-            // We can use the base (type-fest) split **only** if all the params
-            // are literals. For all other cases it would return the wrong type
-            // so we fallback to the built-in Array.prototype.split return type.
-            SplitBase<S, Separator>,
-            0,
-            // `undefined` and negative numbers are treated as non-limited
-            // splits, which is what we'd get when using `never` for ArraySlice.
-            N extends number ? NonNegative<N> : never
-          >;
+          // We can use the base (type-fest) split **only** if all the params
+          // are literals. For all other cases it would return the wrong type
+          // so we fallback to the built-in Array.prototype.split return type.
+          SplitBase<S, Separator>,
+          0,
+          // `undefined` and negative numbers are treated as non-limited
+          // splits, which is what we'd get when using `never` for ArraySlice.
+          N extends number ? NonNegative<N> : never
+        >;
 
 /**
  * Takes a pattern and divides this string into an ordered list of substrings by
@@ -47,11 +47,11 @@ type Split<
  * @returns An Array of strings, split at each point where the separator occurs
  * in the given string.
  * @signature
- *   R.split(data, separator, limit);
+ *   P.split(data, separator, limit);
  * @example
- *   R.split("a,b,c", ","); //=> ["a", "b", "c"]
- *   R.split("a,b,c", ",", 2); //=> ["a", "b"]
- *   R.split("a1b2c3d", /\d/u); //=> ["a", "b", "c", "d"]
+ *   P.split("a,b,c", ","); //=> ["a", "b", "c"]
+ *   P.split("a,b,c", ",", 2); //=> ["a", "b"]
+ *   P.split("a1b2c3d", /\d/u); //=> ["a", "b", "c", "d"]
  * @dataFirst
  * @category String
  */
@@ -83,11 +83,11 @@ export function split<
  * @returns An Array of strings, split at each point where the separator occurs
  * in the given string.
  * @signature
- *   R.split(separator, limit)(data);
+ *   P.split(separator, limit)(data);
  * @example
- *   R.pipe("a,b,c", R.split(",")); //=> ["a", "b", "c"]
- *   R.pipe("a,b,c", R.split(",", 2)); //=> ["a", "b"]
- *   R.pipe("a1b2c3d", R.split(/\d/u)); //=> ["a", "b", "c", "d"]
+ *   P.pipe("a,b,c", P.split(",")); //=> ["a", "b", "c"]
+ *   P.pipe("a,b,c", P.split(",", 2)); //=> ["a", "b"]
+ *   P.pipe("a1b2c3d", P.split(/\d/u)); //=> ["a", "b", "c", "d"]
  * @dataLast
  * @category String
  */
@@ -108,6 +108,7 @@ export function split(
 ): unknown {
   return typeof separatorOrLimit === 'number' || separatorOrLimit === undefined
     // dataLast
+    // eslint-disable-next-line sonar/argument-type
     ? (data: string) => data.split(dataOrSeparator, separatorOrLimit)
     // dataFirst
     : (dataOrSeparator as string).split(separatorOrLimit, limit);

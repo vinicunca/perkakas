@@ -57,7 +57,7 @@ export function product<
  *   P.product()(data);
  * @example
  *   P.pipe([1, 2, 3], P.product()); // => 6
- *   P.pipe([1n, 2n, 3n], R.product()); // => 6n
+ *   P.pipe([1n, 2n, 3n], P.product()); // => 6n
  *   P.pipe([], P.product()); // => 1
  * @dataLast
  * @category Number
