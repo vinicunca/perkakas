@@ -1,12 +1,11 @@
-/* eslint-disable ts/no-explicit-any, ts/consistent-type-definitions --
+/* eslint-disable ts/consistent-type-definitions --
  * Function inference doesn't work when `unknown` is used as the parameters
  * generic type, it **has** to be `any`.
  */
 
-type Debouncer<
-  F extends (...args: any) => unknown,
-  IsNullable extends boolean = true,
-> = {
+import type { StrictFunction } from './internal/types/strict-function';
+
+type Debouncer<F extends StrictFunction, IsNullable extends boolean = true> = {
   /**
    * Invoke the debounced function.
    *
@@ -98,27 +97,28 @@ type DebounceOptions = {
  * @category Function
  * @see https://css-tricks.com/debouncing-throttling-explained-examples/
  */
-export function debounce<F extends (...args: any) => any>(
+export function debounce<F extends StrictFunction>(
   func: F,
   options: DebounceOptions & { readonly timing?: 'trailing' },
 ): Debouncer<F>;
-export function debounce<F extends (...args: any) => any>(
+export function debounce<F extends StrictFunction>(
   func: F,
   options:
     | (DebounceOptions & { readonly timing: 'both' })
     | (Omit<DebounceOptions, 'maxWaitMs'> & { readonly timing: 'leading' }),
 ): Debouncer<F, false>;
 
-export function debounce<F extends (...args: any) => any>(
+export function debounce<F extends StrictFunction>(
   func: F,
-  // eslint-disable-next-line antfu/consistent-list-newline
+
   {
     waitMs,
     timing = 'trailing',
     maxWaitMs,
   }: DebounceOptions & {
     readonly timing?: 'both' | 'leading' | 'trailing';
-  }): Debouncer<F> {
+  },
+): Debouncer<F> {
   if (maxWaitMs !== undefined && waitMs !== undefined && maxWaitMs < waitMs) {
     throw new Error(
       `debounce: maxWaitMs (${maxWaitMs}) cannot be less than waitMs (${waitMs})`,
@@ -166,6 +166,9 @@ export function debounce<F extends (...args: any) => any>(
     latestCallArgs = undefined;
 
     // Invoke the function and store the results locally.
+    // @ts-expect-error [ts2345, ts2322] -- TypeScript infers the generic sub-
+    // types too eagerly, making itself blind to the fact that the types match
+    // here.
     result = func(...args);
   };
 
@@ -212,6 +215,9 @@ export function debounce<F extends (...args: any) => any>(
         } else {
           // Otherwise for "leading" and "both" the first call is actually
           // called directly and not via a timeout.
+          // @ts-expect-error [ts2345, ts2322] -- TypeScript infers the generic sub-
+          // types too eagerly, making itself blind to the fact that the types match
+          // here.
           result = func(...args);
         }
       } else {

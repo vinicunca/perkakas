@@ -1,7 +1,8 @@
-/* eslint-disable no-nested-ternary, function-paren-newline, ts/explicit-function-return-type, ts/no-explicit-any --
+/* eslint-disable no-nested-ternary, ts/explicit-function-return-type --
  * These aren't useful for a reference implementation for a legacy library!
  */
 
+import type { StrictFunction } from './internal/types/strict-function';
 import { describe, expect, it, vi } from 'vitest';
 import { constant } from './constant';
 import { funnel } from './funnel';
@@ -36,7 +37,7 @@ import { sleep } from './sleep';
  * @see Lodash Tests: https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L22768
  * @see Lodash Typing: https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/lodash/common/function.d.ts#L1347
  */
-function throttleWithCachedValue<F extends (...args: any) => any>(
+function throttleWithCachedValue<F extends StrictFunction>(
   func: F,
   wait = 0,
   {
@@ -65,6 +66,9 @@ function throttleWithCachedValue<F extends (...args: any) => any>(
        * array maintained via the reducer below.
        * Also, every time the function is invoked the cached value is updated.
        */
+      // @ts-expect-error [ts2345, ts2322] -- TypeScript infers the generic sub-
+      // types too eagerly, making itself blind to the fact that the types
+      // match here.
       cachedValue = func(...args) as ReturnType<F>;
     },
     {

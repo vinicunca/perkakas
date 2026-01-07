@@ -1,9 +1,6 @@
-/* eslint-disable ts/no-unsafe-function-type --
- * Function is used generically in this file to define any type of function, so
- * this lint error is not relevant for it.
- */
-type DefinitelyFunction<T>
-  = Extract<T, Function> extends never ? Function : Extract<T, Function>;
+import type { NarrowedTo } from './internal/types/narrowed-to';
+import type { StrictFunction } from './internal/types/strict-function';
+
 /**
  * A function that checks if the passed parameter is a Function and narrows its type accordingly.
  *
@@ -16,8 +13,6 @@ type DefinitelyFunction<T>
  *    P.isFunction('somethingElse') //=> false
  * @category Guard
  */
-export function isFunction<T>(
-  data: Function | T,
-): data is DefinitelyFunction<T> {
+export function isFunction<T>(data: StrictFunction | T): data is NarrowedTo<T, StrictFunction> {
   return typeof data === 'function';
 }

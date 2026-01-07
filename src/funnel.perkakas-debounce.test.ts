@@ -1,17 +1,15 @@
-/* eslint-disable function-paren-newline, no-nested-ternary, ts/explicit-function-return-type, ts/no-explicit-any --
+/* eslint-disable no-nested-ternary, ts/explicit-function-return-type --
  * These aren't useful for a reference implementation!
  */
 
+import type { StrictFunction } from './internal/types/strict-function';
 import { describe, expect, it, vi } from 'vitest';
 import { constant } from './constant';
 import { funnel } from './funnel';
 import { identity } from './identity';
 import { sleep } from './sleep';
 
-interface Debouncer<
-  F extends (...args: any) => unknown,
-  IsNullable extends boolean = true,
-> {
+interface Debouncer<F extends StrictFunction, IsNullable extends boolean = true> {
   readonly call: (
     ...args: Parameters<F>
   ) => ReturnType<F> | (true extends IsNullable ? undefined : never);
@@ -37,17 +35,17 @@ interface DebounceOptions {
  *
  * @see debounce
  */
-function debounce<F extends (...args: any) => any>(
+function debounce<F extends StrictFunction>(
   func: F,
   options: DebounceOptions & { readonly timing?: 'trailing' },
 ): Debouncer<F>;
-function debounce<F extends (...args: any) => any>(
+function debounce<F extends StrictFunction>(
   func: F,
   options:
     | (DebounceOptions & { readonly timing: 'both' })
     | (Omit<DebounceOptions, 'maxWaitMs'> & { readonly timing: 'leading' }),
 ): Debouncer<F, false>;
-function debounce<F extends (...args: any) => any>(
+function debounce<F extends StrictFunction>(
   func: F,
   {
     timing,
@@ -67,7 +65,9 @@ function debounce<F extends (...args: any) => any>(
 
   const debouncingFunnel = funnel(
     (args: Parameters<F>) => {
-      // Every time the function is invoked the cached value is updated.
+      // @ts-expect-error [ts2345, ts2322] -- TypeScript infers the generic sub-
+      // types too eagerly, making itself blind to the fact that the types
+      // match here.
       cachedValue = func(...args) as ReturnType<F>;
     },
     {

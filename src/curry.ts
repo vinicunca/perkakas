@@ -1,6 +1,7 @@
 /* eslint-disable ts/no-explicit-any */
 
 import type { LazyEvaluator } from './internal/types/lazy-evaluator';
+import type { StrictFunction } from './internal/types/strict-function';
 import { lazyDataLastImpl } from './internal/lazy-data-last-impl';
 
 /**
@@ -43,12 +44,16 @@ import { lazyDataLastImpl } from './internal/lazy-data-last-impl';
  * @category Function
  */
 export function curry(
-  fn: (...args: any) => unknown,
+  fn: StrictFunction,
   args: ReadonlyArray<unknown>,
   lazy?: (...args: any) => LazyEvaluator,
 ): unknown {
   const diff = fn.length - args.length;
   if (diff === 0) {
+    // @ts-expect-error [ts2345] -- This error is accurate because we don't know
+    // anything about `fn` so can't ensure that we are passing the correct
+    // arguments to it, we just have to trust that the caller knows what they
+    // are doing.
     return fn(...args);
   }
 
