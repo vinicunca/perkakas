@@ -1,7 +1,7 @@
 import type { EmptyObject, IsNever, KeysOfUnion, Writable } from 'type-fest';
 import type { IsBounded } from './internal/types/is-bounded';
 import type { IsBoundedRecord } from './internal/types/is-bounded-record';
-import type { IsUnion } from './internal/types/is-union';
+import type { PartitionByUnion } from './internal/types/partition-by-union';
 import type { TupleParts } from './internal/types/tuple-parts';
 import { curry } from './curry';
 
@@ -21,10 +21,10 @@ type PickFromArray<T, Keys extends ReadonlyArray<KeysOfUnion<T>>>
         // new, mutable, object. We don't wrap the result with `Simplify` to
         // flatten it because `Writable` does the same thing implicitly.
         : Writable<
-            IsBoundedRecord<T> extends true
-              ? PickBoundedFromArray<T, Keys>
-              : PickUnbounded<T, Extract<Keys[number], keyof T>>
-          >
+          IsBoundedRecord<T> extends true
+            ? PickBoundedFromArray<T, Keys>
+            : PickUnbounded<T, Extract<Keys[number], keyof T>>
+        >
       : never
     : never;
 
@@ -44,43 +44,27 @@ type PickBoundedFromArray<T, Keys extends ReadonlyArray<KeysOfUnion<T>>>
     // When T is a union the keys need to be narrowed to just those that are
     // keys of the specific sub-type being built
     Extract<
-      | ItemsByUnion<TupleParts<Keys>['required']>['singular']
-      | ItemsByUnion<TupleParts<Keys>['suffix']>['singular'],
+      | PartitionByUnion<TupleParts<Keys>['required']>['singular']
+      | PartitionByUnion<TupleParts<Keys>['suffix']>['singular'],
       keyof T
     >
   >
     // Union keys, optional elements, and rest elements are optional.
   & Partial<
-      Pick<
-        T,
-        // When T is a union the keys need to be narrowed to just those that are
-        // keys of the specific sub-type being built.
-        Extract<
-          | ItemsByUnion<TupleParts<Keys>['required']>['union']
+    Pick<
+      T,
+      // When T is a union the keys need to be narrowed to just those that are
+      // keys of the specific sub-type being built.
+      Extract<
+        | PartitionByUnion<TupleParts<Keys>['required']>['union']
           // TODO: the optional part of the keys array will always be empty because its impossible to provide the pick function with a tuple with optional elements; this is because optional elements are always implicitly `undefined` too; which breaks the constraint that all keys are keys of T (`undefined` is not a key of anything). We can lift this restriction by supporting `undefined` in the runtime and relaxing the type constraint to allow it, but this relaxed constraint enables a niche feature (optional tuple elements) at the expense of better type-safety for the more common cases of fixed tuples and arrays. Anyway... if we ever change it, this part of the output type will ensure the output is still correct:
-          | TupleParts<Keys>['optional'][number]
-          | TupleParts<Keys>['item']
-          | ItemsByUnion<TupleParts<Keys>['suffix']>['union'],
-          keyof T
-        >
+        | TupleParts<Keys>['optional'][number]
+        | TupleParts<Keys>['item']
+        | PartitionByUnion<TupleParts<Keys>['suffix']>['union'],
+        keyof T
       >
-    >;
-
-/**
- * We split the fixed tuple item types into **singular** props (e.g., `"a"`),
- * and unions of several props (e.g., `"a" | "b"`).
- *
- * We assume that T is a fixed tuple (no optional or rest elements), and that
- * all elements in it are bounded (as defined by `IsBounded`).
- */
-type ItemsByUnion<T, Singular = never, Union = never> = T extends readonly [
-  infer Head,
-  ...infer Rest,
-]
-  ? IsUnion<Head> extends true
-    ? ItemsByUnion<Rest, Singular, Union | Head>
-    : ItemsByUnion<Rest, Singular | Head, Union>
-  : { singular: Singular; union: Union };
+    >
+  >;
 
 /**
  * The built-in `Pick` is weird when it comes to picking bounded keys from
