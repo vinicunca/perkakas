@@ -1,8 +1,8 @@
 {
   "name": "@vinicunca/perkakas",
   "type": "module",
-  "version": "1.13.0",
-  "packageManager": "pnpm@10.26.1",
+  "version": "1.13.1",
+  "packageManager": "pnpm@10.28.1",
   "description": "Utility for JavaScript and Typescript.",
   "author": "praburangki<https://github.com/praburangki>",
   "license": "MIT",
@@ -66,5 +66,8 @@
     "type-fest": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
+  },
+  "dependencies": {
+    "@internationalized/date": "catalog:"
   }
 }
