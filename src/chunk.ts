@@ -41,19 +41,19 @@ type Chunk<
 
 type LiteralChunk<T extends IterableContainer, N extends number>
   = | ChunkRestElement<
-      // Our result will always have the prefix tuple chunked the same way, so
-      // we compute it once here and send it to the main logic below
-      ChunkFixedTuple<TuplePrefix<T>, N>,
-      TupleParts<T>['item'],
-      TupleParts<T>['suffix'],
-      N
-    >
-    // If both the prefix and suffix tuples are empty then our input is a simple
-    // array of the form `Array<Item>`. This means it could also be empty, so we
-    // need to add the empty output to our return type.
-    | ([...TuplePrefix<T>, ...TupleParts<T>['suffix']] extends readonly []
-      ? []
-      : never);
+    // Our result will always have the prefix tuple chunked the same way, so
+    // we compute it once here and send it to the main logic below
+    ChunkFixedTuple<TuplePrefix<T>, N>,
+    TupleParts<T>['item'],
+    TupleParts<T>['suffix'],
+    N
+  >
+  // If both the prefix and suffix tuples are empty then our input is a simple
+  // array of the form `Item[]`. This means it could also be empty, so we
+  // need to add the empty output to our return type.
+  | ([...TuplePrefix<T>, ...TupleParts<T>['suffix']] extends readonly []
+    ? []
+    : never);
 
 /**
  * This type **only** works if the input array `T` is a fixed tuple. For these
@@ -68,25 +68,25 @@ type ChunkFixedTuple<
 > = T extends readonly [infer Head, ...infer Rest]
   // We continue consuming the input tuple recursively item by item.
   ? ChunkFixedTuple<
-      Rest,
-      N,
-      Result extends [
-        ...infer Previous extends Array<Array<unknown>>,
-        infer Current extends Array<unknown>,
-      ]
-        // We take a look at the last chunk in the result, this is the
-        // "current" chunk where new items would be added, all chunks before
-        // it are already full.
-        ? Current['length'] extends N
-          // The current chunk is full, create a new chunk and put Head in it.
-          ? [...Previous, Current, [Head]]
-          // The current chunk is not full yet, so we add Head to it.
-          : [...Previous, [...Current, Head]]
-        // This would only happen on the first iteration, when result is
-        // still empty. In this case we create the first chunk and put Head
-        // in it.
-        : [[Head]]
-    >
+    Rest,
+    N,
+    Result extends [
+      ...infer Previous extends Array<Array<unknown>>,
+      infer Current extends Array<unknown>,
+    ]
+      // We take a look at the last chunk in the result, this is the
+      // "current" chunk where new items would be added, all chunks before
+      // it are already full.
+      ? Current['length'] extends N
+        // The current chunk is full, create a new chunk and put Head in it.
+        ? [...Previous, Current, [Head]]
+        // The current chunk is not full yet, so we add Head to it.
+        : [...Previous, [...Current, Head]]
+      // This would only happen on the first iteration, when result is
+      // still empty. In this case we create the first chunk and put Head
+      // in it.
+      : [[Head]]
+  >
   // We know T is a finite tuple, so the only case where we would reach this
   // is when T is empty, and in that case our results array contains the whole
   // input chunked by N.
@@ -123,17 +123,17 @@ type ChunkRestElement<
         // until the last prefix chunk is full, we need to consider the
         // suffix being part of it too...
         [Padding in IntRangeInclusive<
-                0,
-                Subtract<N, LastPrefixChunk['length']>
-              >]: [
+          0,
+          Subtract<N, LastPrefixChunk['length']>
+        >]: [
           ...PrefixFullChunks,
           ...ChunkFixedTuple<
-                  // Create a new array that would **not** contain a rest param
-                  // (so it's finite) made of the last prefix chunk, padding
-                  // from the rest param, and the suffix.
-                  [...LastPrefixChunk, ...NTuple<Item, Padding>, ...Suffix],
-                  N
-                >,
+            // Create a new array that would **not** contain a rest param
+            // (so it's finite) made of the last prefix chunk, padding
+            // from the rest param, and the suffix.
+            [...LastPrefixChunk, ...NTuple<Item, Padding>, ...Suffix],
+            N
+          >,
         ];
       }>
           // Additionally, we need to consider the case where the last prefix
