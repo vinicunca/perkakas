@@ -2,17 +2,3 @@ catalogMode: prefer
 shellEmulator: true
 trustPolicy: no-downgrade
 shamefully-hoist: true
-
-catalog:
-  '@arethetypeswrong/core': ^0.18.2
-  '@types/node': ^25.0.3
-  '@vinicunca/eslint-config': ^4.1.0
-  '@vitest/coverage-v8': 4.0.16
-  bumpp: ^10.3.2
-  eslint: ^9.39.2
-  publint: ^0.3.14
-  taze: ^19.9.2
-  tsdown: ^0.18.2
-  type-fest: ^5.3.1
-  typescript: ^5.9.3
-  vitest: 4.0.16

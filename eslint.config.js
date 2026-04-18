@@ -40,6 +40,7 @@ export default vinicuncaESLint(
         'warn',
         { allowTypedFunctionExpressions: false },
       ],
+      'pnpm/json-enforce-catalog': 'off',
     },
   },
 
