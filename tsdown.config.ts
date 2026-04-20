@@ -95,10 +95,10 @@ export default defineConfig({
         // for each utility function. This also includes the barrel file which
         // is crucial to allow importing directly from the package root, without
         // needing paths within the import statement: e.g.,
-        // `import { map } from "remeda";`
+        // `import { map } from "@vinicunca/perkakas";`
         `${SOURCE_DIR}/*.ts`,
-        // Skip test files
-        '!**/*.test{,-d,-prop}.ts',
+        // Skip Vitest specs (runtime + type tests)
+        '!**/*.spec{,-d,-prop}.ts',
       ],
 
       // We enforce target at the type-checking level via tsconfig.json. Once we
