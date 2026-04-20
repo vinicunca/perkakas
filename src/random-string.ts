@@ -4,27 +4,33 @@ const ALPHABET
   = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
 /**
- * Random a non-cryptographic random string from characters a-zA-Z0-9.
+ * A [pseudo-random](https://en.wikipedia.org/wiki/Pseudorandom_number_generator) [alpha-numeric](https://en.wikipedia.org/wiki/Alphanumericals)
+ * [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String).
+ *
+ * It is not [cryptographically secure](https://en.wikipedia.org/wiki/Cryptographically_secure_pseudorandom_number_generator)!
  *
  * @param length - The length of the random string.
  * @returns The random string.
  * @signature
- *   P.randomString(length)
+ *   randomString(length)
  * @example
- *   P.randomString(5) // => aB92J
+ *   randomString(5) // => aB92J
  * @dataFirst
  * @category String
  */
 export function randomString(length: number): string;
 
 /**
- * Random a non-cryptographic random string from characters a-zA-Z0-9.
+ * A [pseudo-random](https://en.wikipedia.org/wiki/Pseudorandom_number_generator) [alpha-numeric](https://en.wikipedia.org/wiki/Alphanumericals)
+ * [string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String).
+ *
+ * It is not [cryptographically secure](https://en.wikipedia.org/wiki/Cryptographically_secure_pseudorandom_number_generator)!
  *
  * @returns The random string.
  * @signature
- *   P.randomString()(length)
+ *   randomString()(length)
  * @example
- *   P.pipe(5, P.randomString()) // => aB92J
+ *   pipe(5, randomString()) // => aB92J
  * @dataLast
  * @category String
  */

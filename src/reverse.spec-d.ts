@@ -5,16 +5,20 @@ import { reverse } from './reverse';
 describe('data first', () => {
   it('arrays', () => {
     const actual = reverse([1, 2, 3]);
+
     expectTypeOf(actual).toEqualTypeOf<Array<number>>();
   });
+
   it('tuples', () => {
     const actual = reverse([1, 2, [true], 'a'] as const);
+
     expectTypeOf(actual).toEqualTypeOf<['a', readonly [true], 2, 1]>();
   });
 
   it('variadic tuples', () => {
     const input: [number, ...Array<string>] = [1, 'two', 'three'];
     const actual = reverse(input);
+
     expectTypeOf(actual).toEqualTypeOf<[...Array<string>, number]>();
   });
 });
@@ -22,16 +26,20 @@ describe('data first', () => {
 describe('data last', () => {
   it('arrays', () => {
     const actual = pipe([1, 2, 3], reverse());
+
     expectTypeOf(actual).toEqualTypeOf<Array<number>>();
   });
+
   it('tuples', () => {
     const actual = pipe([1, 2, [true], 'a'] as const, reverse());
+
     expectTypeOf(actual).toEqualTypeOf<['a', readonly [true], 2, 1]>();
   });
 
   it('variadic tuples', () => {
     const input: [number, ...Array<string>] = [1, 'two', 'three'];
     const actual = pipe(input, reverse());
+
     expectTypeOf(actual).toEqualTypeOf<[...Array<string>, number]>();
   });
 });

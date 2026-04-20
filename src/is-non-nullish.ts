@@ -6,11 +6,11 @@
  * @returns True if the passed input is defined and isn't `null`, false
  * otherwise.
  * @signature
- *    P.isNonNullish(data)
+ *    isNonNullish(data)
  * @example
- *    P.isNonNullish('string') //=> true
- *    P.isNonNullish(null) //=> false
- *    P.isNonNullish(undefined) //=> false
+ *    isNonNullish('string') //=> true
+ *    isNonNullish(null) //=> false
+ *    isNonNullish(undefined) //=> false
  * @category Guard
  */
 export function isNonNullish<T>(data: T): data is NonNullable<T> {

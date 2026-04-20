@@ -8,15 +8,15 @@ import type { NarrowedTo } from './internal/types/narrowed-to';
  * @returns True if the passed input is either `null` or `undefined`, false
  * otherwise.
  * @signature
- *    P.isNullish(data)
+ *    isNullish(data)
  * @example
- *    P.isNullish(undefined) //=> true
- *    P.isNullish(null) //=> true
- *    P.isNullish('somethingElse') //=> false
+ *    isNullish(undefined) //=> true
+ *    isNullish(null) //=> true
+ *    isNullish('somethingElse') //=> false
  * @category Guard
  */
 export function isNullish<T>(
-  data: null | T | undefined,
+  data: T | null | undefined,
 ): data is NarrowedTo<T, null | undefined> {
   return data === null || data === undefined;
 }

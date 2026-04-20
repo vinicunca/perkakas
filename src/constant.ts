@@ -15,18 +15,19 @@
  * The value is not copied/cloned on every invocation so care should be taken
  * with mutable objects (like arrays, objects, Maps, etc...).
  * @signature
- *   P.constant(value);
+ *   constant(value);
  * @example
- *   P.map([1, 2, 3], P.constant('a')); // => ['a', 'a', 'a']
- *   P.map(
+ *   map([1, 2, 3], constant('a')); // => ['a', 'a', 'a']
+ *   map(
  *     [1, 2, 3],
- *     isDemoMode ? P.add(1) : P.constant(0),
+ *     isDemoMode ? add(1) : constant(0),
  *   ); // => [2, 3, 4] or [0, 0, 0]
  * @dataLast
  * @category Function
  */
 export function constant<const T>(
   value: T,
-): <Args extends ReadonlyArray<unknown>>(...args: Args) => T {
+): // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters -- There is no other way to make typescript infer the function arguments "backwards" in data-last invocations without the Args type parameter. @see: https://github.com/typescript-eslint/typescript-eslint/issues/9887
+<Args extends ReadonlyArray<unknown>>(...args: Args) => T {
   return () => value;
 }

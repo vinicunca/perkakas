@@ -65,11 +65,11 @@ export function curryOrderRules<T>(
   // We rely on casting blindly here, but we rely on casting blindly everywhere
   // else when we call curry so it's fine...
   const [dataOrRule, ...rules] = inputArgs as
+    | Readonly<NonEmptyArray<OrderRule<T>>>
     | [
         data: OrderRule<T> | ReadonlyArray<T>,
         ...rules: Readonly<NonEmptyArray<OrderRule<T>>>,
-    ]
-    | Readonly<NonEmptyArray<OrderRule<T>>>;
+    ];
 
   if (!isOrderRule<T>(dataOrRule)) {
     // dataFirst!
@@ -162,8 +162,7 @@ function isOrderRule<T>(x: unknown): x is OrderRule<T> {
     return false;
   }
 
-  const [maybeProjection, maybeDirection, ...rest]
-    = x as ReadonlyArray<unknown>;
+  const [maybeProjection, maybeDirection, ...rest] = x as ReadonlyArray<unknown>;
 
   return (
     isProjection(maybeProjection)

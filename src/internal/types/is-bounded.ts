@@ -20,12 +20,12 @@ export type IsBounded<T>
       ? Or<IsBoundedString<T>, Or<IsNumericLiteral<T>, IsSymbolLiteral<T>>>
       : never
   ) extends true
-    // When some parts of the union result in `true` and others in `false`
-    // (e.g. `"a" | number`), when we distribute the union we would get
-    // `boolean` as a result (because `true | false` === `boolean`); but the
-    // union as a whole is bounded only if **all** it's parts are bounded
-    // individually.
-    ? true
+    ? // When some parts of the union result in `true` and others in `false`
+  // (e.g. `"a" | number`), when we distribute the union we would get
+  // `boolean` as a result (because `true | false` === `boolean`); but the
+  // union as a whole is bounded only if **all** it's parts are bounded
+  // individually.
+    true
     : false;
 
 /**
@@ -35,10 +35,10 @@ export type IsBounded<T>
  */
 type IsBoundedString<T> = T extends string
   ? IsStringLiteral<T> extends true
-    // T[number] alone doesn't work because that's just string.
-    ? Split<T, ''>[number] extends infer U
-      // string. Otherwise, we assume it's bounded.
-      ? [`${number}`] extends [U]
+    ? // T[number] alone doesn't work because that's just string.
+    Split<T, ''>[number] extends infer U
+      ? // string. Otherwise, we assume it's bounded.
+        [`${number}`] extends [U]
           ? false
           : [string] extends [U]
               ? false

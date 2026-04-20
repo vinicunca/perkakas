@@ -13,11 +13,11 @@ type IsEquals<T> = (a: T, b: T) => boolean;
  * @param data - The array to filter.
  * @param isEquals - The comparator.
  * @signature
- *    P.uniqueWith(array, isEquals)
+ *    uniqueWith(array, isEquals)
  * @example
- *    P.uniqueWith(
+ *    uniqueWith(
  *      [{a: 1}, {a: 2}, {a: 2}, {a: 5}, {a: 1}, {a: 6}, {a: 7}],
- *      P.equals,
+ *      equals,
  *    ) // => [{a: 1}, {a: 2}, {a: 5}, {a: 6}, {a: 7}]
  * @dataFirst
  * @lazy
@@ -33,15 +33,15 @@ export function uniqueWith<T extends IterableContainer>(
  * list. Elements are compared by custom comparator isEquals.
  *
  * @param isEquals - The comparator.
- * @signature P.uniqueWith(isEquals)(array)
+ * @signature uniqueWith(isEquals)(array)
  * @example
- *    P.uniqueWith(P.equals)(
+ *    uniqueWith(equals)(
  *      [{a: 1}, {a: 2}, {a: 2}, {a: 5}, {a: 1}, {a: 6}, {a: 7}],
  *    ) // => [{a: 1}, {a: 2}, {a: 5}, {a: 6}, {a: 7}]
- *    P.pipe(
+ *    pipe(
  *      [{a: 1}, {a: 2}, {a: 2}, {a: 5}, {a: 1}, {a: 6}, {a: 7}], // only 4 iterations
- *      P.uniqueWith(P.equals),
- *      P.take(3)
+ *      uniqueWith(equals),
+ *      take(3)
  *    ) // => [{a: 1}, {a: 2}, {a: 5}]
  * @dataLast
  * @lazy

@@ -2,11 +2,11 @@ import type { EmptyObject } from 'type-fest';
 import type { EnumerableStringKeyedValueOf } from './enumerable-string-keyed-value-of';
 import { expectTypeOf, it } from 'vitest';
 
+declare const SYMBOL: unique symbol;
+
 declare function enumerableStringKeyedValueOf<const T>(
   data: T,
 ): EnumerableStringKeyedValueOf<T>;
-
-const SymbolFoo = Symbol('foo');
 
 it('string values', () => {
   expectTypeOf(
@@ -80,16 +80,16 @@ it('nullish and undefined values', () => {
 
 it('symbol keys', () => {
   expectTypeOf(
-    enumerableStringKeyedValueOf({ [SymbolFoo]: 'hello' } as const),
+    enumerableStringKeyedValueOf({ [SYMBOL]: 'hello' } as const),
   ).toEqualTypeOf<never>();
 
   expectTypeOf(
-    enumerableStringKeyedValueOf({ [SymbolFoo]: 'hello', b: '1' } as const),
+    enumerableStringKeyedValueOf({ [SYMBOL]: 'hello', b: '1' } as const),
   ).toEqualTypeOf<'1'>();
 
   expectTypeOf(
     enumerableStringKeyedValueOf(
-      {} as Record<PropertyKey | typeof SymbolFoo, string>,
+      {} as Record<PropertyKey | typeof SYMBOL, string>,
     ),
   ).toEqualTypeOf<string>();
 });
@@ -101,15 +101,23 @@ it('empty object', () => {
 });
 
 it('parameterized record key', () => {
-  // @ts-expect-error [ts6133] -- Only functions allow us to define a parametrized record (I think...)
-  // eslint-disable-next-line ts/no-unused-vars, unused-imports/no-unused-vars, sonar/no-dead-store -- The function inside this test IS the main point of the test and can't be pulled out or used.
   const foo = <K extends string>(data: Record<K, { a: 'hello' }>): void => {
-    // TypeScript/Vitest (?!) is failing to infer the result of our function
-    // on this type directly, but still manages to typecheck it once we
-    // destructure the result and only test the type of the property. I don't
-    // know why that is and if there's any better more idiomatic way to do this.
+    // Because of the type parameter TypeScript doesn't infer the concrete
+    // return type here, preventing us from being able to compare it to an
+    // expected type (that doesn't use EnumerableStringKeyedValueOf itself);
+    // but once we treat it as an object by accessing a specific property
+    // TypeScript attempts to eagerly infer it (and succeeds). This provides us
+    // a good enough workaround for testing the expected type.
+    // @see https://github.com/microsoft/TypeScript/issues/48810
     const { a } = enumerableStringKeyedValueOf(data);
 
     expectTypeOf(a).toEqualTypeOf<'hello'>();
   };
+
+  // We need to "use" the function above to prevent GitHub's CodeQL from
+  // surfacing it as unused (`js/unused-local-variable`), which it technically
+  // is, albeit this being a **type test** where execution is meaningless to
+  // begin with...
+  // eslint-disable-next-line sonar/void-use
+  void foo;
 });

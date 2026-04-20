@@ -1,9 +1,7 @@
 import type { IsNumericLiteral } from 'type-fest';
-
 import type { IterableContainer } from './internal/types/iterable-container';
 import type { LazyEvaluator } from './internal/types/lazy-evaluator';
 import type { LazyResult } from './internal/types/lazy-result';
-
 import { lazyDataLastImpl } from './internal/lazy-data-last-impl';
 import { lazyIdentityEvaluator } from './internal/utility-evaluators';
 
@@ -12,26 +10,27 @@ type FlatArray<
   Depth extends number,
   Iteration extends ReadonlyArray<unknown> = [],
 > = Depth extends Iteration['length']
-  // Stopping condition for the recursion when the array is a tuple.
-  ? T
+  ? // Stopping condition for the recursion when the array is a tuple.
+  T
   : T extends readonly []
-    // Trivial result when the array is empty.
-    ? []
+    ? // Trivial result when the array is empty.
+      []
     : T extends readonly [infer Item, ...infer Rest]
-      // Tuples could be special-cased by "iterating" over each item
-      // separately so that we maintain more information from the input type,
-      // instead of putting all values in a union.
-      ? [
+      ? // Tuples could be special-cased by "iterating" over each item
+        // separately so that we maintain more information from the input type,
+        // instead of putting all values in a union.
+        [
           ...(Item extends IterableContainer
-            // If the item itself is an array we continue going deeper
-            ? FlatArray<Item, Depth, [...Iteration, unknown]>
-            // But if it isn't we add it to the output tuple
-            : [Item]),
+            ? // If the item itself is an array we continue going deeper
+            FlatArray<Item, Depth, [...Iteration, unknown]>
+            : // But if it isn't we add it to the output tuple
+              [Item]),
           // And we merge this with the result from the rest of the tuple.
           ...FlatArray<Rest, Depth, Iteration>,
         ]
-      // For simple arrays we compute the item type, and wrap it with an array.
-      : Array<FlatSimpleArrayItems<T, Depth, Iteration>>;
+      : // For simple arrays we compute the item type, and wrap it with an
+    // array.
+      Array<FlatSimpleArrayItems<T, Depth, Iteration>>;
 
 // This type is based on the built-in type for `Array.prototype.flat` from the
 // ES2019 Array typescript library, but we improved it to handle any depth
@@ -69,19 +68,16 @@ type FlatSimpleArrayItems<
  * "unlimited" depth use a literal value that would exceed your expected
  * practical maximum nesting level.
  * @signature
- *   P.flat(data)
- *   P.flat(data, depth)
+ *   flat(data)
+ *   flat(data, depth)
  * @example
- *   P.flat([[1, 2], [3, 4], [5], [[6]]]); // => [1, 2, 3, 4, 5, [6]]
- *   P.flat([[[1]], [[2]]], 2); // => [1, 2]
+ *   flat([[1, 2], [3, 4], [5], [[6]]]); // => [1, 2, 3, 4, 5, [6]]
+ *   flat([[[1]], [[2]]], 2); // => [1, 2]
  * @dataFirst
  * @lazy
  * @category Array
  */
-export function flat<
-  T extends IterableContainer,
-  Depth extends number = 1,
->(
+export function flat<T extends IterableContainer, Depth extends number = 1>(
   data: T,
   depth?: IsNumericLiteral<Depth> extends true ? Depth : never,
 ): FlatArray<T, Depth>;
@@ -94,11 +90,11 @@ export function flat<
  * @param depth - The depth level specifying how deep a nested array structure
  * should be flattened. Defaults to 1.
  * @signature
- *   P.flat()(data)
- *   P.flat(depth)(data)
+ *   flat()(data)
+ *   flat(depth)(data)
  * @example
- *   P.pipe([[1, 2], [3, 4], [5], [[6]]], P.flat()); // => [1, 2, 3, 4, 5, [6]]
- *   P.pipe([[[1]], [[2]]], P.flat(2)); // => [1, 2]
+ *   pipe([[1, 2], [3, 4], [5], [[6]]], flat()); // => [1, 2, 3, 4, 5, [6]]
+ *   pipe([[[1]], [[2]]], flat(2)); // => [1, 2]
  * @dataLast
  * @lazy
  * @category Array
@@ -122,12 +118,9 @@ export function flat(
   );
 }
 
-function flatImplementation(
-  data: IterableContainer,
-  depth?: number,
-): IterableContainer {
-  return (depth === undefined ? data.flat() : data.flat(depth));
-};
+function flatImplementation(data: IterableContainer, depth?: number): IterableContainer {
+  return depth === undefined ? data.flat() : data.flat(depth);
+}
 
 function lazyImplementation(depth?: number): LazyEvaluator {
   if (depth === undefined || depth === 1) {
@@ -149,11 +142,9 @@ function lazyImplementation(depth?: number): LazyEvaluator {
       : { next: value, hasNext: true, done: false }; ;
 }
 
-/**
- * This function is pulled out so that we don't generate a new function
- * each time. Because it doesn't need to run with recursion it could be pulled
- * out from the lazyImplementation and be reused for all invocations.
- */
+// This function is pulled out so that we don't generate a new arrow function
+// each time. Because it doesn't need to run with recursion it could be pulled
+// out from the lazyImplementation and be reused for all invocations.
 function lazyShallow<T>(value: T): LazyResult<T> {
   return Array.isArray(value)
     ? { next: value, hasNext: true, hasMany: true, done: false }

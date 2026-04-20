@@ -1,5 +1,4 @@
 import type { Simplify } from 'type-fest';
-
 import type { ToString } from './internal/types/to-string';
 import { curry } from './curry';
 
@@ -17,9 +16,9 @@ type Inverted<T extends object> = Simplify<{
  *
  * @param object - The object.
  * @signature
- *    P.invert(object)
+ *    invert(object)
  * @example
- *    P.invert({ a: "d", b: "e", c: "f" }) // => { d: "a", e: "b", f: "c" }
+ *    invert({ a: "d", b: "e", c: "f" }) // => { d: "a", e: "b", f: "c" }
  * @dataFirst
  * @category Object
  */
@@ -30,9 +29,9 @@ export function invert<T extends object>(object: T): Inverted<T>;
  * subsequent values will overwrite previous values.
  *
  * @signature
- *    P.invert()(object)
+ *    invert()(object)
  * @example
- *    P.pipe({ a: "d", b: "e", c: "f" }, P.invert()); // => { d: "a", e: "b", f: "c" }
+ *    pipe({ a: "d", b: "e", c: "f" }, invert()); // => { d: "a", e: "b", f: "c" }
  * @dataLast
  * @category Object
  */

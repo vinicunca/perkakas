@@ -1,6 +1,5 @@
 import type { IterableContainer } from './internal/types/iterable-container';
 import type { ReorderedArray } from './internal/types/reordered-array';
-
 import { curry } from './curry';
 
 /**
@@ -8,9 +7,9 @@ import { curry } from './curry';
  *
  * @param items - The array to shuffle.
  * @signature
- *    P.shuffle(array)
+ *    shuffle(array)
  * @example
- *    P.shuffle([4, 2, 7, 5]) // => [7, 5, 4, 2]
+ *    shuffle([4, 2, 7, 5]) // => [7, 5, 4, 2]
  * @dataFirst
  * @category Array
  */
@@ -22,9 +21,9 @@ export function shuffle<T extends IterableContainer>(
  * Shuffles the input array, returning a new array with the same elements in a random order.
  *
  * @signature
- *    P.shuffle()(array)
+ *    shuffle()(array)
  * @example
- *    P.pipe([4, 2, 7, 5], P.shuffle()) // => [7, 5, 4, 2]
+ *    pipe([4, 2, 7, 5], shuffle()) // => [7, 5, 4, 2]
  * @dataLast
  * @category Array
  */

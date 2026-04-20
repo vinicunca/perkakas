@@ -9,5 +9,4 @@
  */
 export type SimplifiedWritable<T> = {
   -readonly [KeyType in keyof T]: T[KeyType];
-// eslint-disable-next-line sonar/no-useless-intersection
 } & {};

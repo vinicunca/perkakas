@@ -1,9 +1,9 @@
 import type { DeepPartial } from './type.helpers';
-import { describe, expectTypeOf, test } from 'vitest';
+import { describe, expectTypeOf, it } from 'vitest';
 
 describe('DeepPartial', () => {
   describe('basic types', () => {
-    test('primitives should remain the same type', () => {
+    it('primitives should remain the same type', () => {
       type Result = DeepPartial<{
         str: string;
         num: number;
@@ -17,7 +17,7 @@ describe('DeepPartial', () => {
       }>();
     });
 
-    test('all properties should be optional', () => {
+    it('all properties should be optional', () => {
       type Result = DeepPartial<{
         required: string;
         alsoRequired: number;
@@ -31,7 +31,7 @@ describe('DeepPartial', () => {
   });
 
   describe('nested objects', () => {
-    test('should make nested properties optional', () => {
+    it('should make nested properties optional', () => {
       type Result = DeepPartial<{
         user: {
           name: string;
@@ -47,7 +47,7 @@ describe('DeepPartial', () => {
       }>();
     });
 
-    test('deeply nested objects', () => {
+    it('deeply nested objects', () => {
       type Result = DeepPartial<{
         level1: {
           level2: {
@@ -71,7 +71,7 @@ describe('DeepPartial', () => {
   });
 
   describe('mixed structures', () => {
-    test('complex nested structure', () => {
+    it('complex nested structure', () => {
       type Result = DeepPartial<{
         id: number;
         name: string;
@@ -107,12 +107,12 @@ describe('DeepPartial', () => {
   });
 
   describe('edge cases', () => {
-    test('empty object', () => {
+    it('empty object', () => {
       type Result = DeepPartial<object>;
       expectTypeOf<Result>().toEqualTypeOf<object>();
     });
 
-    test('null and undefined', () => {
+    it('null and undefined', () => {
       type Result = DeepPartial<{
         nullable: null;
         undef: undefined;
@@ -124,7 +124,7 @@ describe('DeepPartial', () => {
       }>();
     });
 
-    test('optional properties remain optional', () => {
+    it('optional properties remain optional', () => {
       type Result = DeepPartial<{
         required: string;
         optional?: number;
@@ -138,7 +138,7 @@ describe('DeepPartial', () => {
   });
 
   describe('potential issues', () => {
-    test('tuple types - might not work as expected', () => {
+    it('tuple types - might not work as expected', () => {
       type Result = DeepPartial<{
         tuple: [string, number];
       }>;
@@ -150,7 +150,7 @@ describe('DeepPartial', () => {
       }>();
     });
 
-    test('functions should remain as-is', () => {
+    it('functions should remain as-is', () => {
       type Result = DeepPartial<{
         callback: () => void;
       }>;
@@ -161,7 +161,7 @@ describe('DeepPartial', () => {
       }>();
     });
 
-    test('Date objects', () => {
+    it('Date objects', () => {
       type Result = DeepPartial<{
         timestamp: Date;
       }>;

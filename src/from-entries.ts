@@ -1,7 +1,5 @@
 import type { Simplify } from 'type-fest';
-
 import type { IterableContainer } from './internal/types/iterable-container';
-
 import type { PerkakasTypeError } from './internal/types/perkakas-type-error';
 import { curry } from './curry';
 
@@ -97,17 +95,16 @@ type ValueForKey<
  *
  * There are several other functions that could be used to build an object from
  * an array:
- * - `fromKeys`: Builds an object from an array of *keys* and a mapper for values.
- * - `indexBy`: Builds an object from an array of *values* and a mapper for keys.
- * - `pullObject`: Builds an object from an array of items with mappers for *both* keys and values.
- * - `mapToObj`: Builds an object from an array of items and a single mapper for key-value pairs.
+ * `fromKeys` - Builds an object from an array of *keys* and a mapper for values.
+ * `indexBy` - Builds an object from an array of *values* and a mapper for keys.
+ * `pullObject` - Builds an object from an array of items with mappers for *both* keys and values.
  * Refer to the docs for more details.
  *
  * @param entries - An array of key-value pairs.
  * @signature
- *   P.fromEntries(tuples)
+ *   fromEntries(tuples)
  * @example
- *   P.fromEntries([['a', 'b'], ['c', 'd']]); // => {a: 'b', c: 'd'}
+ *   fromEntries([['a', 'b'], ['c', 'd']]); // => {a: 'b', c: 'd'}
  * @dataFirst
  * @category Object
  */
@@ -128,15 +125,14 @@ export function fromEntries<Entries extends IterableContainer<Entry>>(
  * `fromKeys` - Builds an object from an array of *keys* and a mapper for values.
  * `indexBy` - Builds an object from an array of *values* and a mapper for keys.
  * `pullObject` - Builds an object from an array of items with mappers for *both* keys and values.
- * `mapToObj` - Builds an object from an array of items and a single mapper for key-value pairs.
  * Refer to the docs for more details.
  *
  * @signature
- *   P.fromEntries()(tuples)
+ *   fromEntries()(tuples)
  * @example
- *   P.pipe(
+ *   pipe(
  *     [['a', 'b'], ['c', 'd']] as const,
- *     P.fromEntries(),
+ *     fromEntries(),
  *   ); // => {a: 'b', c: 'd'}
  * @dataLast
  * @category Object

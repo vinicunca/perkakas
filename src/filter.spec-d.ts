@@ -25,9 +25,7 @@ describe('primitives arrays', () => {
   });
 
   it('trivial rejector', () => {
-    expectTypeOf(filter([] as Array<string>, constant(false))).toEqualTypeOf<
-      []
-    >();
+    expectTypeOf(filter([] as Array<string>, constant(false))).toEqualTypeOf<[]>();
   });
 
   it('type predicate', () => {
@@ -37,9 +35,7 @@ describe('primitives arrays', () => {
   });
 
   it('type predicate of the same type as the array', () => {
-    expectTypeOf(filter([] as Array<string>, isString)).toEqualTypeOf<
-      Array<string>
-    >();
+    expectTypeOf(filter([] as Array<string>, isString)).toEqualTypeOf<Array<string>>();
   });
 });
 
@@ -51,9 +47,9 @@ describe('arrays with literal unions', () => {
   });
 
   it('trivial acceptor', () => {
-    expectTypeOf(
-      filter([] as Array<'cat' | 'dog'>, constant(true)),
-    ).toEqualTypeOf<Array<'cat' | 'dog'>>();
+    expectTypeOf(filter([] as Array<'cat' | 'dog'>, constant(true))).toEqualTypeOf<
+      Array<'cat' | 'dog'>
+    >();
   });
 
   it('trivial rejector', () => {
@@ -135,9 +131,7 @@ describe('special tuple shapes', () => {
     expectTypeOf(filter(data, isStrictEqual('world' as const))).toEqualTypeOf<
       Array<'world'> | ['world', ...Array<'world'>]
     >();
-    expectTypeOf(filter(data, isString)).toEqualTypeOf<
-      [string, ...Array<string>]
-    >();
+    expectTypeOf(filter(data, isString)).toEqualTypeOf<[string, ...Array<string>]>();
     expectTypeOf(filter(data, constant(true as boolean))).toEqualTypeOf<
       Array<string>
     >();
@@ -170,10 +164,7 @@ describe('special tuple shapes', () => {
         isStrictEqual('hello' as 'hello' | 123 | true),
       ),
     ).toEqualTypeOf<
-      | Array<123>
-      | [...Array<123>, true]
-      | ['hello', ...Array<123>]
-      | ['hello', ...Array<123>, true]
+      Array<123> | [...Array<123>, true] | ['hello', ...Array<123>] | ['hello', ...Array<123>, true]
     >();
   });
 });
@@ -205,15 +196,15 @@ describe('accepts readonly arrays, returns mutable ones', () => {
   // too
 
   it('predicate', () => {
-    expectTypeOf(
-      filter([] as ReadonlyArray<string>, constant(true)),
-    ).toEqualTypeOf<Array<string>>();
+    expectTypeOf(filter([] as ReadonlyArray<string>, constant(true))).toEqualTypeOf<
+      Array<string>
+    >();
   });
 
   it('trivial acceptor', () => {
-    expectTypeOf(
-      filter([] as ReadonlyArray<string>, constant(true)),
-    ).toEqualTypeOf<Array<string>>();
+    expectTypeOf(filter([] as ReadonlyArray<string>, constant(true))).toEqualTypeOf<
+      Array<string>
+    >();
   });
 
   it('trivial rejector', () => {
@@ -271,17 +262,14 @@ describe('data last', () => {
 describe('union of array types', () => {
   it('arrays', () => {
     expectTypeOf(
-      filter(
-        [] as Array<string | undefined> | Array<number | undefined>,
-        isDefined,
-      ),
+      filter([] as Array<string | undefined> | Array<number | undefined>, isDefined),
     ).toEqualTypeOf<Array<string> | Array<number>>();
   });
 
   it('disjoint conditions', () => {
-    expectTypeOf(
-      filter([] as Array<string> | Array<number>, isString),
-    ).toEqualTypeOf<[] | Array<string>>();
+    expectTypeOf(filter([] as Array<string> | Array<number>, isString)).toEqualTypeOf<
+      [] | Array<string>
+    >();
   });
 
   it('fixed tuples', () => {

@@ -1,6 +1,5 @@
 import type { IterableContainer } from './internal/types/iterable-container';
 import type { LazyEvaluator } from './internal/types/lazy-evaluator';
-
 import { curry } from './curry';
 import { lazyEmptyEvaluator } from './internal/utility-evaluators';
 
@@ -10,9 +9,9 @@ import { lazyEmptyEvaluator } from './internal/utility-evaluators';
  * @param array - The array.
  * @param n - The number of elements to take.
  * @signature
- *    P.take(array, n)
+ *    take(array, n)
  * @example
- *    P.take([1, 2, 3, 4, 3, 2, 1], 3) // => [1, 2, 3]
+ *    take([1, 2, 3, 4, 3, 2, 1], 3) // => [1, 2, 3]
  * @dataFirst
  * @lazy
  * @category Array
@@ -27,9 +26,9 @@ export function take<T extends IterableContainer>(
  *
  * @param n - The number of elements to take.
  * @signature
- *    P.take(n)(array)
+ *    take(n)(array)
  * @example
- *    P.pipe([1, 2, 3, 4, 3, 2, 1], P.take(n)) // => [1, 2, 3]
+ *    pipe([1, 2, 3, 4, 3, 2, 1], take(3)) // => [1, 2, 3]
  * @dataLast
  * @lazy
  * @category Array
@@ -42,10 +41,7 @@ export function take(...args: ReadonlyArray<unknown>): unknown {
   return curry(takeImplementation, args, lazyImplementation);
 }
 
-function takeImplementation<T extends IterableContainer>(
-  array: T,
-  n: number,
-): Array<T[number]> {
+function takeImplementation<T extends IterableContainer>(array: T, n: number): Array<T[number]> {
   return n < 0 ? [] : array.slice(0, n);
 }
 

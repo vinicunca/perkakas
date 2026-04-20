@@ -1,4 +1,3 @@
-/* eslint-disable no-nested-ternary */
 import type { IsNumericLiteral, IsStringLiteral } from 'type-fest';
 
 // This is the most efficient way to check an arbitrary string if it is a simple
@@ -10,9 +9,7 @@ const NON_NEGATIVE_INTEGER_RE = /^(?:0|[1-9]\d*)$/u;
 type StringToPath<S>
   // We can only compute the path type for literals that TypeScript can
   // break down further into parts.
-  = IsStringLiteral<S> extends true
-    ? StringToPathImpl<S>
-    : Array<string | number>;
+  = IsStringLiteral<S> extends true ? StringToPathImpl<S> : Array<string | number>;
 
 type StringToPathImpl<S>
   // We start by checking the 2 quoted variants of the square bracket access
@@ -24,32 +21,32 @@ type StringToPathImpl<S>
     ? [...StringToPath<Head>, Quoted, ...StringToPath<Tail>]
     : S extends `${infer Head}["${infer DoubleQuoted}"]${infer Tail}`
       ? [...StringToPath<Head>, DoubleQuoted, ...StringToPath<Tail>]
-      // If we have an unquoted property access we also need to run the
-      // contents recursively too (unlike the quoted variants above).
-      : S extends `${infer Head}[${infer Unquoted}]${infer Tail}`
+      : // If we have an unquoted property access we also need to run the
+    // contents recursively too (unlike the quoted variants above).
+      S extends `${infer Head}[${infer Unquoted}]${infer Tail}`
         ? [
             ...StringToPath<Head>,
             ...StringToPath<Unquoted>,
             ...StringToPath<Tail>,
           ]
-        // Finally, we process any dots one after the other from left to
-        // right. TypeScript will be non-greedy here, putting *everything*
-        // after the first dot into the Tail.
-        : S extends `${infer Head}.${infer Tail}`
+        : // Finally, we process any dots one after the other from left to
+      // right. TypeScript will be non-greedy here, putting *everything*
+      // after the first dot into the Tail.
+        S extends `${infer Head}.${infer Tail}`
           ? [...StringToPath<Head>, ...StringToPath<Tail>]
-          // Finally we need to handle the few cases of simple literals.
-          : '' extends S
-            // There are some edge-cases where Lodash will try to access an
-            // empty property, but those seem nonsensical in practice so we
-            // prefer just skipping these cases.
-            ? []
-            // We differ from Lodash in the way we handle numbers. Lodash
-            // returns everything in the path as a string, and relies on JS to
-            // coerce array accessors to numbers (or the other way around in
-            // practice, e.g., `myArray[123] === myArray['123']`), but from a
-            // typing perspective the two are not the same and we need the
-            // path to be accurate about it.
-            : S extends `${infer N extends number}`
+          : // Finally we need to handle the few cases of simple literals.
+          '' extends S
+            ? // There are some edge-cases where Lodash will try to access an
+              // empty property, but those seem nonsensical in practice so we
+              // prefer just skipping these cases.
+              []
+            : // We differ from Lodash in the way we handle numbers. Lodash
+          // returns everything in the path as a string, and relies on JS to
+          // coerce array accessors to numbers (or the other way around in
+          // practice, e.g., `myArray[123] === myArray['123']`), but from a
+          // typing perspective the two are not the same and we need the
+          // path to be accurate about it.
+            S extends `${infer N extends number}`
               ? [
                   // TypeScript considers " 123 " to still extend `${number}`,
                   // but would type is as `string` instead of a literal. We
@@ -57,12 +54,12 @@ type StringToPathImpl<S>
                   // number literals as numbers, and take the rest as strings.
                   IsNumericLiteral<N> extends true ? N : S,
                 ]
-              // This simplest form of a path is just a single string literal.
-              : [S];
+              : // This simplest form of a path is just a single string literal.
+                [S];
 
 /**
  * A utility to allow JSONPath-like strings to be used in other utilities which
- * take an array of path segments as input (e.g. `pathOr`, `setPath`, etc...).
+ * take an array of path segments as input (e.g. `prop`, `setPath`, etc...).
  * The main purpose of this utility is to act as a bridge between the runtime
  * implementation that converts the path to an array, and the type-system that
  * parses the path string **type** into an array **type**. This type allows us
@@ -84,9 +81,9 @@ type StringToPathImpl<S>
  *
  * @param path - A string path.
  * @signature
- *   P.stringToPath(path)
+ *   stringToPath(path)
  * @example
- *   P.stringToPath('a.b[0].c') // => ['a', 'b', 0, 'c']
+ *   stringToPath('a.b[0].c') // => ['a', 'b', 0, 'c']
  * @dataFirst
  * @category Utility
  */
@@ -129,12 +126,13 @@ export function stringToPath<const Path extends string>(
     }
 
     result.push(
+      // eslint-disable-next-line no-nested-ternary
       propName === undefined
         ? (quoted ?? doubleQuoted!)
-        // The only way to differentiate between array indices and properties
-        // is to check if the property is a non-negative integer. In those
-        // cases we perform the conversion (unlike Lodash).
-        : NON_NEGATIVE_INTEGER_RE.test(propName)
+        : // The only way to differentiate between array indices and properties
+      // is to check if the property is a non-negative integer. In those
+      // cases we perform the conversion (unlike Lodash).
+        NON_NEGATIVE_INTEGER_RE.test(propName)
           ? Number(propName)
           : propName,
     );

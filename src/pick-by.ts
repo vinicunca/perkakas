@@ -15,13 +15,13 @@ type EnumeratedPartial<T> = T extends unknown
           // Object.entries returns keys as strings.
           -readonly [P in keyof T as ToString<P>]?: Required<T>[P];
         }
-        // For unbounded records (a simple Record with primitive `string` or
-        // `number` keys) the return type here could technically be T; but for
-        // cases where the record is unbounded but is more complex (like
-        // `symbol` keys) we want to "reconstruct" the record from just its
-        // enumerable components (which are the ones accessible via
-        // `Object.entries`).
-      : Record<EnumerableStringKeyOf<T>, EnumerableStringKeyedValueOf<T>>
+      : // For unbounded records (a simple Record with primitive `string` or
+    // `number` keys) the return type here could technically be T; but for
+    // cases where the record is unbounded but is more complex (like
+    // `symbol` keys) we want to "reconstruct" the record from just its
+    // enumerable components (which are the ones accessible via
+    // `Object.entries`).
+      Record<EnumerableStringKeyOf<T>, EnumerableStringKeyedValueOf<T>>
   >
   : never;
 
@@ -39,11 +39,11 @@ type EnumeratedPartialNarrowed<T, S> = T extends unknown
   ? Simplify<
     IsBoundedRecord<T> extends true
       ? ExactProps<T, S> & PartialProps<T, S>
-    // For unbounded records we need to "reconstruct" the record and
+      : // For unbounded records we need to "reconstruct" the record and
     // narrow the value types. Similar to the non-narrowed case, we need
     // to also ignore `symbol` keys and any values that are only relevant
     // to them.
-      : Record<
+      Record<
         EnumerableStringKeyOf<T>,
         Extract<EnumerableStringKeyedValueOf<T>, S>
       >
@@ -65,12 +65,12 @@ type PartialProps<T, S> = {
   -readonly [P in keyof T as ToString<
     IsPartialProp<T, P, S> extends true ? P : never
   >]?: IsNever<Extract<T[P], S>> extends true
-    // If the result of extracting S from T[P] is never but S still extends
-    // it, it means that T[P] is too wide and S can't be extracted from it:
-    // e.g. if T[P] is `number` S is `1` then `Extract<number, 1> === never`.
-    // For these cases we can return S directly as the type as it's already
-    // very narrowed compared to T[P].
-    ? S extends T[P]
+    ? // If the result of extracting S from T[P] is never but S still extends
+  // it, it means that T[P] is too wide and S can't be extracted from it:
+  // e.g. if T[P] is `number` S is `1` then `Extract<number, 1> === never`.
+  // For these cases we can return S directly as the type as it's already
+  // very narrowed compared to T[P].
+    S extends T[P]
       ? S
       : never
     : Extract<T[P], S>;
@@ -92,12 +92,12 @@ type IsPartialProp<T, P extends keyof T, S>
     ? false
     : IsNever<Extract<T[P], S>> extends true
       ? S extends T[P]
-        // If the result of extracting S from T[P] is never but S still
-        // extends it, it means that T[P] is too wide and S can't be
-        // extracted from it: e.g. if T[P] is `number` S is `1` then
-        // `Extract<number, 1> === never`, but `1` extends `number`. We need
-        // to handle these cases when we extract the value too (see above).
-        ? true
+        ? // If the result of extracting S from T[P] is never but S still
+      // extends it, it means that T[P] is too wide and S can't be
+      // extracted from it: e.g. if T[P] is `number` S is `1` then
+      // `Extract<number, 1> === never`, but `1` extends `number`. We need
+      // to handle these cases when we extract the value too (see above).
+        true
         : false
       : true;
 
@@ -120,9 +120,9 @@ type IsPartialProp<T, P extends keyof T, S>
  * would be narrowed accordingly.
  * @returns A shallow copy of the input object with the rejected entries
  * removed.
- * @signature P.pickBy(data, predicate)
+ * @signature pickBy(data, predicate)
  * @example
- *    P.pickBy({a: 1, b: 2, A: 3, B: 4}, (val, key) => key.toUpperCase() === key) // => {A: 3, B: 4}
+ *    pickBy({a: 1, b: 2, A: 3, B: 4}, (val, key) => key.toUpperCase() === key) // => {A: 3, B: 4}
  * @dataFirst
  * @category Object
  */
@@ -163,9 +163,9 @@ export function pickBy<T extends object>(
  * to remove it. If the function is a type-guard on the value the output type
  * would be narrowed accordingly.
  * @signature
- *   P.pickBy(predicate)(data)
+ *   pickBy(predicate)(data)
  * @example
- *    P.pipe({a: 1, b: 2, A: 3, B: 4}, pickBy((val, key) => key.toUpperCase() === key)); // => {A: 3, B: 4}
+ *    pipe({a: 1, b: 2, A: 3, B: 4}, pickBy((val, key) => key.toUpperCase() === key)); // => {A: 3, B: 4}
  * @dataLast
  * @category Object
  */

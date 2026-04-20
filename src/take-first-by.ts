@@ -1,6 +1,5 @@
 import type { OrderRule } from './internal/curry-order-rules';
 import type { CompareFunction } from './internal/types/compare-function';
-
 import type { NonEmptyArray } from './internal/types/non-empty-array';
 import {
   curryOrderRulesWithArgument,
@@ -18,9 +17,9 @@ import { heapify, heapMaybeInsert } from './internal/heap';
  * @param rules - A variadic array of order rules defining the sorting criteria. Each order rule is a projection function that extracts a comparable value from the data. Sorting is based on these extracted values using the native `<` and `>` operators. Earlier rules take precedence over later ones. Use the syntax `[projection, "desc"]` for descending order.
  * @returns A subset of the input array.
  * @signature
- *   P.takeFirstBy(data, n, ...rules);
+ *   takeFirstBy(data, n, ...rules);
  * @example
- *   P.takeFirstBy(['aa', 'aaaa', 'a', 'aaa'], 2, x => x.length); // => ['a', 'aa']
+ *   takeFirstBy(['aa', 'aaaa', 'a', 'aaa'], 2, x => x.length); // => ['aa', 'a']
  * @dataFirst
  * @category Array
  */
@@ -39,9 +38,9 @@ export function takeFirstBy<T>(
  * @param rules - A variadic array of order rules defining the sorting criteria. Each order rule is a projection function that extracts a comparable value from the data. Sorting is based on these extracted values using the native `<` and `>` operators. Earlier rules take precedence over later ones. Use the syntax `[projection, "desc"]` for descending order.
  * @returns A subset of the input array.
  * @signature
- *   P.takeFirstBy(n, ...rules)(data);
+ *   takeFirstBy(n, ...rules)(data);
  * @example
- *   P.pipe(['aa', 'aaaa', 'a', 'aaa'], P.takeFirstBy(2, x => x.length)); // => ['a', 'aa']
+ *   pipe(['aa', 'aaaa', 'a', 'aaa'], takeFirstBy(2, x => x.length)); // => ['aa', 'a']
  * @dataLast
  * @category Array
  */

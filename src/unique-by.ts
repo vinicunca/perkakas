@@ -1,7 +1,7 @@
+import type { BrandedReturn } from './internal/types/branded-return';
 import type { Deduped } from './internal/types/deduped';
 import type { IterableContainer } from './internal/types/iterable-container';
 import type { LazyEvaluator } from './internal/types/lazy-evaluator';
-
 import { curryFromLazy } from './internal/curry-from-lazy';
 import { SKIP_ITEM } from './internal/utility-evaluators';
 
@@ -12,9 +12,9 @@ import { SKIP_ITEM } from './internal/utility-evaluators';
  * @param data - The array to filter.
  * @param keyFunction - Extracts a value that would be used to compare elements.
  * @signature
- *    P.uniqueBy(data, keyFunction)
+ *    uniqueBy(data, keyFunction)
  * @example
- *    P.uniqueBy(
+ *    uniqueBy(
  *     [{ n: 1 }, { n: 2 }, { n: 2 }, { n: 5 }, { n: 1 }, { n: 6 }, { n: 7 }],
  *     (obj) => obj.n,
  *    ) // => [{n: 1}, {n: 2}, {n: 5}, {n: 6}, {n: 7}]
@@ -22,9 +22,9 @@ import { SKIP_ITEM } from './internal/utility-evaluators';
  * @lazy
  * @category Array
  */
-export function uniqueBy<T extends IterableContainer, K>(
+export function uniqueBy<T extends IterableContainer>(
   data: T,
-  keyFunction: (item: T[number], index: number, data: T) => K,
+  keyFunction: (item: T[number], index: number, data: T) => unknown,
 ): Deduped<T>;
 
 /**
@@ -33,31 +33,34 @@ export function uniqueBy<T extends IterableContainer, K>(
  *
  * @param keyFunction - Extracts a value that would be used to compare elements.
  * @signature
- *    P.uniqueBy(keyFunction)(data)
+ *    uniqueBy(keyFunction)(data)
  * @example
- *    P.pipe(
+ *    pipe(
  *      [{n: 1}, {n: 2}, {n: 2}, {n: 5}, {n: 1}, {n: 6}, {n: 7}], // only 4 iterations
- *      P.uniqueBy(obj => obj.n),
- *      P.take(3)
+ *      uniqueBy(obj => obj.n),
+ *      take(3)
  *    ) // => [{n: 1}, {n: 2}, {n: 5}]
  * @dataLast
  * @lazy
  * @category Array
  */
-export function uniqueBy<T extends IterableContainer, K>(
-  keyFunction: (item: T[number], index: number, data: T) => K,
+export function uniqueBy<T extends IterableContainer>(
+  keyFunction: (item: T[number], index: number, data: T) => unknown,
 ): (data: T) => Deduped<T>;
 
 export function uniqueBy(...args: ReadonlyArray<unknown>): unknown {
   return curryFromLazy(lazyImplementation, args);
 }
 
-function lazyImplementation<T, K>(
-  keyFunction: (item: T, index: number, data: ReadonlyArray<T>) => K,
+function lazyImplementation<T>(
+  keyFunction: (item: T, index: number, data: ReadonlyArray<T>) => unknown,
 ): LazyEvaluator<T> {
-  const set = new Set<K>();
+  // @see https://github.com/typescript-eslint/typescript-eslint/issues/9885
+  const brandedKeyFunction = keyFunction as BrandedReturn<typeof keyFunction>;
+
+  const set = new Set<ReturnType<typeof brandedKeyFunction>>();
   return (value, index, data) => {
-    const key = keyFunction(value, index, data);
+    const key = brandedKeyFunction(value, index, data);
     if (set.has(key)) {
       return SKIP_ITEM;
     }

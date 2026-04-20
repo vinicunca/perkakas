@@ -1,8 +1,6 @@
 import type { IsEqual, IsUnknown, Or } from 'type-fest';
 import { expectTypeOf, it } from 'vitest';
-import {
-  ALL_TYPES_DATA_PROVIDER,
-} from '../test/types-data-provider';
+import { ALL_TYPES_DATA_PROVIDER } from '../test/types-data-provider';
 import { isNullish } from './is-nullish';
 
 it('narrows nulls', () => {
@@ -78,5 +76,6 @@ it('doesn\'t expand narrow types', () => {
 
 it('should work as type guard in filter', () => {
   const result = ALL_TYPES_DATA_PROVIDER.filter(isNullish);
+
   expectTypeOf(result).toEqualTypeOf<Array<null | undefined>>();
 });

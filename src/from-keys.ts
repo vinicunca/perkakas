@@ -1,18 +1,16 @@
 import type { Simplify } from 'type-fest';
-
 import type { BoundedPartial } from './internal/types/bounded-partial';
-
 import type { IterableContainer } from './internal/types/iterable-container';
 import { curry } from './curry';
 
 // Takes a union of literals and creates a union of records with the value V for
 // each key **separately**
 // @example ExactlyOneKey<"cat" | "dog", boolean> // { cat: boolean } | { dog: boolean }
-type ExactlyOneKey<T, V> = T extends PropertyKey ? { [P in T]: V } : never;
+type ExactlyOneKey<T, V> = T extends PropertyKey ? Record<T, V> : never;
 
 type FromKeys<T extends IterableContainer, V> = T extends readonly []
-  // eslint-disable-next-line ts/no-empty-object-type -- We want to return an empty object type here, but it's not trivial to build that in Typescript, other fixer suggestions like Record<PropertyKey, never> or Record<PropertyKey, unknown> both break our type tests so they don't do what we need here. Because the result is mutable this might be the correct type after all...
-  ? {}
+  ? // eslint-disable-next-line ts/no-empty-object-type -- We want to return an empty object type here, but it's not trivial to build that in Typescript, other fixer suggestions like Record<PropertyKey, never> or Record<PropertyKey, unknown> both break our type tests so they don't do what we need here. Because the result is mutable this might be the correct type after all...
+    {}
   : T extends readonly [infer Head, ...infer Rest]
     ? ExactlyOneKey<Head, V> & FromKeys<Rest, V>
     : T[number] extends PropertyKey
@@ -29,7 +27,6 @@ type FromKeys<T extends IterableContainer, V> = T extends readonly []
  * `indexBy` - Builds an object from an array of *values* and a mapper for keys.
  * `pullObject` - Builds an object from an array of items with mappers for *both* keys and values.
  * `fromEntries` - Builds an object from an array of key-value pairs.
- * `mapToObj` - Builds an object from an array of items and a single mapper for key-value pairs.
  * Refer to the docs for more details.
  *
  * @param data - An array of keys of the output object. All items in the array
@@ -37,10 +34,10 @@ type FromKeys<T extends IterableContainer, V> = T extends readonly []
  * @param mapper - Takes a key and returns the value that would be associated
  * with that key.
  * @signature
- *   P.fromKeys(data, mapper);
+ *   fromKeys(data, mapper);
  * @example
- *   P.fromKeys(["cat", "dog"], P.length()); // { cat: 3, dog: 3 } (typed as Partial<Record<"cat" | "dog", number>>)
- *   P.fromKeys([1, 2], P.add(1)); // { 1: 2, 2: 3 } (typed as Partial<Record<1 | 2, number>>)
+ *   fromKeys(["cat", "dog"], length()); // { cat: 3, dog: 3 } (typed as Partial<Record<"cat" | "dog", number>>)
+ *   fromKeys([1, 2], add(1)); // { 1: 2, 2: 3 } (typed as Partial<Record<1 | 2, number>>)
  * @dataFirst
  * @category Object
  */
@@ -59,16 +56,15 @@ export function fromKeys<T extends IterableContainer<PropertyKey>, V>(
  * `indexBy` - Builds an object from an array of *values* and a mapper for keys.
  * `pullObject` - Builds an object from an array of items with mappers for *both* keys and values.
  * `fromEntries` - Builds an object from an array of key-value pairs.
- * `mapToObj` - Builds an object from an array of items and a single mapper for key-value pairs.
  * Refer to the docs for more details.
  *
  * @param mapper - Takes a key and returns the value that would be associated
  * with that key.
  * @signature
- *   P.fromKeys(mapper)(data);
+ *   fromKeys(mapper)(data);
  * @example
- *   P.pipe(["cat", "dog"], P.fromKeys(P.length())); // { cat: 3, dog: 3 } (typed as Partial<Record<"cat" | "dog", number>>)
- *   P.pipe([1, 2], P.fromKeys(P.add(1))); // { 1: 2, 2: 3 } (typed as Partial<Record<1 | 2, number>>)
+ *   pipe(["cat", "dog"], fromKeys(length())); // { cat: 3, dog: 3 } (typed as Partial<Record<"cat" | "dog", number>>)
+ *   pipe([1, 2], fromKeys(add(1))); // { 1: 2, 2: 3 } (typed as Partial<Record<1 | 2, number>>)
  * @dataLast
  * @category Object
  */

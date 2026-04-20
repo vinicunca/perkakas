@@ -88,6 +88,7 @@ describe('dataFirst', () => {
     const result1 = zip(array1, array2);
 
     expectTypeOf(result1).toEqualTypeOf<[[1, 4], [2, 5]]>();
+
     const result2 = zip(array2, array1);
 
     expectTypeOf(result2).toEqualTypeOf<[[4, 1], [5, 2]]>();
@@ -112,6 +113,7 @@ describe('dataLast', () => {
       [[number, string], [number, string], [number, string]]
     >();
   });
+
   it('tuples', () => {
     const actual = pipe(
       [1, 2, 3] as [1, 2, 3],
@@ -120,6 +122,7 @@ describe('dataLast', () => {
 
     expectTypeOf(actual).toEqualTypeOf<[[1, 'a'], [2, 'b'], [3, 'c']]>();
   });
+
   it('variadic tuples', () => {
     const firstVariadic: [number, ...Array<string>] = [1, 'b', 'c'];
     const secondVariadic: [string, ...Array<number>] = ['a', 2, 3];
@@ -188,6 +191,7 @@ describe('dataLast', () => {
     const result1 = pipe(array1, zip(array2));
 
     expectTypeOf(result1).toEqualTypeOf<[[1, 4], [2, 5]]>();
+
     const result2 = pipe(array2, zip(array1));
 
     expectTypeOf(result2).toEqualTypeOf<[[4, 1], [5, 2]]>();

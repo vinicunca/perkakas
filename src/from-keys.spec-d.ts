@@ -146,10 +146,7 @@ describe('with string template keys', () => {
   });
 
   it('non-empty array', () => {
-    const data = ['prefix_1'] as [
-      `prefix_${number}`,
-      ...Array<`prefix_${number}`>,
-    ];
+    const data = ['prefix_1'] as [`prefix_${number}`, ...Array<`prefix_${number}`>];
 
     expectTypeOf(fromKeys(data, constant(1))).toEqualTypeOf<
       Record<`prefix_${number}`, 1>

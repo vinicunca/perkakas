@@ -3,7 +3,7 @@
  * type after passing it to Partial without additional testing. To allow simpler
  * code we pulled this check into it's own utility.
  *
- * TODO: Remove this utility once the minimum TypeScript version is bumped.
+ * TODO [>2]: Remove this utility once the minimum TypeScript version is bumped.
  */
 export type PartialArray<T> = T extends ReadonlyArray<unknown> | []
   ? Partial<T>

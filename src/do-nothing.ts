@@ -13,25 +13,21 @@
  * `identity` - A function that returns the first argument it receives.
  *
  * @signature
- *   P.doNothing();
+ *   doNothing();
  * @example
- *   myApi({ onSuccess: handleSuccess, onError: P.doNothing() });
- *   myApi({ onSuccess: isDemoMode ? P.doNothing(): handleSuccess });
+ *   myApi({ onSuccess: handleSuccess, onError: doNothing() });
+ *   myApi({ onSuccess: isDemoMode ? doNothing(): handleSuccess });
  * @dataLast
  * @category Function
  */
 export function doNothing(): typeof doesNothing {
-  /**
-   * Notice that the exported identity function is just the "factory" for the
-   * function. We do it this way so that all "Function" utilities have a similar
-   * API where the function is called, and not just used "headless". e.g.
-   * `doNothing()` and not `doNothing`, just like the API for `constant(1)`.
-   */
+  // Notice that the exported identity function is just the "factory" for the
+  // function. We do it this way so that all "Function" utilities have a similar
+  // API where the function is called, and not just used "headless". e.g.
+  // `doNothing()` and not `doNothing`, just like the API for `constant(1)`.
   return doesNothing;
 }
 
-function doesNothing<Args extends ReadonlyArray<unknown>>(
-  ..._args: Args
-): void {
+function doesNothing<Args extends ReadonlyArray<unknown>>(..._args: Args): void {
   /* do nothing */
 }

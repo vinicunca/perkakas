@@ -8,9 +8,11 @@ import { times } from './times';
 describe('data_first', () => {
   it('returns a trivial empty array for non-positive values', () => {
     const zeroResult = times(0, identity());
+
     expect(zeroResult).toStrictEqual([]);
 
     const negativeResult = times(-1000, identity());
+
     expect(negativeResult).toStrictEqual([]);
 
     // Make sure that the array returned is new, and not the same copy.
@@ -24,8 +26,9 @@ describe('data_first', () => {
   });
 
   it('passes idx to fn', () => {
-    const fn = vi.fn();
+    const fn = vi.fn<(x: number) => void>();
     times(5, fn);
+
     expect(fn).toHaveBeenNthCalledWith(1, 0);
     expect(fn).toHaveBeenNthCalledWith(2, 1);
     expect(fn).toHaveBeenNthCalledWith(3, 2);
@@ -46,9 +49,11 @@ describe('data_first', () => {
 describe('data_last', () => {
   it('returns a trivial empty array for non-positive values', () => {
     const zeroResult = pipe(0, times(identity()));
+
     expect(zeroResult).toStrictEqual([]);
 
     const negativeResult = pipe(-1000, times(identity()));
+
     expect(negativeResult).toStrictEqual([]);
 
     // Make sure that the array returned is new, and not the same copy.
@@ -62,8 +67,9 @@ describe('data_last', () => {
   });
 
   it('passes idx to fn', () => {
-    const fn = vi.fn();
+    const fn = vi.fn<(x: number) => void>();
     pipe(5, times(fn));
+
     expect(fn).toHaveBeenNthCalledWith(1, 0);
     expect(fn).toHaveBeenNthCalledWith(2, 1);
     expect(fn).toHaveBeenNthCalledWith(3, 2);

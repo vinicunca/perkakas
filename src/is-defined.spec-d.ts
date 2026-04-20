@@ -34,26 +34,25 @@ it('should work as type guard', () => {
 
 it('should work as type guard in filter', () => {
   const data = ALL_TYPES_DATA_PROVIDER.filter(isDefined);
+
   expectTypeOf(data).toEqualTypeOf<
-    Array<
-      | Array<number>
-      | Date
-      | Error
-      | Map<string, string>
-      | Promise<number>
-      | RegExp
-      | Set<string>
-      | TestClass
-      | TypedArray
-      | boolean
-      | number
-      | string
-      | symbol
-      | 1n
-      | (() => void)
-      | { readonly a: 'asd' }
-      | [number, number, number]
-      | null
-    >
+    Array<Array<number>
+    | Date
+    | Error
+    | Map<string, string>
+    | Promise<number>
+    | RegExp
+    | Set<string>
+    | TestClass
+    | TypedArray
+    | boolean
+    | number
+    | string
+    | symbol
+    | 1n
+    | (() => void)
+    | { readonly a: 'asd' }
+    | [number, number, number]
+    | null>
   >();
 });

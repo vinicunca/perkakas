@@ -15,16 +15,16 @@ import { curry } from './curry';
 
 type Sampled<T extends IterableContainer, N extends number>
   = Or<IsEqual<N, 0>, IsEqual<T['length'], 0>> extends true
-    // Short-circuit on trivial inputs.
-    ? []
+    ? // Short-circuit on trivial inputs.
+      []
     : IsNever<NonNegativeInteger<N>> extends true
       ? SampledPrimitive<T>
       : IsLongerThan<T, N> extends true
         ? SampledLiteral<T, N>
-        // If our tuple can never fulfil the sample size the only valid sample
-        // is the whole input tuple. Because it's a shallow clone we also
-        // strip any readonly-ness.
-        : Writable<T>;
+        : // If our tuple can never fulfil the sample size the only valid sample
+      // is the whole input tuple. Because it's a shallow clone we also
+      // strip any readonly-ness.
+        Writable<T>;
 
 /**
  * When N is not a non-negative integer **literal** we can't use it in our
@@ -38,38 +38,39 @@ type SampledPrimitive<T extends IterableContainer> = [
   ...CoercedArray<TupleParts<T>['item']>,
   ...FixedSubTuples<TupleParts<T>['suffix']>,
 ];
+
 /**
  * Knowing N is a non-negative literal integer we can construct all sub-tuples
  * of T that are exactly N elements long.
  */
 type SampledLiteral<T extends IterableContainer, N extends number>
   = | Extract<
-      FixedSubTuples<
-        [
-          ...TupleParts<T>['required'],
-          // TODO: This deliberately ignores optional elements which we don't have tests for either. In order to handle optional elements we can treat the "optional" tuple-part as more required elements.
-          // We add N elements of the `item` type to the tuple so that we
-          // consider any combination possible of elements of the prefix items,
-          // any amount of rest items, and suffix items.
-          ...(IsNever<TupleParts<T>['item']> extends true
-            ? []
-            : NTuple<TupleParts<T>['item'], N>),
-          ...TupleParts<T>['suffix'],
-        ]
-      >,
-      // This is just [unknown, unknown, ..., unknown] with N elements.
-      FixedLengthArray<unknown, N>
-    >
+    FixedSubTuples<
+      [
+        ...TupleParts<T>['required'],
+        // TODO: This deliberately ignores optional elements which we don't have tests for either. In order to handle optional elements we can treat the "optional" tuple-part as more required elements.
+        // We add N elements of the `item` type to the tuple so that we
+        // consider any combination possible of elements of the prefix items,
+        // any amount of rest items, and suffix items.
+        ...(IsNever<TupleParts<T>['item']> extends true
+          ? []
+          : NTuple<TupleParts<T>['item'], N>),
+        ...TupleParts<T>['suffix'],
+      ]
+    >,
+    // This is just [unknown, unknown, ..., unknown] with N elements.
+    FixedLengthArray<unknown, N>
+  >
   // In addition to all sub-tuples of length N, we also need to consider all
   // tuples where the input is shorter than N. This will contribute exactly
   // one sub-tuple at each length from the minimum length of T and up to N-1.
-    | SubSampled<
-      TupleParts<T>['required'],
-      // TODO: This deliberately ignores optional elements which we don't have tests for either. In order to handle optional elements we can treat the "optional" tuple-part as more required elements.
-      TupleParts<T>['item'],
-      TupleParts<T>['suffix'],
-      N
-    >;
+  | SubSampled<
+    TupleParts<T>['required'],
+    // TODO: This deliberately ignores optional elements which we don't have tests for either. In order to handle optional elements we can treat the "optional" tuple-part as more required elements.
+    TupleParts<T>['item'],
+    TupleParts<T>['suffix'],
+    N
+  >;
 
 // We want to create a union of all sub-tuples where we incrementally add an
 // additional element of the type of the rest element in the middle between the
@@ -81,8 +82,9 @@ type SubSampled<
   N extends number,
 >
   = IsLongerThan<[...Prefix, ...Suffix], N> extends true
-    // We need to prevent overflows in case Prefix and Suffix are already long enough
-    ? never
+    ? // We need to prevent overflows in case Prefix and Suffix are already long
+  // enough
+    never
     : [...Prefix, ...Suffix]['length'] extends N
         ? never
         : [...Prefix, ...Suffix] | SubSampled<[...Prefix, Item], Item, Suffix, N>;
@@ -95,8 +97,8 @@ type IsLongerThan<T extends ReadonlyArray<unknown>, N extends number>
 
 // Assuming T is a fixed tuple we build all it's possible sub-tuples.
 type FixedSubTuples<T> = T extends readonly [infer Head, ...infer Rest]
-  // For each element we either take it or skip it, and recurse over the rest.
-  ? FixedSubTuples<Rest> | [Head, ...FixedSubTuples<Rest>]
+  ? // For each element we either take it or skip it, and recurse over the rest.
+      FixedSubTuples<Rest> | [Head, ...FixedSubTuples<Rest>]
   : [];
 
 /**
@@ -113,14 +115,14 @@ type FixedSubTuples<T> = T extends readonly [infer Head, ...infer Rest]
  * @param data - The array.
  * @param sampleSize - The number of elements to take.
  * @signature
- *    P.sample(array, sampleSize)
+ *    sample(array, sampleSize)
  * @example
- *    P.sample(["hello", "world"], 1); // => ["hello"] // typed string[]
- *    P.sample(["hello", "world"] as const, 1); // => ["world"] // typed ["hello" | "world"]
+ *    sample(["hello", "world"], 1); // => ["hello"] // typed string[]
+ *    sample(["hello", "world"] as const, 1); // => ["world"] // typed ["hello" | "world"]
  * @dataFirst
  * @category Array
  */
-export function sample<const T extends IterableContainer, N extends number = number>(
+export function sample<const T extends IterableContainer, N extends number>(
   data: T,
   sampleSize: N,
 ): Sampled<T, N>;
@@ -138,14 +140,14 @@ export function sample<const T extends IterableContainer, N extends number = num
  *
  * @param sampleSize - The number of elements to take.
  * @signature
- *    P.sample(sampleSize)(array)
+ *    sample(sampleSize)(array)
  * @example
- *    P.sample(1)(["hello", "world"]); // => ["hello"] // typed string[]
- *    P.sample(1)(["hello", "world"] as const); // => ["world"] // typed ["hello" | "world"]
+ *    sample(1)(["hello", "world"]); // => ["hello"] // typed string[]
+ *    sample(1)(["hello", "world"] as const); // => ["world"] // typed ["hello" | "world"]
  * @dataLast
  * @category Array
  */
-export function sample<const T extends IterableContainer, N extends number = number>(
+export function sample<const T extends IterableContainer, N extends number>(
   sampleSize: N,
 ): (data: T) => Sampled<T, N>;
 
@@ -153,10 +155,7 @@ export function sample(...args: ReadonlyArray<unknown>): unknown {
   return curry(sampleImplementation, args);
 }
 
-function sampleImplementation<T>(
-  data: ReadonlyArray<T>,
-  sampleSize: number,
-): Array<T> {
+function sampleImplementation<T>(data: ReadonlyArray<T>, sampleSize: number): Array<T> {
   if (sampleSize <= 0) {
     // Trivial
     return [];

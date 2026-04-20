@@ -25,12 +25,14 @@ describe('dataFirst', () => {
 
   it('only tests reference equality: (arrays)', () => {
     const arr = [1];
+
     expect(isIncludedIn([1], [arr])).toBe(false);
     expect(isIncludedIn(arr, [arr])).toBe(true);
   });
 
   it('only tests reference equality: (objects)', () => {
     const obj = { a: 1 };
+
     expect(isIncludedIn({ a: 1 }, [obj])).toBe(false);
     expect(isIncludedIn(obj, [obj])).toBe(true);
   });
@@ -55,12 +57,14 @@ describe('dataLast', () => {
 
   it('only tests reference equality: (arrays)', () => {
     const arr = [1];
+
     expect(pipe([1], isIncludedIn([arr]))).toBe(false);
     expect(pipe(arr, isIncludedIn([arr]))).toBe(true);
   });
 
   it('only tests reference equality: (objects)', () => {
     const obj = { a: 1 };
+
     expect(pipe({ a: 1 }, isIncludedIn([obj]))).toBe(false);
     expect(pipe(obj, isIncludedIn([obj]))).toBe(true);
   });
@@ -68,6 +72,7 @@ describe('dataLast', () => {
   describe('dataLast memoization', () => {
     it('returns correct result when called multiple times with the same container', () => {
       const isIncludedInContainer = isIncludedIn([1, 2, 3]);
+
       expect(isIncludedInContainer(2)).toBe(true);
       expect(isIncludedInContainer(4)).toBe(false);
     });
@@ -75,6 +80,7 @@ describe('dataLast', () => {
     it('returns correct result when called with different containers', () => {
       const isIncludedInContainer1 = isIncludedIn([1, 2, 3]);
       const isIncludedInContainer2 = isIncludedIn([4, 5, 6]);
+
       expect(isIncludedInContainer1(2)).toBe(true);
       expect(isIncludedInContainer2(2)).toBe(false);
       expect(isIncludedInContainer1(4)).toBe(false);
@@ -108,10 +114,7 @@ describe('legacy v1 replacements', () => {
       it('should return difference', () => {
         expect(
           filter([1, 2, 3, 4], isNot(isIncludedIn([2, 5, 3]))),
-        ).toStrictEqual([
-          1,
-          4,
-        ]);
+        ).toStrictEqual([1, 4]);
       });
     });
 
@@ -119,14 +122,11 @@ describe('legacy v1 replacements', () => {
       it('should return difference', () => {
         expect(
           filter(isNot(isIncludedIn([2, 5, 3])))([1, 2, 3, 4]),
-        ).toStrictEqual([
-          1,
-          4,
-        ]);
+        ).toStrictEqual([1, 4]);
       });
 
       it('lazy', () => {
-        const count = vi.fn();
+        const count = vi.fn<() => void>();
         const result = pipe(
           [1, 2, 3, 4, 5, 6],
           map((x) => {
@@ -136,6 +136,7 @@ describe('legacy v1 replacements', () => {
           filter(isNot(isIncludedIn([2, 3]))),
           take(2),
         );
+
         expect(count).toHaveBeenCalledTimes(4);
         expect(result).toStrictEqual([1, 4]);
       });
@@ -145,13 +146,19 @@ describe('legacy v1 replacements', () => {
   describe('intersection', () => {
     describe('data_first', () => {
       it('intersection', () => {
-        expect(filter([1, 2, 3], isIncludedIn([2, 3, 5]))).toStrictEqual([2, 3]);
+        expect(filter([1, 2, 3], isIncludedIn([2, 3, 5]))).toStrictEqual([
+          2,
+          3,
+        ]);
       });
     });
 
     describe('data_last', () => {
       it('intersection', () => {
-        expect(filter(isIncludedIn([2, 3, 5]))([1, 2, 3])).toStrictEqual([2, 3]);
+        expect(filter(isIncludedIn([2, 3, 5]))([1, 2, 3])).toStrictEqual([
+          2,
+          3,
+        ]);
       });
     });
   });

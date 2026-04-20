@@ -1,19 +1,18 @@
 import type { IterableContainer } from './internal/types/iterable-container';
-
 import { curry } from './curry';
 
 type Sum<T extends IterableContainer<bigint> | IterableContainer<number>>
-  // Empty arrays would always result in a product of (a non-bigint) 1
+  // Empty arrays would always result in a sum of (a non-bigint) 0.
   = T extends readonly []
     ? 0
-    // Non-empty bigint arrays will always result in a bigint sum.
-    : T extends readonly [bigint, ...ReadonlyArray<unknown>]
+    : // Non-empty bigint arrays will always result in a bigint sum.
+    T extends readonly [bigint, ...(ReadonlyArray<unknown>)]
       ? bigint
-      // But an empty bigint array would result in a non-bigint 0.
-      : T[number] extends bigint
-        ? 0 | bigint
-        // Non-bigint arrays are always handled correctly.
-        : number;
+      : // But an empty bigint array would result in a non-bigint 0.
+      T[number] extends bigint
+        ? bigint | 0
+        : // Non-bigint arrays are always handled correctly.
+        number;
 
 /**
  * Sums the numbers in the array, or return 0 for an empty array.
@@ -28,11 +27,11 @@ type Sum<T extends IterableContainer<bigint> | IterableContainer<number>>
  *
  * @param data - The array of numbers.
  * @signature
- *   P.sum(data);
+ *   sum(data);
  * @example
- *   P.sum([1, 2, 3]); // => 6
- *   P.sum([1n, 2n, 3n]); // => 6n
- *   P.sum([]); // => 0
+ *   sum([1, 2, 3]); // => 6
+ *   sum([1n, 2n, 3n]); // => 6n
+ *   sum([]); // => 0
  * @dataFirst
  * @category Number
  */
@@ -52,11 +51,11 @@ export function sum<
  * `isEmpty`to guard against this case.
  *
  * @signature
- *   P.sum()(data);
+ *   sum()(data);
  * @example
- *   P.pipe([1, 2, 3], P.sum()); // => 6
- *   P.pipe([1n, 2n, 3n], R.sum()); // => 6n
- *   P.pipe([], P.sum()); // => 0
+ *   pipe([1, 2, 3], sum()); // => 6
+ *   pipe([1n, 2n, 3n], sum()); // => 6n
+ *   pipe([], sum()); // => 0
  * @dataLast
  * @category Number
  */
@@ -76,7 +75,6 @@ function sumImplementation<
   let out = typeof data[0] === 'bigint' ? 0n : 0;
   for (const value of data) {
     // @ts-expect-error [ts2365] -- Typescript can't infer that all elements will be a number of the same type.
-
     out += value;
   }
   return out;

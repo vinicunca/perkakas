@@ -1,3 +1,4 @@
+/* eslint-disable sonar/argument-type */
 import type {
   ArraySlice,
   IsFloat,
@@ -5,34 +6,32 @@ import type {
   Split as SplitBase,
 } from 'type-fest';
 
+// We can use the type-fest's split **only** if all the params are literals.
+// For all other cases it would return the wrong type so we use
+// `Array.prototype.split`s return type instead.
+type BuiltInReturnType = ReturnType<typeof String.prototype.split>;
+
 type Split<
   S extends string,
   Separator extends string,
   N extends number | undefined = undefined,
 > = string extends S
-  ? Array<string>
+  ? BuiltInReturnType
   : string extends Separator
-    ? Array<string>
+    ? BuiltInReturnType
     : number extends N
-      ? Array<string>
-      // TODO: We need a way to "floor" non-integer numbers, until then we return a lower fidelity type instead.
-      : IsFloat<N> extends true
-        ? Array<string>
-        : ArraySlice<
-          // We can use the base (type-fest) split **only** if all the params
-          // are literals. For all other cases it would return the wrong type
-          // so we fallback to the built-in Array.prototype.split return type.
-          SplitBase<S, Separator>,
-          0,
-          // `undefined` and negative numbers are treated as non-limited
-          // splits, which is what we'd get when using `never` for ArraySlice.
-          N extends number ? NonNegative<N> : never
-        >;
+      ? BuiltInReturnType
+      : // TODO: We need a way to "floor" non-integer numbers, until then we return a lower fidelity type instead.
+      IsFloat<N> extends true
+        ? BuiltInReturnType
+        : N extends number
+          ? ArraySlice<SplitBase<S, Separator>, 0, NonNegative<N>>
+          : SplitBase<S, Separator>;
 
 /**
- * Takes a pattern and divides this string into an ordered list of substrings by
- * searching for the pattern, puts these substrings into an array, and returns
- * the array. This function mirrors the built-in [`String.prototype.split`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/split)
+ * Splits a string into an array of substrings using a separator pattern.
+ *
+ * This function is a wrapper around the built-in [`String.prototype.split`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/split)
  * method.
  *
  * @param data - The string to split.
@@ -44,14 +43,14 @@ type Split<
  * been placed in the array. Any leftover text is not included in the array at
  * all. The array may contain fewer entries than limit if the end of the string
  * is reached before the limit is reached. If limit is 0, [] is returned.
- * @returns An Array of strings, split at each point where the separator occurs
+ * @returns An array of strings, split at each point where the separator occurs
  * in the given string.
  * @signature
- *   P.split(data, separator, limit);
+ *   split(data, separator, limit);
  * @example
- *   P.split("a,b,c", ","); //=> ["a", "b", "c"]
- *   P.split("a,b,c", ",", 2); //=> ["a", "b"]
- *   P.split("a1b2c3d", /\d/u); //=> ["a", "b", "c", "d"]
+ *   split("a,b,c", ","); //=> ["a", "b", "c"]
+ *   split("a,b,c", ",", 2); //=> ["a", "b"]
+ *   split("a1b2c3d", /\d/u); //=> ["a", "b", "c", "d"]
  * @dataFirst
  * @category String
  */
@@ -67,9 +66,9 @@ export function split<
 >(data: S, separator: Separator, limit?: N): Split<S, Separator, N>;
 
 /**
- * Takes a pattern and divides this string into an ordered list of substrings by
- * searching for the pattern, puts these substrings into an array, and returns
- * the array. This function mirrors the built-in [`String.prototype.split`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/split)
+ * Splits a string into an array of substrings using a separator pattern.
+ *
+ * This function is a wrapper around the built-in [`String.prototype.split`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/split)
  * method.
  *
  * @param separator - The pattern describing where each split should occur. Can
@@ -80,14 +79,14 @@ export function split<
  * been placed in the array. Any leftover text is not included in the array at
  * all. The array may contain fewer entries than limit if the end of the string
  * is reached before the limit is reached. If limit is 0, [] is returned.
- * @returns An Array of strings, split at each point where the separator occurs
+ * @returns An array of strings, split at each point where the separator occurs
  * in the given string.
  * @signature
- *   P.split(separator, limit)(data);
+ *   split(separator, limit)(data);
  * @example
- *   P.pipe("a,b,c", P.split(",")); //=> ["a", "b", "c"]
- *   P.pipe("a,b,c", P.split(",", 2)); //=> ["a", "b"]
- *   P.pipe("a1b2c3d", P.split(/\d/u)); //=> ["a", "b", "c", "d"]
+ *   pipe("a,b,c", split(",")); //=> ["a", "b", "c"]
+ *   pipe("a,b,c", split(",", 2)); //=> ["a", "b"]
+ *   pipe("a1b2c3d", split(/\d/u)); //=> ["a", "b", "c", "d"]
  * @dataLast
  * @category String
  */
@@ -107,9 +106,8 @@ export function split(
   limit?: number,
 ): unknown {
   return typeof separatorOrLimit === 'number' || separatorOrLimit === undefined
-    // dataLast
-    // eslint-disable-next-line sonar/argument-type
-    ? (data: string) => data.split(dataOrSeparator, separatorOrLimit)
-    // dataFirst
-    : (dataOrSeparator as string).split(separatorOrLimit, limit);
+    ? // dataLast
+      (data: string) => data.split(dataOrSeparator, separatorOrLimit)
+    : // dataFirst
+      (dataOrSeparator as string).split(separatorOrLimit, limit);
 }

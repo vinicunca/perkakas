@@ -11,10 +11,10 @@ type Values<T extends object> = T extends IterableContainer
  *
  * @param data - Either an array or an object.
  * @signature
- *    P.values(source)
+ *    values(source)
  * @example
- *    P.values(['x', 'y', 'z']) // => ['x', 'y', 'z']
- *    P.values({ a: 'x', b: 'y', c: 'z' }) // => ['x', 'y', 'z']
+ *    values(['x', 'y', 'z']) // => ['x', 'y', 'z']
+ *    values({ a: 'x', b: 'y', c: 'z' }) // => ['x', 'y', 'z']
  * @dataFirst
  * @category Object
  */
@@ -24,14 +24,14 @@ export function values<T extends object>(data: T): Values<T>;
  * Returns a new array containing the values of the array or object.
  *
  * @signature
- *    P.values()(source)
+ *    values()(source)
  * @example
- *    P.pipe(['x', 'y', 'z'], P.values()) // => ['x', 'y', 'z']
- *    P.pipe({ a: 'x', b: 'y', c: 'z' }, P.values()) // => ['x', 'y', 'z']
- *    P.pipe(
+ *    pipe(['x', 'y', 'z'], values()) // => ['x', 'y', 'z']
+ *    pipe({ a: 'x', b: 'y', c: 'z' }, values()) // => ['x', 'y', 'z']
+ *    pipe(
  *      { a: 'x', b: 'y', c: 'z' },
- *      P.values(),
- *      P.first(),
+ *      values(),
+ *      first(),
  *    ) // => 'x'
  * @dataLast
  * @category Object

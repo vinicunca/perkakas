@@ -58,6 +58,7 @@ describe('filtering on undefined grouper result', () => {
   it('regular', () => {
     const result = groupBy([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], (x) =>
       x % 2 === 0 ? 'even' : undefined);
+
     expect(Object.values(result)).toHaveLength(1);
     expect(result.even).toStrictEqual([0, 2, 4, 6, 8]);
   });
@@ -67,6 +68,7 @@ describe('filtering on undefined grouper result', () => {
       ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'],
       (_, index) => (index % 2 === 0 ? 'even' : undefined),
     );
+
     expect(Object.values(result)).toHaveLength(1);
     expect(result.even).toStrictEqual(['a', 'c', 'e', 'g', 'i']);
   });

@@ -16,7 +16,10 @@ describe('data first', () => {
   });
 
   it('duplicate values', () => {
-    expect(invert({ a: 'd', b: 'e', c: 'd' })).toStrictEqual({ e: 'b', d: 'c' });
+    expect(invert({ a: 'd', b: 'e', c: 'd' })).toStrictEqual({
+      e: 'b',
+      d: 'c',
+    });
   });
 
   it('numeric values', () => {
@@ -24,7 +27,9 @@ describe('data first', () => {
   });
 
   it('symbol keys are filtered out', () => {
-    expect(invert({ [Symbol('a')]: 4, a: 'hello' })).toStrictEqual({ hello: 'a' });
+    expect(invert({ [Symbol('a')]: 4, a: 'hello' })).toStrictEqual({
+      hello: 'a',
+    });
   });
 
   it('number keys are converted to strings', () => {
@@ -33,6 +38,7 @@ describe('data first', () => {
 
   it('symbol values are fine', () => {
     const mySymbol = Symbol('my');
+
     expect(invert({ a: mySymbol })).toStrictEqual({ [mySymbol]: 'a' });
   });
 });

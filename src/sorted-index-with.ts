@@ -28,9 +28,9 @@ import { binarySearchCutoffIndex } from './internal/binary-search-cutoff-index';
  * @param predicate - A predicate which also defines the array's order.
  * @returns Index (In the range 0..data.length).
  * @signature
- *    P.sortedIndexWith(data, predicate)
+ *    sortedIndexWith(data, predicate)
  * @example
- *    P.sortedIndexWith(['a','ab','abc'], (item) => item.length < 2) // => 1
+ *    sortedIndexWith(['a','ab','abc'], (item) => item.length < 2) // => 1
  * @dataFirst
  * @category Array
  * @see findIndex, sortedIndex, sortedIndexBy, sortedLastIndex, sortedLastIndexBy
@@ -66,9 +66,9 @@ export function sortedIndexWith<T>(
  * @param predicate - A predicate which also defines the array's order.
  * @returns Index (In the range 0..data.length).
  * @signature
- *    P.sortedIndexWith(predicate)(data)
+ *    sortedIndexWith(predicate)(data)
  * @example
- *    P.pipe(['a','ab','abc'], P.sortedIndexWith((item) => item.length < 2)) // => 1
+ *    pipe(['a','ab','abc'], sortedIndexWith((item) => item.length < 2)) // => 1
  * @dataLast
  * @category Array
  */

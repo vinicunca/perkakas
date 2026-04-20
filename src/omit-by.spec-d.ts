@@ -6,9 +6,13 @@ import { isString } from './is-string';
 import { omitBy } from './omit-by';
 import { pipe } from './pipe';
 
+declare const SYMBOL_A: unique symbol;
+declare const SYMBOL_B: unique symbol;
+
 describe('data first', () => {
   it('it should omit props', () => {
     const result = omitBy({ a: 1, b: 2, A: 3, B: 4 } as const, constant(true));
+
     expectTypeOf(result).toEqualTypeOf<{ a?: 1; b?: 2; A?: 3; B?: 4 }>();
   });
 
@@ -17,6 +21,7 @@ describe('data first', () => {
       {} as Partial<{ a: string; b: number }>,
       constant(true),
     );
+
     expectTypeOf(result).toEqualTypeOf<Partial<{ a: string; b: number }>>();
   });
 });
@@ -27,6 +32,7 @@ describe('data last', () => {
       { a: 1, b: 2, A: 3, B: 4 } as const,
       omitBy(constant(true)),
     );
+
     expectTypeOf(result).toEqualTypeOf<{ a?: 1; b?: 2; A?: 3; B?: 4 }>();
   });
 
@@ -35,28 +41,29 @@ describe('data last', () => {
       {} as Partial<{ a: string; b: number }>,
       omitBy(constant(true)),
     );
+
     expectTypeOf(result).toEqualTypeOf<Partial<{ a: string; b: number }>>();
   });
 });
 
 it('symbols are passed through', () => {
-  const requiredSymbol = Symbol('required');
-  const optionalSymbol = Symbol('optional');
   const result = omitBy(
-    {} as { [requiredSymbol]: number; [optionalSymbol]?: boolean; a: string },
+    {} as { [SYMBOL_A]: number; [SYMBOL_B]?: boolean; a: string },
     constant(true),
   );
+
   expectTypeOf(result).toEqualTypeOf<{
-    [requiredSymbol]: number;
-    [optionalSymbol]?: boolean;
+    [SYMBOL_A]: number;
+    [SYMBOL_B]?: boolean;
     a?: string;
   }>();
 });
 
 it('symbols are not passed to the predicate', () => {
-  omitBy({ [Symbol('mySymbol')]: 1, b: 'hello', c: true }, (value, key) => {
+  omitBy({ [SYMBOL_A]: 1, b: 'hello', c: true }, (value, key) => {
     expectTypeOf(value).toEqualTypeOf<boolean | string>();
     expectTypeOf(key).toEqualTypeOf<'b' | 'c'>();
+
     return true;
   });
 });
@@ -64,6 +71,7 @@ it('symbols are not passed to the predicate', () => {
 it('number keys are passed as strings to the predicate', () => {
   omitBy({ 123: 'hello' }, (_, key) => {
     expectTypeOf(key).toEqualTypeOf<'123'>();
+
     return true;
   });
 });
@@ -80,6 +88,7 @@ it('handles type-predicates', () => {
     },
     isString,
   );
+
   expectTypeOf(result).toEqualTypeOf<{
     b: number;
     optionalB?: number;
@@ -88,16 +97,18 @@ it('handles type-predicates', () => {
   }>();
 });
 
-it('Makes wide types partial', () => {
+it('makes wide types partial', () => {
   const wide = omitBy({ a: 0 } as { a: number }, isDeepEqual(1 as const));
+
   expectTypeOf(wide).toEqualTypeOf<{ a?: number }>();
 
   const narrow = omitBy({ a: 1 } as const, (_x): _x is 1 => true);
-  // eslint-disable-next-line ts/no-empty-object-type -- Expected!
+
+  // eslint-disable-next-line ts/no-empty-object-type
   expectTypeOf(narrow).toEqualTypeOf<{}>();
 });
 
-it('Works well with nullish type-guards', () => {
+it('works well with nullish type-guards', () => {
   const data = {} as {
     required: string;
     optional?: string;
@@ -110,6 +121,7 @@ it('Works well with nullish type-guards', () => {
   };
 
   const resultDefined = omitBy(data, isUndefined);
+
   expectTypeOf(resultDefined).toEqualTypeOf<{
     required: string;
     optional?: string;
@@ -122,6 +134,7 @@ it('Works well with nullish type-guards', () => {
   }>();
 
   const resultNonNull = omitBy(data, isNull);
+
   expectTypeOf(resultNonNull).toEqualTypeOf<{
     required: string;
     optional?: string;
@@ -134,6 +147,7 @@ it('Works well with nullish type-guards', () => {
   }>();
 
   const resultNonNullish = omitBy(data, isNullish);
+
   expectTypeOf(resultNonNullish).toEqualTypeOf<{
     required: string;
     optional?: string;
@@ -146,22 +160,25 @@ it('Works well with nullish type-guards', () => {
   }>();
 });
 
-describe('Records with non-narrowing predicates', () => {
+describe('records with non-narrowing predicates', () => {
   it('string keys', () => {
     const data = {} as Record<string, string>;
     const result = omitBy(data, constant(true));
+
     expectTypeOf(result).toEqualTypeOf(data);
   });
 
   it('number keys', () => {
     const data = {} as Record<number, string>;
     const result = omitBy(data, constant(true));
+
     expectTypeOf(result).toEqualTypeOf<Record<`${number}`, string>>();
   });
 
   it('combined numbers and strings', () => {
     const data = {} as Record<number | string, string>;
     const result = omitBy(data, constant(true));
+
     expectTypeOf(result).toEqualTypeOf<Record<string, string>>();
   });
 
@@ -169,21 +186,23 @@ describe('Records with non-narrowing predicates', () => {
     const data = {} as Record<number, string> | Record<string, string>;
 
     const dataFirst = omitBy(data, constant(true));
+
     expectTypeOf(dataFirst).toEqualTypeOf<
       Record<`${number}`, string> | Record<string, string>
     >();
 
     const dataLast = pipe(data, omitBy(constant(true)));
+
     expectTypeOf(dataLast).toEqualTypeOf<
       Record<`${number}`, string> | Record<string, string>
     >();
   });
 });
 
-function isUndefined<T>(value: T | undefined): value is undefined {
+function isUndefined(value: unknown): value is undefined {
   return value === undefined;
 }
 
-function isNull<T>(value: T | null): value is null {
+function isNull(value: unknown): value is null {
   return typeof value === 'object' && value === null;
 }

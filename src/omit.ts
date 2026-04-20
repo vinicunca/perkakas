@@ -11,12 +11,12 @@ type OmitFromArray<T, Keys extends ReadonlyArray<PropertyKey>>
   // Distribute unions for both object types and key arrays.
   = T extends unknown
     ? Keys extends unknown
-      // The output is always writable because we always create a new object!
-      ? SimplifiedWritable<
+      ? // The output is always writable because we always create a new object!
+      SimplifiedWritable<
         IsNever<Extract<Keys[number], keyof T>> extends true
-          // When none of the keys belong to T we can short-circuit and
-          // simply return T as-is because `omit` would do nothing.
-          ? T
+          ? // When none of the keys belong to T we can short-circuit and
+        // simply return T as-is because `omit` would do nothing.
+          T
           : IsBoundedRecord<T> extends true
             ? OmitBounded<T, Keys>
             : OmitUnbounded<T, Keys>
@@ -97,9 +97,9 @@ type Bounded<T> = T extends unknown
  *
  * @param keys - The property names.
  * @signature
- *    P.omit(keys)(obj);
+ *    omit(keys)(obj);
  * @example
- *    P.pipe({ a: 1, b: 2, c: 3, d: 4 }, P.omit(['a', 'd'])) // => { b: 2, c: 3 }
+ *    pipe({ a: 1, b: 2, c: 3, d: 4 }, omit(['a', 'd'])) // => { b: 2, c: 3 }
  * @dataLast
  * @category Object
  */
@@ -113,9 +113,9 @@ export function omit<T, const Keys extends ReadonlyArray<KeysOfUnion<T>>>(
  * @param data - The object.
  * @param keys - The property names.
  * @signature
- *    P.omit(obj, keys);
+ *    omit(obj, keys);
  * @example
- *    P.omit({ a: 1, b: 2, c: 3, d: 4 }, ['a', 'd']) // => { b: 2, c: 3 }
+ *    omit({ a: 1, b: 2, c: 3, d: 4 }, ['a', 'd']) // => { b: 2, c: 3 }
  * @dataFirst
  * @category Object
  */
@@ -156,6 +156,7 @@ function omitImplementation<
     // eslint-disable-next-line ts/no-dynamic-delete -- This is intentional! It is the most effective way to allow the runtime engine to optimize the object without creating excessive copies for every omitted key.
     delete out[key];
   }
+
   // @ts-expect-error [ts2322] - The type is too complex and TypeScript can't
   // "follow" the iterative algorithm to ensure the output makes sense.
   return out;

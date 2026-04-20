@@ -2,6 +2,7 @@ import type { AllTypesDataProviderTypes } from '../test/types-data-provider';
 import { expectTypeOf, it } from 'vitest';
 import {
   ALL_TYPES_DATA_PROVIDER,
+
   TYPES_DATA_PROVIDER,
 } from '../test/types-data-provider';
 import { isPlainObject } from './is-plain-object';
@@ -36,10 +37,11 @@ it('should work even if data type is unknown', () => {
 
 it('should work as type guard in filter', () => {
   const data = ALL_TYPES_DATA_PROVIDER.filter(isPlainObject);
+
   expectTypeOf(data).toEqualTypeOf<Array<{ readonly a: 'asd' }>>();
 });
 
-it('Can narrow down `any`', () => {
+it('can narrow down `any`', () => {
   // eslint-disable-next-line ts/no-explicit-any -- Explicitly testing `any`
   const data = { hello: 'world' } as any;
   if (isPlainObject(data)) {

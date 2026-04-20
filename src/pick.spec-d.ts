@@ -370,9 +370,7 @@ describe('bounded object types', () => {
     });
 
     it('all keys', () => {
-      expectTypeOf(
-        pick(DATA, [] as Array<'a' | 'b' | 'c' | 'd'>),
-      ).toEqualTypeOf<{
+      expectTypeOf(pick(DATA, [] as Array<'a' | 'b' | 'c' | 'd'>)).toEqualTypeOf<{
         a?: 'required';
         b?: 'optional';
         c?: 'undefinable' | undefined;
@@ -400,27 +398,19 @@ describe('bounded object types', () => {
     });
 
     it('with unions, partial overlap', () => {
-      expectTypeOf(
-        pick(DATA, ['a'] as ['a', ...Array<'a' | 'b'>]),
-      ).toEqualTypeOf<{
+      expectTypeOf(pick(DATA, ['a'] as ['a', ...Array<'a' | 'b'>])).toEqualTypeOf<{
         a: 'required';
         b?: 'optional';
       }>();
-      expectTypeOf(
-        pick(DATA, ['b'] as ['b', ...Array<'a' | 'b'>]),
-      ).toEqualTypeOf<{
+      expectTypeOf(pick(DATA, ['b'] as ['b', ...Array<'a' | 'b'>])).toEqualTypeOf<{
         a?: 'required';
         b?: 'optional';
       }>();
-      expectTypeOf(
-        pick(DATA, ['a'] as ['a' | 'b', ...Array<'a'>]),
-      ).toEqualTypeOf<{
+      expectTypeOf(pick(DATA, ['a'] as ['a' | 'b', ...Array<'a'>])).toEqualTypeOf<{
         a?: 'required';
         b?: 'optional';
       }>();
-      expectTypeOf(
-        pick(DATA, ['a'] as ['a' | 'b', ...Array<'b'>]),
-      ).toEqualTypeOf<{
+      expectTypeOf(pick(DATA, ['a'] as ['a' | 'b', ...Array<'b'>])).toEqualTypeOf<{
         a?: 'required';
         b?: 'optional';
       }>();
@@ -443,30 +433,22 @@ describe('bounded object types', () => {
     });
 
     it('with unions, no overlap', () => {
-      expectTypeOf(
-        pick(DATA, ['a'] as ['a', ...Array<'b' | 'c'>]),
-      ).toEqualTypeOf<{
+      expectTypeOf(pick(DATA, ['a'] as ['a', ...Array<'b' | 'c'>])).toEqualTypeOf<{
         a: 'required';
         b?: 'optional';
         c?: 'undefinable' | undefined;
       }>();
-      expectTypeOf(
-        pick(DATA, ['b'] as ['b', ...Array<'a' | 'c'>]),
-      ).toEqualTypeOf<{
+      expectTypeOf(pick(DATA, ['b'] as ['b', ...Array<'a' | 'c'>])).toEqualTypeOf<{
         a?: 'required';
         b?: 'optional';
         c?: 'undefinable' | undefined;
       }>();
-      expectTypeOf(
-        pick(DATA, ['a'] as ['a' | 'b', ...Array<'c'>]),
-      ).toEqualTypeOf<{
+      expectTypeOf(pick(DATA, ['a'] as ['a' | 'b', ...Array<'c'>])).toEqualTypeOf<{
         a?: 'required';
         b?: 'optional';
         c?: 'undefinable' | undefined;
       }>();
-      expectTypeOf(
-        pick(DATA, ['b'] as ['b' | 'c', ...Array<'a'>]),
-      ).toEqualTypeOf<{
+      expectTypeOf(pick(DATA, ['b'] as ['b' | 'c', ...Array<'a'>])).toEqualTypeOf<{
         a?: 'required';
         b?: 'optional';
         c?: 'undefinable' | undefined;
@@ -501,27 +483,19 @@ describe('bounded object types', () => {
     });
 
     it('with unions, partial overlap', () => {
-      expectTypeOf(
-        pick(DATA, ['a'] as [...Array<'a' | 'b'>, 'a']),
-      ).toEqualTypeOf<{
+      expectTypeOf(pick(DATA, ['a'] as [...Array<'a' | 'b'>, 'a'])).toEqualTypeOf<{
         a: 'required';
         b?: 'optional';
       }>();
-      expectTypeOf(
-        pick(DATA, ['b'] as [...Array<'a' | 'b'>, 'b']),
-      ).toEqualTypeOf<{
+      expectTypeOf(pick(DATA, ['b'] as [...Array<'a' | 'b'>, 'b'])).toEqualTypeOf<{
         a?: 'required';
         b?: 'optional';
       }>();
-      expectTypeOf(
-        pick(DATA, ['a'] as [...Array<'a'>, 'a' | 'b']),
-      ).toEqualTypeOf<{
+      expectTypeOf(pick(DATA, ['a'] as [...Array<'a'>, 'a' | 'b'])).toEqualTypeOf<{
         a?: 'required';
         b?: 'optional';
       }>();
-      expectTypeOf(
-        pick(DATA, ['a'] as [...Array<'b'>, 'a' | 'b']),
-      ).toEqualTypeOf<{
+      expectTypeOf(pick(DATA, ['a'] as [...Array<'b'>, 'a' | 'b'])).toEqualTypeOf<{
         a?: 'required';
         b?: 'optional';
       }>();
@@ -544,30 +518,22 @@ describe('bounded object types', () => {
     });
 
     it('with unions, no overlap', () => {
-      expectTypeOf(
-        pick(DATA, ['a'] as [...Array<'b' | 'c'>, 'a']),
-      ).toEqualTypeOf<{
+      expectTypeOf(pick(DATA, ['a'] as [...Array<'b' | 'c'>, 'a'])).toEqualTypeOf<{
         a: 'required';
         b?: 'optional';
         c?: 'undefinable' | undefined;
       }>();
-      expectTypeOf(
-        pick(DATA, ['b'] as [...Array<'a' | 'c'>, 'b']),
-      ).toEqualTypeOf<{
+      expectTypeOf(pick(DATA, ['b'] as [...Array<'a' | 'c'>, 'b'])).toEqualTypeOf<{
         a?: 'required';
         b?: 'optional';
         c?: 'undefinable' | undefined;
       }>();
-      expectTypeOf(
-        pick(DATA, ['a'] as [...Array<'c'>, 'a' | 'b']),
-      ).toEqualTypeOf<{
+      expectTypeOf(pick(DATA, ['a'] as [...Array<'c'>, 'a' | 'b'])).toEqualTypeOf<{
         a?: 'required';
         b?: 'optional';
         c?: 'undefinable' | undefined;
       }>();
-      expectTypeOf(
-        pick(DATA, ['b'] as [...Array<'a'>, 'b' | 'c']),
-      ).toEqualTypeOf<{
+      expectTypeOf(pick(DATA, ['b'] as [...Array<'a'>, 'b' | 'c'])).toEqualTypeOf<{
         a?: 'required';
         b?: 'optional';
         c?: 'undefinable' | undefined;

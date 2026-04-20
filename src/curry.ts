@@ -21,7 +21,7 @@ import { lazyDataLastImpl } from './internal/lazy-data-last-impl';
  * @param fn - The function to curry.
  * @param args - The arguments.
  * @param lazy - A lazy version of the function to curry.
- * @signature P.curry(fn, args);
+ * @signature curry(fn, args);
  * @example
  *    function _findIndex(array, fn) {
  *      for (let i = 0; i < array.length; i++) {
@@ -39,7 +39,7 @@ import { lazyDataLastImpl } from './internal/lazy-data-last-impl';
  *    function findIndex<T>(fn: (item: T) => boolean): (array: T[]) => number;
  *
  *    function findIndex(...args: unknown[]) {
- *      return P.curry(_findIndex, args);
+ *      return curry(_findIndex, args);
  *    }
  * @category Function
  */

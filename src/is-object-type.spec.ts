@@ -1,8 +1,5 @@
 import { expect, it } from 'vitest';
-import {
-  ALL_TYPES_DATA_PROVIDER,
-  TestClass,
-} from '../test/types-data-provider';
+import { ALL_TYPES_DATA_PROVIDER, TestClass } from '../test/types-data-provider';
 import { isObjectType } from './is-object-type';
 
 it('accepts simple objects', () => {
@@ -33,32 +30,32 @@ it('accepts null prototypes', () => {
   expect(isObjectType(Object.create(null))).toBe(true);
 });
 
-it('aLL_TYPES_DATA_PROVIDER', () => {
+it('everything from ALL_TYPES_DATA_PROVIDER', () => {
   expect(ALL_TYPES_DATA_PROVIDER.filter(isObjectType)).toMatchInlineSnapshot(`
-    [
       [
-        1,
-        2,
-        3,
-      ],
-      1985-07-24T07:40:00.000Z,
-      [Error: asd],
-      TestClass {},
-      Map {},
-      {
-        "a": "asd",
-      },
-      Promise {},
-      /test/gu,
-      Set {},
-      [
-        1,
-        2,
-        3,
-      ],
-      Uint8Array [
-        0,
-      ],
-    ]
-  `);
+        [
+          1,
+          2,
+          3,
+        ],
+        1985-07-24T07:40:00.000Z,
+        [Error: asd],
+        TestClass {},
+        Map {},
+        {
+          "a": "asd",
+        },
+        Promise {},
+        /test/gu,
+        Set {},
+        [
+          1,
+          2,
+          3,
+        ],
+        Uint8Array [
+          0,
+        ],
+      ]
+    `);
 });

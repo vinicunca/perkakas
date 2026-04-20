@@ -1,5 +1,4 @@
 import type { UpsertProp } from './internal/types/upsert-prop';
-
 import { curry } from './curry';
 
 /**
@@ -12,9 +11,9 @@ import { curry } from './curry';
  * @param prop - The property name.
  * @param value - The value to set.
  * @signature
- *    P.set(obj, prop, value)
+ *    set(obj, prop, value)
  * @example
- *    P.set({ a: 1 }, 'a', 2) // => { a: 2 }
+ *    set({ a: 1 }, 'a', 2) // => { a: 2 }
  * @dataFirst
  * @category Object
  */
@@ -33,9 +32,9 @@ export function set<T, K extends keyof T, V extends Required<T>[K]>(
  * @param prop - The property name.
  * @param value - The value to set.
  * @signature
- *    P.set(prop, value)(obj)
+ *    set(prop, value)(obj)
  * @example
- *    P.pipe({ a: 1 }, P.set('a', 2)) // => { a: 2 }
+ *    pipe({ a: 1 }, set('a', 2)) // => { a: 2 }
  * @dataLast
  * @category Object
  */
@@ -48,11 +47,6 @@ export function set(...args: ReadonlyArray<unknown>): unknown {
   return curry(setImplementation, args);
 }
 
-function setImplementation<T, K extends keyof T, V extends Required<T>[K]>(
-  obj: T,
-  prop: K,
-  value: V,
-): UpsertProp<T, K, V> {
-  // @ts-expect-error [ts2322] - Hard to type this function
-  return ({ ...obj, [prop]: value });
+function setImplementation<T, K extends keyof T, V extends Required<T>[K]>(obj: T, prop: K, value: V): UpsertProp<T, K, V> {
+  return { ...obj, [prop]: value };
 }

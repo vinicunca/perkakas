@@ -1,6 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
 import { first } from './first';
-import { identity } from './identity';
 import { map } from './map';
 import { pipe } from './pipe';
 import { zip } from './zip';
@@ -53,8 +52,9 @@ describe('dataLast', () => {
   });
 
   it('evaluates lazily', () => {
-    const mockFn = vi.fn(identity());
+    const mockFn = vi.fn<(x: number) => number>();
     pipe([1, 2, 3], map(mockFn), zip([4, 5, 6]), first());
+
     expect(mockFn).toHaveBeenCalledTimes(1);
   });
 });

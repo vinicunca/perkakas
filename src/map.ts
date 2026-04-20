@@ -1,7 +1,6 @@
 import type { IterableContainer } from './internal/types/iterable-container';
 import type { LazyEvaluator } from './internal/types/lazy-evaluator';
 import type { Mapped } from './internal/types/mapped';
-
 import { curry } from './curry';
 
 /**
@@ -14,11 +13,11 @@ import { curry } from './curry';
  * @returns A new array with each element being the result of the callback
  * function.
  * @signature
- *    P.map(data, callbackfn)
+ *    map(data, callbackfn)
  * @example
- *    P.map([1, 2, 3], P.multiply(2)); // => [2, 4, 6]
- *    P.map([0, 0], P.add(1)); // => [1, 1]
- *    P.map([0, 0], (value, index) => value + index); // => [0, 1]
+ *    map([1, 2, 3], multiply(2)); // => [2, 4, 6]
+ *    map([0, 0], add(1)); // => [1, 1]
+ *    map([0, 0], (value, index) => value + index); // => [0, 1]
  * @dataFirst
  * @lazy
  * @category Array
@@ -37,11 +36,11 @@ export function map<T extends IterableContainer, U>(
  * @returns A new array with each element being the result of the callback
  * function.
  * @signature
- *    P.map(callbackfn)(data)
+ *    map(callbackfn)(data)
  * @example
- *    P.pipe([1, 2, 3], P.map(P.multiply(2))); // => [2, 4, 6]
- *    P.pipe([0, 0], P.map(P.add(1))); // => [1, 1]
- *    P.pipe([0, 0], P.map((value, index) => value + index)); // => [0, 1]
+ *    pipe([1, 2, 3], map(multiply(2))); // => [2, 4, 6]
+ *    pipe([0, 0], map(add(1))); // => [1, 1]
+ *    pipe([0, 0], map((value, index) => value + index)); // => [0, 1]
  * @dataLast
  * @lazy
  * @category Array
@@ -54,16 +53,11 @@ export function map(...args: ReadonlyArray<unknown>): unknown {
   return curry(mapImplementation, args, lazyImplementation);
 }
 
-function mapImplementation<T, U>(
-  data: ReadonlyArray<T>,
-  callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => U,
-): Array<U> {
+function mapImplementation<T, U>(data: ReadonlyArray<T>, callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => U): Array<U> {
   return data.map(callbackfn);
-};
+}
 
-function lazyImplementation<T, U>(
-  callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => U,
-): LazyEvaluator<T, U> {
+function lazyImplementation<T, U>(callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => U): LazyEvaluator<T, U> {
   return (value, index, data) => ({
     done: false,
     hasNext: true,

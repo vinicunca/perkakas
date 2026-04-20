@@ -1,5 +1,4 @@
 /* eslint-disable no-nested-ternary */
-
 /* eslint-disable ts/explicit-function-return-type --
  * These aren't useful for a reference implementation for a legacy library!
  */
@@ -13,7 +12,7 @@ import { sleep } from './sleep';
 
 /**
  * A reference implementation of the Lodash `debounce` function using the
- * The `funnel` function. While migrating from Lodash you can copy this
+ * Perkakas `funnel` function. While migrating from Lodash you can copy this
  * function as-is into your codebase and use it as a drop-in replacement; but
  * we recommend eventually inlining the call to `funnel` so you can adjust the
  * function to your specific needs.
@@ -57,32 +56,26 @@ function debounceWithCachedValue<F extends StrictFunction>(
   const { call, flush, cancel } = funnel(
     (args: Parameters<F>) => {
       if (!leading && !trailing) {
-        /**
-         * In Lodash you can disable both the trailing and leading edges of the
-         * debounce window, effectively causing the function to never be
-         * invoked. Our's uses the invokedAt enum exactly to prevent such a
-         * situation; so to simulate Lodash we need to only pass the callback
-         * when at least one of them is enabled.
-         */
+        // In Lodash you can disable both the trailing and leading edges of the
+        // debounce window, effectively causing the function to never be
+        // invoked. Perkakas uses the invokedAt enum exactly to prevent such a
+        // situation; so to simulate Lodash we need to only pass the callback
+        // when at least one of them is enabled.
         return;
       }
 
-      /**
-       * Funnel provides more control over the args, but lodash simply passes
-       * them through, to replicate this behavior we need to spread the args
-       * array maintained via the reducer below.
-       * Also, every time the function is invoked the cached value is updated.
-       */
+      // Funnel provides more control over the args, but lodash simply passes
+      // them through, to replicate this behavior we need to spread the args
+      // array maintained via the reducer below.
+      // Also, every time the function is invoked the cached value is updated.
       // @ts-expect-error [ts2345, ts2322] -- TypeScript infers the generic sub-
       // types too eagerly, making itself blind to the fact that the types
       // match here.
-      cachedValue = func(...args) as ReturnType<F>;
+      cachedValue = func(...args);
     },
     {
-      /**
-       * Debounce stores the latest args it was called with for the next
-       * invocation of the callback.
-       */
+      // Debounce stores the latest args it was called with for the next
+      // invocation of the callback.
       reducer: (_, ...args: Parameters<F>) => args,
       minQuietPeriodMs: wait,
       ...(maxWait !== undefined && { maxBurstDurationMs: maxWait }),
@@ -94,12 +87,10 @@ function debounceWithCachedValue<F extends StrictFunction>(
     },
   );
 
-  /**
-   * Lodash uses a legacy JS-isms to attach helper functions to the main
-   * callback of `debounce`. In our function we return a proper object where the
-   * callback is one of the available properties. Here we destructure and then
-   * reconstruct the object to fit the Lodash API.
-   */
+  // Lodash uses a legacy JS-isms to attach helper functions to the main
+  // callback of `debounce`. In Perkakas we return a proper object where the
+  // callback is one of the available properties. Here we destructure and then
+  // reconstruct the object to fit the Lodash API.
   return Object.assign(
     (...args: Parameters<F>) => {
       call(...args);
@@ -116,13 +107,11 @@ function debounceWithCachedValue<F extends StrictFunction>(
   );
 }
 
-/**
- * We need some non-trivial duration to use in all our tests, to abstract the
- * actual chosen value we use this UnitOfTime (UT) constant. As long as it is a
- * positive integer, the actual value doesn't matter (but the larger it is,
- * the longer the tests would take to run); the value used by Lodash is 32.
- * The number is in milliseconds.
- */
+// We need some non-trivial duration to use in all our tests, to abstract the
+// actual chosen value we use this UnitOfTime (UT) constant. As long as it is a
+// positive integer, the actual value doesn't matter (but the larger it is,
+// the longer the tests would take to run); the value used by Lodash is 32.
+// The number is in milliseconds.
 const UT = 16;
 
 describe('https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L4187', () => {
@@ -179,16 +168,14 @@ describe('https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L4187', () 
     const DATA = {};
     const mockFn = vi.fn<(a: object, b: string) => boolean>(constant(false));
 
-    /**
-     * In Lodash the test uses both `leading` and `trailing` timing options
-     * for this test, but it only works because the `leading` option in Lodash
-     * runs within the same execution frame as the call to the debouncer; the
-     * Lodash test also passes when the `leading` option is removed. For our
-     * implementation the "leading" option is delayed to the next execution
-     * frame, which, when used together with `maxWait` would cause the debouncer
-     * to see a "quiet window" and trigger an additional invocation of the
-     * mockFn, and the test to fail.
-     */
+    // In Lodash the test uses both `leading` and `trailing` timing options
+    // for this test, but it only works because the `leading` option in Lodash
+    // runs within the same execution frame as the call to the debouncer; the
+    // Lodash test also passes when the `leading` option is removed. For our
+    // implementation the "leading" option is delayed to the next execution
+    // frame, which, when used together with `maxWait` would cause the debouncer
+    // to see a "quiet window" and trigger an additional invocation of the
+    // mockFn, and the test to fail.
     const debounced = debounceWithCachedValue(mockFn, UT, { maxWait: 2 * UT });
 
     while (debounced(DATA, 'a') ?? true) {

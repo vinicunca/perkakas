@@ -1,0 +1,84 @@
+import type { IterableContainer } from './internal/types/iterable-container';
+import type { PerkakasTypeError } from './internal/types/perkakas-type-error';
+import type { StrictFunction } from './internal/types/strict-function';
+import type { TupleSplits } from './internal/types/tuple-splits';
+
+type PartialLastBindError<
+  Message extends string,
+  Metadata = never,
+> = PerkakasTypeError<'partialLastBind', Message, { metadata: Metadata }>;
+
+type TupleSuffix<T extends IterableContainer> = TupleSplits<T>['right'];
+
+type RemoveSuffix<
+  T extends IterableContainer,
+  Suffix extends TupleSuffix<T>,
+> = Suffix extends readonly []
+  ? T
+  : T extends readonly [...infer TRest, infer TLast]
+    ? Suffix extends readonly [...infer SuffixRest, infer _SuffixLast]
+      ? // SuffixLast extends TLast.
+      RemoveSuffix<TRest, SuffixRest>
+      : // Suffix (as a whole) extends readonly TLast[].
+        // Suffix could possibly be empty, so this has to be TLast?.
+        [...RemoveSuffix<TRest, Suffix>, TLast?]
+    : // T has an optional or rest parameter last. If T is a parameter list,
+  // this can only happen if we have optional arguments or a rest param;
+  // both cases are similar.
+    T extends readonly [...infer TRest, (infer _TLast)?]
+      ? Suffix extends readonly [...infer SuffixRest, infer _SuffixLast]
+        ? // SuffixLast extends TLast.
+        RemoveSuffix<TRest, SuffixRest>
+        : // Suffix (as a whole) extends [...TRest, TLast?].
+        TRest
+      : // We got passed a parameter list that isn't what we expected; this
+    // is an internal error.
+      PartialLastBindError<'Function parameter list has unexpected shape', T>;
+
+/**
+ * Creates a function that calls `func` with `partial` put after the arguments
+ * it receives. Note that this doesn't support functions with both optional
+ * and rest parameters.
+ *
+ * Can be thought of as "freezing" some portion of a function's arguments,
+ * resulting in a new function with a simplified signature.
+ *
+ * Useful for converting a data-first function to a data-last one.
+ *
+ * @param func - The function to wrap.
+ * @param partial - The arguments to put after.
+ * @returns A partially bound function.
+ * @signature
+ *    partialLastBind(func, ...partial);
+ * @example
+ *    const fn = (x: number, y: number, z: number) => x * 100 + y * 10 + z;
+ *    const partialFn = partialLastBind(fn, 2, 3);
+ *    partialFn(1); //=> 123
+ *
+ *    const parseBinary = partialLastBind(parseInt, "2");
+ *    parseBinary("101"); //=> 5
+ *
+ *    pipe(
+ *      { a: 1 },
+ *      // instead of (arg) => JSON.stringify(arg, null, 2)
+ *      partialLastBind(JSON.stringify, null, 2),
+ *    ); //=> '{\n  "a": 1\n}'
+ * @dataFirst
+ * @category Function
+ * @see partialBind
+ */
+export function partialLastBind<
+  F extends StrictFunction,
+  SuffixArgs extends TupleSuffix<Parameters<F>>,
+  RemovedSuffix extends RemoveSuffix<Parameters<F>, SuffixArgs>,
+>(
+  func: F,
+  ...partial: SuffixArgs
+): (
+  ...rest: RemovedSuffix extends IterableContainer ? RemovedSuffix : never
+) => ReturnType<F> {
+  // @ts-expect-error [ts2345, ts2322] -- TypeScript infers the generic sub-
+  // types too eagerly, making itself blind to the fact that the types match
+  // here.
+  return (...rest) => func(...rest, ...partial);
+}

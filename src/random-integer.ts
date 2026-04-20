@@ -8,6 +8,9 @@ import type {
 } from 'type-fest';
 import type { IntRangeInclusive } from './internal/types/int-range-inclusive';
 
+// This limitation is defined by type-fest
+type MaxLiteral = 1000;
+
 type RandomInteger<From extends number, To extends number>
   = Or<
     IsNever<NonNegativeInteger<From>>,
@@ -18,21 +21,28 @@ type RandomInteger<From extends number, To extends number>
       ? From
       : GreaterThan<From, To> extends true
         ? never
-        : GreaterThanOrEqual<To, 1000> extends true
+        : GreaterThanOrEqual<To, MaxLiteral> extends true
           ? number
           : IntRangeInclusive<From, To>;
 
 /**
  * Generate a random integer between `from` and `to` (inclusive).
  *
+ * !Important: This function uses [`Math.random()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random) under-the-hood, which has two major limitations:
+ * 1. It generates 2^52 possible values, so the bigger the range, the less
+ * uniform the distribution of values would be, and at ranges larger than that
+ * some values would never come up.
+ * 2. It is not cryptographically secure and should not be used for security
+ * scenarios.
+ *
  * @param from - The minimum value.
  * @param to - The maximum value.
  * @returns The random integer.
  * @signature
- *   P.randomInt(from, to)
+ *   randomInteger(from, to)
  * @example
- *   P.randomInt(1, 10) // => 5
- *   P.randomInt(1.5, 2.6) // => 2
+ *   randomInteger(1, 10) // => 5
+ *   randomInteger(1.5, 2.6) // => 2
  * @dataFirst
  * @category Number
  */
@@ -45,7 +55,7 @@ export function randomInteger<From extends number, To extends number>(
 
   if (toFloored < fromCeiled) {
     throw new RangeError(
-      `randomInt: The range [${from},${to}] contains no integer`,
+      `randomInteger: The range [${from.toString()},${to.toString()}] contains no integer`,
     );
   }
 

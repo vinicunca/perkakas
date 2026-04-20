@@ -17,9 +17,9 @@ import { heapify, heapMaybeInsert } from './internal/heap';
  * @param rules - A variadic array of order rules defining the sorting criteria. Each order rule is a projection function that extracts a comparable value from the data. Sorting is based on these extracted values using the native `<` and `>` operators. Earlier rules take precedence over later ones. Use the syntax `[projection, "desc"]` for descending order.
  * @returns A subset of the input array.
  * @signature
- *   P.dropFirstBy(data, n, ...rules);
+ *   dropFirstBy(data, n, ...rules);
  * @example
- *   P.dropFirstBy(['aa', 'aaaa', 'a', 'aaa'], 2, x => x.length); // => ['aaa', 'aaaa']
+ *   dropFirstBy(['aa', 'aaaa', 'a', 'aaa'], 2, x => x.length); // => ['aaaa', 'aaa']
  * @dataFirst
  * @category Array
  */
@@ -38,9 +38,9 @@ export function dropFirstBy<T>(
  * @param rules - A variadic array of order rules defining the sorting criteria. Each order rule is a projection function that extracts a comparable value from the data. Sorting is based on these extracted values using the native `<` and `>` operators. Earlier rules take precedence over later ones. Use the syntax `[projection, "desc"]` for descending order.
  * @returns A subset of the input array.
  * @signature
- *   P.dropFirstBy(n, ...rules)(data);
+ *   dropFirstBy(n, ...rules)(data);
  * @example
- *   P.pipe(['aa', 'aaaa', 'a', 'aaa'], P.dropFirstBy(2, x => x.length)); // => ['aaa', 'aaaa']
+ *   pipe(['aa', 'aaaa', 'a', 'aaa'], dropFirstBy(2, x => x.length)); // => ['aaaa', 'aaa']
  * @dataLast
  * @category Array
  */

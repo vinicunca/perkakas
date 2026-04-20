@@ -72,13 +72,6 @@ describe('objects', () => {
 });
 
 describe('strings', () => {
-  it('just undefined', () => {
-    const data = undefined;
-    if (isEmpty(data)) {
-      expectTypeOf(data).toEqualTypeOf<undefined>();
-    }
-  });
-
   it('just string', () => {
     const data = '' as string;
     if (isEmpty(data)) {
@@ -90,13 +83,6 @@ describe('strings', () => {
     const data = '' as const;
     if (isEmpty(data)) {
       expectTypeOf(data).toEqualTypeOf<''>();
-    }
-  });
-
-  it('string or undefined', () => {
-    const data = undefined as string | undefined;
-    if (isEmpty(data)) {
-      expectTypeOf(data).toEqualTypeOf<'' | undefined>();
     }
   });
 
@@ -115,20 +101,6 @@ describe('strings', () => {
     }
   });
 
-  it('string literals that CAN be undefined', () => {
-    const data = 'cat' as 'cat' | 'dog' | undefined;
-    if (isEmpty(data)) {
-      expectTypeOf(data).toEqualTypeOf<undefined>();
-    }
-  });
-
-  it('string literals that CAN be undefined or empty', () => {
-    const data = 'cat' as '' | 'cat' | 'dog' | undefined;
-    if (isEmpty(data)) {
-      expectTypeOf(data).toEqualTypeOf<'' | undefined>();
-    }
-  });
-
   it('string templates that CANT be empty or undefined', () => {
     const data = 'prefix_0' as `prefix_${number}`;
     if (isEmpty(data)) {
@@ -141,6 +113,40 @@ describe('strings', () => {
     const data = '' as '' | `prefix_${number}`;
     if (isEmpty(data)) {
       expectTypeOf(data).toEqualTypeOf<''>();
+    }
+  });
+});
+
+describe('deprecated `string | undefined` support', () => {
+  /* eslint-disable sonar/deprecation --
+   * The function is deprecated!
+   */
+
+  it('just undefined', () => {
+    const data = undefined;
+    if (isEmpty(data)) {
+      expectTypeOf(data).toEqualTypeOf<undefined>();
+    }
+  });
+
+  it('string or undefined', () => {
+    const data = undefined as string | undefined;
+    if (isEmpty(data)) {
+      expectTypeOf(data).toEqualTypeOf<'' | undefined>();
+    }
+  });
+
+  it('string literals that CAN be undefined', () => {
+    const data = 'cat' as 'cat' | 'dog' | undefined;
+    if (isEmpty(data)) {
+      expectTypeOf(data).toEqualTypeOf<undefined>();
+    }
+  });
+
+  it('string literals that CAN be undefined or empty', () => {
+    const data = 'cat' as '' | 'cat' | 'dog' | undefined;
+    if (isEmpty(data)) {
+      expectTypeOf(data).toEqualTypeOf<'' | undefined>();
     }
   });
 

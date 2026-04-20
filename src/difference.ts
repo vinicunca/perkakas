@@ -1,5 +1,4 @@
 import type { LazyEvaluator } from './internal/types/lazy-evaluator';
-
 import { curryFromLazy } from './internal/curry-from-lazy';
 import { lazyIdentityEvaluator, SKIP_ITEM } from './internal/utility-evaluators';
 
@@ -11,18 +10,15 @@ import { lazyIdentityEvaluator, SKIP_ITEM } from './internal/utility-evaluators'
  * @param data - The input items.
  * @param other - The values to exclude.
  * @signature
- *    P.difference(data, other)
+ *    difference(data, other)
  * @example
- *    P.difference([1, 2, 3, 4], [2, 5, 3]); // => [1, 4]
- *    P.difference([1, 1, 2, 2], [1]); // => [1, 2, 2]
+ *    difference([1, 2, 3, 4], [2, 5, 3]); // => [1, 4]
+ *    difference([1, 1, 2, 2], [1]); // => [1, 2, 2]
  * @dataFirst
  * @lazy
  * @category Array
  */
-export function difference<T>(
-  data: ReadonlyArray<T>,
-  other: ReadonlyArray<T>,
-): Array<T>;
+export function difference<T>(data: ReadonlyArray<T>, other: ReadonlyArray<T>): Array<T>;
 
 /**
  * Excludes the values from `other` array. The output maintains the same order
@@ -31,17 +27,15 @@ export function difference<T>(
  *
  * @param other - The values to exclude.
  * @signature
- *    P.difference(other)(data)
+ *    difference(other)(data)
  * @example
- *    P.pipe([1, 2, 3, 4], P.difference([2, 5, 3])); // => [1, 4]
- *    P.pipe([1, 1, 2, 2], P.difference([1])); // => [1, 2, 2]
+ *    pipe([1, 2, 3, 4], difference([2, 5, 3])); // => [1, 4]
+ *    pipe([1, 1, 2, 2], difference([1])); // => [1, 2, 2]
  * @dataFirst
  * @lazy
  * @category Array
  */
-export function difference<T>(
-  other: ReadonlyArray<T>,
-): (data: ReadonlyArray<T>) => Array<T>;
+export function difference<T>(other: ReadonlyArray<T>): (data: ReadonlyArray<T>) => Array<T>;
 
 export function difference(...args: ReadonlyArray<unknown>): unknown {
   return curryFromLazy(lazyImplementation, args);

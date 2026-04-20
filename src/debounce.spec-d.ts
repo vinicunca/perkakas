@@ -1,3 +1,6 @@
+/* eslint-disable no-nested-ternary */
+/* eslint-disable sonar/deprecation -- We know! */
+
 import { expectTypeOf, it } from 'vitest';
 import { debounce } from './debounce';
 import { identity } from './identity';
@@ -8,6 +11,7 @@ it('returns undefined on \'trailing\' timing', () => {
     timing: 'trailing',
   });
   const result = debouncer.call();
+
   expectTypeOf(result).toEqualTypeOf<string | undefined>();
 });
 
@@ -17,6 +21,7 @@ it('doesn\'t return undefined on \'leading\' timing', () => {
     timing: 'leading',
   });
   const result = debouncer.call();
+
   expectTypeOf(result).toEqualTypeOf<string>();
 });
 
@@ -26,6 +31,7 @@ it('doesn\'t return undefined on \'both\' timing', () => {
     timing: 'both',
   });
   const result = debouncer.call();
+
   expectTypeOf(result).toEqualTypeOf<string>();
 });
 
@@ -51,7 +57,6 @@ it('argument typing to be good (all required)', () => {
 it('argument typing to be good (with optional)', () => {
   const debouncer = debounce(
     (a: string, b?: number, c?: boolean) =>
-      // eslint-disable-next-line no-nested-ternary
       `${a}${b ?? 'undefined'}${c === undefined ? 'undefined' : c ? 'y' : 'n'}`,
     {},
   );

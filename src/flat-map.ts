@@ -1,5 +1,4 @@
 import type { LazyEvaluator } from './internal/types/lazy-evaluator';
-
 import { curry } from './curry';
 
 /**
@@ -16,20 +15,16 @@ import { curry } from './curry';
  * @returns A new array with each element being the result of the callback
  * function and flattened by a depth of 1.
  * @signature
- *    P.flatMap(data, callbackfn)
+ *    flatMap(data, callbackfn)
  * @example
- *    P.flatMap([1, 2, 3], x => [x, x * 10]) // => [1, 10, 2, 20, 3, 30]
+ *    flatMap([1, 2, 3], x => [x, x * 10]) // => [1, 10, 2, 20, 3, 30]
  * @dataFirst
  * @lazy
  * @category Array
  */
 export function flatMap<T, U>(
   data: ReadonlyArray<T>,
-  callbackfn: (
-    input: T,
-    index: number,
-    data: ReadonlyArray<T>,
-  ) => ReadonlyArray<U> | U,
+  callbackfn: (input: T, index: number, data: ReadonlyArray<T>) => ReadonlyArray<U> | U,
 ): Array<U>;
 
 /**
@@ -45,44 +40,30 @@ export function flatMap<T, U>(
  * @returns A new array with each element being the result of the callback
  * function and flattened by a depth of 1.
  * @signature
- *    P.flatMap(callbackfn)(data)
+ *    flatMap(callbackfn)(data)
  * @example
- *    P.pipe([1, 2, 3], P.flatMap(x => [x, x * 10])) // => [1, 10, 2, 20, 3, 30]
+ *    pipe([1, 2, 3], flatMap(x => [x, x * 10])) // => [1, 10, 2, 20, 3, 30]
  * @dataLast
  * @lazy
  * @category Array
  */
 export function flatMap<T, U>(
-  callbackfn: (
-    input: T,
-    index: number,
-    data: ReadonlyArray<T>,
-  ) => ReadonlyArray<U> | U,
+  callbackfn: (input: T, index: number, data: ReadonlyArray<T>) => ReadonlyArray<U> | U,
 ): (data: ReadonlyArray<T>) => Array<U>;
 
 export function flatMap(...args: ReadonlyArray<unknown>): unknown {
   return curry(flatMapImplementation, args, lazyImplementation);
 }
 
-function flatMapImplementation<T, U>(
-  data: ReadonlyArray<T>,
-  callbackfn: (
-    value: T,
-    index: number,
-    data: ReadonlyArray<T>,
-  ) => ReadonlyArray<U> | U,
-): Array<U> {
+function flatMapImplementation<T, U>(data: ReadonlyArray<T>, callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => ReadonlyArray<U> | U): Array<U> {
   return data.flatMap(callbackfn);
 }
 
-function lazyImplementation<T, K>(
-  callbackfn: (
-    input: T,
-    index: number,
-    data: ReadonlyArray<T>,
-  ) => K | ReadonlyArray<K>,
-): LazyEvaluator<T, K> {
-  // @ts-expect-error [ts2322] - We need to make LazyMany better so it accommodate the typing here...
+function lazyImplementation<T, K>(callbackfn: (
+  input: T,
+  index: number,
+  data: ReadonlyArray<T>,
+) => K | ReadonlyArray<K>): LazyEvaluator<T, K> {
   return (value, index, data) => {
     const next = callbackfn(value, index, data);
     return Array.isArray(next)

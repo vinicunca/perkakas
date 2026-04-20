@@ -1,19 +1,18 @@
 import type { IterableContainer } from './internal/types/iterable-container';
-
 import { curry } from './curry';
 
 type Product<T extends IterableContainer<bigint> | IterableContainer<number>>
   // Empty arrays would always result in a product of (a non-bigint) 1
   = T extends readonly []
     ? 1
-    // Non-empty bigint arrays will always result in a bigint product.
-    : T extends readonly [bigint, ...ReadonlyArray<unknown>]
+    : // Non-empty bigint arrays will always result in a bigint product.
+    T extends readonly [bigint, ...(ReadonlyArray<unknown>)]
       ? bigint
-      // But an empty bigint array would result in a non-bigint 1.
-      : T[number] extends bigint
-        ? 1 | bigint
-        // Non-bigint arrays are always handled correctly.
-        : number;
+      : // But an empty bigint array would result in a non-bigint 1.
+      T[number] extends bigint
+        ? bigint | 1
+        : // Non-bigint arrays are always handled correctly.
+        number;
 
 /**
  * Compute the product of the numbers in the array, or return 1 for an empty
@@ -29,11 +28,11 @@ type Product<T extends IterableContainer<bigint> | IterableContainer<number>>
  *
  * @param data - The array of numbers.
  * @signature
- *   P.product(data);
+ *   product(data);
  * @example
- *   P.product([1, 2, 3]); // => 6
- *   P.product([1n, 2n, 3n]); // => 6n
- *   P.product([]); // => 1
+ *   product([1, 2, 3]); // => 6
+ *   product([1n, 2n, 3n]); // => 6n
+ *   product([]); // => 1
  * @dataFirst
  * @category Number
  */
@@ -54,11 +53,11 @@ export function product<
  * `isEmpty` to guard against this case.
  *
  * @signature
- *   P.product()(data);
+ *   product()(data);
  * @example
- *   P.pipe([1, 2, 3], P.product()); // => 6
- *   P.pipe([1n, 2n, 3n], P.product()); // => 6n
- *   P.pipe([], P.product()); // => 1
+ *   pipe([1, 2, 3], product()); // => 6
+ *   pipe([1n, 2n, 3n], product()); // => 6n
+ *   pipe([], product()); // => 1
  * @dataLast
  * @category Number
  */

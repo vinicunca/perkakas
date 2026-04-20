@@ -1,7 +1,5 @@
 import type { LastArrayElement } from 'type-fest';
-
 import type { IterableContainer } from './internal/types/iterable-container';
-
 import { curry } from './curry';
 
 type Last<T extends IterableContainer> = LastArrayElement<
@@ -18,10 +16,10 @@ type Last<T extends IterableContainer> = LastArrayElement<
  *
  * @param data - The array.
  * @signature
- *    P.last(array)
+ *    last(array)
  * @example
- *    P.last([1, 2, 3]) // => 3
- *    P.last([]) // => undefined
+ *    last([1, 2, 3]) // => 3
+ *    last([]) // => undefined
  * @dataFirst
  * @category Array
  */
@@ -31,12 +29,12 @@ export function last<T extends IterableContainer>(data: T): Last<T>;
  * Gets the last element of `array`.
  *
  * @signature
- *    P.last()(array)
+ *    last()(array)
  * @example
- *    P.pipe(
+ *    pipe(
  *      [1, 2, 4, 8, 16],
- *      P.filter(x => x > 3),
- *      P.last(),
+ *      filter(x => x > 3),
+ *      last(),
  *      x => x + 1
  *    ); // => 17
  * @dataLast
@@ -50,4 +48,4 @@ export function last(...args: ReadonlyArray<unknown>): unknown {
 
 function lastImplementation<T>(array: ReadonlyArray<T>): T | undefined {
   return array.at(-1);
-};
+}

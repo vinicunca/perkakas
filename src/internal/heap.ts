@@ -3,7 +3,6 @@
  */
 
 import type { CompareFunction } from './types/compare-function';
-
 import { hasAtLeast } from '../has-at-least';
 import { swapInPlace } from './swap-in-place';
 
@@ -16,7 +15,6 @@ import { swapInPlace } from './swap-in-place';
  * unexpected results.
  */
 export function heapify<T>(
-
   heap: Array<T>,
   compareFn: CompareFunction<T>,
 ): void {
@@ -38,7 +36,6 @@ export function heapify<T>(
  * heap if the item was inserted.
  */
 export function heapMaybeInsert<T>(
-
   heap: Array<T>,
   compareFn: CompareFunction<T>,
   item: T,
@@ -65,7 +62,6 @@ export function heapMaybeInsert<T>(
  * swapping other items in the process.
  */
 function heapSiftDown<T>(
-
   heap: Array<T>,
   index: number,
   compareFn: CompareFunction<T>,
@@ -78,8 +74,8 @@ function heapSiftDown<T>(
 
     let swapIndex
       = compareFn(heap[currentIndex]!, heap[firstChildIndex]!) < 0
-        // Is the parent "smaller" (in regards to `compareFn`) to its child?
-        ? firstChildIndex
+        ? // Is the parent "smaller" (in regards to `compareFn`) to its child?
+        firstChildIndex
         : currentIndex;
 
     const secondChildIndex = firstChildIndex + 1;

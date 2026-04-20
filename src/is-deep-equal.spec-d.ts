@@ -33,20 +33,13 @@ it('doesn\'t accept non-overlapping types', () => {
 });
 
 it('works deeply', () => {
-  const data = [] as Array<
-    { a: Array<number> | Array<string> } | { b: Array<boolean> }
-  >;
+  const data = [] as Array<{ a: Array<number> | Array<string> } | { b: Array<boolean> }>;
   if (isDeepEqual(data, [{ a: [1] }])) {
     expectTypeOf(data).toEqualTypeOf<Array<{ a: Array<number> }>>();
   } else {
     expectTypeOf(data).toEqualTypeOf<
       Array<
-        | {
-          a: Array<number> | Array<string>;
-        }
-        | {
-          b: Array<boolean>;
-        }
+        { a: Array<number> | Array<string> } | { b: Array<boolean> }
       >
     >();
   }
@@ -65,5 +58,6 @@ it('doesn\'t narrow when comparing objects of the same type', () => {
 
 it('headless usage can infer types', () => {
   const result = differenceWith(['a', 'b', 'c'], ['a', 'c', 'd'], isDeepEqual);
+
   expectTypeOf(result).toEqualTypeOf<Array<string>>();
 });

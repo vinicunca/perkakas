@@ -15,12 +15,12 @@ import { curry } from './curry';
  * is a literal value, the output is narrowed to ensure the first items are
  * guaranteed.
  * @signature
- *   P.hasAtLeast(data, minimum)
+ *   hasAtLeast(data, minimum)
  * @example
- *   P.hasAtLeast([], 4); // => false
+ *   hasAtLeast([], 4); // => false
  *
  *   const data: number[] = [1,2,3,4];
- *   P.hasAtLeast(data, 1); // => true
+ *   hasAtLeast(data, 1); // => true
  *   data[0]; // 1, with type `number`
  * @dataFirst
  * @category Array
@@ -42,15 +42,15 @@ export function hasAtLeast(data: IterableContainer, minimum: number): boolean;
  * is a literal value, the output is narrowed to ensure the first items are
  * guaranteed.
  * @signature
- *   P.hasAtLeast(minimum)(data)
+ *   hasAtLeast(minimum)(data)
  * @example
- *   P.pipe([], P.hasAtLeast(4)); // => false
+ *   pipe([], hasAtLeast(4)); // => false
  *
  *   const data = [[1,2], [3], [4,5]];
- *   P.pipe(
+ *   pipe(
  *     data,
- *     P.filter(P.hasAtLeast(2)),
- *     P.map(([, second]) => second),
+ *     filter(hasAtLeast(2)),
+ *     map(([, second]) => second),
  *   ); // => [2,5], with type `number[]`
  * @dataLast
  * @category Array
@@ -68,9 +68,6 @@ export function hasAtLeast(...args: ReadonlyArray<unknown>): unknown {
   return curry(hasAtLeastImplementation, args);
 }
 
-function hasAtLeastImplementation(
-  data: IterableContainer,
-  minimum: number,
-): boolean {
+function hasAtLeastImplementation(data: IterableContainer, minimum: number): boolean {
   return data.length >= minimum;
 }

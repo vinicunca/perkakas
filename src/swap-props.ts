@@ -5,16 +5,16 @@ type SwappedProps<T, K1 extends keyof T, K2 extends keyof T> = {
 };
 
 /**
- * Swaps the positions of two properties in an object based on the provided keys.
+ * Swaps the values of two properties in an object based on the provided keys.
  *
  * @param data - The object to be manipulated.
  * @param key1 - The first property key.
  * @param key2 - The second property key.
  * @returns Returns the manipulated object.
  * @signature
- *   swap(data, key1, key2)
+ *   swapProps(data, key1, key2)
  * @example
- *   swap({a: 1, b: 2, c: 3}, 'a', 'b') // => {a: 2, b: 1, c: 3}
+ *   swapProps({a: 1, b: 2, c: 3}, 'a', 'b') // => {a: 2, b: 1, c: 3}
  * @dataFirst
  * @category Object
  */
@@ -25,15 +25,15 @@ export function swapProps<
 >(data: T, key1: K1, key2: K2): SwappedProps<T, K1, K2>;
 
 /**
- * Swaps the positions of two properties in an object based on the provided keys.
+ * Swaps the values of two properties in an object based on the provided keys.
  *
  * @param key1 - The first property key.
  * @param key2 - The second property key.
  * @returns Returns the manipulated object.
  * @signature
- *   swap(key1, key2)(data)
+ *   swapProps(key1, key2)(data)
  * @example
- *   swap('a', 'b')({a: 1, b: 2, c: 3}) // => {a: 2, b: 1, c: 3}
+ *   swapProps('a', 'b')({a: 1, b: 2, c: 3}) // => {a: 2, b: 1, c: 3}
  * @dataLast
  * @category Object
  */
@@ -47,17 +47,11 @@ export function swapProps(...args: ReadonlyArray<unknown>): unknown {
   return curry(swapPropsImplementation, args);
 }
 
-function swapPropsImplementation<
-  T extends object,
-  K1 extends keyof T,
-  K2 extends keyof T,
->(
+function swapPropsImplementation<T extends object>(
   obj: T,
-  key1: K1,
-  key2: K2,
-): {
-  [K in PropertyKey]: unknown;
-} {
+  key1: keyof T,
+  key2: keyof T,
+): Record<PropertyKey, unknown> {
   const { [key1]: value1, [key2]: value2 } = obj;
   return {
     ...obj,

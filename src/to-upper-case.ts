@@ -17,9 +17,9 @@ import { curry } from './curry';
  *
  * @param data - A string.
  * @signature
- *   P.toUpperCase(data);
+ *   toUpperCase(data);
  * @example
- *   P.toUpperCase("Hello World"); // "HELLO WORLD"
+ *   toUpperCase("Hello World"); // "HELLO WORLD"
  * @dataFirst
  * @category String
  */
@@ -41,9 +41,9 @@ export function toUpperCase<T extends string>(data: T): Uppercase<T>;
  * `toTitleCase`.
  *
  * @signature
- *   P.toUpperCase()(data);
+ *   toUpperCase()(data);
  * @example
- *   P.pipe("Hello World", P.toUpperCase()); // "HELLO WORLD"
+ *   pipe("Hello World", toUpperCase()); // "HELLO WORLD"
  * @dataLast
  * @category String
  */
@@ -54,6 +54,5 @@ export function toUpperCase(...args: ReadonlyArray<unknown>): unknown {
 }
 
 function toUpperCaseImplementation<T extends string>(data: T): Uppercase<T> {
-  // @ts-expect-error [ts2322] -- TypeScript can't infer this from the code...
   return data.toUpperCase();
 }

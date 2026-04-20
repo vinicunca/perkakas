@@ -1,11 +1,6 @@
-/* eslint-disable ts/consistent-type-definitions --
- * Function inference doesn't work when `unknown` is used as the parameters
- * generic type, it **has** to be `any`.
- */
-
 import type { StrictFunction } from './internal/types/strict-function';
 
-type Debouncer<F extends StrictFunction, IsNullable extends boolean = true> = {
+interface Debouncer<F extends StrictFunction, IsNullable extends boolean = true> {
   /**
    * Invoke the debounced function.
    *
@@ -42,12 +37,12 @@ type Debouncer<F extends StrictFunction, IsNullable extends boolean = true> = {
    * The last computed value of the debounced function.
    */
   readonly cachedValue: ReturnType<F> | undefined;
-};
+}
 
-type DebounceOptions = {
+interface DebounceOptions {
   readonly waitMs?: number;
   readonly maxWaitMs?: number;
-};
+}
 
 /**
  * Wraps `func` with a debouncer object that "debounces" (delays) invocations of the function during a defined cool-down period (`waitMs`). It can be configured to invoke the function either at the start of the cool-down period, the end of it, or at both ends (`timing`).
@@ -55,6 +50,8 @@ type DebounceOptions = {
  * It stores the latest call's arguments so they could be used at the end of the cool-down period when invoking `func` (if configured to invoke the function at the end of the cool-down period).
  * It stores the value returned by `func` whenever its invoked. This value is returned on every call, and is accessible via the `cachedValue` property of the debouncer. Its important to note that the value might be different from the value that would be returned from running `func` with the current arguments as it is a cached value from a previous invocation.
  * **Important**: The cool-down period defines the minimum between two invocations, and not the maximum. The period will be **extended** each time a call is made until a full cool-down period has elapsed without any additional calls.
+ *
+ *! **DEPRECATED**: This implementation of debounce is known to have issues and might not behave as expected. It should be replaced with the `funnel` utility instead.
  *
  * @param func - The function to debounce, the returned `call` function will have
  * the exact same signature.
@@ -84,7 +81,7 @@ type DebounceOptions = {
  * - `cachedValue` the latest return value of an invocation (if one occurred).
  * - `isPending` flag to check if there is an inflight cool-down window.
  * @signature
- *   P.debounce(func, options);
+ *   debounce(func, options);
  * @example
  *   const debouncer = debounce(identity(), { timing: 'trailing', waitMs: 1000 });
  *   const result1 = debouncer.call(1); // => undefined
@@ -95,6 +92,9 @@ type DebounceOptions = {
  *   debouncer.cachedValue; // => 3
  * @dataFirst
  * @category Function
+ * @deprecated This implementation of debounce is known to have issues and might
+ * not behave as expected. It should be replaced with the `funnel` utility
+ * instead.
  * @see https://css-tricks.com/debouncing-throttling-explained-examples/
  */
 export function debounce<F extends StrictFunction>(
@@ -110,7 +110,6 @@ export function debounce<F extends StrictFunction>(
 
 export function debounce<F extends StrictFunction>(
   func: F,
-
   {
     waitMs,
     timing = 'trailing',
@@ -121,7 +120,7 @@ export function debounce<F extends StrictFunction>(
 ): Debouncer<F> {
   if (maxWaitMs !== undefined && waitMs !== undefined && maxWaitMs < waitMs) {
     throw new Error(
-      `debounce: maxWaitMs (${maxWaitMs}) cannot be less than waitMs (${waitMs})`,
+      `debounce: maxWaitMs (${maxWaitMs.toString()}) cannot be less than waitMs (${waitMs.toString()})`,
     );
   }
 
@@ -144,7 +143,7 @@ export function debounce<F extends StrictFunction>(
   // will return this cached value.
   let result: ReturnType<F> | undefined;
 
-  function handleInvoke(): void {
+  const handleInvoke = (): void => {
     if (maxWaitTimeoutId !== undefined) {
       // We are invoking the function so the wait is over...
       const timeoutId = maxWaitTimeoutId;
@@ -152,10 +151,12 @@ export function debounce<F extends StrictFunction>(
       clearTimeout(timeoutId);
     }
 
-    /* v8 ignore next 7 -- This protects us against changes to the logic, there is no known flow we can simulate to reach this condition. It can only happen if a previous timeout isn't cleared (or faces a race condition clearing). */
+    /* v8 ignore if -- This protects us against changes to the logic, there is no known flow we can simulate to reach this condition. It can only happen if a previous timeout isn't cleared (or faces a race condition clearing). @preserve */
     if (latestCallArgs === undefined) {
+      // If you see this error pop up when using this function please report
+      // it on the github page!
       throw new Error(
-        'PERKAKAS[debounce]: latestCallArgs was unexpectedly undefined.',
+        'Perkakas[debounce]: latestCallArgs was unexpectedly undefined.',
       );
     }
 
@@ -172,7 +173,7 @@ export function debounce<F extends StrictFunction>(
     result = func(...args);
   };
 
-  function handleCoolDownEnd(): void {
+  const handleCoolDownEnd = (): void => {
     if (coolDownTimeoutId === undefined) {
       // It's rare to get here, it should only happen when `flush` is called
       // when the cool-down window isn't active.
@@ -192,7 +193,7 @@ export function debounce<F extends StrictFunction>(
     }
   };
 
-  function handleDebouncedCall(args: Parameters<F>): void {
+  const handleDebouncedCall = (args: Parameters<F>): void => {
     // We save the latest call args so that (if and) when we invoke the function
     // in the future, we have args to invoke it with.
     latestCallArgs = args;
@@ -215,9 +216,9 @@ export function debounce<F extends StrictFunction>(
         } else {
           // Otherwise for "leading" and "both" the first call is actually
           // called directly and not via a timeout.
-          // @ts-expect-error [ts2345, ts2322] -- TypeScript infers the generic sub-
-          // types too eagerly, making itself blind to the fact that the types match
-          // here.
+          // @ts-expect-error [ts2345, ts2322] -- TypeScript infers the generic
+          // sub-types too eagerly, making itself blind to the fact that the
+          // types match here.
           result = func(...args);
         }
       } else {

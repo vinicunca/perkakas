@@ -24,21 +24,21 @@ describe('data-first', () => {
   it.each([Number.NaN, Number.POSITIVE_INFINITY])(
     'should throw for %d precision',
     (val) => {
-      expect(() => round(1, val)).toThrowError(
+      expect(() => round(1, val)).toThrow(
         `precision must be an integer: ${val}`,
       );
     },
   );
 
   it('should throw for non integer precision', () => {
-    expect(() => round(1, 21.37)).toThrowError(
+    expect(() => round(1, 21.37)).toThrow(
       'precision must be an integer: 21.37',
     );
   });
 
   it('should throw for precision higher than 15 and lower than -15', () => {
-    expect(() => round(1, 16)).toThrowError('precision must be between -15 and 15');
-    expect(() => round(1, -16)).toThrowError('precision must be between -15 and 15');
+    expect(() => round(1, 16)).toThrow('precision must be between -15 and 15');
+    expect(() => round(1, -16)).toThrow('precision must be between -15 and 15');
   });
 
   it.each([Number.NaN, Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY])(
@@ -70,21 +70,21 @@ describe('data-last', () => {
   it.each([Number.NaN, Number.POSITIVE_INFINITY])(
     'should throw for %d precision',
     (val) => {
-      expect(() => round(val)(1)).toThrowError(
+      expect(() => round(val)(1)).toThrow(
         `precision must be an integer: ${val}`,
       );
     },
   );
 
   it('should throw for non integer precision', () => {
-    expect(() => round(21.37)(1)).toThrowError(
+    expect(() => round(21.37)(1)).toThrow(
       'precision must be an integer: 21.37',
     );
   });
 
   it('should throw for precision higher than 15 and lower than -15', () => {
-    expect(() => round(16)(1)).toThrowError('precision must be between -15 and 15');
-    expect(() => round(-16)(1)).toThrowError('precision must be between -15 and 15');
+    expect(() => round(16)(1)).toThrow('precision must be between -15 and 15');
+    expect(() => round(-16)(1)).toThrow('precision must be between -15 and 15');
   });
 
   it.each([Number.NaN, Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY])(
@@ -95,4 +95,9 @@ describe('data-last', () => {
       }
     },
   );
+});
+
+it('inconsistencies due to IEEE 754 double-precision floating-point inaccuracies', () => {
+  expect(round(2.345, 2)).toBe(2.35);
+  expect(round(2.135, 2)).toBe(2.14);
 });

@@ -3,7 +3,7 @@ import { describe, expectTypeOf, it } from 'vitest';
 import { groupBy } from './group-by';
 import { prop } from './prop';
 
-it('Union of string literals', () => {
+it('union of string literals', () => {
   const data = groupBy(
     [
       { a: 'cat', b: 123 },
@@ -25,7 +25,7 @@ it('Union of string literals', () => {
   >();
 });
 
-it('Union of number literals', () => {
+it('union of number literals', () => {
   const data = groupBy(
     [
       { a: 'cat', b: 123 },
@@ -33,6 +33,7 @@ it('Union of number literals', () => {
     ] as const,
     prop('b'),
   );
+
   expectTypeOf(data).toEqualTypeOf<
     Partial<
       Record<
@@ -54,6 +55,7 @@ it('string', () => {
     ] as const,
     (x): string => x.a,
   );
+
   expectTypeOf(data).toEqualTypeOf<
     Record<
       string,
@@ -73,6 +75,7 @@ it('number', () => {
     ] as const,
     (x): number => x.b,
   );
+
   expectTypeOf(data).toEqualTypeOf<
     Record<
       number,
@@ -92,6 +95,7 @@ it('string | number', () => {
     ] as const,
     (x): number | string => x.b,
   );
+
   expectTypeOf(data).toEqualTypeOf<
     Record<
       number | string,
@@ -103,10 +107,11 @@ it('string | number', () => {
   >();
 });
 
-describe('Filtering on undefined grouper result', () => {
+describe('filtering on undefined grouper result', () => {
   it('regular', () => {
     const { even, ...rest } = groupBy([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], (x) =>
       x % 2 === 0 ? 'even' : undefined);
+
     expectTypeOf(rest).toEqualTypeOf({} as const);
   });
 
@@ -115,6 +120,7 @@ describe('Filtering on undefined grouper result', () => {
       ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'],
       (_, index) => (index % 2 === 0 ? 'even' : undefined),
     );
+
     expectTypeOf(rest).toEqualTypeOf({} as const);
   });
 });

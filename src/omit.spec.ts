@@ -23,12 +23,14 @@ it('dataLast', () => {
 
 it('can omit symbol keys', () => {
   const mySymbol = Symbol('mySymbol');
+
   expect(omit({ [mySymbol]: 3 }, [mySymbol])).toStrictEqual({});
 });
 
 it('shallow clone the array when there\'s nothing to omit', () => {
   const obj = { a: 1, b: 2, c: 3, d: 4 };
   const result = omit(obj, []);
+
   expect(result).toStrictEqual(obj);
   expect(result).not.toBe(obj);
 });

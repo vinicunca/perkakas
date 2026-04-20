@@ -6,10 +6,10 @@ import { curry } from './curry';
  * @param value - The number.
  * @param addend - The number to add to the value.
  * @signature
- *    P.add(value, addend);
+ *    add(value, addend);
  * @example
- *    P.add(10, 5) // => 15
- *    P.add(10, -5) // => 5
+ *    add(10, 5) // => 15
+ *    add(10, -5) // => 5
  * @dataFirst
  * @category Number
  */
@@ -21,11 +21,11 @@ export function add(value: number, addend: number): number;
  *
  * @param addend - The number to add to the value.
  * @signature
- *    P.add(addend)(value);
+ *    add(addend)(value);
  * @example
- *    P.add(5)(10) // => 15
- *    P.add(-5)(10) // => 5
- *    P.map([1, 2, 3, 4], P.add(1)) // => [2, 3, 4, 5]
+ *    add(5)(10) // => 15
+ *    add(-5)(10) // => 5
+ *    map([1, 2, 3, 4], add(1)) // => [2, 3, 4, 5]
  * @dataLast
  * @category Number
  */
@@ -36,6 +36,8 @@ export function add(...args: ReadonlyArray<unknown>): unknown {
   return curry(addImplementation, args);
 }
 
+// The implementation only uses `number` types, but that's just because it's
+// hard to tell typescript that both value and addend would be of the same type.
 function addImplementation(value: number, addend: number): number {
   return value + addend;
 }

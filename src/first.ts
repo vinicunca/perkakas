@@ -17,10 +17,10 @@ type First<T extends IterableContainer> = T extends []
  * @param data - The array.
  * @returns The first element of the array.
  * @signature
- *    P.first(array)
+ *    first(array)
  * @example
- *    P.first([1, 2, 3]) // => 1
- *    P.first([]) // => undefined
+ *    first([1, 2, 3]) // => 1
+ *    first([]) // => undefined
  * @dataFirst
  * @lazy
  * @category Array
@@ -32,12 +32,12 @@ export function first<T extends IterableContainer>(data: T): First<T>;
  *
  * @returns The first element of the array.
  * @signature
- *    P.first()(array)
+ *    first()(array)
  * @example
- *    P.pipe(
+ *    pipe(
  *      [1, 2, 4, 8, 16],
- *      P.filter(x => x > 3),
- *      P.first(),
+ *      filter(x => x > 3),
+ *      first(),
  *      x => x + 1
  *    ); // => 5
  * @dataLast
@@ -50,15 +50,10 @@ export function first(...args: ReadonlyArray<unknown>): unknown {
   return curry(firstImplementation, args, toSingle(lazyImplementation));
 }
 
-function firstImplementation<T>([item]: ReadonlyArray<T>): T | undefined {
-  return item;
-}
+const firstImplementation = <T>([item]: ReadonlyArray<T>): T | undefined => item;
 
-function lazyImplementation(): LazyEvaluator {
-  return firstLazy;
-}
+const lazyImplementation = (): LazyEvaluator => firstLazy;
 
-// eslint-disable-next-line ts/explicit-function-return-type
 function firstLazy<T>(value: T) {
   return ({ hasNext: true, next: value, done: true }) as const;
 }

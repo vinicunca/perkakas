@@ -2,6 +2,7 @@ import type { AllTypesDataProviderTypes, TestClass, TypedArray } from '../test/t
 import { expectTypeOf, it } from 'vitest';
 import {
   ALL_TYPES_DATA_PROVIDER,
+
   TYPES_DATA_PROVIDER,
 } from '../test/types-data-provider';
 import { isObjectType } from './is-object-type';
@@ -42,21 +43,20 @@ it('should work even if data type is unknown', () => {
 
 it('should work as type guard in filter', () => {
   const data = ALL_TYPES_DATA_PROVIDER.filter(isObjectType);
+
   expectTypeOf(data).toEqualTypeOf<
-    Array<
-      | Array<number>
-      | Date
-      | Error
-      | Map<string, string>
-      | Promise<number>
-      | RegExp
-      | Set<string>
-      | TestClass
-      | TypedArray
-      | (() => void)
-      | { readonly a: 'asd' }
-      | [number, number, number]
-    >
+    Array<Array<number>
+    | Date
+    | Error
+    | Map<string, string>
+    | Promise<number>
+    | RegExp
+    | Set<string>
+    | TestClass
+    | TypedArray
+    | (() => void)
+    | { readonly a: 'asd' }
+    | [number, number, number]>
   >();
 });
 

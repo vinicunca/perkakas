@@ -72,14 +72,11 @@ it('works with literal unions', () => {
 
 it('could be \'disabled\' with large literals', () => {
   const result = times(10_000, identity());
+
   // The result is a tuple of our max length supported for a literal, with an
   // array tail for the rest of the items...
-
   expectTypeOf(result).toExtend<Array<number>>();
-
   expectTypeOf(result[0]).toEqualTypeOf<number>();
-
   expectTypeOf(result[45]).toEqualTypeOf<number>();
-
   expectTypeOf(result[56]).toEqualTypeOf<number | undefined>();
 });

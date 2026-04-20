@@ -1,71 +1,111 @@
-import { describe, expect, test } from 'vitest';
+import { describe, expectTypeOf, it } from 'vitest';
 import { pipe } from './pipe';
 import { uncapitalize } from './uncapitalize';
 
 describe('data-first', () => {
-  test('empty string', () => {
-    expect(uncapitalize('')).toBe('');
+  it('on lower case', () => {
+    const result = uncapitalize('hello world');
+
+    expectTypeOf(result).toEqualTypeOf<'hello world'>();
   });
 
-  test('on lower case', () => {
-    expect(uncapitalize('hello world')).toBe('hello world');
+  it('on upper case', () => {
+    const result = uncapitalize('HELLO WORLD');
+
+    expectTypeOf(result).toEqualTypeOf<'hELLO WORLD'>();
   });
 
-  test('on upper case', () => {
-    expect(uncapitalize('HELLO WORLD')).toBe('hELLO WORLD');
+  it('on mixed case', () => {
+    const result = uncapitalize('HeLlO WoRlD');
+
+    expectTypeOf(result).toEqualTypeOf<'heLlO WoRlD'>();
   });
 
-  test('on mixed case', () => {
-    expect(uncapitalize('HeLlO WoRlD')).toBe('heLlO WoRlD');
+  it('on empty string', () => {
+    const result = uncapitalize('');
+
+    expectTypeOf(result).toEqualTypeOf<''>();
+  });
+
+  it('on non-literal string', () => {
+    const result = uncapitalize('hello world' as string);
+
+    expectTypeOf(result).toEqualTypeOf<Uncapitalize<string>>();
+  });
+
+  it('on template literal type', () => {
+    const result = uncapitalize('PREFIX_123' as `PREFIX_${number}`);
+
+    expectTypeOf(result).toEqualTypeOf<`pREFIX_${number}`>();
   });
 });
 
 describe('data-last', () => {
-  test('empty string', () => {
-    expect(pipe('', uncapitalize())).toBe('');
+  it('on lower case', () => {
+    const result = pipe('hello world' as const, uncapitalize());
+
+    expectTypeOf(result).toEqualTypeOf<'hello world'>();
   });
 
-  test('on lower case', () => {
-    expect(pipe('hello world', uncapitalize())).toBe('hello world');
+  it('on upper case', () => {
+    const result = pipe('HELLO WORLD' as const, uncapitalize());
+
+    expectTypeOf(result).toEqualTypeOf<'hELLO WORLD'>();
   });
 
-  test('on upper case', () => {
-    expect(pipe('HELLO WORLD', uncapitalize())).toBe('hELLO WORLD');
+  it('on mixed case', () => {
+    const result = pipe('HeLlO WoRlD' as const, uncapitalize());
+
+    expectTypeOf(result).toEqualTypeOf<'heLlO WoRlD'>();
   });
 
-  test('on mixed case', () => {
-    expect(pipe('HeLlO WoRlD', uncapitalize())).toBe('heLlO WoRlD');
+  it('on empty string', () => {
+    const result = pipe('' as const, uncapitalize());
+
+    expectTypeOf(result).toEqualTypeOf<''>();
+  });
+
+  it('on non-literal string', () => {
+    const result = pipe('hello world' as string, uncapitalize());
+
+    expectTypeOf(result).toEqualTypeOf<Uncapitalize<string>>();
+  });
+
+  it('on template literal type', () => {
+    const result = pipe('PREFIX_123' as `PREFIX_${number}`, uncapitalize());
+
+    expectTypeOf(result).toEqualTypeOf<`pREFIX_${number}`>();
   });
 });
 
 describe('unicode', () => {
-  test('maintains diacritics in rest of word', () => {
-    expect(uncapitalize('Café Naïve')).toBe('café Naïve');
-    expect(uncapitalize('CAFÉ NAÏVE')).toBe('cAFÉ NAÏVE');
+  it('maintains diacritics in rest of word', () => {
+    expectTypeOf(uncapitalize('Café Naïve')).toEqualTypeOf<'café Naïve'>();
+    expectTypeOf(uncapitalize('CAFÉ NAÏVE')).toEqualTypeOf<'cAFÉ NAÏVE'>();
   });
 
-  test('handles non-Latin scripts', () => {
-    expect(uncapitalize('Москва')).toBe('москва');
-    expect(uncapitalize('Ελλάδα')).toBe('ελλάδα');
+  it('handles non-Latin scripts', () => {
+    expectTypeOf(uncapitalize('Москва')).toEqualTypeOf<'москва'>();
+    expectTypeOf(uncapitalize('Ελλάδα')).toEqualTypeOf<'ελλάδα'>();
   });
 
-  test('handles surrogate pairs (astral plane)', () => {
-    expect(uncapitalize('𝒽Ello World')).toBe('𝒽Ello World');
+  it('handles surrogate pairs (astral plane)', () => {
+    expectTypeOf(uncapitalize('𝒽Ello World')).toEqualTypeOf<'𝒽Ello World'>();
   });
 
-  test('doesn\'t explode on emojis', () => {
-    expect(uncapitalize('🎉Party Time')).toBe('🎉Party Time');
+  it('doesn\'t explode on emojis', () => {
+    expectTypeOf(uncapitalize('🎉Party Time')).toEqualTypeOf<'🎉Party Time'>();
   });
 
-  test('handles combining characters', () => {
-    expect(uncapitalize('É\u0301llo')).toBe('é\u0301llo');
+  it('handles combining characters', () => {
+    expectTypeOf(uncapitalize('É\u0301llo')).toEqualTypeOf<'é\u0301llo'>();
   });
 
-  test('single surrogate pair', () => {
-    expect(uncapitalize('𝒽')).toBe('𝒽');
+  it('single surrogate pair', () => {
+    expectTypeOf(uncapitalize('𝒽')).toEqualTypeOf<'𝒽'>();
   });
 
-  test('single accented character', () => {
-    expect(uncapitalize('É')).toBe('é');
+  it('single accented character', () => {
+    expectTypeOf(uncapitalize('É')).toEqualTypeOf<'é'>();
   });
 });

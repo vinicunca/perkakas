@@ -5,11 +5,11 @@
  * @param data - The variable to check.
  * @returns True if the passed input is defined, false otherwise.
  * @signature
- *    P.isNonNull(data)
+ *    isNonNull(data)
  * @example
- *    P.isNonNull('string') //=> true
- *    P.isNonNull(null) //=> false
- *    P.isNonNull(undefined) //=> true
+ *    isNonNull('string') //=> true
+ *    isNonNull(null) //=> false
+ *    isNonNull(undefined) //=> true
  * @category Guard
  */
 export function isNonNull<T>(data: T | null): data is T {

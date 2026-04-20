@@ -1,6 +1,5 @@
 import type { EnumerableStringKeyOf } from './internal/types/enumerable-string-key-of';
 import type { IterableContainer } from './internal/types/iterable-container';
-
 import type { ToString } from './internal/types/to-string';
 import { curry } from './curry';
 
@@ -11,12 +10,12 @@ type Keys<T> = T extends IterableContainer ? ArrayKeys<T> : ObjectKeys<T>;
 // would maintain the shape, even including labels.
 type ArrayKeys<T extends IterableContainer> = {
   -readonly [Index in keyof T]: Index extends number | string
-    // Notice that we coalesce the values as strings, this is because in JS,
-    // Object.keys always returns strings, even for arrays.
-    ? ToString<IsIndexAfterSpread<T, Index> extends true ? number : Index>
-    // Index is typed as a symbol, this can't happen, but we need to guard
-    // against it for typescript.
-    : never;
+    ? // Notice that we coalesce the values as strings, this is because in JS,
+  // Object.keys always returns strings, even for arrays.
+    ToString<IsIndexAfterSpread<T, Index> extends true ? number : Index>
+    : // Index is typed as a symbol, this can't happen, but we need to guard
+  // against it for typescript.
+    never;
 };
 
 type IsIndexAfterSpread<
@@ -44,7 +43,8 @@ type IndicesAfterSpread<
   : T extends readonly [unknown, ...infer Tail]
     ? IndicesAfterSpread<Tail, [unknown, ...Iterations]>
     : T extends readonly [...infer Head, unknown]
-      ? | IndicesAfterSpread<Head, [unknown, ...Iterations]>
+      ?
+      | IndicesAfterSpread<Head, [unknown, ...Iterations]>
       | Iterations['length']
       : Iterations['length'];
 
@@ -56,10 +56,10 @@ type ObjectKeys<T>
  *
  * @param data - Either an array or an object.
  * @signature
- *    P.keys(source)
+ *    keys(source)
  * @example
- *    P.keys(['x', 'y', 'z']); // => ['0', '1', '2']
- *    P.keys({ a: 'x', b: 'y', 5: 'z' }); // => ['a', 'b', '5']
+ *    keys(['x', 'y', 'z']); // => ['0', '1', '2']
+ *    keys({ a: 'x', b: 'y', 5: 'z' }); // => ['a', 'b', '5']
  * @dataFirst
  * @category Object
  */
@@ -69,10 +69,10 @@ export function keys<T extends object>(data: T): Keys<T>;
  * Returns a new array containing the keys of the array or object.
  *
  * @signature
- *    P.keys()(source)
+ *    keys()(source)
  * @example
- *    P.Pipe(['x', 'y', 'z'], keys()); // => ['0', '1', '2']
- *    P.pipe({ a: 'x', b: 'y', 5: 'z' } as const, P.keys()) // => ['a', 'b', '5']
+ *    pipe(['x', 'y', 'z'], keys()); // => ['0', '1', '2']
+ *    pipe({ a: 'x', b: 'y', 5: 'z' } as const, keys()) // => ['a', 'b', '5']
  * @dataLast
  * @category Object
  */

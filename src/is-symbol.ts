@@ -6,12 +6,12 @@ import type { NarrowedTo } from './internal/types/narrowed-to';
  * @param data - The variable to check.
  * @returns True if the passed input is a symbol, false otherwise.
  * @signature
- *    P.isSymbol(data)
+ *    isSymbol(data)
  * @example
- *    P.isSymbol(Symbol('foo')) //=> true
- *    P.isSymbol(1) //=> false
+ *    isSymbol(Symbol('foo')) //=> true
+ *    isSymbol(1) //=> false
  * @category Guard
  */
-export function isSymbol<T>(data: symbol | T): data is NarrowedTo<T, symbol> {
+export function isSymbol<T>(data: T | symbol): data is NarrowedTo<T, symbol> {
   return typeof data === 'symbol';
 }

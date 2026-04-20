@@ -17,9 +17,9 @@ type MappedValues<T extends object, Value> = Simplify<{
  * @param data - The object to map.
  * @param valueMapper - The mapping function.
  * @signature
- *    P.mapValues(data, mapper)
+ *    mapValues(data, mapper)
  * @example
- *    P.mapValues({a: 1, b: 2}, (value, key) => value + key) // => {a: '1a', b: '2b'}
+ *    mapValues({a: 1, b: 2}, (value, key) => value + key) // => {a: '1a', b: '2b'}
  * @dataFirst
  * @category Object
  */
@@ -41,9 +41,9 @@ export function mapValues<T extends object, Value>(
  *
  * @param valueMapper - The mapping function.
  * @signature
- *    P.mapValues(mapper)(data)
+ *    mapValues(mapper)(data)
  * @example
- *    P.pipe({a: 1, b: 2}, P.mapValues((value, key) => value + key)) // => {a: '1a', b: '2b'}
+ *    pipe({a: 1, b: 2}, mapValues((value, key) => value + key)) // => {a: '1a', b: '2b'}
  * @dataLast
  * @category Object
  */

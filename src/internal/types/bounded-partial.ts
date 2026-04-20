@@ -9,4 +9,5 @@ import type { IsBoundedRecord } from './is-bounded-record';
  *    BoundedPartial<{ a: number }>; //=> { a?: number }
  *    BoundedPartial<Record<string, number>>; //=> Record<string, number>
  */
-export type BoundedPartial<T> = IsBoundedRecord<T> extends true ? Partial<T> : T;
+export type BoundedPartial<T>
+  = IsBoundedRecord<T> extends true ? Partial<T> : T;

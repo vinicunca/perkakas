@@ -140,7 +140,7 @@ describe('data-first', () => {
     const obj = {} as { a?: string; b?: number };
 
     if (hasSubObject(obj, {})) {
-      expectTypeOf(obj).toExtend<{ a?: string; b?: number }>();
+      expectTypeOf(obj).toMatchObjectType<{ a?: string; b?: number }>();
     } else {
       expectTypeOf(obj).toEqualTypeOf<{ a?: string; b?: number }>();
     }
@@ -150,7 +150,7 @@ describe('data-first', () => {
     const obj = {} as { a?: string; b?: number };
 
     if (hasSubObject(obj, obj)) {
-      expectTypeOf(obj).toExtend<{ a?: string; b?: number }>();
+      expectTypeOf(obj).toMatchObjectType<{ a?: string; b?: number }>();
     } else {
       expectTypeOf(obj).toEqualTypeOf<{ a?: string; b?: number }>();
     }
@@ -160,7 +160,7 @@ describe('data-first', () => {
     const obj = {} as { a?: string; b?: number };
 
     if (hasSubObject(obj, { a: 'a' })) {
-      expectTypeOf(obj).toExtend<{ a: string; b?: number }>();
+      expectTypeOf(obj).toMatchObjectType<{ a: string; b?: number }>();
     } else {
       expectTypeOf(obj).toEqualTypeOf<{ a?: string; b?: number }>();
     }
@@ -170,7 +170,7 @@ describe('data-first', () => {
     const obj = {} as { a?: string; b?: number };
 
     if (hasSubObject(obj, { a: 'a' } as const)) {
-      expectTypeOf(obj).toExtend<{ a: 'a'; b?: number }>();
+      expectTypeOf(obj).toMatchObjectType<{ a: 'a'; b?: number }>();
     } else {
       expectTypeOf(obj).toEqualTypeOf<{ a?: string; b?: number }>();
     }
@@ -180,7 +180,7 @@ describe('data-first', () => {
     const obj: { a?: string; b?: number; c?: boolean } = {};
 
     if (hasSubObject(obj, { c: true as boolean | number })) {
-      expectTypeOf(obj).toExtend<{
+      expectTypeOf(obj).toMatchObjectType<{
         a?: string;
         b?: number;
         c: boolean;
@@ -198,7 +198,7 @@ describe('data-first', () => {
     const obj: { a?: string; b?: number; c?: number | string } = {};
 
     if (hasSubObject(obj, { c: true } as { c?: boolean | number })) {
-      expectTypeOf(obj).toExtend<{
+      expectTypeOf(obj).toMatchObjectType<{
         a?: string;
         b?: number;
         c?: number;
@@ -224,7 +224,7 @@ describe('data-first', () => {
         b: { foo: 'test', bar: true as boolean | number },
       })
     ) {
-      expectTypeOf(obj).toExtend<{
+      expectTypeOf(obj).toMatchObjectType<{
         a: { foo: string; bar: boolean };
         b: { foo: string; bar: boolean };
       }>();
@@ -248,7 +248,7 @@ describe('data-first', () => {
         b: { foo: 'test', bar: true },
       })
     ) {
-      expectTypeOf(obj).toExtend<{
+      expectTypeOf(obj).toMatchObjectType<{
         a: { foo: number; bar: boolean };
         b: { foo: string; bar: boolean };
       }>();
@@ -454,7 +454,7 @@ describe('data-last', () => {
     const obj = {} as { a?: string; b?: number };
 
     if (hasSubObject({})(obj)) {
-      expectTypeOf(obj).toExtend<{ a?: string; b?: number }>();
+      expectTypeOf(obj).toMatchObjectType<{ a?: string; b?: number }>();
     } else {
       expectTypeOf(obj).toEqualTypeOf<{ a?: string; b?: number }>();
     }
@@ -464,7 +464,7 @@ describe('data-last', () => {
     const obj = {} as { a?: string; b?: number };
 
     if (hasSubObject(obj)(obj)) {
-      expectTypeOf(obj).toExtend<{ a?: string; b?: number }>();
+      expectTypeOf(obj).toMatchObjectType<{ a?: string; b?: number }>();
     } else {
       expectTypeOf(obj).toEqualTypeOf<{ a?: string; b?: number }>();
     }
@@ -474,7 +474,7 @@ describe('data-last', () => {
     const obj = {} as { a?: string; b?: number };
 
     if (hasSubObject({ a: 'a' })(obj)) {
-      expectTypeOf(obj).toExtend<{ a: string; b?: number }>();
+      expectTypeOf(obj).toMatchObjectType<{ a: string; b?: number }>();
     } else {
       expectTypeOf(obj).toEqualTypeOf<{ a?: string; b?: number }>();
     }
@@ -484,7 +484,7 @@ describe('data-last', () => {
     const obj = {} as { a?: string; b?: number };
 
     if (hasSubObject({ a: 'a' } as const)(obj)) {
-      expectTypeOf(obj).toExtend<{ a: 'a'; b?: number }>();
+      expectTypeOf(obj).toMatchObjectType<{ a: 'a'; b?: number }>();
     } else {
       expectTypeOf(obj).toEqualTypeOf<{ a?: string; b?: number }>();
     }
@@ -494,7 +494,7 @@ describe('data-last', () => {
     const obj: { a?: string; b?: number; c?: boolean } = {};
 
     if (hasSubObject({ c: true as boolean | number })(obj)) {
-      expectTypeOf(obj).toExtend<{
+      expectTypeOf(obj).toMatchObjectType<{
         a?: string;
         b?: number;
         c: boolean;
@@ -512,7 +512,7 @@ describe('data-last', () => {
     const obj: { a?: string; b?: number; c?: number | string } = {};
 
     if (hasSubObject({ c: true } as { c?: boolean | number })(obj)) {
-      expectTypeOf(obj).toExtend<{
+      expectTypeOf(obj).toMatchObjectType<{
         a?: string;
         b?: number;
         c?: number;
@@ -538,7 +538,7 @@ describe('data-last', () => {
         b: { foo: 'test', bar: true as boolean | number },
       })(obj)
     ) {
-      expectTypeOf(obj).toExtend<{
+      expectTypeOf(obj).toMatchObjectType<{
         a: { foo: string; bar: boolean };
         b: { foo: string; bar: boolean };
       }>();
@@ -562,7 +562,7 @@ describe('data-last', () => {
         b: { foo: 'test', bar: true },
       })(obj)
     ) {
-      expectTypeOf(obj).toExtend<{
+      expectTypeOf(obj).toMatchObjectType<{
         a: { foo: number; bar: boolean };
         b: { foo: string; bar: boolean };
       }>();

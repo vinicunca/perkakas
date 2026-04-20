@@ -1,18 +1,20 @@
-import { describe, expectTypeOf, test } from 'vitest';
+import { describe, expectTypeOf, it } from 'vitest';
 import { map } from './map';
 import { pipe } from './pipe';
 import { prop } from './prop';
 import { sortBy } from './sort-by';
 import { stringToPath } from './string-to-path';
 
+declare const SYMBOL: unique symbol;
+
 describe('data-last', () => {
-  test('inferred directly', () => {
+  it('inferred directly', () => {
     expectTypeOf(sortBy([{ a: 1 }] as const, prop('a'))).toEqualTypeOf<
       [{ readonly a: 1 }]
     >();
   });
 
-  test('inferred indirectly', () => {
+  it('inferred indirectly', () => {
     expectTypeOf(pipe([{ a: 1 }] as const, sortBy(prop('a')))).toEqualTypeOf<
       [{ readonly a: 1 }]
     >();
@@ -20,17 +22,15 @@ describe('data-last', () => {
 });
 
 describe('tuples', () => {
-  test('fixed tuple', () => {
+  it('fixed tuple', () => {
     expectTypeOf(prop([1, 2, 3] as const, 0)).toEqualTypeOf<1>();
   });
 
-  test('simple array', () => {
-    expectTypeOf(prop([] as Array<'cat'>, 3)).toEqualTypeOf<
-      'cat' | undefined
-    >();
+  it('simple array', () => {
+    expectTypeOf(prop([] as Array<'cat'>, 3)).toEqualTypeOf<'cat' | undefined>();
   });
 
-  test('prefix array', () => {
+  it('prefix array', () => {
     expectTypeOf(prop([1] as [number, ...Array<string>], 10)).toEqualTypeOf<
       string | undefined
     >();
@@ -38,23 +38,23 @@ describe('tuples', () => {
 });
 
 describe('unions', () => {
-  test('shared prop name', () => {
+  it('shared prop name', () => {
     expectTypeOf(prop({} as { a: 1 } | { a: 2 }, 'a')).toEqualTypeOf<1 | 2>();
   });
 
-  test('disjoint prop name', () => {
+  it('disjoint prop name', () => {
     expectTypeOf(prop({} as { a: 1 } | { b: 2 }, 'a')).toEqualTypeOf<
       1 | undefined
     >();
   });
 
-  test('union of keys', () => {
+  it('union of keys', () => {
     expectTypeOf(
       prop({ a: 'hello', b: 'world' } as const, 'a' as 'a' | 'b'),
     ).toEqualTypeOf<'hello' | 'world'>();
   });
 
-  test('union with shared and disjoin keys', () => {
+  it('union with shared and disjoin keys', () => {
     expectTypeOf(
       prop(
         {} as { a: 'hello'; b: 'world' } | { a: 'hello'; c: 'foo' },
@@ -63,35 +63,35 @@ describe('unions', () => {
     ).toEqualTypeOf<'hello' | 'world' | undefined>();
   });
 
-  test('detects typos in union of objects', () => {
+  it('detects typos in union of objects', () => {
     // @ts-expect-error [ts2345] -- 'c' is not a key of the union type
     prop({} as { a: 1 } | { b: 2 }, 'c');
   });
 
-  test('detects typos in unions of keys', () => {
+  it('detects typos in unions of keys', () => {
     // @ts-expect-error [ts2345] -- 'c' is not a key of the union type
     prop({ a: 'hello', b: 'world' } as const, 'a' as 'a' | 'c');
   });
 
-  test('union of arrays', () => {
+  it('union of arrays', () => {
     expectTypeOf(prop([] as Array<string> | Array<number>, 10)).toEqualTypeOf<
       string | number | undefined
     >();
   });
 
-  test('arrays of unions', () => {
+  it('arrays of unions', () => {
     expectTypeOf(prop([] as Array<'cat' | 'dog'>, 100)).toEqualTypeOf<
       'cat' | 'dog' | undefined
     >();
   });
 
-  test('union of tuples', () => {
+  it('union of tuples', () => {
     expectTypeOf(
       prop([1, 'foo'] as [number, string] | [string, boolean], 1),
     ).toEqualTypeOf<string | boolean>();
   });
 
-  test('union of array and object', () => {
+  it('union of array and object', () => {
     const data = { a: 1 } as { a: 1 } | ReadonlyArray<'cat'>;
 
     expectTypeOf(prop(data, 'a')).toEqualTypeOf<1 | undefined>();
@@ -103,13 +103,13 @@ describe('unions', () => {
 });
 
 describe('as a factory function', () => {
-  test('direct usage', () => {
+  it('direct usage', () => {
     const propA = prop('a');
 
     expectTypeOf(propA({ a: 1 } as const)).toEqualTypeOf<1>();
   });
 
-  test('indirect usage as a callback', () => {
+  it('indirect usage as a callback', () => {
     const propA = prop('a');
 
     expectTypeOf(map([{ a: 1 }, { a: 2 }] as const, propA)).toEqualTypeOf<
@@ -117,7 +117,7 @@ describe('as a factory function', () => {
     >();
   });
 
-  test('detects typos', () => {
+  it('detects typos', () => {
     const propB = prop('b');
 
     // @ts-expect-error [ts2353] -- b is not a key of typeof item
@@ -130,7 +130,7 @@ describe('deep prop', () => {
     a: { b: { c: { d: { e: { f: { g: { h: { i: { j: 10 } } } } } } } } };
   };
 
-  test('data-first', () => {
+  it('data-first', () => {
     expectTypeOf(prop(DATA, 'a')).toEqualTypeOf<{
       b: { c: { d: { e: { f: { g: { h: { i: { j: 10 } } } } } } } };
     }>();
@@ -165,7 +165,7 @@ describe('deep prop', () => {
     ).toEqualTypeOf<10>();
   });
 
-  test('data-last', () => {
+  it('data-last', () => {
     expectTypeOf(pipe(DATA, prop('a'))).toEqualTypeOf<{
       b: { c: { d: { e: { f: { g: { h: { i: { j: 10 } } } } } } } };
     }>();
@@ -202,25 +202,21 @@ describe('deep prop', () => {
     ).toEqualTypeOf<10>();
   });
 
-  test('detects typos', () => {
+  it('detects typos', () => {
     // @ts-expect-error [ts2769] -- "cc" is not a key of DATA.a.b
     prop(DATA, 'a', 'b', 'cc', 'd', 'e');
   });
 
-  test('multi-dimensional arrays', () => {
+  it('multi-dimensional arrays', () => {
     const data = [[[[]]]] as Array<Array<Array<Array<'cat'>>>>;
 
-    expectTypeOf(prop(data, 10)).toExtend<
-      Array<Array<Array<'cat'>>> | undefined
-    >();
-    expectTypeOf(prop(data, 10, 20)).toExtend<
-      Array<Array<'cat'>> | undefined
-    >();
+    expectTypeOf(prop(data, 10)).toExtend<Array<Array<Array<'cat'>>> | undefined>();
+    expectTypeOf(prop(data, 10, 20)).toExtend<Array<Array<'cat'>> | undefined>();
     expectTypeOf(prop(data, 10, 20, 30)).toExtend<Array<'cat'> | undefined>();
     expectTypeOf(prop(data, 10, 20, 30, 40)).toExtend<'cat' | undefined>();
   });
 
-  test('element aware deep props', () => {
+  it('element aware deep props', () => {
     const data = [{ a: 1 }, { b: 2 }, { c: 3 }] as const;
 
     expectTypeOf(prop(data, 0)).toEqualTypeOf<{ readonly a: 1 }>();
@@ -288,7 +284,7 @@ describe('deeper than 10 levels', () => {
     };
   };
 
-  test('just before the tip', () => {
+  it('just before the tip', () => {
     expectTypeOf(
       prop(
         data,
@@ -321,7 +317,7 @@ describe('deeper than 10 levels', () => {
     ).toEqualTypeOf<{ z: 'yey!' }>();
   });
 
-  test('at the tip', () => {
+  it('at the tip', () => {
     expectTypeOf(
       prop(
         data,
@@ -355,7 +351,7 @@ describe('deeper than 10 levels', () => {
     ).toEqualTypeOf<'yey!'>();
   });
 
-  test('after the tip', () => {
+  it('after the tip', () => {
     expectTypeOf(
       prop(
         data,
@@ -398,17 +394,17 @@ describe('deeper than 10 levels', () => {
 });
 
 describe('optional props', () => {
-  test('shallow prop', () => {
+  it('shallow prop', () => {
     expectTypeOf(prop({} as { a?: 1 }, 'a')).toEqualTypeOf<1 | undefined>();
   });
 
-  test('deep prop', () => {
+  it('deep prop', () => {
     expectTypeOf(
       prop({} as { a?: { b?: { c?: 1 } } }, 'a', 'b', 'c'),
     ).toEqualTypeOf<1 | undefined>();
   });
 
-  test('discriminated unions', () => {
+  it('discriminated unions', () => {
     expectTypeOf(
       prop(
         {} as {
@@ -428,7 +424,7 @@ describe('optional props', () => {
 describe('with stringToPath', () => {
   const DATA = {} as { a: { b: Array<{ c: { d: number } }> } };
 
-  test('with valid paths', () => {
+  it('with valid paths', () => {
     expectTypeOf(prop(DATA, ...stringToPath('a'))).toEqualTypeOf<{
       b: Array<{ c: { d: number } }>;
     }>();
@@ -446,7 +442,7 @@ describe('with stringToPath', () => {
     >();
   });
 
-  test('with invalid paths', () => {
+  it('with invalid paths', () => {
     // @ts-expect-error [ts2769] -- 'x' is not a key of DATA
     prop(DATA, ...stringToPath('x.y'));
     // @ts-expect-error [ts2769] -- 'e' is not a key of DATA.a.b[0].c.d
@@ -457,18 +453,18 @@ describe('with stringToPath', () => {
 });
 
 describe('prevents unsupported data types', () => {
-  test('strings', () => {
+  it('strings', () => {
     // @ts-expect-error [ts2769] -- strings can't be used as data.
     prop('hello', 'length');
   });
 
-  test('number', () => {
+  it('number', () => {
     // @ts-expect-error [ts2769] -- numbers can't be used as data.
     prop(123, 'doNumbersHaveProps?');
   });
 
-  test('symbol', () => {
+  it('symbol', () => {
     // @ts-expect-error [ts2769] -- symbols can't be used as data.
-    prop(Symbol('test'), 'description');
+    prop(SYMBOL, 'description');
   });
 });

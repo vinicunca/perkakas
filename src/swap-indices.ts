@@ -1,16 +1,6 @@
-import type { Join } from 'type-fest';
-
+import type { And, IsEqual, Join } from 'type-fest';
 import type { IterableContainer } from './internal/types/iterable-container';
-
 import { curry } from './curry';
-
-/**
- * @see https://github.com/sindresorhus/type-fest/blob/main/source/is-equal.d.ts
- */
-type isEqual<A, B>
-  = (<G>() => G extends A ? 1 : 2) extends <G>() => G extends B ? 1 : 2
-    ? true
-    : false;
 
 type Difference<A extends number, B extends number>
   = TupleOfLength<A> extends [...infer U, ...TupleOfLength<B>]
@@ -18,7 +8,7 @@ type Difference<A extends number, B extends number>
     : never;
 
 type isLessThan<A extends number, B extends number>
-  = isEqual<A, B> extends true
+  = IsEqual<A, B> extends true
     ? false
     : 0 extends A
       ? true
@@ -76,23 +66,14 @@ type SwapArray<
   K1 extends number,
   K2 extends number,
 >
-  // TODO: Because of limitations on the typescript version used, we
-  // can't build a proper Absolute number type so we can't implement proper
-  // typing for negative indices and have to opt for a less- strict type
-  // instead.
-  // Check out the history for the PR that introduced this TODO to see how it
-  // could be implemented.
-  = IsNonNegative<K1> extends false
-    ? Array<T[number]>
-    : IsNonNegative<K2> extends false
-      ? Array<T[number]>
-      : // If the indices are not within the input arrays range the result would be
-    // trivially the same as the input array.
-      isLessThan<K1, T['length']> extends false
-        ? T
-        : isLessThan<K2, T['length']> extends false
-          ? T
-          : SwapArrayInternal<T, K1, K2>;
+  = And<IsNonNegative<K1>, IsNonNegative<K2>> extends true
+    ? And<isLessThan<K1, T['length']>, isLessThan<K2, T['length']>> extends true
+      ? SwapArrayInternal<T, K1, K2>
+      : // If the indices are not within the input arrays range the result would
+    // be trivially the same as the input array.
+      T
+    :
+    Array<T[number]>;
 
 type SwappedIndices<
   T extends IterableContainer | string,
@@ -157,11 +138,7 @@ export function swapIndices(...args: ReadonlyArray<unknown>): unknown {
   return curry(swapIndicesImplementation, args);
 }
 
-function swapIndicesImplementation(
-  data: IterableContainer | string,
-  index1: number,
-  index2: number,
-): unknown {
+function swapIndicesImplementation(data: IterableContainer | string, index1: number, index2: number): unknown {
   return typeof data === 'string'
     ? swapArray([...data], index1, index2).join('')
     : swapArray(data, index1, index2);

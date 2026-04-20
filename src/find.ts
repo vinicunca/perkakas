@@ -23,9 +23,9 @@ import { SKIP_ITEM } from './internal/utility-evaluators';
  * @returns The first element in the array that satisfies the provided testing
  * function. Otherwise, `undefined` is returned.
  * @signature
- *    P.find(data, predicate)
+ *    find(data, predicate)
  * @example
- *    P.find([1, 3, 4, 6], n => n % 2 === 0) // => 4
+ *    find([1, 3, 4, 6], n => n % 2 === 0) // => 4
  * @dataFirst
  * @lazy
  * @category Array
@@ -58,11 +58,11 @@ export function find<T>(
  * @returns The first element in the array that satisfies the provided testing
  * function. Otherwise, `undefined` is returned.
  * @signature
- *    P.find(predicate)(data)
+ *    find(predicate)(data)
  * @example
- *    P.pipe(
+ *    pipe(
  *      [1, 3, 4, 6],
- *      P.find(n => n % 2 === 0)
+ *      find(n => n % 2 === 0)
  *    ) // => 4
  * @dataLast
  * @lazy
@@ -79,16 +79,11 @@ export function find(...args: ReadonlyArray<unknown>): unknown {
   return curry(findImplementation, args, toSingle(lazyImplementation));
 }
 
-function findImplementation<T, S extends T>(
-  data: ReadonlyArray<T>,
-  predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S,
-): S | undefined {
+function findImplementation<T, S extends T>(data: ReadonlyArray<T>, predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S): S | undefined {
   return data.find(predicate);
 }
 
-function lazyImplementation<T, S extends T>(
-  predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S,
-): LazyEvaluator<T, S> {
+function lazyImplementation<T, S extends T>(predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S): LazyEvaluator<T, S> {
   return (value, index, data) =>
     predicate(value, index, data)
       ? { done: true, hasNext: true, next: value }

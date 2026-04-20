@@ -1,67 +1,67 @@
-import { expectTypeOf, test } from 'vitest';
+import { expectTypeOf, it } from 'vitest';
 import { toKebabCase } from './to-kebab-case';
 
-test('primitive string', () => {
+it('primitive string', () => {
   const result = toKebabCase('hello world' as string);
 
   expectTypeOf(result).toEqualTypeOf<string>();
 });
 
-test('empty string', () => {
+it('empty string', () => {
   const result = toKebabCase('' as const);
 
   expectTypeOf(result).toEqualTypeOf<''>();
 });
 
-test('camelCase', () => {
+it('camelCase', () => {
   const result = toKebabCase('helloWorld' as const);
 
   expectTypeOf(result).toEqualTypeOf<'hello-world'>();
 });
 
-test('spaces and mixed cases', () => {
+it('spaces and mixed cases', () => {
   const result = toKebabCase('Hello World' as const);
 
   expectTypeOf(result).toEqualTypeOf<'hello-world'>();
 });
 
-test('spaces and lower case', () => {
+it('spaces and lower case', () => {
   const result = toKebabCase('hello world' as const);
 
   expectTypeOf(result).toEqualTypeOf<'hello-world'>();
 });
 
-test('spaces and UPPERCASE', () => {
+it('spaces and UPPERCASE', () => {
   const result = toKebabCase('HELLO WORLD' as const);
 
   expectTypeOf(result).toEqualTypeOf<'hello-world'>();
 });
 
-test('snake_case', () => {
+it('snake_case', () => {
   const result = toKebabCase('hello_world' as const);
 
   expectTypeOf(result).toEqualTypeOf<'hello-world'>();
 });
 
-test('kebab-case', () => {
+it('kebab-case', () => {
   const result = toKebabCase('hello-world' as const);
 
   expectTypeOf(result).toEqualTypeOf<'hello-world'>();
 });
 
-test('string with multiple delimiters', () => {
+it('string with multiple delimiters', () => {
   const result = toKebabCase('foo---bar' as const);
 
   expectTypeOf(result).toEqualTypeOf<'foo-bar'>();
 });
 
-test('numbers', () => {
+it('numbers', () => {
   const result = toKebabCase('helloWorld123' as const);
 
   expectTypeOf(result).toEqualTypeOf<'hello-world-123'>();
 });
 
-test('string with special characters', () => {
+it('string with special characters', () => {
   const result = toKebabCase('hello@world!' as const);
 
   expectTypeOf(result).toEqualTypeOf<'hello-@world-!'>();

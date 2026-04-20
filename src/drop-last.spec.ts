@@ -28,6 +28,7 @@ it('n > length', () => {
 it('should return a new array even if there was no drop', () => {
   const data = [1, 2, 3, 4, 5];
   const result = dropLast(data, 0);
+
   expect(result).not.toBe(data);
   expect(result).toStrictEqual(data);
 });

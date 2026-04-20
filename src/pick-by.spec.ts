@@ -20,13 +20,14 @@ it('dataLast', () => {
 
 it('symbols are filtered out', () => {
   const mySymbol = Symbol('mySymbol');
+
   expect(pickBy({ [mySymbol]: 1 }, constant(true))).toStrictEqual({});
 });
 
 it('symbols are not passed to the predicate', () => {
-  const mock = vi.fn();
+  const mock = vi.fn<(x: string) => boolean>();
   const data = { [Symbol('mySymbol')]: 1, a: 'hello' };
   pickBy(data, mock);
-  expect(mock).toHaveBeenCalledTimes(1);
+
   expect(mock).toHaveBeenCalledExactlyOnceWith('hello', 'a', data);
 });

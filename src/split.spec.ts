@@ -88,6 +88,6 @@ describe('dataLast', () => {
   });
 
   it('undefined limit', () => {
-    expect(pipe('a,b,c', split(',', undefined))).toStrictEqual(['a', 'b', 'c']);
+    expect(pipe('a,b,c', split(','))).toStrictEqual(['a', 'b', 'c']);
   });
 });

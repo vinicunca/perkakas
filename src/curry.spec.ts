@@ -15,9 +15,10 @@ it('all arguments', () => {
 
 it('1 missing', () => {
   const purried = fn(5) as (...args: ReadonlyArray<unknown>) => unknown;
+
   expect(purried(10)).toBe(5);
 });
 
 it('wrong number of arguments', () => {
-  expect(() => fn(5, 10, 40)).toThrowError('Wrong number of arguments');
+  expect(() => fn(5, 10, 40)).toThrow('Wrong number of arguments');
 });

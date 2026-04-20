@@ -9,18 +9,18 @@ type PickFromArray<T, Keys extends ReadonlyArray<KeysOfUnion<T>>>
   // Distribute unions for both object types and key arrays.
   = T extends unknown
     ? Keys extends unknown
-      // When T is a union (or when Keys is empty) the picked props might
-      // not exist in some of its sub-types, e.g.,
-      //   `pick(... as { a: string } | { b: number }, ['a'])`,
-      // if we simply let the regular "constructive" logic run, the
-      // resulting type would be `{}` which doesn't behave like an empty
-      // object! instead, we want to use a more explicit *empty* type.
-      ? IsNever<Extract<Keys[number], keyof T>> extends true
+      ? // When T is a union (or when Keys is empty) the picked props might
+    // not exist in some of its sub-types, e.g.,
+    //   `pick(... as { a: string } | { b: number }, ['a'])`,
+    // if we simply let the regular "constructive" logic run, the
+    // resulting type would be `{}` which doesn't behave like an empty
+    // object! instead, we want to use a more explicit *empty* type.
+      IsNever<Extract<Keys[number], keyof T>> extends true
         ? EmptyObject
-        // Remove `readonly` modifiers from picked props since we return a
-        // new, mutable, object. We don't wrap the result with `Simplify` to
-        // flatten it because `Writable` does the same thing implicitly.
-        : Writable<
+        : // Remove `readonly` modifiers from picked props since we return a
+      // new, mutable, object. We don't wrap the result with `Simplify` to
+      // flatten it because `Writable` does the same thing implicitly.
+        Writable<
           IsBoundedRecord<T> extends true
             ? PickBoundedFromArray<T, Keys>
             : PickUnbounded<T, Extract<Keys[number], keyof T>>
@@ -77,15 +77,16 @@ type PickBoundedFromArray<T, Keys extends ReadonlyArray<KeysOfUnion<T>>>
  *
  * See: https://www.typescriptlang.org/play/?#code/PTAEE0HsFcHIBNQFMAeAHJBjALqAGqNpKAEZKigAGA3qABZIA2jkA-AFygBEA7pAE6N4XUAF9KAGlLRcAQ0ayAzgChsATwz5QAXlAAFAJaYA1gB4ASlgHxTi7PwMA7AOZTeAoVwB8bhs0jeANzKIBSgAHqsykA.
  */
-type PickUnbounded<T, Keys extends keyof T> = IsBounded<Keys> extends true ? Partial<Pick<T, Keys>> : Pick<T, Keys>;
+type PickUnbounded<T, Keys extends keyof T>
+  = IsBounded<Keys> extends true ? Partial<Pick<T, Keys>> : Pick<T, Keys>;
 
 /**
  * Creates an object composed of the picked `data` properties.
  *
  * @param keys - The property names.
- * @signature P.pick([prop1, prop2])(object)
+ * @signature pick([prop1, prop2])(object)
  * @example
- *    P.pipe({ a: 1, b: 2, c: 3, d: 4 }, P.pick(['a', 'd'])) // => { a: 1, d: 4 }
+ *    pipe({ a: 1, b: 2, c: 3, d: 4 }, pick(['a', 'd'])) // => { a: 1, d: 4 }
  * @dataLast
  * @category Object
  */
@@ -99,9 +100,9 @@ export function pick<
  *
  * @param data - The target object.
  * @param keys - The property names.
- * @signature P.pick(object, [prop1, prop2])
+ * @signature pick(object, [prop1, prop2])
  * @example
- *    P.pick({ a: 1, b: 2, c: 3, d: 4 }, ['a', 'd']) // => { a: 1, d: 4 }
+ *    pick({ a: 1, b: 2, c: 3, d: 4 }, ['a', 'd']) // => { a: 1, d: 4 }
  * @dataFirst
  * @category Object
  */

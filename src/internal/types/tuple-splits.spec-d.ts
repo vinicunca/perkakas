@@ -87,9 +87,7 @@ describe('all tuple shapes', () => {
       | { left: []; right: [1, 2, ...Array<3>] }
     >();
 
-    expectTypeOf(
-      tupleSplits([1, 2] as readonly [1, 2, ...Array<3>]),
-    ).toEqualTypeOf<
+    expectTypeOf(tupleSplits([1, 2] as readonly [1, 2, ...Array<3>])).toEqualTypeOf<
       | { left: [1, 2, ...Array<3>]; right: [] }
       | { left: [1, 2, ...Array<3>]; right: Array<3> }
       | { left: [1, 2]; right: Array<3> }
@@ -107,9 +105,7 @@ describe('all tuple shapes', () => {
       | { left: []; right: [1?, 2?, ...Array<3>] }
     >();
 
-    expectTypeOf(
-      tupleSplits([] as readonly [1?, 2?, ...Array<3>]),
-    ).toEqualTypeOf<
+    expectTypeOf(tupleSplits([] as readonly [1?, 2?, ...Array<3>])).toEqualTypeOf<
       | { left: [1?, 2?, ...Array<3>]; right: [] }
       | { left: [1?, 2?, ...Array<3>]; right: Array<3> }
       | { left: [1?, 2?]; right: Array<3> }
@@ -119,9 +115,7 @@ describe('all tuple shapes', () => {
   });
 
   it('mixed-prefix array', () => {
-    expectTypeOf(
-      tupleSplits([1, 2] as [1, 2, 3?, 4?, ...Array<5>]),
-    ).toEqualTypeOf<
+    expectTypeOf(tupleSplits([1, 2] as [1, 2, 3?, 4?, ...Array<5>])).toEqualTypeOf<
       | { left: [1, 2, 3?, 4?, ...Array<5>]; right: [] }
       | { left: [1, 2, 3?, 4?, ...Array<5>]; right: Array<5> }
       | { left: [1, 2, 3?, 4?]; right: Array<5> }
@@ -153,9 +147,7 @@ describe('all tuple shapes', () => {
       | { left: []; right: [...Array<1>, 2, 3] }
     >();
 
-    expectTypeOf(
-      tupleSplits([2, 3] as readonly [...Array<1>, 2, 3]),
-    ).toEqualTypeOf<
+    expectTypeOf(tupleSplits([2, 3] as readonly [...Array<1>, 2, 3])).toEqualTypeOf<
       | { left: [...Array<1>, 2, 3]; right: [] }
       | { left: [...Array<1>, 2]; right: [3] }
       | { left: Array<1>; right: [2, 3] }
@@ -193,9 +185,7 @@ describe('all tuple shapes', () => {
 
 describe('unions', () => {
   it('union of arrays', () => {
-    expectTypeOf(
-      tupleSplits([] as Array<boolean> | Array<number>),
-    ).toEqualTypeOf<
+    expectTypeOf(tupleSplits([] as Array<boolean> | Array<number>)).toEqualTypeOf<
       | { left: []; right: Array<boolean> }
       | { left: Array<boolean>; right: Array<boolean> }
       | { left: Array<boolean>; right: [] }
@@ -206,9 +196,7 @@ describe('unions', () => {
   });
 
   it('mixed unions', () => {
-    expectTypeOf(
-      tupleSplits([] as Array<boolean> | [number, string]),
-    ).toEqualTypeOf<
+    expectTypeOf(tupleSplits([] as Array<boolean> | [number, string])).toEqualTypeOf<
       | { left: []; right: Array<boolean> }
       | { left: Array<boolean>; right: Array<boolean> }
       | { left: Array<boolean>; right: [] }

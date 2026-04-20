@@ -2,15 +2,17 @@ import { expectTypeOf, it } from 'vitest';
 import { forEachObj } from './for-each-obj';
 import { pipe } from './pipe';
 
-it('Typing is sound when only symbol keys', () => {
-  forEachObj({ [Symbol('a')]: 4 }, (value, key) => {
+declare const SYMBOL: unique symbol;
+
+it('typing is sound when only symbol keys', () => {
+  forEachObj({ [SYMBOL]: 4 }, (value, key) => {
     expectTypeOf(key).toBeNever();
     expectTypeOf(value).toBeNever();
   });
 });
 
-it('Symbol keys are ignored', () => {
-  forEachObj({ [Symbol('a')]: 4, a: 'hello', b: true }, (value, key) => {
+it('symbol keys are ignored', () => {
+  forEachObj({ [SYMBOL]: 4, a: 'hello', b: true }, (value, key) => {
     expectTypeOf(key).toEqualTypeOf<'a' | 'b'>();
     expectTypeOf(value).toEqualTypeOf<boolean | string>();
   });

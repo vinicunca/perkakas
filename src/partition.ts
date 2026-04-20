@@ -13,9 +13,9 @@ import { curry } from './curry';
  * passed the predicate, and the second array contains the elements that did
  * not. The items are in the same order as they were in the original array.
  * @signature
- *    P.partition(data, predicate)
+ *    partition(data, predicate)
  * @example
- *    P.partition(
+ *    partition(
  *      ['one', 'two', 'forty two'],
  *      x => x.length === 3,
  *    ); // => [['one', 'two'], ['forty two']]
@@ -43,11 +43,11 @@ export function partition<T>(
  * passed the predicate, and the second array contains the elements that did
  * not. The items are in the same order as they were in the original array.
  * @signature
- *    P.partition(predicate)(data)
+ *    partition(predicate)(data)
  * @example
- *    P.pipe(
+ *    pipe(
  *      ['one', 'two', 'forty two'],
- *      P.partition(x => x.length === 3),
+ *      partition(x => x.length === 3),
  *    ); // => [['one', 'two'], ['forty two']]
  * @dataLast
  * @category Array
@@ -63,14 +63,14 @@ export function partition(...args: ReadonlyArray<unknown>): unknown {
   return curry(partitionImplementation, args);
 }
 
-function partitionImplementation<T, S extends T>(
-  data: ReadonlyArray<T>,
-  predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S,
-): [Array<T>, Array<T>] {
-  const ret: [Array<T>, Array<T>] = [[], []];
+function partitionImplementation<T, S extends T>(data: ReadonlyArray<T>, predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S): [Array<S>, Array<T>] {
+  const ret: [Array<S>, Array<T>] = [[], []];
   for (const [index, item] of data.entries()) {
-    const matches = predicate(item, index, data);
-    ret[matches ? 0 : 1].push(item);
+    if (predicate(item, index, data)) {
+      ret[0].push(item);
+    } else {
+      ret[1].push(item);
+    }
   }
   return ret;
-};
+}

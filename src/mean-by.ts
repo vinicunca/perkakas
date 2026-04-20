@@ -5,11 +5,11 @@ import { curry } from './curry';
  *
  * @param fn - Predicate function.
  * @signature
- *   P.meanBy(fn)(array)
+ *   meanBy(fn)(array)
  * @example
- *    P.pipe(
+ *    pipe(
  *      [{a: 5}, {a: 1}, {a: 3}],
- *      P.meanBy(x => x.a)
+ *      meanBy(x => x.a)
  *    ) // 3
  * @dataLast
  * @category Array
@@ -25,9 +25,9 @@ export function meanBy<T>(
  * @param items - The array.
  * @param fn - Predicate function.
  * @signature
- *   P.meanBy(array, fn)
+ *   meanBy(array, fn)
  * @example
- *    P.meanBy(
+ *    meanBy(
  *      [{a: 5}, {a: 1}, {a: 3}],
  *      x => x.a
  *    ) // 3
@@ -44,10 +44,7 @@ export function meanBy(...args: ReadonlyArray<unknown>): unknown {
   return curry(meanByImplementation, args);
 }
 
-function meanByImplementation<T>(
-  array: ReadonlyArray<T>,
-  fn: (value: T, index: number, data: ReadonlyArray<T>) => number,
-): number {
+function meanByImplementation<T>(array: ReadonlyArray<T>, fn: (value: T, index: number, data: ReadonlyArray<T>) => number): number {
   if (array.length === 0) {
     return Number.NaN;
   }
@@ -59,4 +56,4 @@ function meanByImplementation<T>(
   }
 
   return sum / array.length;
-};
+}

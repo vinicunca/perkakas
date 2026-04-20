@@ -9,9 +9,9 @@ import { curry } from './curry';
  *
  * @param data - The object to clone.
  * @signature
- *   P.clone(data)
+ *   clone(data)
  * @example
- *   P.clone({foo: 'bar'}) // {foo: 'bar'}
+ *   clone({foo: 'bar'}) // {foo: 'bar'}
  * @dataFirst
  * @category Object
  */
@@ -25,9 +25,9 @@ export function clone<T>(data: T): T;
  * work).
  *
  * @signature
- *   P.clone()(data)
+ *   clone()(data)
  * @example
- *   P.pipe({foo: 'bar'}, P.clone()) // {foo: 'bar'}
+ *   pipe({foo: 'bar'}, clone()) // {foo: 'bar'}
  * @dataLast
  * @category Object
  */
@@ -67,21 +67,16 @@ function cloneImplementation<T>(
     return structuredClone(value);
   }
 
-  /**
-   * In order to support cyclic/self-referential structures,
-   * and to support functions _within_ objects,
-   * we need to have our own cloning logic.
-   */
+  // In order to support cyclic/self-referential structures, and to support
+  // functions _within_ objects, we need to have our own cloning logic.
 
   // First we check if we've already cloned this value.
   const idx = refFrom.indexOf(value);
-  if (idx >= 0) {
+  if (idx !== -1) {
     return refTo[idx] as T;
   }
-  /**
-   * And if we haven't, we add it to our list of seen values so that it is kept
-   * and clone the deep structure.
-   */
+  // And if we haven't, we add it to our list of seen values so that it is kept
+  // and clone the deep structure.
   refFrom.push(value);
   return Array.isArray(value)
     ? deepCloneArray(value, refFrom, refTo)
@@ -95,10 +90,8 @@ function deepCloneObject<T extends object>(
 ): T {
   const copiedValue: Record<PropertyKey, unknown> = {};
 
-  /**
-   * It's important to first push the cloned ref so that it's index is kept in
-   * sync with the ref to the original value in refFrom.
-   */
+  // It's important to first push the cloned ref so that it's index is kept in
+  // sync with the ref to the original value in refFrom.
   refTo.push(copiedValue);
 
   for (const [k, v] of Object.entries(value)) {
@@ -115,10 +108,8 @@ function deepCloneArray<T extends ReadonlyArray<unknown>>(
 ): T {
   const copiedValue: Array<unknown> = [];
 
-  /**
-   * It's important to first push the cloned ref so that it's index is kept in
-   * sync with the ref to the original value in refFrom.
-   */
+  // It's important to first push the cloned ref so that it's index is kept in
+  // sync with the ref to the original value in refFrom.
   refTo.push(copiedValue);
 
   for (const [index, item] of value.entries()) {

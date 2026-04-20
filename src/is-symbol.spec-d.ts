@@ -2,6 +2,7 @@ import type { AllTypesDataProviderTypes } from '../test/types-data-provider';
 import { expectTypeOf, it } from 'vitest';
 import {
   ALL_TYPES_DATA_PROVIDER,
+
   TYPES_DATA_PROVIDER,
 } from '../test/types-data-provider';
 import { isSymbol } from './is-symbol';
@@ -30,5 +31,6 @@ it('should work even if data type is `any`', () => {
 
 it('should work as type guard in array', () => {
   const data = ALL_TYPES_DATA_PROVIDER.filter(isSymbol);
+
   expectTypeOf(data).toEqualTypeOf<Array<symbol>>();
 });

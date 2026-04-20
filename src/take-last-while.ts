@@ -1,5 +1,4 @@
 import type { IterableContainer } from './internal/types/iterable-container';
-
 import { curry } from './curry';
 
 /**
@@ -9,9 +8,9 @@ import { curry } from './curry';
  * @param data - The array.
  * @param predicate - The predicate.
  * @signature
- *    P.takeLastWhile(data, predicate)
+ *    takeLastWhile(data, predicate)
  * @example
- *    P.takeLastWhile([1, 2, 10, 3, 4, 5], x => x < 10) // => [3, 4, 5]
+ *    takeLastWhile([1, 2, 10, 3, 4, 5], x => x < 10) // => [3, 4, 5]
  * @dataFirst
  * @category Array
  */
@@ -30,9 +29,9 @@ export function takeLastWhile<T extends IterableContainer>(
  *
  * @param predicate - The predicate.
  * @signature
- *    P.takeLastWhile(predicate)(data)
+ *    takeLastWhile(predicate)(data)
  * @example
- *    P.pipe([1, 2, 10, 3, 4, 5], P.takeLastWhile(x => x < 10))  // => [3, 4, 5]
+ *    pipe([1, 2, 10, 3, 4, 5], takeLastWhile(x => x < 10))  // => [3, 4, 5]
  * @dataLast
  * @category Array
  */

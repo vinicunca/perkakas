@@ -39,7 +39,7 @@ describe('dataLast', () => {
     expect(pipe([1, 2, 3], flatMap(add(1)))).toStrictEqual([2, 3, 4]);
   });
 
-  describe('pipe', () => {
+  describe(pipe, () => {
     it('with find', () => {
       const counter1 = createLazyInvocationCounter();
       const counter2 = createLazyInvocationCounter();
@@ -50,10 +50,10 @@ describe('dataLast', () => {
         counter2.fn(),
         find((x) => x === 22),
       );
+
       expect(counter1.count).toHaveBeenCalledTimes(2);
       expect(counter2.count).toHaveBeenCalledTimes(7);
-
-      expect(result).toStrictEqual(22);
+      expect(result).toBe(22);
     });
   });
 });

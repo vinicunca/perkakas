@@ -1,5 +1,8 @@
 import { expect, it } from 'vitest';
-import { ALL_TYPES_DATA_PROVIDER, TYPES_DATA_PROVIDER } from '../test/types-data-provider';
+import {
+  ALL_TYPES_DATA_PROVIDER,
+  TYPES_DATA_PROVIDER,
+} from '../test/types-data-provider';
 import { isBigInt } from './is-big-int';
 
 it('should work as type guard', () => {

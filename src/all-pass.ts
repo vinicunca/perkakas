@@ -1,18 +1,18 @@
 import { curry } from './curry';
 
 /**
- * Determines whether all predicates returns true for the input data.
+ * Determines whether all predicates return true for the input data.
  *
  * @param data - The input data for predicates.
  * @param fns - The list of predicates.
  * @signature
- *    P.allPass(data, fns)
+ *    allPass(data, fns)
  * @example
  *    const isDivisibleBy3 = (x: number) => x % 3 === 0
  *    const isDivisibleBy4 = (x: number) => x % 4 === 0
  *    const fns = [isDivisibleBy3, isDivisibleBy4]
- *    P.allPass(12, fns) // => true
- *    P.allPass(8, fns) // => false
+ *    allPass(12, fns) // => true
+ *    allPass(8, fns) // => false
  * @dataFirst
  * @category Array
  */
@@ -22,17 +22,17 @@ export function allPass<T>(
 ): boolean;
 
 /**
- * Determines whether all predicates returns true for the input data.
+ * Determines whether all predicates return true for the input data.
  *
  * @param fns - The list of predicates.
  * @signature
- *    P.allPass(fns)(data)
+ *    allPass(fns)(data)
  * @example
  *    const isDivisibleBy3 = (x: number) => x % 3 === 0
  *    const isDivisibleBy4 = (x: number) => x % 4 === 0
  *    const fns = [isDivisibleBy3, isDivisibleBy4]
- *    P.allPass(fns)(12) // => true
- *    P.allPass(fns)(8) // => false
+ *    allPass(fns)(12) // => true
+ *    allPass(fns)(8) // => false
  * @dataLast
  * @category Array
  */
@@ -44,9 +44,6 @@ export function allPass(...args: ReadonlyArray<unknown>): unknown {
   return curry(allPassImplementation, args);
 }
 
-function allPassImplementation<T>(
-  data: T,
-  fns: ReadonlyArray<(data: T) => boolean>,
-): boolean {
+function allPassImplementation<T>(data: T, fns: ReadonlyArray<(data: T) => boolean>): boolean {
   return fns.every((fn) => fn(data));
 }

@@ -1,5 +1,4 @@
 import type { IterableContainer } from './internal/types/iterable-container';
-
 import { curry } from './curry';
 
 /**
@@ -8,9 +7,9 @@ import { curry } from './curry';
  * @param data - The array.
  * @param predicate - The predicate.
  * @signature
- *    P.takeWhile(data, predicate)
+ *    takeWhile(data, predicate)
  * @example
- *    P.takeWhile([1, 2, 3, 4, 3, 2, 1], x => x !== 4) // => [1, 2, 3]
+ *    takeWhile([1, 2, 3, 4, 3, 2, 1], x => x !== 4) // => [1, 2, 3]
  * @dataFirst
  * @category Array
  */
@@ -28,9 +27,9 @@ export function takeWhile<T extends IterableContainer>(
  *
  * @param predicate - The predicate.
  * @signature
- *    P.takeWhile(predicate)(data)
+ *    takeWhile(predicate)(data)
  * @example
- *    P.pipe([1, 2, 3, 4, 3, 2, 1], P.takeWhile(x => x !== 4))  // => [1, 2, 3]
+ *    pipe([1, 2, 3, 4, 3, 2, 1], takeWhile(x => x !== 4))  // => [1, 2, 3]
  * @dataLast
  * @category Array
  */

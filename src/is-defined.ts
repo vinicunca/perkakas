@@ -5,11 +5,11 @@
  * @param data - The variable to check.
  * @returns True if the passed input is defined, false otherwise.
  * @signature
- *    P.isDefined(data)
+ *    isDefined(data)
  * @example
- *    P.isDefined('string') //=> true
- *    P.isDefined(null) //=> true
- *    P.isDefined(undefined) //=> false
+ *    isDefined('string') //=> true
+ *    isDefined(null) //=> true
+ *    isDefined(undefined) //=> false
  * @category Guard
  */
 export function isDefined<T>(data: T | undefined): data is T {

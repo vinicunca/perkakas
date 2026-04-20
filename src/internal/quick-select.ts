@@ -19,16 +19,12 @@ import { swapInPlace } from './swap-in-place';
  * @returns The item at the given index, or `undefined` if the index is out-of-
  * bounds.
  */
-export function quickSelect<T>(
-  data: ReadonlyArray<T>,
-  index: number,
-  compareFn: CompareFunction<T>,
-): T | undefined {
+export function quickSelect<T>(data: ReadonlyArray<T>, index: number, compareFn: CompareFunction<T>): T | undefined {
   return index < 0 || index >= data.length
-  // Quickselect doesn't work with out-of-bound indices
-    ? undefined
+    ? // Quickselect doesn't work with out-of-bound indices
+    undefined
     : quickSelectImplementation(
-      // We need to clone the array because quickSelect mutates it in-place.
+        // We need to clone the array because quickSelect mutates it in-place.
         [...data],
         0 /* left */,
         data.length - 1 /* right */,
@@ -54,9 +50,9 @@ function quickSelectImplementation<T>(
   const pivotIndex = partition(data, left, right, compareFn);
 
   return index === pivotIndex
-    // Once a pivot is chosen it's location is final, so if it matches the
-    // index we found out item!
-    ? data[index]!
+    ? // Once a pivot is chosen it's location is final, so if it matches the
+  // index we found out item!
+    data[index]!
     : quickSelectImplementation(
         data,
         // We continue by recursing into the partition where index would be

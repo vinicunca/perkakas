@@ -1,6 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
 import { drop } from './drop';
-import { identity } from './identity';
 import { map } from './map';
 import { pipe } from './pipe';
 import { take } from './take';
@@ -25,6 +24,7 @@ describe('data first', () => {
   it('returns a shallow clone when no items are dropped', () => {
     const data = [1, 2, 3, 4, 5];
     const result = drop(data, 0);
+
     expect(result).toStrictEqual([1, 2, 3, 4, 5]);
     expect(result).not.toBe(data);
   });
@@ -48,8 +48,9 @@ describe('data last', () => {
   });
 
   it('lazy impl', () => {
-    const mockFunc = vi.fn(identity());
+    const mockFunc = vi.fn<(x: number) => number>();
     pipe([1, 2, 3, 4, 5], map(mockFunc), drop(2), take(2));
+
     expect(mockFunc).toHaveBeenCalledTimes(4);
   });
 });

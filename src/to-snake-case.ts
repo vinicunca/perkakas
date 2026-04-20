@@ -25,10 +25,10 @@ type SnakeCase<S extends string> = string extends S
  *
  * @param data - A string.
  * @signature
- *   P.toSnakeCase(data);
+ *   toSnakeCase(data);
  * @example
- *   P.toSnakeCase("hello world"); // "hello_world"
- *   P.toSnakeCase("__HELLO_WORLD__"); // "hello_world"
+ *   toSnakeCase("hello world"); // "hello_world"
+ *   toSnakeCase("__HELLO_WORLD__"); // "hello_world"
  * @dataFirst
  * @category String
  */
@@ -52,10 +52,10 @@ export function toSnakeCase<S extends string>(data: S): SnakeCase<S>;
  * For *CONSTANT_CASE* use `toUpperCase(toSnakeCase(data))`.
  *
  * @signature
- *   P.toSnakeCase()(data);
+ *   toSnakeCase()(data);
  * @example
- *   P.pipe("hello world", P.toSnakeCase()); // "hello_world"
- *   P.pipe("__HELLO_WORLD__", P.toSnakeCase()); // "hello_world"
+ *   pipe("hello world", toSnakeCase()); // "hello_world"
+ *   pipe("__HELLO_WORLD__", toSnakeCase()); // "hello_world"
  * @dataLast
  * @category String
  */
@@ -66,9 +66,5 @@ export function toSnakeCase(...args: ReadonlyArray<unknown>): unknown {
 }
 
 function toSnakeCaseImplementation<S extends string>(data: S): SnakeCase<S> {
-  // @ts-expect-error [ts2322] -- To avoid importing our own utilities for this
-  // we are using the built-in `join` and `toLowerCase` functions which aren't
-  // typed as well. This is equivalent to `toLowerCase(join(words(data), "_"))`
-  // which TypeScript infers correctly as SnakeCase.
   return words(data).join('_').toLowerCase();
 }

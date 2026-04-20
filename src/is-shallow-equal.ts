@@ -8,6 +8,10 @@ import { curry } from './curry';
  * equality**; Unlike `isDeepEqual` where the function also *recurses* into each
  * item and value.
  *
+ * !IMPORTANT: symbol properties of objects are not supported right now and
+ * might result in unexpected behavior. Please open an issue in the Perkakas
+ * github project if you need support for these types.
+ *
  * !IMPORTANT: Promise, Date, and RegExp, are shallowly equal, even when they
  * are semantically different (e.g. resolved promises); but `isDeepEqual` does
  * compare the latter 2 semantically by-value.
@@ -23,12 +27,12 @@ import { curry } from './curry';
  * @param data - The first value to compare.
  * @param other - The second value to compare.
  * @signature
- *    P.isShallowEqual(data, other)
+ *    isShallowEqual(data, other)
  * @example
- *    P.isShallowEqual(1, 1) //=> true
- *    P.isShallowEqual(1, '1') //=> false
- *    P.isShallowEqual([1, 2, 3], [1, 2, 3]) //=> true
- *    P.isShallowEqual([[1], [2], [3]], [[1], [2], [3]]) //=> false
+ *    isShallowEqual(1, 1) //=> true
+ *    isShallowEqual(1, '1') //=> false
+ *    isShallowEqual([1, 2, 3], [1, 2, 3]) //=> true
+ *    isShallowEqual([[1], [2], [3]], [[1], [2], [3]]) //=> false
  * @dataFirst
  * @category Guard
  */
@@ -36,7 +40,7 @@ export function isShallowEqual<T, S extends T>(
   data: T,
   other: T extends Exclude<T, S> ? S : never,
 ): data is S;
-export function isShallowEqual<T, S extends T = T>(data: T, other: S): boolean;
+export function isShallowEqual<T>(data: T, other: T): boolean;
 
 /**
  * Performs a *shallow structural* comparison between two values to determine if
@@ -45,6 +49,10 @@ export function isShallowEqual<T, S extends T = T>(data: T, other: S): boolean;
  * order, and for objects props will be matched and checked for **strict
  * equality**; Unlike `isDeepEqual` where the function also *recurses* into each
  * item and value.
+ *
+ * !IMPORTANT: symbol properties of objects are not supported right now and
+ * might result in unexpected behavior. Please open an issue in the Perkakas
+ * github project if you need support for these types.
  *
  * !IMPORTANT: All built-in objects (Promise, Date, RegExp) are shallowly equal,
  * even when they are semantically different (e.g. resolved promises). Use
@@ -60,21 +68,19 @@ export function isShallowEqual<T, S extends T = T>(data: T, other: S): boolean;
  *
  * @param other - The second value to compare.
  * @signature
- *    P.isShallowEqual(other)(data)
+ *    isShallowEqual(other)(data)
  * @example
- *    P.pipe(1, P.isShallowEqual(1)) //=> true
- *    P.pipe(1, P.isShallowEqual('1')) //=> false
- *    P.pipe([1, 2, 3], P.isShallowEqual([1, 2, 3])) //=> true
- *    P.pipe([[1], [2], [3]], P.isShallowEqual([[1], [2], [3]])) //=> false
+ *    pipe(1, isShallowEqual(1)) //=> true
+ *    pipe(1, isShallowEqual('1')) //=> false
+ *    pipe([1, 2, 3], isShallowEqual([1, 2, 3])) //=> true
+ *    pipe([[1], [2], [3]], isShallowEqual([[1], [2], [3]])) //=> false
  * @dataFirst
  * @category Guard
  */
 export function isShallowEqual<T, S extends T>(
   other: T extends Exclude<T, S> ? S : never,
 ): (data: T) => data is S;
-export function isShallowEqual<S>(
-  other: S,
-): <T extends S = S>(data: T) => boolean;
+export function isShallowEqual<T>(other: T): (data: T) => boolean;
 
 export function isShallowEqual(...args: ReadonlyArray<unknown>): unknown {
   return curry(isShallowEqualImplementation, args);
@@ -108,7 +114,7 @@ function isShallowEqualImplementation<T>(a: T, b: T): boolean {
   }
 
   for (const key of keys) {
-    if (!Object.prototype.hasOwnProperty.call(b, key)) {
+    if (!Object.hasOwn(b, key)) {
       return false;
     }
 

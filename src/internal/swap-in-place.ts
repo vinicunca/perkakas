@@ -2,7 +2,6 @@
  * An efficient hack to swap the values at two indices in an array *in-place*.
  */
 export function swapInPlace(
-
   data: Array<unknown>,
   i: number,
   j: number,

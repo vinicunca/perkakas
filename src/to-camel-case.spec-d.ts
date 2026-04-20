@@ -1,15 +1,15 @@
-import { describe, expectTypeOf, test } from 'vitest';
+import { describe, expectTypeOf, it } from 'vitest';
 import { pipe } from './pipe';
 import { toCamelCase } from './to-camel-case';
 
 describe('data-last', () => {
-  test('without options', () => {
+  it('without options', () => {
     const result = pipe('hello world' as const, toCamelCase());
 
     expectTypeOf(result).toEqualTypeOf<'helloWorld'>();
   });
 
-  test('with options (preserveConsecutiveUppercase: true)', () => {
+  it('with options (preserveConsecutiveUppercase: true)', () => {
     const result = pipe(
       'fooBAR' as const,
       toCamelCase({ preserveConsecutiveUppercase: true }),
@@ -18,7 +18,7 @@ describe('data-last', () => {
     expectTypeOf(result).toEqualTypeOf<'fooBAR'>();
   });
 
-  test('with options (preserveConsecutiveUppercase: false)', () => {
+  it('with options (preserveConsecutiveUppercase: false)', () => {
     const result = pipe(
       'fooBAR' as const,
       toCamelCase({ preserveConsecutiveUppercase: false }),
@@ -29,91 +29,91 @@ describe('data-last', () => {
 });
 
 describe('tests copied from type-fest\'s tests', () => {
-  test('pascal', () => {
+  it('pascal', () => {
     const result = toCamelCase('FooBar');
 
     expectTypeOf(result).toEqualTypeOf<'fooBar'>();
   });
 
-  test('kebab', () => {
+  it('kebab', () => {
     const result = toCamelCase('foo-bar');
 
     expectTypeOf(result).toEqualTypeOf<'fooBar'>();
   });
 
-  test('complex kebab', () => {
+  it('complex kebab', () => {
     const result = toCamelCase('foo-bar-abc-123');
 
     expectTypeOf(result).toEqualTypeOf<'fooBarAbc123'>();
   });
 
-  test('space', () => {
+  it('space', () => {
     const result = toCamelCase('foo bar');
 
     expectTypeOf(result).toEqualTypeOf<'fooBar'>();
   });
 
-  test('snake', () => {
+  it('snake', () => {
     const result = toCamelCase('foo_bar');
 
     expectTypeOf(result).toEqualTypeOf<'fooBar'>();
   });
 
-  test('no delimiter from mono', () => {
+  it('no delimiter from mono', () => {
     const result = toCamelCase('foobar');
 
     expectTypeOf(result).toEqualTypeOf<'foobar'>();
   });
 
-  test('mixed', () => {
+  it('mixed', () => {
     const result = toCamelCase('foo-bar_abc xyzBarFoo');
 
     expectTypeOf(result).toEqualTypeOf<'fooBarAbcXyzBarFoo'>();
   });
 
-  test('vendor prefixed css property', () => {
+  it('vendor prefixed css property', () => {
     const result = toCamelCase('-webkit-animation');
 
     expectTypeOf(result).toEqualTypeOf<'webkitAnimation'>();
   });
 
-  test('double prefixed kebab', () => {
+  it('double prefixed kebab', () => {
     const result = toCamelCase('--very-prefixed');
 
     expectTypeOf(result).toEqualTypeOf<'veryPrefixed'>();
   });
 
-  test('repeated separators', () => {
+  it('repeated separators', () => {
     const result = toCamelCase('foo____bar');
 
     expectTypeOf(result).toEqualTypeOf<'fooBar'>();
   });
 
-  test('uppercase', () => {
+  it('uppercase', () => {
     const result = toCamelCase('FOO');
 
     expectTypeOf(result).toEqualTypeOf<'foo'>();
   });
 
-  test('lowercase', () => {
+  it('lowercase', () => {
     const result = toCamelCase('foo');
 
     expectTypeOf(result).toEqualTypeOf<'foo'>();
   });
 
-  test('screaming snake case', () => {
+  it('screaming snake case', () => {
     const result = toCamelCase('FOO_BAR');
 
     expectTypeOf(result).toEqualTypeOf<'fooBar'>();
   });
 
-  test('screaming kebab case', () => {
+  it('screaming kebab case', () => {
     const result = toCamelCase('FOO-BAR');
 
     expectTypeOf(result).toEqualTypeOf<'fooBar'>();
   });
 
-  test('preserveConsecutiveUppercase: fooBAR', () => {
+  it('preserveConsecutiveUppercase: fooBAR', () => {
     const data = 'fooBAR';
     const whenTrue = toCamelCase(data, { preserveConsecutiveUppercase: true });
 
@@ -126,7 +126,7 @@ describe('tests copied from type-fest\'s tests', () => {
     expectTypeOf(whenFalse).toEqualTypeOf<'fooBar'>();
   });
 
-  test('preserveConsecutiveUppercase: fooBARBiz', () => {
+  it('preserveConsecutiveUppercase: fooBARBiz', () => {
     const data = 'fooBARBiz';
     const whenTrue = toCamelCase(data, { preserveConsecutiveUppercase: true });
 
@@ -139,7 +139,7 @@ describe('tests copied from type-fest\'s tests', () => {
     expectTypeOf(whenFalse).toEqualTypeOf<'fooBarBiz'>();
   });
 
-  test('preserveConsecutiveUppercase: foo BAR-Biz_BUZZ', () => {
+  it('preserveConsecutiveUppercase: foo BAR-Biz_BUZZ', () => {
     const data = 'foo BAR-Biz_BUZZ';
     const whenTrue = toCamelCase(data, { preserveConsecutiveUppercase: true });
 
@@ -152,7 +152,7 @@ describe('tests copied from type-fest\'s tests', () => {
     expectTypeOf(whenFalse).toEqualTypeOf<'fooBarBizBuzz'>();
   });
 
-  test('preserveConsecutiveUppercase: foo\tBAR-Biz_BUZZ', () => {
+  it('preserveConsecutiveUppercase: foo\tBAR-Biz_BUZZ', () => {
     const data = 'foo\tBAR-Biz_BUZZ';
     const whenTrue = toCamelCase(data, { preserveConsecutiveUppercase: true });
 
@@ -166,26 +166,26 @@ describe('tests copied from type-fest\'s tests', () => {
   });
 });
 
-test('fallback when regular string', () => {
+it('fallback when regular string', () => {
   const result = toCamelCase('hello world' as string);
 
   expectTypeOf(result).toEqualTypeOf<string>();
 });
 
-test('with template literal type (lowercase)', () => {
+it('with template literal type (lowercase)', () => {
   const result = toCamelCase('this_is_1' as `this_is_${number}`);
 
   expectTypeOf(result).toEqualTypeOf<`thisIs${Capitalize<`${number}`>}`>();
 });
 
-test('with template literal type (uppercase)', () => {
+it('with template literal type (uppercase)', () => {
   const result = toCamelCase('THIS_IS_1' as `THIS_IS_${number}`);
 
   expectTypeOf(result).toEqualTypeOf<`tHISIS${Capitalize<`${number}`>}`>();
 });
 
 describe('implicit default \'preserveConsecutiveUppercase\' option matches explicit setting', () => {
-  test('fooBAR', () => {
+  it('fooBAR', () => {
     const data = 'fooBAR';
 
     expectTypeOf(toCamelCase(data)).toEqualTypeOf(
@@ -193,7 +193,7 @@ describe('implicit default \'preserveConsecutiveUppercase\' option matches expli
     );
   });
 
-  test('fooBARBiz', () => {
+  it('fooBARBiz', () => {
     const data = 'fooBARBiz';
 
     expectTypeOf(toCamelCase(data)).toEqualTypeOf(
@@ -201,7 +201,7 @@ describe('implicit default \'preserveConsecutiveUppercase\' option matches expli
     );
   });
 
-  test('foo BAR-Biz_BUZZ', () => {
+  it('foo BAR-Biz_BUZZ', () => {
     const data = 'foo BAR-Biz_BUZZ';
 
     expectTypeOf(toCamelCase(data)).toEqualTypeOf(
@@ -209,7 +209,7 @@ describe('implicit default \'preserveConsecutiveUppercase\' option matches expli
     );
   });
 
-  test('foo\tBAR-Biz_BUZZ', () => {
+  it('foo\tBAR-Biz_BUZZ', () => {
     const data = 'foo\tBAR-Biz_BUZZ';
 
     expectTypeOf(toCamelCase(data)).toEqualTypeOf(

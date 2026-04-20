@@ -34,6 +34,7 @@ describe('runtime (dataFirst)', () => {
 
   it('breaks ties with multiple order rules', () => {
     const data = ['a', 'bb', 'b', 'aaaa', 'bbb', 'aa', 'aaa', 'bbbb'];
+
     expect(firstBy(data, (x) => x.length, identity())).toBe('a');
     expect(firstBy(data, [(x) => x.length, 'desc'], identity())).toBe('aaaa');
     expect(firstBy(data, (x) => x.length, [identity(), 'desc'])).toBe('b');
@@ -55,10 +56,9 @@ describe('runtime (dataFirst)', () => {
   });
 
   it('can compare valueOfs', () => {
-    expect(firstBy([new Date(), new Date(1), new Date(2)], identity()))
-      .toStrictEqual(
-        new Date(1),
-      );
+    expect(
+      firstBy([new Date(), new Date(1), new Date(2)], identity()),
+    ).toStrictEqual(new Date(1));
   });
 });
 
@@ -96,6 +96,7 @@ describe('runtime (dataLast)', () => {
 
   it('breaks ties with multiple order rules', () => {
     const data = ['a', 'bb', 'b', 'aaaa', 'bbb', 'aa', 'aaa', 'bbbb'];
+
     expect(
       pipe(
         data,

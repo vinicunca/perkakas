@@ -6,9 +6,9 @@ type SumBy<
   U extends bigint | number,
 > = T extends readonly []
   ? 0
-  : T extends readonly [unknown, ...ReadonlyArray<unknown>]
+  : T extends readonly [unknown, ...(ReadonlyArray<unknown>)]
     ? U
-    : 0 | U;
+    : U | 0;
 
 /**
  * Returns the sum of the elements of an array using the provided mapper.
@@ -21,15 +21,19 @@ type SumBy<
  * where the array is known to be non-empty you can use `hasAtLeast` or
  * `isEmpty` to guard against this case.
  *
- *
  * @param callbackfn - Predicate function.
  * @signature
- *   P.sumBy(fn)(array)
+ *   sumBy(fn)(array)
  * @example
- *    P.pipe(
+ *    pipe(
  *      [{a: 5}, {a: 1}, {a: 3}],
- *      P.sumBy(x => x.a)
+ *      sumBy(x => x.a)
  *    ) // 9
+ *
+ *    pipe(
+ *      [{a: 5n}, {a: 1n}, {a: 3n}],
+ *      sumBy(x => x.a)
+ *    ) // 9n
  * @dataLast
  * @category Array
  */
@@ -54,12 +58,16 @@ export function sumBy<T extends IterableContainer>(
  * @param data - The array.
  * @param callbackfn - Predicate function.
  * @signature
- *   P.sumBy(array, fn)
+ *   sumBy(array, fn)
  * @example
- *    P.sumBy(
+ *    sumBy(
  *      [{a: 5}, {a: 1}, {a: 3}],
  *      x => x.a
  *    ) // 9
+ *    sumBy(
+ *      [{a: 5n}, {a: 1n}, {a: 3n}],
+ *      x => x.a
+ *    ) // 9n
  * @dataFirst
  * @category Array
  */
@@ -77,14 +85,7 @@ export function sumBy(...args: ReadonlyArray<unknown>): unknown {
 }
 
 // eslint-disable-next-line sonar/function-return-type
-function sumByImplementation<T>(
-  array: ReadonlyArray<T>,
-  callbackfn: (
-    value: T,
-    index: number,
-    data: ReadonlyArray<T>
-  ) => bigint | number,
-): bigint | number {
+function sumByImplementation<T>(array: ReadonlyArray<T>, callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => bigint | number): bigint | number {
   const iter = array.entries();
 
   const firstEntry = iter.next();
@@ -102,6 +103,5 @@ function sumByImplementation<T>(
     // @ts-expect-error [ts2365] -- Typescript can't infer that all elements will be a number of the same type.
     sum += summand;
   }
-
   return sum;
-};
+}

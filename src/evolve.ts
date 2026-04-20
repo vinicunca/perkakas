@@ -1,12 +1,11 @@
 import type { IterableContainer } from './internal/types/iterable-container';
-
 import { curry } from './curry';
 
 /**
  * Basic structure of `evolver` parameter of the function `evolve`.
  */
 type GenericEvolver = {
-  readonly [P in string]: ((data: unknown) => unknown) | GenericEvolver;
+  readonly [P in string]: GenericEvolver | ((data: unknown) => unknown);
 };
 
 /**
@@ -15,7 +14,7 @@ type GenericEvolver = {
  * @example
  * interface Data {
  *   id: number;
- *   quartile: Array<number>;
+ *   quartile: number[];
  *   time?: { elapsed: number; remaining?: number };
  * }
  * type Nested = Evolver<Data>; //  => type Nested = {
@@ -36,7 +35,7 @@ type Evolver<T> = T extends object
     : {
         readonly [K in keyof T]?: K extends symbol
           ? never
-          : ((data: Required<T>[K]) => unknown) | Evolver<T[K]>;
+          : Evolver<T[K]> | ((data: Required<T>[K]) => unknown);
       }
   : never;
 
@@ -70,7 +69,7 @@ type Evolved<T, E> = T extends object
  * @param evolver - Object that include functions that is applied to
  * the corresponding value of `data` object at the same path.
  * @signature
- *    P.evolve(data, evolver)
+ *    evolve(data, evolver)
  * @example
  *    const evolver = {
  *      count: add(1),
@@ -107,7 +106,7 @@ export function evolve<T extends object, E extends Evolver<T>>(
  * @param evolver - Object that include functions that is applied to
  * the corresponding value of `data` object at the same path.
  * @signature
- *    P.evolve(evolver)(data)
+ *    evolve(evolver)(data)
  * @example
  *    const evolver = {
  *      count: add(1),
@@ -118,7 +117,7 @@ export function evolve<T extends object, E extends Evolver<T>>(
  *      count: 10,
  *      time: { elapsed: 100, remaining: 1400 },
  *    };
- *    P.pipe(object, P.evolve(evolver))
+ *    pipe(data, evolve(evolver))
  *    // => {
  *    //   id: 10,
  *    //   count: 11,

@@ -9,17 +9,17 @@ type Paths<T, Prefix extends ReadonlyArray<unknown> = []>
         [K in ProperKeyOf<T>]-?: Paths<T[K], [...Prefix, K]>;
       }>
       : PerkakasTypeError<
-          'setPath',
-          'Can only compute paths objects',
-          { type: never; metadata: T }
-        >) extends infer Path
-    // The Paths type is used to define the path param in `setPath`. In order
+        'setPath',
+        'Can only compute paths objects',
+        { type: never; metadata: T }
+      >) extends infer Path
+    ? // The Paths type is used to define the path param in `setPath`. In order
     // for both mutable arrays and readonly arrays to be supported we need to
     // make all results `readonly` (because mutable arrays extend readonly
     // arrays, but not the other way around). Because the result of Paths is
     // a union of arrays we need to distribute Result so that the operator is
     // applied to each member separately.
-    ? Readonly<Path>
+    Readonly<Path>
     : never;
 
 /**
@@ -48,9 +48,9 @@ type ValueAtPath<T, Path> = Path extends readonly [
  * @param path - The array of properties.
  * @param value - The value to set.
  * @signature
- *    P.setPath(obj, path, value)
+ *    setPath(obj, path, value)
  * @example
- *    P.setPath({ a: { b: 1 } }, ['a', 'b'], 2) // => { a: { b: 2 } }
+ *    setPath({ a: { b: 1 } }, ['a', 'b'], 2) // => { a: { b: 2 } }
  * @dataFirst
  * @category Object
  */
@@ -66,9 +66,9 @@ export function setPath<T, Path extends Paths<T>>(
  * @param path - The array of properties.
  * @param value - The value to set.
  * @signature
- *    P.setPath(path, value)(obj)
+ *    setPath(path, value)(obj)
  * @example
- *    P.pipe({ a: { b: 1 } }, P.setPath(['a', 'b'], 2)) // { a: { b: 2 } }
+ *    pipe({ a: { b: 1 } }, setPath(['a', 'b'], 2)) // { a: { b: 2 } }
  * @dataLast
  * @category Object
  */

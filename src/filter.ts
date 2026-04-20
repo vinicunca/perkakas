@@ -13,17 +13,18 @@ type NonRefinedFilteredArray<
   T extends IterableContainer,
   IsItemIncluded extends boolean,
 > = boolean extends IsItemIncluded
-  // We don't know which items of the array the predicate would allow in the
-  // output so we can only safely say that the result is an array with items
-  // from the input array.
-  // TODO: Theoretically we could build an output shape that would take into account the **order** of elements in the input array by reconstructing it with every single element in it either included or not, but this type can grow to a union of as much as 2^n options which might not be usable in practice.
-  ? Array<T[number]>
+  ? // We don't know which items of the array the predicate would allow in the
+// output so we can only safely say that the result is an array with items
+// from the input array.
+// TODO: Theoretically we could build an output shape that would take into account the **order** of elements in the input array by reconstructing it with every single element in it either included or not, but this type can grow to a union of as much as 2^n options which might not be usable in practice.
+  Array<T[number]>
   : IsItemIncluded extends true
-    // If the predicate is always true we return a shallow copy of the array.
-    // If it was originally readonly we need to strip that away.
-    ? Writable<T>
-    // If the predicate is always false we will always return an empty array.
-    : [];
+    ? // If the predicate is always true we return a shallow copy of the array.
+  // If it was originally readonly we need to strip that away.
+    Writable<T>
+    : // If the predicate is always false we will always return an empty
+      // array.
+      [];
 
 /**
  * Creates a shallow copy of a portion of a given array, filtered down to just
@@ -37,9 +38,9 @@ type NonRefinedFilteredArray<
  * @returns A shallow copy of the given array containing just the elements that
  * pass the test. If no elements pass the test, an empty array is returned.
  * @signature
- *    P.filter(data, predicate)
+ *    filter(data, predicate)
  * @example
- *    P.filter([1, 2, 3], x => x % 2 === 1) // => [1, 3]
+ *    filter([1, 2, 3], x => x % 2 === 1) // => [1, 3]
  * @dataFirst
  * @lazy
  * @category Array
@@ -70,9 +71,9 @@ export function filter<
  * @returns A shallow copy of the given array containing just the elements that
  * pass the test. If no elements pass the test, an empty array is returned.
  * @signature
- *    P.filter(predicate)(data)
+ *    filter(predicate)(data)
  * @example
- *    P.pipe([1, 2, 3], P.filter(x => x % 2 === 1)) // => [1, 3]
+ *    pipe([1, 2, 3], filter(x => x % 2 === 1)) // => [1, 3]
  * @dataLast
  * @lazy
  * @category Array
@@ -94,16 +95,11 @@ export function filter(...args: ReadonlyArray<unknown>): unknown {
   return curry(filterImplementation, args, lazyImplementation);
 }
 
-function filterImplementation<T>(
-  data: ReadonlyArray<T>,
-  predicate: (value: T, index: number, array: ReadonlyArray<T>) => boolean,
-): Array<T> {
+function filterImplementation<T>(data: ReadonlyArray<T>, predicate: (value: T, index: number, array: ReadonlyArray<T>) => boolean): Array<T> {
   return data.filter(predicate);
-};
+}
 
-function lazyImplementation<T>(
-  predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
-): LazyEvaluator<T> {
+function lazyImplementation<T>(predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean): LazyEvaluator<T> {
   return (value, index, data) =>
     predicate(value, index, data)
       ? { done: false, hasNext: true, next: value }

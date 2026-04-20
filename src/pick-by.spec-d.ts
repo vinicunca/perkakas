@@ -8,15 +8,19 @@ import { isString } from './is-string';
 import { pickBy } from './pick-by';
 import { pipe } from './pipe';
 
+declare const SYMBOL: unique symbol;
+
 describe('data first', () => {
   it('it should pick props', () => {
     const data = { a: 1, b: 2, A: 3, B: 4 };
     const result = pickBy(data, constant(true));
+
     expectTypeOf(result).toEqualTypeOf<Partial<typeof data>>();
   });
 
   it('allow partial type', () => {
     const result = pickBy({} as { a?: string; b?: number }, constant(true));
+
     expectTypeOf(result).toEqualTypeOf<Partial<{ a: string; b: number }>>();
   });
 });
@@ -25,6 +29,7 @@ describe('data last', () => {
   it('it should pick props', () => {
     const data = { a: 1, b: 2, A: 3, B: 4 };
     const result = pipe(data, pickBy(constant(true)));
+
     expectTypeOf(result).toEqualTypeOf<Partial<typeof data>>();
   });
 
@@ -33,39 +38,42 @@ describe('data last', () => {
       {} as { a?: string; b?: number },
       pickBy(constant(true)),
     );
+
     expectTypeOf(result).toEqualTypeOf<Partial<{ a: string; b: number }>>();
   });
 });
 
 it('symbols are filtered out', () => {
-  const mySymbol = Symbol('mySymbol');
-  const result = pickBy({ [mySymbol]: 1, a: 123 }, constant(true));
+  const result = pickBy({ [SYMBOL]: 1, a: 123 }, constant(true));
+
   expectTypeOf(result).toEqualTypeOf<{ a?: number }>();
 });
 
 it('symbols are not passed to the predicate', () => {
-  pickBy({ [Symbol('mySymbol')]: 1, b: 'hello', c: true }, (value, key) => {
+  pickBy({ [SYMBOL]: 1, b: 'hello', c: true }, (value, key) => {
     expectTypeOf(value).toEqualTypeOf<boolean | string>();
     expectTypeOf(key).toEqualTypeOf<'b' | 'c'>();
+
     return true;
   });
 });
 
-it('Makes wide types partial', () => {
+it('makes wide types partial', () => {
   const wide = pickBy({ a: 0 } as { a: number }, isDeepEqual(1 as const));
+
   expectTypeOf(wide).toEqualTypeOf<{ a?: 1 }>();
 
   const narrow = pickBy({ a: 1 } as const, (_x): _x is 1 => true);
+
   expectTypeOf(narrow).toEqualTypeOf<{ a: 1 }>();
 });
 
 it('works with type-guards', () => {
-  const mySymbol = Symbol('test');
   const result = pickBy(
     {} as {
       a: number;
       b: string;
-      [mySymbol]: string;
+      [SYMBOL]: string;
       literalUnion: 'cat' | 'dog';
       optionalA: number;
       optionalB?: string;
@@ -75,6 +83,7 @@ it('works with type-guards', () => {
     },
     isString,
   );
+
   expectTypeOf(result).toEqualTypeOf<{
     b: string;
     literalUnion: 'cat' | 'dog';
@@ -85,7 +94,7 @@ it('works with type-guards', () => {
   }>();
 });
 
-it('Works well with nullish type-guards', () => {
+it('works well with nullish type-guards', () => {
   const data = {} as {
     required: string;
     optional?: string;
@@ -97,6 +106,7 @@ it('Works well with nullish type-guards', () => {
     optionalNullish?: string | null | undefined;
   };
   const resultDefined = pickBy(data, isDefined);
+
   expectTypeOf(resultDefined).toEqualTypeOf<{
     required: string;
     optional?: string;
@@ -109,6 +119,7 @@ it('Works well with nullish type-guards', () => {
   }>();
 
   const resultNonNull = pickBy(data, isNonNull);
+
   expectTypeOf(resultNonNull).toEqualTypeOf<{
     required: string;
     optional?: string;
@@ -121,6 +132,7 @@ it('Works well with nullish type-guards', () => {
   }>();
 
   const resultNonNullish = pickBy(data, isNonNullish);
+
   expectTypeOf(resultNonNullish).toEqualTypeOf<{
     required: string;
     optional?: string;
@@ -133,35 +145,90 @@ it('Works well with nullish type-guards', () => {
   }>();
 });
 
-describe('Records with non-narrowing predicates', () => {
+describe('records with non-narrowing predicates', () => {
   it('string keys', () => {
     const data = {} as Record<string, string>;
     const result = pickBy(data, constant(true));
+
     expectTypeOf(result).toEqualTypeOf(data);
   });
 
   it('number keys', () => {
     const data = {} as Record<number, string>;
     const result = pickBy(data, constant(true));
+
     expectTypeOf(result).toEqualTypeOf<Record<`${number}`, string>>();
   });
 
   it('combined numbers and strings', () => {
     const data = {} as Record<number | string, string>;
     const result = pickBy(data, constant(true));
+
     expectTypeOf(result).toEqualTypeOf<Record<string, string>>();
   });
 
   it('union of records', () => {
     const data = {} as Record<number, string> | Record<string, string>;
     const dataFirst = pickBy(data, constant(true));
+
     expectTypeOf(dataFirst).toEqualTypeOf<
       Record<`${number}`, string> | Record<string, string>
     >();
 
     const dataLast = pipe(data, pickBy(constant(true)));
+
     expectTypeOf(dataLast).toEqualTypeOf<
       Record<`${number}`, string> | Record<string, string>
     >();
+  });
+});
+
+describe('unbounded records and narrowing predicates', () => {
+  it('simple case', () => {
+    expectTypeOf(
+      pickBy({} as Record<string, number | null>, isNonNull),
+    ).toEqualTypeOf<Record<string, number>>();
+  });
+
+  describe('union record types', () => {
+    it('disjoint value types', () => {
+      expectTypeOf(
+        pickBy(
+          {} as
+          | Record<string, string | null>
+          | Record<string, number | boolean>,
+          isString,
+        ),
+      ).toEqualTypeOf<Record<string, string> | Record<string, never>>();
+    });
+
+    it('shared filtered type', () => {
+      expectTypeOf(
+        pickBy(
+          {} as Record<string, number | null> | Record<string, string | null>,
+          isNonNull,
+        ),
+      ).toEqualTypeOf<Record<string, number> | Record<string, string>>();
+    });
+
+    it('shared remaining type', () => {
+      expectTypeOf(
+        pickBy(
+          {} as Record<string, string | number> | Record<string, string | null>,
+          isNonNull,
+        ),
+      ).toEqualTypeOf<
+        Record<string, string | number> | Record<string, string>
+      >();
+    });
+
+    it('same type after narrowing', () => {
+      expectTypeOf(
+        pickBy(
+          {} as Record<string, string | 123> | Record<string, string | 456>,
+          isString,
+        ),
+      ).toEqualTypeOf<Record<string, string>>();
+    });
   });
 });

@@ -33,8 +33,8 @@ type LazyFunction = LazyDefinition & ((input: unknown) => unknown);
  * directly in the pipe. To disable lazy evaluation, use data-first calls via
  * arrow functions: `($) => map($, callback)` instead of `map(callback)`.
  *
- * Any function can be used in pipes, not just Remeda utilities. For creating
- * custom functions with currying and lazy evaluation support, see the `purry`
+ * Any function can be used in pipes, not just Perkakas utilities. For creating
+ * custom functions with currying and lazy evaluation support, see the `curry`
  * utility.
  *
  * A "headless" variant `piped` is available for creating reusable pipe
@@ -48,55 +48,55 @@ type LazyFunction = LazyDefinition & ((input: unknown) => unknown);
  * @param functions - A sequence of functions that take one argument and
  * return a value.
  * @signature
- *   P.pipe(data, ...functions);
+ *   pipe(data, ...functions);
  * @example
- *    P.pipe([1, 2, 3], P.map(P.multiply(3))); //=> [3, 6, 9]
+ *    pipe([1, 2, 3], map(multiply(3))); //=> [3, 6, 9]
  *
  *    // = Early termination with lazy evaluation =
- *    P.pipe(
+ *    pipe(
  *      hugeArray,
- *      P.map(expensiveComputation),
- *      P.filter(complexPredicate),
+ *      map(expensiveComputation),
+ *      filter(complexPredicate),
  *      // Only processes items until 2 results are found, then stops.
  *      // Most of hugeArray never gets processed.
- *      P.take(2),
+ *      take(2),
  *    );
  *
  *    // = Custom logic within a pipe =
- *    P.pipe(
+ *    pipe(
  *      input,
- *      P.toLowerCase(),
+ *      toLowerCase(),
  *      normalize,
  *      ($) => validate($, CONFIG),
- *      P.split(","),
- *      P.unique(),
+ *      split(","),
+ *      unique(),
  *    );
  *
  *    // = Migrating nested transformations to pipes =
  *    // Nested
- *    const result = P.prop(
- *      P.mapValues(P.groupByProp(users, "department"), P.length()),
+ *    const result = prop(
+ *      mapValues(groupByProp(users, "department"), length()),
  *      "engineering",
  *    );
  *
  *    // Piped
- *    const result = P.pipe(
+ *    const result = pipe(
  *      users,
- *      P.groupByProp("department"),
- *      P.mapValues(P.length()),
- *      P.prop("engineering"),
+ *      groupByProp("department"),
+ *      mapValues(length()),
+ *      prop("engineering"),
  *    );
  *
  *    // = Using the 3rd param of a callback =
  *    // The following would print out `data` in its entirety for each value
  *    // of `data`.
- *    P.forEach([1, 2, 3, 4], (_item, _index, data) => {
+ *    forEach([1, 2, 3, 4], (_item, _index, data) => {
  *      console.log(data);
  *    }); //=> "[1, 2, 3, 4]" logged 4 times
  *
  *    // But with `pipe` data would only contain the items up to the current
  *    // index
- *    P.pipe([1, 2, 3, 4], P.forEach((_item, _index, data) => {
+ *    pipe([1, 2, 3, 4], forEach((_item, _index, data) => {
  *      console.log(data);
  *    })); //=> "[1]", "[1, 2]", "[1, 2, 3]", "[1, 2, 3, 4]"
  * @dataFirst
@@ -326,7 +326,6 @@ export function pipe(
     output = isSingle ? accumulator[0] : accumulator;
     functionIndex += lazySequence.length;
   }
-
   return output;
 }
 

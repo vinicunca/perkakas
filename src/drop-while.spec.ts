@@ -22,6 +22,7 @@ describe('data first', () => {
   it('should return a copy of the array when the first item fails the predicate', () => {
     const data = [1, 2, 3, 4];
     const result = dropWhile(data, (n) => n !== 1);
+
     expect(result).toStrictEqual(data);
     expect(result).not.toBe(data);
   });
@@ -70,6 +71,7 @@ describe('data last', () => {
       data,
       dropWhile((n) => n !== 1),
     );
+
     expect(result).toStrictEqual(data);
     expect(result).not.toBe(data);
   });

@@ -21,21 +21,23 @@ it('dataLast', () => {
 it('number keys are converted to strings in the mapper', () => {
   omitBy({ 123: 'hello' }, (_, key) => {
     expect(key).toBe('123');
+
     return true;
   });
 });
 
 it('symbols are passed through', () => {
   const mySymbol = Symbol('mySymbol');
+
   expect(omitBy({ [mySymbol]: 1 }, constant(true))).toStrictEqual({
     [mySymbol]: 1,
   });
 });
 
 it('symbols are not passed to the predicate', () => {
-  const mock = vi.fn();
+  const mock = vi.fn<(x: string) => boolean>();
   const data = { [Symbol('mySymbol')]: 1, a: 'hello' };
   omitBy(data, mock);
-  expect(mock).toHaveBeenCalledTimes(1);
+
   expect(mock).toHaveBeenCalledExactlyOnceWith('hello', 'a', data);
 });

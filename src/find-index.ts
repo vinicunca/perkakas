@@ -15,9 +15,9 @@ import { curry } from './curry';
  * @returns The index of the first element in the array that passes the test.
  * Otherwise, -1.
  * @signature
- *    P.findIndex(data, predicate)
+ *    findIndex(data, predicate)
  * @example
- *    P.findIndex([1, 3, 4, 6], n => n % 2 === 0) // => 2
+ *    findIndex([1, 3, 4, 6], n => n % 2 === 0) // => 2
  * @dataFirst
  * @category Array
  */
@@ -40,11 +40,11 @@ export function findIndex<T>(
  * @returns The index of the first element in the array that passes the test.
  * Otherwise, -1.
  * @signature
- *    P.findIndex(predicate)(data)
+ *    findIndex(predicate)(data)
  * @example
- *    P.pipe(
+ *    pipe(
  *      [1, 3, 4, 6],
- *      P.findIndex(n => n % 2 === 0)
+ *      findIndex(n => n % 2 === 0)
  *    ); // => 2
  * @dataLast
  * @category Array
@@ -57,9 +57,6 @@ export function findIndex(...args: ReadonlyArray<unknown>): unknown {
   return curry(findIndexImplementation, args);
 }
 
-function findIndexImplementation<T>(
-  data: ReadonlyArray<T>,
-  predicate: (value: T, index: number, obj: ReadonlyArray<T>) => boolean,
-): number {
+function findIndexImplementation<T>(data: ReadonlyArray<T>, predicate: (value: T, index: number, obj: ReadonlyArray<T>) => boolean): number {
   return data.findIndex(predicate);
 }

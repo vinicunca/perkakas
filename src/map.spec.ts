@@ -18,24 +18,24 @@ describe('data_first', () => {
   });
 });
 
-describe('data_last', () => {
-  it('map', () => {
+describe('data-last', () => {
+  it('passes the value to the mapper as its first argument', () => {
     expect(pipe([1, 2, 3], map(multiply(2)))).toStrictEqual([2, 4, 6]);
   });
 
-  it('map pipe', () => {
+  it('passes the index to the mapper as its second argument', () => {
     expect(
       pipe(
         [0, 0, 0],
-        map((_, i) => i),
+        map((_, index) => index),
       ),
     ).toStrictEqual([0, 1, 2]);
   });
 });
 
-describe('pipe', () => {
+describe(pipe, () => {
   it('invoked lazily', () => {
-    const count = vi.fn(multiply(10));
+    const count = vi.fn<(x: number) => number>(multiply(10));
 
     expect(pipe([1, 2, 3], map(count), take(2))).toStrictEqual([10, 20]);
 
@@ -43,7 +43,7 @@ describe('pipe', () => {
   });
 
   it('invoked lazily (indexed)', () => {
-    const count = vi.fn((_: unknown, index: number) => index);
+    const count = vi.fn<(_: unknown, index: number) => number>((_, index) => index);
 
     expect(pipe([0, 0, 0], map(count), take(2))).toStrictEqual([0, 1]);
 
@@ -105,6 +105,7 @@ it('complex variadic number array', () => {
     123,
     true,
   ];
+
   expect(map(input, identity())).toStrictEqual(input);
 });
 

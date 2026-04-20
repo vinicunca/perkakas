@@ -8,7 +8,7 @@ it('dataFirst', () => {
     b: 2,
     c: 3,
   };
-  const cb = vi.fn();
+  const cb = vi.fn<(value: number, key: string) => void>();
 
   forEachObj(data, cb);
 
@@ -19,7 +19,7 @@ it('dataFirst', () => {
 
 it('doesn\'t run on symbol keys', () => {
   const data = { [Symbol('a')]: 4 };
-  const cb = vi.fn();
+  const cb = vi.fn<(value: never, key: never) => void>();
 
   forEachObj(data, cb);
 
@@ -36,7 +36,7 @@ it('number keys are translated to string', () => {
 
 it('dataLast', () => {
   const data = { a: 1, b: 2, c: 3 };
-  const cb = vi.fn();
+  const cb = vi.fn<(value: number, key: string) => void>();
 
   expect(pipe(data, forEachObj(cb))).toBe(data);
   expect(cb).toHaveBeenNthCalledWith(1, 1, 'a', data);

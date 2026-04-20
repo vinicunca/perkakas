@@ -1,5 +1,4 @@
 import type { LazyEvaluator } from './internal/types/lazy-evaluator';
-
 import { curryFromLazy } from './internal/curry-from-lazy';
 import { lazyEmptyEvaluator, SKIP_ITEM } from './internal/utility-evaluators';
 
@@ -11,10 +10,10 @@ import { lazyEmptyEvaluator, SKIP_ITEM } from './internal/utility-evaluators';
  * @param data - The input items.
  * @param other - The items to compare against.
  * @signature
- *    P.intersection(data, other)
+ *    intersection(data, other)
  * @example
- *    P.intersection([1, 2, 3], [2, 3, 5]); // => [2, 3]
- *    P.intersection([1, 1, 2, 2], [1]); // => [1]
+ *    intersection([1, 2, 3], [2, 3, 5]); // => [2, 3]
+ *    intersection([1, 1, 2, 2], [1]); // => [1]
  * @dataFirst
  * @lazy
  * @category Array
@@ -31,11 +30,11 @@ export function intersection<T, S>(
  *
  * @param other - The items to compare against.
  * @signature
- *    P.intersection(other)(data)
+ *    intersection(other)(data)
  * @example
- *    P.pipe([1, 2, 3], P.intersection([2, 3, 5])); // => [2, 3]
- *    P.pipe([1, 1, 2, 2], P.intersection([1])); // => [1]
- * @dataFirst
+ *    pipe([1, 2, 3], intersection([2, 3, 5])); // => [2, 3]
+ *    pipe([1, 1, 2, 2], intersection([1])); // => [1]
+ * @dataLast
  * @lazy
  * @category Array
  */

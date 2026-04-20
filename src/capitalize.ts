@@ -18,9 +18,9 @@ import { curry } from './curry';
  *
  * @param data - A string.
  * @signature
- *   P.capitalize(data);
+ *   capitalize(data);
  * @example
- *   P.capitalize("hello world"); // "Hello world"
+ *   capitalize("hello world"); // "Hello world"
  * @dataFirst
  * @category String
  */
@@ -43,9 +43,9 @@ export function capitalize<T extends string>(data: T): Capitalize<T>;
  * `toTitleCase`.
  *
  * @signature
- *   P.capitalize()(data);
+ *   capitalize()(data);
  * @example
- *   P.pipe("hello world", P.capitalize()); // "Hello world"
+ *   pipe("hello world", capitalize()); // "Hello world"
  * @dataLast
  * @category String
  */

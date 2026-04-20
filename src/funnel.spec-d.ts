@@ -41,7 +41,7 @@ describe('\'call\' method args', () => {
   it('rest args', () => {
     const foo = funnel(doNothing(), {
       reducer:
-        // @ts-expect-error [ts(6133)] -- We want to use explicit names, not prefixed with _
+      // @ts-expect-error [ts(6133)] -- We want to use explicit names, not prefixed with _
         (_: 'test' | undefined, ...as: Array<string>) => 'test' as const,
 
       triggerAt: 'start',
@@ -75,9 +75,7 @@ describe('derive the reducer accumulator type from the executor param', () => {
       },
       {
         reducer: (reduced) => {
-          expectTypeOf(reduced).toEqualTypeOf<
-            ReadonlyArray<number> | undefined
-          >();
+          expectTypeOf(reduced).toEqualTypeOf<ReadonlyArray<number> | undefined>();
 
           return reduced!;
         },

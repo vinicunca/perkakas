@@ -1,13 +1,11 @@
 import type { RequireAtLeastOne } from 'type-fest';
 
-/**
- * We use the value provided by the reducer to also determine if a call
- * was done during a timeout period. This means that even when no reducer
- * is provided, we still need a dummy reducer that would return something
- * other than `undefined`. It is safe to cast this to R (which might be
- * anything) because the callback would never use it as it would be typed
- * as a zero-args function.
- */
+// We use the value provided by the reducer to also determine if a call
+// was done during a timeout period. This means that even when no reducer
+// is provided, we still need a dummy reducer that would return something
+// other than `undefined`. It is safe to cast this to R (which might be
+// anything) because the callback would never use it as it would be typed
+// as a zero-args function.
 const VOID_REDUCER_SYMBOL = Symbol('funnel/voidReducer');
 const voidReducer = <R>(): R => VOID_REDUCER_SYMBOL as R;
 
@@ -15,11 +13,9 @@ type FunnelOptions<Args extends RestArguments, R> = {
   readonly reducer?: (accumulator: R | undefined, ...params: Args) => R;
 } & FunnelTimingOptions;
 
-/**
- * Not all combinations of timing options are valid, there are dependencies
- * between them to ensure users can't configure the funnel in a way which would
- * cause it to never trigger.
- */
+// Not all combinations of timing options are valid, there are dependencies
+// between them to ensure users can't configure the funnel in a way which would
+// cause it to never trigger.
 type FunnelTimingOptions
   = | ({ readonly triggerAt?: 'end' } & (
       | ({ readonly minGapMs: number } & RequireAtLeastOne<{
@@ -118,7 +114,7 @@ interface Funnel<Args extends RestArguments = []> {
  * be started. Any calls during this time would be passed to the reducer, and
  * when the timers are done, the reduced result would trigger an invocation.
  * - `both` - the function will be invoked immediately, and then the funnel
- * would behave as if it was in the 'end' state. @default 'end'.
+ * would behave as if it was in the 'end' state. Default: 'end'.
  * @param options.minQuietPeriodMs - The burst timer prevents subsequent calls
  * in short succession to cause excessive invocations (aka "debounce"). This
  * duration represents the **minimum** amount of time that needs to pass
@@ -142,9 +138,9 @@ interface Funnel<Args extends RestArguments = []> {
  * then resets the funnel to it's initial state.
  * - `isIdle` - Checks if there are any active timeouts.
  * @signature
- *   P.funnel(callback, options);
+ *   funnel(callback, options);
  * @example
- *   const debouncer = P.funnel(
+ *   const debouncer = funnel(
  *     () => {
  *       console.log("Callback executed!");
  *     },
@@ -153,7 +149,7 @@ interface Funnel<Args extends RestArguments = []> {
  *   debouncer.call();
  *   debouncer.call();
  *
- *   const throttle = P.funnel(
+ *   const throttle = funnel(
  *     () => {
  *       console.log("Callback executed!");
  *     },
@@ -173,27 +169,21 @@ export function funnel<Args extends RestArguments = [], R = never>(
     reducer = voidReducer,
   }: FunnelOptions<Args, R>,
 ): Funnel<Args> {
-  /**
-   * We manage execution via 2 timeouts, one to track bursts of calls, and one
-   * to track the interval between invocations. Together we refer to the period
-   * where any of these are active as a "cool-down period".
-   */
+  // We manage execution via 2 timeouts, one to track bursts of calls, and one
+  // to track the interval between invocations. Together we refer to the period
+  // where any of these are active as a "cool-down period".
   let burstTimeoutId: ReturnType<typeof setTimeout> | undefined;
   let intervalTimeoutId: ReturnType<typeof setTimeout> | undefined;
 
-  /**
-   * Until invoked, all calls are reduced into a single value that would be sent
-   * to the executor on invocation.
-   */
+  // Until invoked, all calls are reduced into a single value that would be sent
+  // to the executor on invocation.
   let preparedData: R | undefined;
 
-  /**
-   * In order to be able to limit the total size of the burst (when
-   * `maxBurstDurationMs` is used) we need to track when the burst started.
-   */
+  // In order to be able to limit the total size of the burst (when
+  // `maxBurstDurationMs` is used) we need to track when the burst started.
   let burstStartTimestamp: number | undefined;
 
-  function invoke(): void {
+  const invoke = (): void => {
     const param = preparedData;
     if (param === undefined) {
       // There were no calls during both cool-down periods.
@@ -203,7 +193,6 @@ export function funnel<Args extends RestArguments = [], R = never>(
     // Make sure the args aren't accidentally used again
     preparedData = undefined;
 
-    // eslint-disable-next-line sonar/different-types-comparison
     if (param === VOID_REDUCER_SYMBOL) {
       // @ts-expect-error [ts2554] -- R is typed as `never` because we hide the
       // symbol that `voidReducer` returns; there's no way to make TypeScript
@@ -216,43 +205,35 @@ export function funnel<Args extends RestArguments = [], R = never>(
     if (minGapMs !== undefined) {
       intervalTimeoutId = setTimeout(handleIntervalEnd, minGapMs);
     }
-  }
+  };
 
   function handleIntervalEnd(): void {
-    /**
-     * When called via a timeout the timeout is already cleared, but when called
-     * via `flush` we need to manually clear it.
-     */
+    // When called via a timeout the timeout is already cleared, but when called
+    // via `flush` we need to manually clear it.
     clearTimeout(intervalTimeoutId);
     intervalTimeoutId = undefined;
 
     if (burstTimeoutId !== undefined) {
-      /**
-       * As long as one of the timeouts is active we don't invoke the function.
-       * Each timeout's end event handler has a call to invoke, so we are
-       * guaranteed to invoke the function eventually.
-       */
+      // As long as one of the timeouts is active we don't invoke the function.
+      // Each timeout's end event handler has a call to invoke, so we are
+      // guaranteed to invoke the function eventually.
       return;
     }
 
     invoke();
-  };
+  }
 
-  function handleBurstEnd(): void {
-    /**
-     * When called via a timeout the timeout is already cleared, but when called
-     * via `flush` we need to manually clear it.
-     */
+  const handleBurstEnd = (): void => {
+    // When called via a timeout the timeout is already cleared, but when called
+    // via `flush` we need to manually clear it.
     clearTimeout(burstTimeoutId);
     burstTimeoutId = undefined;
     burstStartTimestamp = undefined;
 
     if (intervalTimeoutId !== undefined) {
-      /**
-       * As long as one of the timeouts is active we don't invoke the function.
-       * Each timeout's end event handler has a call to invoke, so we are
-       * guaranteed to invoke the function eventually.
-       */
+      // As long as one of the timeouts is active we don't invoke the function.
+      // Each timeout's end event handler has a call to invoke, so we are
+      // guaranteed to invoke the function eventually.
       return;
     }
 
@@ -261,21 +242,18 @@ export function funnel<Args extends RestArguments = [], R = never>(
 
   return {
     call: (...args) => {
-      /**
-       * We act based on the initial state of the timeouts before the call is
-       * handled and causes the timeouts to change.
-       */
-      const wasIdle = burstTimeoutId === undefined && intervalTimeoutId === undefined;
+      // We act based on the initial state of the timeouts before the call is
+      // handled and causes the timeouts to change.
+      const wasIdle
+        = burstTimeoutId === undefined && intervalTimeoutId === undefined;
 
       if (triggerAt !== 'start' || wasIdle) {
         preparedData = reducer(preparedData, ...args);
       }
 
       if (burstTimeoutId === undefined && !wasIdle) {
-        /**
-         * We are not in an active burst period but in an interval period. We
-         * don't start a new burst window until the next invoke.
-         */
+        // We are not in an active burst period but in an interval period. We
+        // don't start a new burst window until the next invoke.
         return;
       }
 
@@ -284,11 +262,9 @@ export function funnel<Args extends RestArguments = [], R = never>(
         || maxBurstDurationMs !== undefined
         || minGapMs === undefined
       ) {
-        /**
-         * The timeout tracking the burst period needs to be reset every time
-         * another call is made so that it waits the full cool-down duration
-         * before it is released.
-         */
+        // The timeout tracking the burst period needs to be reset every time
+        // another call is made so that it waits the full cool-down duration
+        // before it is released.
         clearTimeout(burstTimeoutId);
 
         const now = Date.now();
@@ -300,11 +276,9 @@ export function funnel<Args extends RestArguments = [], R = never>(
             ? (minQuietPeriodMs ?? 0)
             : Math.min(
                 minQuietPeriodMs ?? maxBurstDurationMs,
-                /**
-                 * We need to account for the time already spent so that we
-                 * don't wait longer than the maxDelay.
-                 */
-                maxBurstDurationMs - (now - burstStartTimestamp),
+                // We need to account for the time already spent so that we
+                // don't wait longer than the maxDelay.
+                Math.max(0, maxBurstDurationMs - (now - burstStartTimestamp)),
               );
 
         burstTimeoutId = setTimeout(handleBurstEnd, burstRemainingMs);

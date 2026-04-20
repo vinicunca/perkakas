@@ -1,8 +1,6 @@
 import type { Writable } from 'type-fest';
-
 import type { IterableContainer } from './internal/types/iterable-container';
 import type { LazyEvaluator } from './internal/types/lazy-evaluator';
-
 import { curry } from './curry';
 
 /**
@@ -17,9 +15,9 @@ import { curry } from './curry';
  * @param data - The values that would be iterated on.
  * @param callbackfn - A function to execute for each element in the array.
  * @signature
- *    P.forEach(data, callbackfn)
+ *    forEach(data, callbackfn)
  * @example
- *    P.forEach([1, 2, 3], x => {
+ *    forEach([1, 2, 3], x => {
  *      console.log(x)
  *    });
  * @dataFirst
@@ -42,11 +40,11 @@ export function forEach<T extends IterableContainer>(
  * @param callbackfn - A function to execute for each element in the array.
  * @returns The original array (the ref itself, not a shallow copy of it).
  * @signature
- *    P.forEach(callbackfn)(data)
+ *    forEach(callbackfn)(data)
  * @example
- *    P.pipe(
+ *    pipe(
  *      [1, 2, 3],
- *      P.forEach(x => {
+ *      forEach(x => {
  *        console.log(x)
  *      })
  *    ) // => [1, 2, 3]
@@ -71,9 +69,7 @@ function forEachImplementation<T>(
   return data;
 }
 
-function lazyImplementation<T>(
-  callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => void,
-): LazyEvaluator<T> {
+function lazyImplementation<T>(callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => void): LazyEvaluator<T> {
   return (value, index, data) => {
     callbackfn(value, index, data);
     return { done: false, hasNext: true, next: value };

@@ -128,7 +128,7 @@ it('source with any', () => {
   /* eslint-enable ts/no-explicit-any */
 });
 
-it('Type-fest issue #601?', () => {
+it('type-fest issue #601?', () => {
   // Test for issue https://github.com/sindresorhus/type-fest/issues/601
   expectTypeOf(
     merge(

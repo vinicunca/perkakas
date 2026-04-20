@@ -19,17 +19,14 @@ type ZippingFunction<
  *
  * @param fn - The function applied to each position of the list.
  * @signature
- *   P.zipWith(fn)(first, second)
+ *   zipWith(fn)(first, second)
  * @example
- *   P.zipWith((a: string, b: string) => a + b)(['1', '2', '3'], ['a', 'b', 'c']) // => ['1a', '2b', '3c']
+ *   zipWith((a: string, b: string) => a + b)(['1', '2', '3'], ['a', 'b', 'c']) // => ['1a', '2b', '3c']
  * @category Array
  */
 export function zipWith<TItem1, TItem2, Value>(
   fn: ZippingFunction<ReadonlyArray<TItem1>, ReadonlyArray<TItem2>, Value>,
-): <T1 extends IterableContainer<TItem1>, T2 extends IterableContainer<TItem2>>(
-  first: T1,
-  second: T2,
-) => Array<Value>;
+): (first: ReadonlyArray<TItem1>, second: ReadonlyArray<TItem2>) => Array<Value>;
 
 /**
  * Creates a new list from two supplied lists by calling the supplied function
@@ -38,9 +35,9 @@ export function zipWith<TItem1, TItem2, Value>(
  * @param second - The second input list.
  * @param fn - The function applied to each position of the list.
  * @signature
- *   P.zipWith(second, fn)(first)
+ *   zipWith(second, fn)(first)
  * @example
- *   P.pipe(['1', '2', '3'], P.zipWith(['a', 'b', 'c'], (a, b) => a + b)) // => ['1a', '2b', '3c']
+ *   pipe(['1', '2', '3'], zipWith(['a', 'b', 'c'], (a, b) => a + b)) // => ['1a', '2b', '3c']
  * @dataLast
  * @lazy
  * @category Array
@@ -59,9 +56,9 @@ export function zipWith<
  * @param second - The second input list.
  * @param fn - The function applied to each position of the list.
  * @signature
- *   P.zipWith(first, second, fn)
+ *   zipWith(first, second, fn)
  * @example
- *   P.zipWith(['1', '2', '3'], ['a', 'b', 'c'], (a, b) => a + b) // => ['1a', '2b', '3c']
+ *   zipWith(['1', '2', '3'], ['a', 'b', 'c'], (a, b) => a + b) // => ['1a', '2b', '3c']
  * @dataFirst
  * @lazy
  * @category Array
@@ -110,10 +107,7 @@ function zipWithImplementation<
     : second.map((item, index) => fn(first[index], item, index, datum));
 }
 
-function lazyImplementation<T1, T2 extends IterableContainer, Value>(
-  second: T2,
-  fn: ZippingFunction<ReadonlyArray<T1>, T2, Value>,
-): LazyEvaluator<T1, Value> {
+function lazyImplementation<T1, T2 extends IterableContainer, Value>(second: T2, fn: ZippingFunction<ReadonlyArray<T1>, T2, Value>): LazyEvaluator<T1, Value> {
   return (value, index, data) => ({
     next: fn(value, second[index], index, [data, second]),
     hasNext: true,

@@ -84,10 +84,7 @@ describe('indexed', () => {
   });
 
   it('readonly number array', () => {
-    const result = map(
-      [1, 2, 3] as ReadonlyArray<number>,
-      (x, index) => x + index,
-    );
+    const result = map([1, 2, 3] as ReadonlyArray<number>, (x, index) => x + index);
 
     expectTypeOf(result).toEqualTypeOf<Array<number>>();
   });

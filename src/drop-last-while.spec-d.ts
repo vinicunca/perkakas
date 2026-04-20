@@ -23,19 +23,13 @@ describe('data-first', () => {
   });
 
   it('prefix array', () => {
-    const result = dropLastWhile(
-      [1] as [number, ...Array<boolean>],
-      constant(true),
-    );
+    const result = dropLastWhile([1] as [number, ...Array<boolean>], constant(true));
 
     expectTypeOf(result).toEqualTypeOf<Array<boolean | number>>();
   });
 
   it('suffix array', () => {
-    const result = dropLastWhile(
-      [1] as [...Array<boolean>, number],
-      constant(true),
-    );
+    const result = dropLastWhile([1] as [...Array<boolean>, number], constant(true));
 
     expectTypeOf(result).toEqualTypeOf<Array<boolean | number>>();
   });
@@ -56,10 +50,7 @@ describe('data-first', () => {
   });
 
   it('union of arrays', () => {
-    const result = dropLastWhile(
-      [] as Array<boolean> | Array<string>,
-      constant(true),
-    );
+    const result = dropLastWhile([] as Array<boolean> | Array<string>, constant(true));
 
     expectTypeOf(result).toEqualTypeOf<Array<boolean | string>>();
   });
@@ -201,9 +192,7 @@ describe('data-last', () => {
         dropLastWhile((item, index, array) => {
           expectTypeOf(item).toEqualTypeOf<boolean | number | string>();
           expectTypeOf(index).toEqualTypeOf<number>();
-          expectTypeOf(array).toEqualTypeOf<
-            [number, ...Array<boolean>, string]
-          >();
+          expectTypeOf(array).toEqualTypeOf<[number, ...Array<boolean>, string]>();
 
           return true;
         }),

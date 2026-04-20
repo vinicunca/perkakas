@@ -24,19 +24,13 @@ describe('data-first', () => {
   });
 
   it('prefix array', () => {
-    const result = takeWhile(
-      [1] as [number, ...Array<boolean>],
-      constant(true),
-    );
+    const result = takeWhile([1] as [number, ...Array<boolean>], constant(true));
 
     expectTypeOf(result).toEqualTypeOf<Array<boolean | number>>();
   });
 
   it('suffix array', () => {
-    const result = takeWhile(
-      [1] as [...Array<boolean>, number],
-      constant(true),
-    );
+    const result = takeWhile([1] as [...Array<boolean>, number], constant(true));
 
     expectTypeOf(result).toEqualTypeOf<Array<boolean | number>>();
   });
@@ -57,10 +51,7 @@ describe('data-first', () => {
   });
 
   it('union of arrays', () => {
-    const result = takeWhile(
-      [] as Array<boolean> | Array<string>,
-      constant(true),
-    );
+    const result = takeWhile([] as Array<boolean> | Array<string>, constant(true));
 
     expectTypeOf(result).toEqualTypeOf<Array<boolean | string>>();
   });
@@ -86,10 +77,7 @@ describe('data-last', () => {
   });
 
   it('regular array with union type', () => {
-    const result = pipe(
-      [] as Array<number | string>,
-      takeWhile(constant(true)),
-    );
+    const result = pipe([] as Array<number | string>, takeWhile(constant(true)));
 
     expectTypeOf(result).toEqualTypeOf<Array<number | string>>();
   });
@@ -128,10 +116,7 @@ describe('data-last', () => {
   });
 
   it('union of arrays', () => {
-    const result = pipe(
-      [] as Array<boolean> | Array<string>,
-      takeWhile(constant(true)),
-    );
+    const result = pipe([] as Array<boolean> | Array<string>, takeWhile(constant(true)));
 
     expectTypeOf(result).toEqualTypeOf<Array<boolean | string>>();
   });
@@ -214,9 +199,7 @@ describe('data-last', () => {
         takeWhile((item, index, array) => {
           expectTypeOf(item).toEqualTypeOf<boolean | number | string>();
           expectTypeOf(index).toEqualTypeOf<number>();
-          expectTypeOf(array).toEqualTypeOf<
-            [number, ...Array<boolean>, string]
-          >();
+          expectTypeOf(array).toEqualTypeOf<[number, ...Array<boolean>, string]>();
 
           return true;
         }),

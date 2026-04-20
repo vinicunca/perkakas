@@ -10,25 +10,25 @@ import type { NarrowedTo } from './internal/types/narrowed-to';
  * @param data - The variable to check.
  * @returns The input type, narrowed to only plain objects.
  * @signature
- *    P.isPlainObject(data)
+ *    isPlainObject(data)
  * @example
  *    // true
- *    P.isPlainObject({}) //=> true
- *    P.isPlainObject({ a: 123 }) //=> true
+ *    isPlainObject({}) //=> true
+ *    isPlainObject({ a: 123 }) //=> true
  *
  *    // false
- *    P.isPlainObject([]) //=> false
- *    P.isPlainObject(Promise.resolve("something")) //=> false
- *    P.isPlainObject(new Date()) //=> false
- *    P.isPlainObject(new Error("error")) //=> false
- *    P.isPlainObject('somethingElse') //=> false
- *    P.isPlainObject(null) //=> false
+ *    isPlainObject([]) //=> false
+ *    isPlainObject(Promise.resolve("something")) //=> false
+ *    isPlainObject(new Date()) //=> false
+ *    isPlainObject(new Error("error")) //=> false
+ *    isPlainObject('somethingElse') //=> false
+ *    isPlainObject(null) //=> false
  * @category Guard
  */
 export function isPlainObject<T>(
   data: Readonly<Record<PropertyKey, unknown>> | T,
 ): data is NarrowedTo<T, Record<PropertyKey, unknown>> {
-  if (typeof data !== 'object' || data === null) {
+  if (typeof data !== 'object' || data == null) {
     return false;
   }
 

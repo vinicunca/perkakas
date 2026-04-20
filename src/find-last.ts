@@ -20,9 +20,9 @@ import { curry } from './curry';
  * @returns The last (highest-index) element in the array that satisfies the
  * provided testing function; undefined if no matching element is found.
  * @signature
- *    P.findLast(data, predicate)
+ *    findLast(data, predicate)
  * @example
- *    P.findLast([1, 3, 4, 6], n => n % 2 === 1) // => 3
+ *    findLast([1, 3, 4, 6], n => n % 2 === 1) // => 3
  * @dataFirst
  * @category Array
  */
@@ -54,11 +54,11 @@ export function findLast<T>(
  * @returns The last (highest-index) element in the array that satisfies the
  * provided testing function; undefined if no matching element is found.
  * @signature
- *    P.findLast(predicate)(data)
+ *    findLast(predicate)(data)
  * @example
- *    P.pipe(
+ *    pipe(
  *      [1, 3, 4, 6],
- *      P.findLast(n => n % 2 === 1)
+ *      findLast(n => n % 2 === 1)
  *    ) // => 3
  * @dataLast
  * @category Array
@@ -74,11 +74,8 @@ export function findLast(...args: ReadonlyArray<unknown>): unknown {
   return curry(findLastImplementation, args);
 }
 
-function findLastImplementation<T, S extends T>(
-  data: ReadonlyArray<T>,
-  predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S,
-): S | undefined {
-  // TODO: When node 18 reaches end-of-life bump target lib to ES2023+ and use `Array.prototype.findLast` here.
+function findLastImplementation<T, S extends T>(data: ReadonlyArray<T>, predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S): S | undefined {
+  // TODO [>2]: When node 18 reaches end-of-life bump target lib to ES2023+ and use `Array.prototype.findLast` here.
 
   for (let i = data.length - 1; i >= 0; i--) {
     const item = data[i]!;
@@ -88,4 +85,4 @@ function findLastImplementation<T, S extends T>(
   }
 
   return undefined;
-};
+}

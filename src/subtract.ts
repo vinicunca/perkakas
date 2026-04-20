@@ -6,11 +6,11 @@ import { curry } from './curry';
  * @param value - The number.
  * @param subtrahend - The number to subtract from the value.
  * @signature
- *    P.subtract(value, subtrahend);
+ *    subtract(value, subtrahend);
  * @example
- *    P.subtract(10, 5) // => 5
- *    P.subtract(10, -5) // => 15
- *    P.reduce([1, 2, 3, 4], P.subtract, 20) // => 10
+ *    subtract(10, 5) // => 5
+ *    subtract(10, -5) // => 15
+ *    reduce([1, 2, 3, 4], subtract, 20) // => 10
  * @dataFirst
  * @category Number
  */
@@ -22,11 +22,11 @@ export function subtract(value: number, subtrahend: number): number;
  *
  * @param subtrahend - The number to subtract from the value.
  * @signature
- *    P.subtract(subtrahend)(value);
+ *    subtract(subtrahend)(value);
  * @example
- *    P.subtract(5)(10) // => 5
- *    P.subtract(-5)(10) // => 15
- *    P.map([1, 2, 3, 4], P.subtract(1)) // => [0, 1, 2, 3]
+ *    subtract(5)(10) // => 5
+ *    subtract(-5)(10) // => 15
+ *    map([1, 2, 3, 4], subtract(1)) // => [0, 1, 2, 3]
  * @dataLast
  * @category Number
  */

@@ -34,30 +34,35 @@ describe('primitives', () => {
 describe('objects', () => {
   it('arrays', () => {
     const data = [1, 2, 3];
+
     expect(isStrictEqual(data, [1, 2, 3])).toBe(false);
     expect(isStrictEqual(data, data)).toBe(true);
   });
 
   it('objects', () => {
     const data = { a: 1, b: 2 };
+
     expect(isStrictEqual(data, { a: 1, b: 2 })).toBe(false);
     expect(isStrictEqual(data, data)).toBe(true);
   });
 
   it('uint arrays', () => {
     const data = new Uint8Array([1, 2, 3]);
+
     expect(isStrictEqual(data, new Uint8Array([1, 2, 3]))).toBe(false);
     expect(isStrictEqual(data, data)).toBe(true);
   });
 
   it('maps', () => {
     const data = new Map([['a', 1]]);
+
     expect(isStrictEqual(data, new Map([['a', 1]]))).toBe(false);
     expect(isStrictEqual(data, data)).toBe(true);
   });
 
   it('sets', () => {
     const data = new Set([1, 2, 3]);
+
     expect(isStrictEqual(data, new Set([1, 2, 3]))).toBe(false);
     expect(isStrictEqual(data, data)).toBe(true);
   });
@@ -66,25 +71,28 @@ describe('objects', () => {
 describe('built-ins', () => {
   it('regex', () => {
     const data = /a/u;
+
     expect(isStrictEqual(data, /a/u)).toBe(false);
     expect(isStrictEqual(data, data)).toBe(true);
   });
 
   it('dates', () => {
     const data = new Date();
+
     expect(isStrictEqual(data, new Date())).toBe(false);
     expect(isStrictEqual(data, data)).toBe(true);
   });
 
   it('promises', () => {
     const data = Promise.resolve(1);
+
     expect(isStrictEqual(data, Promise.resolve(1))).toBe(false);
     expect(isStrictEqual(data, data)).toBe(true);
   });
 });
 
 describe('special cases', () => {
-  it('naN', () => {
+  it('literal NaN', () => {
     // eslint-disable-next-line unicorn/prefer-number-properties
     expect(isStrictEqual(NaN, NaN)).toBe(true);
     expect(isStrictEqual(Number.NaN, Number.NaN)).toBe(true);

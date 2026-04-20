@@ -11,9 +11,9 @@ import { curry } from './curry';
  * @param items - The array to sort.
  * @param cmp - The comparator function.
  * @signature
- *    P.sort(items, cmp)
+ *    sort(items, cmp)
  * @example
- *    P.sort([4, 2, 7, 5], (a, b) => a - b); // => [2, 4, 5, 7]
+ *    sort([4, 2, 7, 5], (a, b) => a - b); // => [2, 4, 5, 7]
  * @dataFirst
  * @category Array
  */
@@ -30,9 +30,9 @@ export function sort<T extends IterableContainer>(
  *
  * @param cmp - The comparator function.
  * @signature
- *    P.sort(cmp)(items)
+ *    sort(cmp)(items)
  * @example
- *    P.pipe([4, 2, 7, 5], P.sort((a, b) => a - b)) // => [2, 4, 5, 7]
+ *    pipe([4, 2, 7, 5], sort((a, b) => a - b)) // => [2, 4, 5, 7]
  * @dataLast
  * @category Array
  */

@@ -12,9 +12,9 @@ import { curry } from './curry';
  * @returns A new array with the items of the first array followed by the items
  * of the second array.
  * @signature
- *    P.concat(data, other);
+ *    concat(data, other);
  * @example
- *    P.concat([1, 2, 3], ['a']) // [1, 2, 3, 'a']
+ *    concat([1, 2, 3], ['a']) // [1, 2, 3, 'a']
  * @dataFirst
  * @category Array
  */
@@ -32,9 +32,9 @@ export function concat<
  * @returns A new array with the items of the first array followed by the items
  * of the second array.
  * @signature
- *    P.concat(arr2)(arr1);
+ *    concat(arr2)(arr1);
  * @example
- *    P.concat(['a'])([1, 2, 3]) // [1, 2, 3, 'a']
+ *    concat(['a'])([1, 2, 3]) // [1, 2, 3, 'a']
  * @dataLast
  * @category Array
  */
@@ -49,9 +49,6 @@ export function concat(...args: ReadonlyArray<unknown>): unknown {
 function concatImplementation<
   T1 extends IterableContainer,
   T2 extends IterableContainer,
->(
-  arr1: T1,
-  arr2: T2,
-): [...T1, ...T2] {
+>(arr1: T1, arr2: T2): [...T1, ...T2] {
   return [...arr1, ...arr2];
-};
+}

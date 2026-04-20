@@ -1,8 +1,5 @@
 import { expect, it } from 'vitest';
-import {
-  ALL_TYPES_DATA_PROVIDER,
-  TestClass,
-} from '../test/types-data-provider';
+import { ALL_TYPES_DATA_PROVIDER, TestClass } from '../test/types-data-provider';
 import { isPlainObject } from './is-plain-object';
 
 it('accepts simple objects', () => {
@@ -29,7 +26,7 @@ it('accepts null prototypes', () => {
   expect(isPlainObject(Object.create(null))).toBe(true);
 });
 
-it('aLL_TYPES_DATA_PROVIDER', () => {
+it('everything from ALL_TYPES_DATA_PROVIDER', () => {
   expect(ALL_TYPES_DATA_PROVIDER.filter(isPlainObject)).toMatchInlineSnapshot(`
         [
           {

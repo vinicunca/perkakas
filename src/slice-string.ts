@@ -1,6 +1,9 @@
+/* eslint-disable sonar/argument-type */
 /**
- * Extracts a section of this string and returns it as a new string, without
- * modifying the original string. Equivalent to `String.prototype.slice`.
+ * Extracts a section of a string between two indices.
+ *
+ * This function is a wrapper around the built-in [`String.prototype.slice`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/slice)
+ * method.
  *
  * @param data - The string to extract from.
  * @param indexStart - The index of the first character to include in the
@@ -9,11 +12,11 @@
  * returned substring.
  * @returns A new string containing the extracted section of the string.
  * @signature
- *    P.sliceString(data, indexStart, indexEnd)
+ *    sliceString(data, indexStart, indexEnd)
  * @example
- *    P.sliceString("abcdefghijkl", 1) // => `bcdefghijkl`
- *    P.sliceString("abcdefghijkl", 4, 7) // => `efg`
- * @dataLast
+ *    sliceString("abcdefghijkl", 1) // => `bcdefghijkl`
+ *    sliceString("abcdefghijkl", 4, 7) // => `efg`
+ * @dataFirst
  * @category String
  */
 export function sliceString(
@@ -23,8 +26,10 @@ export function sliceString(
 ): string;
 
 /**
- * Extracts a section of this string and returns it as a new string, without
- * modifying the original string. Equivalent to `String.prototype.slice`.
+ * Extracts a section of a string between two indices.
+ *
+ * This function is a wrapper around the built-in [`String.prototype.slice`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/slice)
+ * method.
  *
  * @param indexStart - The index of the first character to include in the
  * returned substring.
@@ -32,10 +37,10 @@ export function sliceString(
  * returned substring, or `undefined` for the rest of the string.
  * @returns A new string containing the extracted section of the string.
  * @signature
- *    P.sliceString(indexStart, indexEnd)(string)
+ *    sliceString(indexStart, indexEnd)(string)
  * @example
- *    P.sliceString(1)("abcdefghijkl") // => `bcdefghijkl`
- *    P.sliceString(4, 7)("abcdefghijkl") // => `efg`
+ *    sliceString(1)("abcdefghijkl") // => `bcdefghijkl`
+ *    sliceString(4, 7)("abcdefghijkl") // => `efg`
  * @dataLast
  * @category String
  */

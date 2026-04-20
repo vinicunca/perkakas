@@ -6,6 +6,7 @@ import { pipe } from './pipe';
 describe('runtime (dataFirst)', () => {
   it('works', () => {
     const data = [2, 1, 3];
+
     expect(nthBy(data, 0, identity())).toBe(1);
     expect(nthBy(data, 1, identity())).toBe(2);
     expect(nthBy(data, 2, identity())).toBe(3);
@@ -13,6 +14,7 @@ describe('runtime (dataFirst)', () => {
 
   it('handles negative indexes', () => {
     const data = [2, 1, 3];
+
     expect(nthBy(data, -1, identity())).toBe(3);
     expect(nthBy(data, -2, identity())).toBe(2);
     expect(nthBy(data, -3, identity())).toBe(1);
@@ -25,6 +27,7 @@ describe('runtime (dataFirst)', () => {
 
   it('works with complex order rules', () => {
     const data = ['aaaa', 'b', 'bb', 'a', 'aaa', 'bbbb', 'aa', 'bbb'] as const;
+
     expect(nthBy(data, 0, (a) => a.length, identity())).toBe('a');
     expect(nthBy(data, 1, (a) => a.length, identity())).toBe('b');
     expect(nthBy(data, 2, (a) => a.length, identity())).toBe('aa');
@@ -39,6 +42,7 @@ describe('runtime (dataFirst)', () => {
 describe('runtime (dataLast)', () => {
   it('works', () => {
     const data = [2, 1, 3];
+
     expect(pipe(data, nthBy(0, identity()))).toBe(1);
     expect(pipe(data, nthBy(1, identity()))).toBe(2);
     expect(pipe(data, nthBy(2, identity()))).toBe(3);
@@ -46,6 +50,7 @@ describe('runtime (dataLast)', () => {
 
   it('handles negative indexes', () => {
     const data = [2, 1, 3];
+
     expect(pipe(data, nthBy(-1, identity()))).toBe(3);
     expect(pipe(data, nthBy(-2, identity()))).toBe(2);
     expect(pipe(data, nthBy(-3, identity()))).toBe(1);
@@ -58,6 +63,7 @@ describe('runtime (dataLast)', () => {
 
   it('works with complex order rules', () => {
     const data = ['aaaa', 'b', 'bb', 'a', 'aaa', 'bbbb', 'aa', 'bbb'] as const;
+
     expect(
       pipe(
         data,

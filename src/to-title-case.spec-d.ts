@@ -1,54 +1,54 @@
-import { describe, expectTypeOf, test } from 'vitest';
+import { describe, expectTypeOf, it } from 'vitest';
 import { pipe } from './pipe';
 import { toTitleCase } from './to-title-case';
 
-test('empty string', () => {
+it('empty string', () => {
   expectTypeOf(toTitleCase('')).toEqualTypeOf<''>();
 });
 
-test('basic words', () => {
+it('basic words', () => {
   expectTypeOf(toTitleCase('hello world')).toEqualTypeOf<'Hello World'>();
 });
 
-test('camelCase', () => {
+it('camelCase', () => {
   expectTypeOf(toTitleCase('fooBar')).toEqualTypeOf<'Foo Bar'>();
 });
 
-test('pascalCase', () => {
+it('pascalCase', () => {
   expectTypeOf(toTitleCase('FooBar')).toEqualTypeOf<'Foo Bar'>();
 });
 
-test('kebab-case', () => {
+it('kebab-case', () => {
   expectTypeOf(toTitleCase('foo-bar')).toEqualTypeOf<'Foo Bar'>();
 });
 
-test('snake_case', () => {
+it('snake_case', () => {
   expectTypeOf(toTitleCase('foo_bar')).toEqualTypeOf<'Foo Bar'>();
 });
 
-test('sCREAMING_SNAKE_CASE', () => {
+it('sCREAMING_SNAKE_CASE', () => {
   expectTypeOf(toTitleCase('FOO_BAR')).toEqualTypeOf<'Foo Bar'>();
 });
 
-test('sCREAMING-KEBAB-CASE', () => {
+it('sCREAMING-KEBAB-CASE', () => {
   expectTypeOf(toTitleCase('FOO-BAR')).toEqualTypeOf<'Foo Bar'>();
 });
 
-test('single word lowercase', () => {
+it('single word lowercase', () => {
   expectTypeOf(toTitleCase('foo')).toEqualTypeOf<'Foo'>();
 });
 
-test('single word uppercase', () => {
+it('single word uppercase', () => {
   expectTypeOf(toTitleCase('FOO')).toEqualTypeOf<'Foo'>();
 });
 
-test('mixed separators', () => {
+it('mixed separators', () => {
   expectTypeOf(
     toTitleCase('foo-bar_baz qux'),
   ).toEqualTypeOf<'Foo Bar Baz Qux'>();
 });
 
-test('data-last', () => {
+it('data-last', () => {
   expectTypeOf(
     pipe('fooBar' as const, toTitleCase()),
   ).toEqualTypeOf<'Foo Bar'>();
@@ -57,51 +57,51 @@ test('data-last', () => {
 describe('lodash spec', () => {
   // @see https://github.com/lodash/lodash/blob/main/test/test.js#L21226-L21236
 
-  test('lodash example: \'--foo-bar--\'', () => {
+  it('lodash example: \'--foo-bar--\'', () => {
     expectTypeOf(toTitleCase('--foo-bar--')).toEqualTypeOf<'Foo Bar'>();
   });
 
-  test('lodash example: \'fooBar\'', () => {
+  it('lodash example: \'fooBar\'', () => {
     expectTypeOf(toTitleCase('fooBar')).toEqualTypeOf<'Foo Bar'>();
   });
 
-  test('lodash example: \'__FOO_BAR__\'', () => {
+  it('lodash example: \'__FOO_BAR__\'', () => {
     expectTypeOf(toTitleCase('__FOO_BAR__')).toEqualTypeOf<'Foo Bar'>();
   });
 });
 
 describe('edge cases', () => {
-  test('repeated separators', () => {
+  it('repeated separators', () => {
     expectTypeOf(toTitleCase('foo____bar')).toEqualTypeOf<'Foo Bar'>();
     expectTypeOf(toTitleCase('foo----bar')).toEqualTypeOf<'Foo Bar'>();
     expectTypeOf(toTitleCase('foo    bar')).toEqualTypeOf<'Foo Bar'>();
   });
 
-  test('leading and trailing separators', () => {
+  it('leading and trailing separators', () => {
     expectTypeOf(toTitleCase('--foo-bar--')).toEqualTypeOf<'Foo Bar'>();
     expectTypeOf(toTitleCase('__foo_bar__')).toEqualTypeOf<'Foo Bar'>();
     expectTypeOf(toTitleCase('  foo bar  ')).toEqualTypeOf<'Foo Bar'>();
   });
 
-  test('vendor prefixed css property', () => {
+  it('vendor prefixed css property', () => {
     expectTypeOf(
       toTitleCase('-webkit-animation'),
     ).toEqualTypeOf<'Webkit Animation'>();
   });
 
-  test('double prefixed', () => {
+  it('double prefixed', () => {
     expectTypeOf(
       toTitleCase('--very-prefixed'),
     ).toEqualTypeOf<'Very Prefixed'>();
   });
 
-  test('complex mixed case', () => {
+  it('complex mixed case', () => {
     expectTypeOf(
       toTitleCase('foo-bar_abc xyzBarFoo'),
     ).toEqualTypeOf<'Foo Bar Abc Xyz Bar Foo'>();
   });
 
-  test('with numbers', () => {
+  it('with numbers', () => {
     expectTypeOf(toTitleCase('foo123bar')).toEqualTypeOf<'Foo 123 Bar'>();
     expectTypeOf(toTitleCase('foo-bar-123')).toEqualTypeOf<'Foo Bar 123'>();
     expectTypeOf(
@@ -111,12 +111,12 @@ describe('edge cases', () => {
 });
 
 describe('unicode', () => {
-  test('maintains diacritics', () => {
+  it('maintains diacritics', () => {
     expectTypeOf(toTitleCase('café naïve')).toEqualTypeOf<'Café Naïve'>();
     expectTypeOf(toTitleCase('CAFÉ_NAÏVE')).toEqualTypeOf<'Café Naïve'>();
   });
 
-  test('handles non-Latin scripts', () => {
+  it('handles non-Latin scripts', () => {
     expectTypeOf(
       toTitleCase('москва петербург'),
     ).toEqualTypeOf<'Москва Петербург'>();
@@ -125,7 +125,7 @@ describe('unicode', () => {
 });
 
 describe('preserveConsecutiveUppercase option', () => {
-  test('defaults to true', () => {
+  it('defaults to true', () => {
     expectTypeOf(
       toTitleCase('XMLHttpRequest'),
     ).toEqualTypeOf<'XML Http Request'>();
@@ -146,7 +146,7 @@ describe('preserveConsecutiveUppercase option', () => {
     ).toEqualTypeOf<'Get CSS Property'>();
   });
 
-  test('false', () => {
+  it('false', () => {
     expectTypeOf(
       toTitleCase('XMLHttpRequest', { preserveConsecutiveUppercase: false }),
     ).toEqualTypeOf<'Xml Http Request'>();
@@ -158,7 +158,7 @@ describe('preserveConsecutiveUppercase option', () => {
     ).toEqualTypeOf<'Get Css Property'>();
   });
 
-  test('mixed case examples', () => {
+  it('mixed case examples', () => {
     expectTypeOf(toTitleCase('fooBAR')).toEqualTypeOf<'Foo BAR'>();
     expectTypeOf(
       toTitleCase('fooBAR', { preserveConsecutiveUppercase: true }),
@@ -168,7 +168,7 @@ describe('preserveConsecutiveUppercase option', () => {
     ).toEqualTypeOf<'Foo Bar'>();
   });
 
-  test('complex examples', () => {
+  it('complex examples', () => {
     expectTypeOf(
       toTitleCase('foo_BAR-biz_BUZZ'),
     ).toEqualTypeOf<'Foo BAR Biz BUZZ'>();
@@ -180,7 +180,7 @@ describe('preserveConsecutiveUppercase option', () => {
     ).toEqualTypeOf<'Foo Bar Biz Buzz'>();
   });
 
-  test('data-last', () => {
+  it('data-last', () => {
     expectTypeOf(
       pipe('XMLHttpRequest' as const, toTitleCase(/* default options */)),
     ).toEqualTypeOf<'XML Http Request'>();

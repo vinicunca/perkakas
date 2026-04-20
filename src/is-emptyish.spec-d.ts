@@ -1,6 +1,9 @@
+/* eslint-disable sonar/no-all-duplicated-branches */
 import type { Tagged } from 'type-fest';
-import { describe, expectTypeOf, test } from 'vitest';
+import { describe, expectTypeOf, it } from 'vitest';
 import { isEmptyish } from './is-emptyish';
+
+declare const SYMBOL: unique symbol;
 
 // eslint-disable-next-line ts/no-unused-vars -- This is a trick in order to bypass breaking changes introduced in TypeScript that made TypedArrays like `Int8Array` accept a required type parameter.
 const TYPED_ARRAY = new Int8Array(1);
@@ -11,7 +14,7 @@ const BUFFER = Buffer.alloc(0);
 export type Buffer = typeof BUFFER;
 
 describe('strings', () => {
-  test('primitives', () => {
+  it('primitives', () => {
     const data = 'test' as string;
     if (isEmptyish(data)) {
       expectTypeOf(data).toEqualTypeOf<''>();
@@ -20,7 +23,7 @@ describe('strings', () => {
     }
   });
 
-  test('empty literal', () => {
+  it('empty literal', () => {
     const data = '' as const;
     if (isEmptyish(data)) {
       expectTypeOf(data).toEqualTypeOf<''>();
@@ -29,7 +32,7 @@ describe('strings', () => {
     }
   });
 
-  test('non-empty literals', () => {
+  it('non-empty literals', () => {
     const data = 'test' as const;
     if (isEmptyish(data)) {
       expectTypeOf(data).toEqualTypeOf<never>();
@@ -38,7 +41,7 @@ describe('strings', () => {
     }
   });
 
-  test('union of non-empty literals', () => {
+  it('union of non-empty literals', () => {
     const data = 'cat' as 'cat' | 'dog';
     if (isEmptyish(data)) {
       expectTypeOf(data).toEqualTypeOf<never>();
@@ -47,7 +50,7 @@ describe('strings', () => {
     }
   });
 
-  test('union with an empty literal', () => {
+  it('union with an empty literal', () => {
     const data = '' as '' | 'cat' | 'dog';
     if (isEmptyish(data)) {
       expectTypeOf(data).toEqualTypeOf<''>();
@@ -56,7 +59,7 @@ describe('strings', () => {
     }
   });
 
-  test('non-empty string templates', () => {
+  it('non-empty string templates', () => {
     const data = 'prefix_0' as `prefix_${number}`;
     if (isEmptyish(data)) {
       expectTypeOf(data).toEqualTypeOf<never>();
@@ -65,7 +68,7 @@ describe('strings', () => {
     }
   });
 
-  test('string template (with empty)', () => {
+  it('string template (with empty)', () => {
     const data = '' as '' | `prefix_${number}`;
     if (isEmptyish(data)) {
       expectTypeOf(data).toEqualTypeOf<''>();
@@ -74,7 +77,7 @@ describe('strings', () => {
     }
   });
 
-  test('empty-able string template', () => {
+  it('empty-able string template', () => {
     const data = '' as `${'' | 'cat'}${'' | 'dog'}`;
     if (isEmptyish(data)) {
       expectTypeOf(data).toEqualTypeOf<''>();
@@ -85,7 +88,7 @@ describe('strings', () => {
 });
 
 describe('branded', () => {
-  test('primitive', () => {
+  it('primitive', () => {
     const data = '' as Tagged<string, 'brand'>;
     if (isEmptyish(data)) {
       expectTypeOf(data).toEqualTypeOf<Tagged<'', 'brand'>>();
@@ -94,7 +97,7 @@ describe('branded', () => {
     }
   });
 
-  test('non-empty literal', () => {
+  it('non-empty literal', () => {
     const data = 'test' as Tagged<'test', 'brand'>;
     if (isEmptyish(data)) {
       expectTypeOf(data).toEqualTypeOf<never>();
@@ -103,7 +106,7 @@ describe('branded', () => {
     }
   });
 
-  test('empty literal', () => {
+  it('empty literal', () => {
     const data = '' as Tagged<'', 'brand'>;
     if (isEmptyish(data)) {
       expectTypeOf(data).toEqualTypeOf<Tagged<'', 'brand'>>();
@@ -112,7 +115,7 @@ describe('branded', () => {
     }
   });
 
-  test('union of non-empty literals', () => {
+  it('union of non-empty literals', () => {
     const data = 'cat' as Tagged<'cat' | 'dog', 'brand'>;
     if (isEmptyish(data)) {
       expectTypeOf(data).toEqualTypeOf<never>();
@@ -121,7 +124,7 @@ describe('branded', () => {
     }
   });
 
-  test('union of empty and non-empty literals', () => {
+  it('union of empty and non-empty literals', () => {
     const data = '' as Tagged<'test' | '', 'brand'>;
     if (isEmptyish(data)) {
       expectTypeOf(data).toEqualTypeOf<Tagged<'', 'brand'>>();
@@ -132,7 +135,7 @@ describe('branded', () => {
 });
 
 describe('nullish', () => {
-  test('null', () => {
+  it('null', () => {
     const data = null;
     if (isEmptyish(data)) {
       expectTypeOf(data).toEqualTypeOf<null>();
@@ -141,7 +144,7 @@ describe('nullish', () => {
     }
   });
 
-  test('undefined', () => {
+  it('undefined', () => {
     const data = undefined;
     if (isEmptyish(data)) {
       expectTypeOf(data).toEqualTypeOf<undefined>();
@@ -150,7 +153,7 @@ describe('nullish', () => {
     }
   });
 
-  test('optional nullable', () => {
+  it('optional nullable', () => {
     const data = null as null | undefined;
     if (isEmptyish(data)) {
       expectTypeOf(data).toEqualTypeOf<null | undefined>();
@@ -159,7 +162,7 @@ describe('nullish', () => {
     }
   });
 
-  test('optional primitive', () => {
+  it('optional primitive', () => {
     const data = undefined as string | undefined;
     if (isEmptyish(data)) {
       expectTypeOf(data).toEqualTypeOf<'' | undefined>();
@@ -168,7 +171,7 @@ describe('nullish', () => {
     }
   });
 
-  test('optional non-empty literal', () => {
+  it('optional non-empty literal', () => {
     const data = 'cat' as 'cat' | 'dog' | undefined;
     if (isEmptyish(data)) {
       expectTypeOf(data).toEqualTypeOf<undefined>();
@@ -177,7 +180,7 @@ describe('nullish', () => {
     }
   });
 
-  test('optional empty literal', () => {
+  it('optional empty literal', () => {
     const data = '' as '' | undefined;
     if (isEmptyish(data)) {
       expectTypeOf(data).toEqualTypeOf<'' | undefined>();
@@ -186,7 +189,7 @@ describe('nullish', () => {
     }
   });
 
-  test('nullable primitive', () => {
+  it('nullable primitive', () => {
     const data = null as string | null;
     if (isEmptyish(data)) {
       expectTypeOf(data).toEqualTypeOf<'' | null>();
@@ -195,7 +198,7 @@ describe('nullish', () => {
     }
   });
 
-  test('nullable non-empty literal', () => {
+  it('nullable non-empty literal', () => {
     const data = 'cat' as 'cat' | null;
     if (isEmptyish(data)) {
       expectTypeOf(data).toEqualTypeOf<null>();
@@ -204,7 +207,7 @@ describe('nullish', () => {
     }
   });
 
-  test('nullable empty literal', () => {
+  it('nullable empty literal', () => {
     const data = '' as '' | null;
     if (isEmptyish(data)) {
       expectTypeOf(data).toEqualTypeOf<'' | null>();
@@ -213,7 +216,7 @@ describe('nullish', () => {
     }
   });
 
-  test('optional, nullable, empty, and non-empty', () => {
+  it('optional, nullable, empty, and non-empty', () => {
     const data = '' as '' | 'cat' | null | undefined;
     if (isEmptyish(data)) {
       expectTypeOf(data).toEqualTypeOf<'' | null | undefined>();
@@ -226,7 +229,7 @@ describe('nullish', () => {
 describe('all tuple shapes', () => {
   // See TupleParts for a description of all possible tuple shapes.
 
-  test('empty tuple', () => {
+  it('empty tuple', () => {
     const data = [] as [];
     if (isEmptyish(data)) {
       expectTypeOf(data).toEqualTypeOf<[]>();
@@ -236,7 +239,7 @@ describe('all tuple shapes', () => {
     }
   });
 
-  test('empty readonly tuple', () => {
+  it('empty readonly tuple', () => {
     const data = [] as const;
     if (isEmptyish(data)) {
       expectTypeOf(data).toEqualTypeOf<readonly []>();
@@ -246,7 +249,7 @@ describe('all tuple shapes', () => {
     }
   });
 
-  test('fixed tuple', () => {
+  it('fixed tuple', () => {
     const data = [1, 2, 3] as [number, number, number];
     if (isEmptyish(data)) {
       // Can never be empty
@@ -256,7 +259,7 @@ describe('all tuple shapes', () => {
     }
   });
 
-  test('fixed readonly tuple', () => {
+  it('fixed readonly tuple', () => {
     const data = [1, 2, 3] as const;
     if (isEmptyish(data)) {
       // Can never be empty
@@ -266,7 +269,7 @@ describe('all tuple shapes', () => {
     }
   });
 
-  test('array', () => {
+  it('array', () => {
     const data = [] as Array<'cat'>;
     if (isEmptyish(data)) {
       // No narrowing when the array is mutable so that it remains mutable
@@ -277,7 +280,7 @@ describe('all tuple shapes', () => {
     }
   });
 
-  test('readonly array', () => {
+  it('readonly array', () => {
     const data = [] as ReadonlyArray<'cat'>;
     if (isEmptyish(data)) {
       // When the array is not mutable we can narrow it down because it can't
@@ -288,7 +291,7 @@ describe('all tuple shapes', () => {
     }
   });
 
-  test('optional tuple', () => {
+  it('optional tuple', () => {
     const data = [] as [number?, number?, string?];
     if (isEmptyish(data)) {
       // No narrowing when the array is mutable so that it remains mutable
@@ -299,7 +302,7 @@ describe('all tuple shapes', () => {
     }
   });
 
-  test('readonly optional tuple', () => {
+  it('readonly optional tuple', () => {
     const data = [] as readonly [number?, number?, string?];
     if (isEmptyish(data)) {
       // When the array is not mutable we can narrow it down because it can't
@@ -310,7 +313,7 @@ describe('all tuple shapes', () => {
     }
   });
 
-  test('fixed-prefix array', () => {
+  it('fixed-prefix array', () => {
     const data = [1] as [number, ...Array<number>];
     if (isEmptyish(data)) {
       // Can never be empty
@@ -320,7 +323,7 @@ describe('all tuple shapes', () => {
     }
   });
 
-  test('readonly fixed-prefix array', () => {
+  it('readonly fixed-prefix array', () => {
     const data = [1] as readonly [number, ...Array<number>];
     if (isEmptyish(data)) {
       // Can never be empty
@@ -330,7 +333,7 @@ describe('all tuple shapes', () => {
     }
   });
 
-  test('fixed-suffix array', () => {
+  it('fixed-suffix array', () => {
     const data = [1] as [...Array<number>, number];
     if (isEmptyish(data)) {
       // Can never be empty
@@ -340,7 +343,7 @@ describe('all tuple shapes', () => {
     }
   });
 
-  test('readonly fixed-suffix array', () => {
+  it('readonly fixed-suffix array', () => {
     const data = [1] as readonly [...Array<number>, number];
     if (isEmptyish(data)) {
       // Can never be empty
@@ -350,7 +353,7 @@ describe('all tuple shapes', () => {
     }
   });
 
-  test('mixed tuples', () => {
+  it('mixed tuples', () => {
     const data = [1] as [number, string?];
     if (isEmptyish(data)) {
       // Can never be empty
@@ -360,7 +363,7 @@ describe('all tuple shapes', () => {
     }
   });
 
-  test('readonly mixed tuples', () => {
+  it('readonly mixed tuples', () => {
     const data = [1] as readonly [number, string?];
     if (isEmptyish(data)) {
       // Can never be empty
@@ -370,7 +373,7 @@ describe('all tuple shapes', () => {
     }
   });
 
-  test('optional prefix arrays', () => {
+  it('optional prefix arrays', () => {
     const data = [] as [number?, ...Array<number>];
     if (isEmptyish(data)) {
       // No narrowing when the array is mutable so that it remains mutable
@@ -381,7 +384,7 @@ describe('all tuple shapes', () => {
     }
   });
 
-  test('readonly optional prefix arrays', () => {
+  it('readonly optional prefix arrays', () => {
     const data = [] as readonly [number?, ...Array<number>];
     if (isEmptyish(data)) {
       // When the array is not mutable we can narrow it down because it can't
@@ -392,7 +395,7 @@ describe('all tuple shapes', () => {
     }
   });
 
-  test('fixed-elements array', () => {
+  it('fixed-elements array', () => {
     const data = [1, 2] as [number, ...Array<number>, number];
     if (isEmptyish(data)) {
       // Can never be empty
@@ -402,7 +405,7 @@ describe('all tuple shapes', () => {
     }
   });
 
-  test('readonly fixed-elements array', () => {
+  it('readonly fixed-elements array', () => {
     const data = [1, 2] as readonly [number, ...Array<number>, number];
     if (isEmptyish(data)) {
       // Can never be empty
@@ -416,7 +419,7 @@ describe('all tuple shapes', () => {
 });
 
 describe('array-like', () => {
-  test('typed arrays', () => {
+  it('typed arrays', () => {
     const data = {} as TypedArray;
     if (isEmptyish(data)) {
       // Typed arrays are either mutable via their underlying buffer, or they
@@ -429,7 +432,7 @@ describe('array-like', () => {
     }
   });
 
-  test('buffers', () => {
+  it('buffers', () => {
     const data = {} as Buffer;
     if (isEmptyish(data)) {
       // There's no way to construct an empty Buffer at the type level.
@@ -440,7 +443,7 @@ describe('array-like', () => {
     }
   });
 
-  test('sets', () => {
+  it('sets', () => {
     const data = new Set<number>();
     if (isEmptyish(data)) {
       expectTypeOf(data).toExtend<Set<number>>();
@@ -449,7 +452,7 @@ describe('array-like', () => {
     }
   });
 
-  test('readonly sets', () => {
+  it('readonly sets', () => {
     const data = new Set<number>() as ReadonlySet<number>;
     if (isEmptyish(data)) {
       expectTypeOf(data).toEqualTypeOf<ReadonlySet<never>>();
@@ -458,24 +461,18 @@ describe('array-like', () => {
     }
   });
 
-  test('array-like (e.g., `arguments`)', () => {
-    // @ts-expect-error [ts6133] -- This is the best way to initialize a proper
-    // `arguments` array.
-    // eslint-disable-next-line ts/no-unused-vars
-    function foo(): void {
-      // eslint-disable-next-line prefer-rest-params
-      const args = arguments;
-      if (isEmptyish(args)) {
-        expectTypeOf(args).toExtend<IArguments>();
-      } else {
-        expectTypeOf(args).toEqualTypeOf<IArguments>();
-      }
+  it('array-like (e.g., `arguments`)', () => {
+    const args = getIArguments();
+    if (isEmptyish(args)) {
+      expectTypeOf(args).toExtend<IArguments>();
+    } else {
+      expectTypeOf(args).toEqualTypeOf<IArguments>();
     }
   });
 });
 
 describe('plain objects', () => {
-  test('never record', () => {
+  it('never record', () => {
     const data = {} as Record<PropertyKey, never>;
     if (isEmptyish(data)) {
       expectTypeOf(data).toEqualTypeOf<Record<PropertyKey, never>>();
@@ -484,7 +481,7 @@ describe('plain objects', () => {
     }
   });
 
-  test('readonly never record', () => {
+  it('readonly never record', () => {
     const data = {} as Readonly<Record<PropertyKey, never>>;
     if (isEmptyish(data)) {
       expectTypeOf(data).toEqualTypeOf<Readonly<Record<PropertyKey, never>>>();
@@ -493,7 +490,7 @@ describe('plain objects', () => {
     }
   });
 
-  test('plain object', () => {
+  it('plain object', () => {
     const data = { a: 123, b: 'hello' } as { a: number; b: string };
     if (isEmptyish(data)) {
       expectTypeOf(data).toEqualTypeOf<never>();
@@ -502,7 +499,7 @@ describe('plain objects', () => {
     }
   });
 
-  test('readonly plain object', () => {
+  it('readonly plain object', () => {
     const data = { a: 123, b: 'hello' } as const;
     if (isEmptyish(data)) {
       expectTypeOf(data).toEqualTypeOf<never>();
@@ -514,7 +511,7 @@ describe('plain objects', () => {
     }
   });
 
-  test('unbounded record', () => {
+  it('unbounded record', () => {
     const data = {} as Record<string, string>;
     if (isEmptyish(data)) {
       expectTypeOf(data).toExtend<Record<string, string>>();
@@ -523,7 +520,7 @@ describe('plain objects', () => {
     }
   });
 
-  test('readonly unbounded record', () => {
+  it('readonly unbounded record', () => {
     const data = {} as Readonly<Record<string, string>>;
     if (isEmptyish(data)) {
       expectTypeOf(data).toEqualTypeOf<Readonly<Record<string, never>>>();
@@ -532,7 +529,7 @@ describe('plain objects', () => {
     }
   });
 
-  test('partial bounded record', () => {
+  it('partial bounded record', () => {
     const data = {} as { a?: number; b?: string };
     if (isEmptyish(data)) {
       expectTypeOf(data).toExtend<{ a?: number; b?: string }>();
@@ -541,7 +538,7 @@ describe('plain objects', () => {
     }
   });
 
-  test('readonly partial bounded record', () => {
+  it('readonly partial bounded record', () => {
     const data = {} as { readonly a?: number; readonly b?: string };
     if (isEmptyish(data)) {
       expectTypeOf(data).toEqualTypeOf<{
@@ -556,7 +553,7 @@ describe('plain objects', () => {
     }
   });
 
-  test('partial and required props', () => {
+  it('partial and required props', () => {
     const data = {} as { a: number; b?: string };
     if (isEmptyish(data)) {
       expectTypeOf(data).toEqualTypeOf<never>();
@@ -565,7 +562,7 @@ describe('plain objects', () => {
     }
   });
 
-  test('required interfaces', () => {
+  it('required interfaces', () => {
     interface MyInterface {
       a: number;
     }
@@ -577,7 +574,7 @@ describe('plain objects', () => {
     }
   });
 
-  test('optional interfaces', () => {
+  it('optional interfaces', () => {
     interface MyInterface {
       a?: number;
     }
@@ -589,7 +586,7 @@ describe('plain objects', () => {
     }
   });
 
-  test('optional readonly interfaces', () => {
+  it('optional readonly interfaces', () => {
     interface MyInterface {
       readonly a?: number;
     }
@@ -601,7 +598,7 @@ describe('plain objects', () => {
     }
   });
 
-  test('required prop and index signature', () => {
+  it('required prop and index signature', () => {
     const data = { a: 'hello' } as { a: string; [key: string]: string };
     if (isEmptyish(data)) {
       expectTypeOf(data).toEqualTypeOf<never>();
@@ -610,7 +607,7 @@ describe('plain objects', () => {
     }
   });
 
-  test('readonly required prop and index signature', () => {
+  it('readonly required prop and index signature', () => {
     const data = { a: 'hello' } as {
       readonly a: string;
       readonly [key: string]: string;
@@ -625,7 +622,7 @@ describe('plain objects', () => {
     }
   });
 
-  test('optional prop and index signature', () => {
+  it('optional prop and index signature', () => {
     const data = {} as { a?: string; [key: string]: string };
     if (isEmptyish(data)) {
       expectTypeOf(data).toExtend<{ a?: string; [key: string]: string }>();
@@ -634,7 +631,7 @@ describe('plain objects', () => {
     }
   });
 
-  test('readonly optional prop and index signature', () => {
+  it('readonly optional prop and index signature', () => {
     const data = {} as { readonly a?: string; readonly [key: string]: string };
     if (isEmptyish(data)) {
       expectTypeOf(data).toEqualTypeOf<{
@@ -649,39 +646,36 @@ describe('plain objects', () => {
     }
   });
 
-  test('required symbol prop', () => {
-    const mySymbol = Symbol('hello');
-    const data = { [mySymbol]: 'world' };
+  it('required symbol prop', () => {
+    const data = { [SYMBOL]: 'world' };
     if (isEmptyish(data)) {
       expectTypeOf(data).toEqualTypeOf<never>();
     } else {
-      expectTypeOf(data).toEqualTypeOf<{ [mySymbol]: string }>();
+      expectTypeOf(data).toEqualTypeOf<{ [SYMBOL]: string }>();
     }
   });
 
-  test('optional symbol prop', () => {
-    const mySymbol = Symbol('hello');
-    const data = {} as { [mySymbol]?: string };
+  it('optional symbol prop', () => {
+    const data = {} as { [SYMBOL]?: string };
     if (isEmptyish(data)) {
-      expectTypeOf(data).toExtend<{ [mySymbol]?: string }>();
+      expectTypeOf(data).toExtend<{ [SYMBOL]?: string }>();
     } else {
-      expectTypeOf(data).toEqualTypeOf<{ [mySymbol]?: string }>();
+      expectTypeOf(data).toEqualTypeOf<{ [SYMBOL]?: string }>();
     }
   });
 
-  test('readonly optional symbol prop', () => {
-    const mySymbol = Symbol('hello');
-    const data = {} as { readonly [mySymbol]?: string };
+  it('readonly optional symbol prop', () => {
+    const data = {} as { readonly [SYMBOL]?: string };
     if (isEmptyish(data)) {
-      expectTypeOf(data).toEqualTypeOf<{ readonly [mySymbol]?: never }>();
+      expectTypeOf(data).toEqualTypeOf<{ readonly [SYMBOL]?: never }>();
     } else {
-      expectTypeOf(data).toEqualTypeOf<{ readonly [mySymbol]?: string }>();
+      expectTypeOf(data).toEqualTypeOf<{ readonly [SYMBOL]?: string }>();
     }
   });
 });
 
 describe('keyed collections', () => {
-  test('maps', () => {
+  it('maps', () => {
     const data = new Map<string, number>();
     if (isEmptyish(data)) {
       expectTypeOf(data).toExtend<Map<string, number>>();
@@ -690,7 +684,7 @@ describe('keyed collections', () => {
     }
   });
 
-  test('readonly maps', () => {
+  it('readonly maps', () => {
     const data: ReadonlyMap<string, number> = new Map();
     if (isEmptyish(data)) {
       expectTypeOf(data).toEqualTypeOf<ReadonlyMap<string, never>>();
@@ -699,7 +693,7 @@ describe('keyed collections', () => {
     }
   });
 
-  test('search params', () => {
+  it('search params', () => {
     const data = new URLSearchParams();
     if (isEmptyish(data)) {
       expectTypeOf(data).toExtend<URLSearchParams>();
@@ -710,7 +704,7 @@ describe('keyed collections', () => {
 });
 
 describe('self-declared sizes', () => {
-  test('primitive length', () => {
+  it('primitive length', () => {
     const data = { length: 0, a: 'hello' } as { length: number; a: string };
     if (isEmptyish(data)) {
       expectTypeOf(data).toExtend<{ length: number; a: string }>();
@@ -719,7 +713,7 @@ describe('self-declared sizes', () => {
     }
   });
 
-  test('literal empty length', () => {
+  it('literal empty length', () => {
     const data = { length: 0 } as { length: 0; a?: string };
     if (isEmptyish(data)) {
       expectTypeOf(data).toEqualTypeOf<{ length: 0; a?: string }>();
@@ -728,7 +722,7 @@ describe('self-declared sizes', () => {
     }
   });
 
-  test('literal non-empty length', () => {
+  it('literal non-empty length', () => {
     const data = { length: 1 } as { length: 1; a: string };
     if (isEmptyish(data)) {
       expectTypeOf(data).toEqualTypeOf<never>();
@@ -737,7 +731,7 @@ describe('self-declared sizes', () => {
     }
   });
 
-  test('literal union of empty and non-empty length', () => {
+  it('literal union of empty and non-empty length', () => {
     const data = { length: 1 } as { length: 0 | 1; a: string };
     if (isEmptyish(data)) {
       expectTypeOf(data).toExtend<{ length: 0 | 1; a: string }>();
@@ -746,7 +740,7 @@ describe('self-declared sizes', () => {
     }
   });
 
-  test('length is optional and readonly', () => {
+  it('length is optional and readonly', () => {
     const data = {} as { readonly length?: number };
     if (isEmptyish(data)) {
       expectTypeOf(data).toEqualTypeOf<{ readonly length?: never }>();
@@ -755,7 +749,7 @@ describe('self-declared sizes', () => {
     }
   });
 
-  test('primitive size', () => {
+  it('primitive size', () => {
     const data = { size: 0, a: 'hello' } as { size: number; a: string };
     if (isEmptyish(data)) {
       expectTypeOf(data).toExtend<{ size: number; a: string }>();
@@ -764,7 +758,7 @@ describe('self-declared sizes', () => {
     }
   });
 
-  test('literal empty size', () => {
+  it('literal empty size', () => {
     const data = { size: 0 } as { size: 0; a?: string };
     if (isEmptyish(data)) {
       expectTypeOf(data).toEqualTypeOf<{ size: 0; a?: string }>();
@@ -773,7 +767,7 @@ describe('self-declared sizes', () => {
     }
   });
 
-  test('literal non-empty size', () => {
+  it('literal non-empty size', () => {
     const data = { size: 1 } as { size: 1; a: string };
     if (isEmptyish(data)) {
       expectTypeOf(data).toEqualTypeOf<never>();
@@ -782,7 +776,7 @@ describe('self-declared sizes', () => {
     }
   });
 
-  test('literal union of empty and non-empty size', () => {
+  it('literal union of empty and non-empty size', () => {
     const data = { size: 1 } as { size: 0 | 1; a: string };
     if (isEmptyish(data)) {
       expectTypeOf(data).toExtend<{ size: 0 | 1; a: string }>();
@@ -791,7 +785,7 @@ describe('self-declared sizes', () => {
     }
   });
 
-  test('size is optional and readonly', () => {
+  it('size is optional and readonly', () => {
     const data = {} as { readonly size?: number };
     if (isEmptyish(data)) {
       expectTypeOf(data).toEqualTypeOf<{ readonly size?: never }>();
@@ -802,27 +796,41 @@ describe('self-declared sizes', () => {
 });
 
 describe('generic types', () => {
-  test('non-nullable', () => {
+  it('non-nullable', () => {
     const data = {} as const;
     if (isEmptyish(data)) {
+      // eslint-disable-next-line ts/no-empty-object-type
+      expectTypeOf(data).toEqualTypeOf<{}>();
+    } else {
       // eslint-disable-next-line ts/no-empty-object-type
       expectTypeOf(data).toEqualTypeOf<{}>();
     }
   });
 
-  test('any', () => {
+  it('any', () => {
     // eslint-disable-next-line ts/no-explicit-any
     const data = '' as any;
     if (isEmptyish(data)) {
       // eslint-disable-next-line ts/no-explicit-any
       expectTypeOf(data).toEqualTypeOf<any>();
+    } else {
+      // For any type, the else branch should also be any, not narrowed
+      // eslint-disable-next-line ts/no-explicit-any
+      expectTypeOf(data).toEqualTypeOf<any>();
     }
   });
 
-  test('unknown', () => {
+  it('unknown', () => {
     const data = '' as unknown;
     if (isEmptyish(data)) {
+      expectTypeOf(data).toEqualTypeOf<unknown>();
+    } else {
       expectTypeOf(data).toEqualTypeOf<unknown>();
     }
   });
 });
+
+function getIArguments(): IArguments {
+  // eslint-disable-next-line prefer-rest-params -- Intentional! This is the whole purpose of this function!
+  return arguments;
+}

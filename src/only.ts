@@ -1,5 +1,4 @@
 import type { IterableContainer } from './internal/types/iterable-container';
-
 import { curry } from './curry';
 
 type Only<T extends IterableContainer> = T extends
@@ -17,11 +16,11 @@ type Only<T extends IterableContainer> = T extends
  *
  * @param array - The target array.
  * @signature
- *    P.only(array)
+ *    only(array)
  * @example
- *    P.only([]) // => undefined
- *    P.only([1]) // => 1
- *    P.only([1, 2]) // => undefined
+ *    only([]) // => undefined
+ *    only([1]) // => 1
+ *    only([1, 2]) // => undefined
  * @dataFirst
  * @category Array
  */
@@ -31,11 +30,11 @@ export function only<T extends IterableContainer>(array: Readonly<T>): Only<T>;
  * Returns the first and only element of `array`, or undefined otherwise.
  *
  * @signature
- *    P.only()(array)
+ *    only()(array)
  * @example
- *    P.pipe([], P.only()); // => undefined
- *    P.pipe([1], P.only()); // => 1
- *    P.pipe([1, 2], P.only()); // => undefined
+ *    pipe([], only()); // => undefined
+ *    pipe([1], only()); // => 1
+ *    pipe([1, 2], only()); // => undefined
  * @dataLast
  * @category Array
  */

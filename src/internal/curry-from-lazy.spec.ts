@@ -17,14 +17,13 @@ it('throws on wrong number of arguments', () => {
       // impl. Because our lazy impl takes 0 args, this extra param should
       // throw.
       'world',
-    )).toThrowError('Wrong number of arguments');
+    )).toThrow('Wrong number of arguments');
 });
 
+/* v8 ignore next 4 -- We only need the function pointer, we never call it! */
 const evaluator: LazyEvaluator = () => {
   throw new Error('unreachable');
 };
-
-/* v8 ignore next 4 -- We only need the function pointer, we never call it! */
 const zeroArgsLazyImpl = () => evaluator;
 
 function zeroArgsPurried(...args: ReadonlyArray<unknown>) {

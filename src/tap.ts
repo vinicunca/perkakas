@@ -10,9 +10,9 @@ import { curry } from './curry';
  * @param value - The value to pass into the function.
  * @param fn - The function to call.
  * @signature
- *    P.tap(value, fn)
+ *    tap(value, fn)
  * @example
- *    P.tap("foo", console.log) // => "foo"
+ *    tap("foo", console.log) // => "foo"
  * @dataFirst
  * @category Other
  */
@@ -27,18 +27,21 @@ export function tap<T>(value: T, fn: (value: T) => void): T;
  *
  * @param fn - The function to call.
  * @signature
- *    P.tap(fn)(value)
+ *    tap(fn)(value)
  * @example
- *    P.pipe(
+ *    pipe(
  *      [-5, -1, 2, 3],
- *      P.filter(n => n > 0),
- *      P.tap(console.log), // prints [2, 3]
- *      P.map(n => n * 2)
+ *      filter(n => n > 0),
+ *      tap(console.log), // prints [2, 3]
+ *      map(n => n * 2)
  *    ) // => [4, 6]
  * @dataLast
  * @category Other
  */
-export function tap<T, F extends (value: T) => unknown>(fn: F): (value: T) => T;
+export function tap<
+  T,
+  F extends (value: T) => unknown,
+>(fn: F): (value: T) => T;
 
 export function tap(...args: ReadonlyArray<unknown>): unknown {
   return curry(tapImplementation, args);

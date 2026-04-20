@@ -2,12 +2,11 @@ import type { EmptyObject } from 'type-fest';
 import { describe, expectTypeOf, it } from 'vitest';
 import { groupByProp } from './group-by-prop';
 
-const SYMBOL = Symbol('sym');
+declare const SYMBOL: unique symbol;
+
 describe('grouping prop types', () => {
   it('primitive strings', () => {
-    expectTypeOf(
-      groupByProp([] as Array<{ a: string }>, 'a'),
-    ).branded.toEqualTypeOf<
+    expectTypeOf(groupByProp([] as Array<{ a: string }>, 'a')).branded.toEqualTypeOf<
       Record<string, [{ a: string }, ...Array<{ a: string }>]>
     >();
   });
@@ -124,23 +123,15 @@ describe('union of array types', () => {
   it('when they share the grouping prop', () => {
     expectTypeOf(
       groupByProp(
-        [] as
-        | Array<{ a: 'cat'; cat: number }>
-        | Array<{ a: 'dog'; dog: boolean }>,
+        [] as Array<{ a: 'cat'; cat: number }> | Array<{ a: 'dog'; dog: boolean }>,
         'a',
       ),
     ).branded.toEqualTypeOf<
       | {
-        cat?: [
-          { a: 'cat'; cat: number },
-          ...Array<{ a: 'cat'; cat: number }>,
-        ];
+        cat?: [{ a: 'cat'; cat: number }, ...Array<{ a: 'cat'; cat: number }>];
       }
       | {
-        dog?: [
-          { a: 'dog'; dog: boolean },
-          ...Array<{ a: 'dog'; dog: boolean }>,
-        ];
+        dog?: [{ a: 'dog'; dog: boolean }, ...Array<{ a: 'dog'; dog: boolean }>];
       }
     >();
   });

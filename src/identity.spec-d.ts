@@ -3,6 +3,7 @@ import { identity } from './identity';
 
 it('normal values', () => {
   const id = identity();
+
   expectTypeOf(id('hello')).toEqualTypeOf<string>();
   expectTypeOf(id(123)).toEqualTypeOf<number>();
   expectTypeOf(id(true)).toEqualTypeOf<boolean>();
@@ -14,6 +15,7 @@ it('normal values', () => {
 
 it('literal values', () => {
   const id = identity();
+
   expectTypeOf(id('hello' as const)).toEqualTypeOf<'hello'>();
   expectTypeOf(id(123 as const)).toEqualTypeOf<123>();
   expectTypeOf(id(true as const)).toEqualTypeOf<true>();
@@ -26,6 +28,7 @@ it('literal values', () => {
 it('complex variadic invocations', () => {
   const data = ['a', true, 123] as const;
   const id = identity();
+
   expectTypeOf(id(...data)).toEqualTypeOf<'a'>();
 });
 

@@ -1,5 +1,4 @@
 import type { Merge } from 'type-fest';
-
 import { curry } from './curry';
 
 /**
@@ -20,9 +19,9 @@ import { curry } from './curry';
  * @returns An object fully containing `source`, and any properties from `data`
  * that don't share a name with any property in `source`.
  * @signature
- *    P.merge(data, source)
+ *    merge(data, source)
  * @example
- *    P.merge({ x: 1, y: 2 }, { y: 10, z: 2 }) // => { x: 1, y: 10, z: 2 }
+ *    merge({ x: 1, y: 2 }, { y: 10, z: 2 }) // => { x: 1, y: 10, z: 2 }
  * @dataFirst
  * @category Object
  */
@@ -43,11 +42,11 @@ export function merge<T, Source>(data: T, source: Source): Merge<T, Source>;
  * @returns An object fully containing `source`, and any properties from `data`
  * that don't share a name with any property in `source`.
  * @signature
- *    P.merge(source)(data)
+ *    merge(source)(data)
  * @example
- *    P.pipe(
+ *    pipe(
  *      { x: 1, y: 2 },
- *      P.merge({ y: 10, z: 2 }),
+ *      merge({ y: 10, z: 2 }),
  *    ); // => { x: 1, y: 10, z: 2 }
  * @dataLast
  * @category Object
@@ -58,9 +57,6 @@ export function merge(...args: ReadonlyArray<unknown>): unknown {
   return curry(mergeImplementation, args);
 }
 
-function mergeImplementation<T, Source>(
-  data: T,
-  source: Source,
-): Merge<T, Source> {
-  return ({ ...data, ...source });
+function mergeImplementation<T, Source>(data: T, source: Source): Merge<T, Source> {
+  return { ...data, ...source };
 }

@@ -9,12 +9,12 @@ import { withPrecision } from './internal/with-precision';
  * @param value - The number to round down.
  * @param precision - The precision to round down to. Must be an integer between -15 and 15.
  * @signature
- *    P.floor(value, precision);
+ *    floor(value, precision);
  * @example
- *    P.floor(123.9876, 3) // => 123.987
- *    P.floor(483.22243, 1) // => 483.2
- *    P.floor(8541, -1) // => 8540
- *    P.floor(456789, -3) // => 456000
+ *    floor(123.9876, 3) // => 123.987
+ *    floor(483.22243, 1) // => 483.2
+ *    floor(8541, -1) // => 8540
+ *    floor(456789, -3) // => 456000
  * @dataFirst
  * @category Number
  */
@@ -27,12 +27,12 @@ export function floor(value: number, precision: number): number;
  *
  * @param precision - The precision to round down to. Must be an integer between -15 and 15.
  * @signature
- *    P.floor(precision)(value);
+ *    floor(precision)(value);
  * @example
- *    P.floor(3)(123.9876) // => 123.987
- *    P.floor(1)(483.22243) // => 483.2
- *    P.floor(-1)(8541) // => 8540
- *    P.floor(-3)(456789) // => 456000
+ *    floor(3)(123.9876) // => 123.987
+ *    floor(1)(483.22243) // => 483.2
+ *    floor(-1)(8541) // => 8540
+ *    floor(-3)(456789) // => 456000
  * @dataLast
  * @category Number
  */

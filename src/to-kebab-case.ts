@@ -25,10 +25,10 @@ type KebabCase<S extends string> = string extends S
  *
  * @param data - A string.
  * @signature
- *   P.toKebabCase(data);
+ *   toKebabCase(data);
  * @example
- *   P.toKebabCase("hello world"); // "hello-world"
- *   P.toKebabCase("__HELLO_WORLD__"); // "hello-world"
+ *   toKebabCase("hello world"); // "hello-world"
+ *   toKebabCase("__HELLO_WORLD__"); // "hello-world"
  * @dataFirst
  * @category String
  */
@@ -52,10 +52,10 @@ export function toKebabCase<S extends string>(data: S): KebabCase<S>;
  * For *COBOL-CASE* use `toUpperCase(toKebabCase(data))`.
  *
  * @signature
- *   P.toKebabCase()(data);
+ *   toKebabCase()(data);
  * @example
- *   P.pipe("hello world", P.toKebabCase()); // "hello-world"
- *   P.pipe("__HELLO_WORLD__", P.toKebabCase()); // "hello-world"
+ *   pipe("hello world", toKebabCase()); // "hello-world"
+ *   pipe("__HELLO_WORLD__", toKebabCase()); // "hello-world"
  * @dataLast
  * @category String
  */
@@ -66,9 +66,5 @@ export function toKebabCase(...args: ReadonlyArray<unknown>): unknown {
 }
 
 function toKebabCaseImplementation<S extends string>(data: S): KebabCase<S> {
-  // @ts-expect-error [ts2322] -- To avoid importing our own utilities for this
-  // we are using the built-in `join` and `toLowerCase` functions which aren't
-  // typed as well. This is equivalent to `toLowerCase(join(words(data), "-"))`
-  // which TypeScript infers correctly as KebabCase.
   return words(data).join('-').toLowerCase();
 }

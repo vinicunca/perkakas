@@ -166,10 +166,7 @@ describe('data-last', () => {
   });
 
   it('array with suffix and prefix', () => {
-    const result = pipe(
-      [1, 'a'] as [number, ...Array<boolean>, string],
-      drop(2),
-    );
+    const result = pipe([1, 'a'] as [number, ...Array<boolean>, string], drop(2));
 
     expectTypeOf(result).toEqualTypeOf<[...Array<boolean>, string] | []>();
   });

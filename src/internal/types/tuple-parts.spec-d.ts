@@ -69,12 +69,7 @@ describe('all tuple/array shapes (mutable and readonly)', () => {
 
   it('fixed-prefix arrays', () => {
     expectTypeOf(
-      tupleParts([1, 'hello', true] as [
-        number,
-        string,
-        boolean,
-        ...Array<Date>,
-      ]),
+      tupleParts([1, 'hello', true] as [number, string, boolean, ...Array<Date>]),
     ).toEqualTypeOf<{
       required: [number, string, boolean];
       optional: [];
@@ -129,12 +124,7 @@ describe('all tuple/array shapes (mutable and readonly)', () => {
 
   it('fixed-elements arrays', () => {
     expectTypeOf(
-      tupleParts([1, 'a', new Date()] as [
-        number,
-        string,
-        ...Array<boolean>,
-        Date,
-      ]),
+      tupleParts([1, 'a', new Date()] as [number, string, ...Array<boolean>, Date]),
     ).toEqualTypeOf<{
       required: [number, string];
       optional: [];
@@ -228,12 +218,7 @@ describe('all tuple/array shapes (mutable and readonly)', () => {
     }>();
 
     expectTypeOf(
-      tupleParts([1, 'a'] as readonly [
-        number,
-        string,
-        boolean?,
-        ...Array<Date>,
-      ]),
+      tupleParts([1, 'a'] as readonly [number, string, boolean?, ...Array<Date>]),
     ).toEqualTypeOf<{
       required: [number, string];
       optional: [boolean];
@@ -245,18 +230,14 @@ describe('all tuple/array shapes (mutable and readonly)', () => {
 
 describe('unions', () => {
   it('union of arrays', () => {
-    expectTypeOf(
-      tupleParts([] as Array<boolean> | Array<number>),
-    ).toEqualTypeOf<
+    expectTypeOf(tupleParts([] as Array<boolean> | Array<number>)).toEqualTypeOf<
       | { required: []; optional: []; item: boolean; suffix: [] }
       | { required: []; optional: []; item: number; suffix: [] }
     >();
   });
 
   it('mixed unions', () => {
-    expectTypeOf(
-      tupleParts([] as Array<boolean> | [number, string]),
-    ).toEqualTypeOf<
+    expectTypeOf(tupleParts([] as Array<boolean> | [number, string])).toEqualTypeOf<
       | { required: []; optional: []; item: boolean; suffix: [] }
       | {
         required: [number, string];

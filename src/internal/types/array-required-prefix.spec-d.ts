@@ -12,9 +12,9 @@ it('synchronizes the tuple readonly modifier', () => {
     [string, ...Array<string>]
   >();
 
-  expectTypeOf(
-    arrayRequiredPrefix([] as ReadonlyArray<string>, 1),
-  ).toEqualTypeOf<readonly [string, ...Array<string>]>();
+  expectTypeOf(arrayRequiredPrefix([] as ReadonlyArray<string>, 1)).toEqualTypeOf<
+    readonly [string, ...Array<string>]
+  >();
 });
 
 describe('works with all array shapes', () => {
@@ -186,106 +186,63 @@ describe('works with all array shapes', () => {
 
   it('optional-prefix arrays', () => {
     expectTypeOf(
-      arrayRequiredPrefix(
-        [] as [number?, string?, boolean?, ...Array<Date>],
-        0,
-      ),
+      arrayRequiredPrefix([] as [number?, string?, boolean?, ...Array<Date>], 0),
     ).toEqualTypeOf<[number?, string?, boolean?, ...Array<Date>]>();
 
     expectTypeOf(
-      arrayRequiredPrefix(
-        [] as [number?, string?, boolean?, ...Array<Date>],
-        1,
-      ),
+      arrayRequiredPrefix([] as [number?, string?, boolean?, ...Array<Date>], 1),
     ).toEqualTypeOf<[number, string?, boolean?, ...Array<Date>]>();
 
     expectTypeOf(
-      arrayRequiredPrefix(
-        [] as [number?, string?, boolean?, ...Array<Date>],
-        2,
-      ),
+      arrayRequiredPrefix([] as [number?, string?, boolean?, ...Array<Date>], 2),
     ).toEqualTypeOf<[number, string, boolean?, ...Array<Date>]>();
 
     expectTypeOf(
-      arrayRequiredPrefix(
-        [] as [number?, string?, boolean?, ...Array<Date>],
-        3,
-      ),
+      arrayRequiredPrefix([] as [number?, string?, boolean?, ...Array<Date>], 3),
     ).toEqualTypeOf<[number, string, boolean, ...Array<Date>]>();
 
     expectTypeOf(
-      arrayRequiredPrefix(
-        [] as [number?, string?, boolean?, ...Array<Date>],
-        4,
-      ),
+      arrayRequiredPrefix([] as [number?, string?, boolean?, ...Array<Date>], 4),
     ).toEqualTypeOf<[number, string, boolean, Date, ...Array<Date>]>();
 
     // No overflow
     expectTypeOf(
-      arrayRequiredPrefix(
-        [] as [number?, string?, boolean?, ...Array<Date>],
-        5,
-      ),
+      arrayRequiredPrefix([] as [number?, string?, boolean?, ...Array<Date>], 5),
     ).toEqualTypeOf<[number, string, boolean, Date, Date, ...Array<Date>]>();
   });
 
   it('fixed-suffix arrays', () => {
     expectTypeOf(
       arrayRequiredPrefix(
-        ['hello', true, new Date()] as [
-          ...Array<number>,
-          string,
-          boolean,
-          Date,
-        ],
+        ['hello', true, new Date()] as [...Array<number>, string, boolean, Date],
         0,
       ),
     ).toEqualTypeOf<[...Array<number>, string, boolean, Date]>();
 
     expectTypeOf(
       arrayRequiredPrefix(
-        ['hello', true, new Date()] as [
-          ...Array<number>,
-          string,
-          boolean,
-          Date,
-        ],
+        ['hello', true, new Date()] as [...Array<number>, string, boolean, Date],
         1,
       ),
     ).toEqualTypeOf<[...Array<number>, string, boolean, Date]>();
 
     expectTypeOf(
       arrayRequiredPrefix(
-        ['hello', true, new Date()] as [
-          ...Array<number>,
-          string,
-          boolean,
-          Date,
-        ],
+        ['hello', true, new Date()] as [...Array<number>, string, boolean, Date],
         2,
       ),
     ).toEqualTypeOf<[...Array<number>, string, boolean, Date]>();
 
     expectTypeOf(
       arrayRequiredPrefix(
-        ['hello', true, new Date()] as [
-          ...Array<number>,
-          string,
-          boolean,
-          Date,
-        ],
+        ['hello', true, new Date()] as [...Array<number>, string, boolean, Date],
         3,
       ),
     ).toEqualTypeOf<[...Array<number>, string, boolean, Date]>();
 
     expectTypeOf(
       arrayRequiredPrefix(
-        ['hello', true, new Date()] as [
-          ...Array<number>,
-          string,
-          boolean,
-          Date,
-        ],
+        ['hello', true, new Date()] as [...Array<number>, string, boolean, Date],
         4,
       ),
     ).toEqualTypeOf<[number, ...Array<number>, string, boolean, Date]>();
@@ -293,17 +250,10 @@ describe('works with all array shapes', () => {
     // No overflow
     expectTypeOf(
       arrayRequiredPrefix(
-        ['hello', true, new Date()] as [
-          ...Array<number>,
-          string,
-          boolean,
-          Date,
-        ],
+        ['hello', true, new Date()] as [...Array<number>, string, boolean, Date],
         5,
       ),
-    ).toEqualTypeOf<
-      [number, number, ...Array<number>, string, boolean, Date]
-    >();
+    ).toEqualTypeOf<[number, number, ...Array<number>, string, boolean, Date]>();
   });
 
   it('fixed-elements array', () => {
@@ -348,9 +298,7 @@ describe('works with all array shapes', () => {
         [1, 'hello', new Date()] as [number, string, ...Array<boolean>, Date],
         5,
       ),
-    ).toEqualTypeOf<
-      [number, string, boolean, boolean, ...Array<boolean>, Date]
-    >();
+    ).toEqualTypeOf<[number, string, boolean, boolean, ...Array<boolean>, Date]>();
   });
 
   it('mixed-prefix array', () => {
@@ -400,9 +348,7 @@ describe('works with all array shapes', () => {
 });
 
 it('errs on non-literal param', () => {
-  expectTypeOf(
-    arrayRequiredPrefix([] as Array<string>, 123 as number),
-  ).toBeNever();
+  expectTypeOf(arrayRequiredPrefix([] as Array<string>, 123 as number)).toBeNever();
 });
 
 describe('union types', () => {

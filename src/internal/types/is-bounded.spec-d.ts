@@ -2,9 +2,9 @@ import type { Tagged } from 'type-fest';
 import type { IsBounded } from './is-bounded';
 import { expectTypeOf, it } from 'vitest';
 
-declare const SymbolFoo: unique symbol;
-// eslint-disable-next-line ts/no-unused-vars, unused-imports/no-unused-vars
-declare const SymbolBar: unique symbol;
+declare const SYMBOL_A: unique symbol;
+// eslint-disable-next-line ts/no-unused-vars
+declare const SYMBOL_B: unique symbol;
 
 declare function isBounded<T>(data: T): IsBounded<T>;
 
@@ -17,7 +17,7 @@ it('number', () => {
 });
 
 it('symbol', () => {
-  expectTypeOf(isBounded(SymbolFoo as symbol)).toEqualTypeOf<false>();
+  expectTypeOf(isBounded(Symbol(''))).toEqualTypeOf<false>();
 });
 
 it('union of string, number, symbol', () => {
@@ -36,18 +36,18 @@ it('number literals and their union', () => {
 });
 
 it('symbol literals and their union', () => {
-  expectTypeOf(isBounded(SymbolFoo)).toEqualTypeOf<true>();
+  expectTypeOf(isBounded(SYMBOL_A)).toEqualTypeOf<true>();
   expectTypeOf(
-    isBounded(SymbolFoo as typeof SymbolFoo | typeof SymbolBar),
+    isBounded(SYMBOL_A as typeof SYMBOL_A | typeof SYMBOL_B),
   ).toEqualTypeOf<true>();
 });
 
 it('unions between string, number, symbol', () => {
   expectTypeOf(isBounded('a' as 'a' | 1)).toEqualTypeOf<true>();
-  expectTypeOf(isBounded('a' as 'a' | typeof SymbolFoo)).toEqualTypeOf<true>();
-  expectTypeOf(isBounded(1 as 1 | typeof SymbolFoo)).toEqualTypeOf<true>();
+  expectTypeOf(isBounded('a' as 'a' | typeof SYMBOL_A)).toEqualTypeOf<true>();
+  expectTypeOf(isBounded(1 as 1 | typeof SYMBOL_A)).toEqualTypeOf<true>();
   expectTypeOf(
-    isBounded('a' as 'a' | 1 | typeof SymbolFoo),
+    isBounded('a' as 'a' | 1 | typeof SYMBOL_A),
   ).toEqualTypeOf<true>();
 });
 

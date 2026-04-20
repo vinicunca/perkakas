@@ -10,9 +10,9 @@ import { SKIP_ITEM } from './internal/utility-evaluators';
  *
  * @param data - The array to filter.
  * @signature
- *    P.unique(array)
+ *    unique(array)
  * @example
- *    P.unique([1, 2, 2, 5, 1, 6, 7]) // => [1, 2, 5, 6, 7]
+ *    unique([1, 2, 2, 5, 1, 6, 7]) // => [1, 2, 5, 6, 7]
  * @dataFirst
  * @lazy
  * @category Array
@@ -24,12 +24,12 @@ export function unique<T extends IterableContainer>(data: T): Deduped<T>;
  * list. Elements are compared by reference using Set.
  *
  * @signature
- *    P.unique()(array)
+ *    unique()(array)
  * @example
- *    P.pipe(
+ *    pipe(
  *      [1, 2, 2, 5, 1, 6, 7], // only 4 iterations
- *      P.unique(),
- *      P.take(3)
+ *      unique(),
+ *      take(3)
  *    ) // => [1, 2, 5]
  * @dataLast
  * @lazy

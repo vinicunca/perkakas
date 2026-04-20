@@ -1,4 +1,4 @@
-/* eslint-disable no-nested-ternary, ts/explicit-function-return-type --
+/* eslint-disable ts/explicit-function-return-type --
  * These aren't useful for a reference implementation!
  */
 
@@ -65,13 +65,15 @@ function debounce<F extends StrictFunction>(
 
   const debouncingFunnel = funnel(
     (args: Parameters<F>) => {
+      // Every time the function is invoked the cached value is updated.
       // @ts-expect-error [ts2345, ts2322] -- TypeScript infers the generic sub-
       // types too eagerly, making itself blind to the fact that the types
       // match here.
-      cachedValue = func(...args) as ReturnType<F>;
+      cachedValue = func(...args);
     },
     {
-      // Debounce stores the latest args it was called with for the next invocation of the callback.
+      // Debounce stores the latest args it was called with for the next
+      // invocation of the callback.
       reducer: (_, ...args: Parameters<F>) => args,
       minQuietPeriodMs: waitMs ?? maxWaitMs ?? 0,
       ...(maxWaitMs !== undefined && { maxBurstDurationMs: maxWaitMs }),
@@ -327,7 +329,7 @@ describe('additional functionality', () => {
 
     expect(() => {
       debouncer.cancel();
-    }).not.toThrowError();
+    }).not.toThrow();
     expect(debouncer.call('hello')).toBeUndefined();
 
     await sleep(32);
@@ -369,7 +371,7 @@ describe('additional functionality', () => {
     expect(debouncer.call('world')).toBe('hello');
     expect(() => {
       debouncer.cancel();
-    }).not.toThrowError();
+    }).not.toThrow();
   });
 
   it('can cancel maxWait timer', async () => {
@@ -461,8 +463,8 @@ describe('additional functionality', () => {
 });
 
 describe('errors', () => {
-  it('prevents maxWaitMs to be less then waitMs', () => {
-    expect(() => debounce(identity(), { waitMs: 32, maxWaitMs: 16 })).toThrowError(
+  it('prevents maxWaitMs to be less than waitMs', () => {
+    expect(() => debounce(identity(), { waitMs: 32, maxWaitMs: 16 })).toThrow(
       'debounce: maxWaitMs (16) cannot be less than waitMs (32)',
     );
   });

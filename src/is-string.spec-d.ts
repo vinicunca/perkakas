@@ -31,5 +31,6 @@ it('should work with literal types', () => {
 
 it('should work as type guard in array', () => {
   const data = ALL_TYPES_DATA_PROVIDER.filter(isString);
+
   expectTypeOf(data).toEqualTypeOf<Array<string>>();
 });

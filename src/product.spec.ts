@@ -32,9 +32,10 @@ describe('dataLast', () => {
   });
 });
 
-describe('kNOWN ISSUES', () => {
+describe('known issues!', () => {
   it('returns 1 (`number`) instead of 1n (`bigint`) for empty `bigint` arrays', () => {
     const result = product([] as Array<bigint>);
+
     expect(result).toBe(1);
   });
 });

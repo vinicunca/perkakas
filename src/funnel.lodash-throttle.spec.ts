@@ -1,4 +1,5 @@
-/* eslint-disable function-paren-newline, no-nested-ternary, ts/explicit-function-return-type, ts/no-explicit-any --
+/* eslint-disable no-nested-ternary */
+/* eslint-disable ts/explicit-function-return-type, ts/no-explicit-any --
  * These aren't useful for a reference implementation for a legacy library!
  */
 
@@ -8,7 +9,7 @@ import { sleep } from './sleep';
 
 /**
  * A reference implementation of the Lodash `throttle` function using the
- * Our `funnel` function. While migrating from Lodash you can copy this
+ * Perkakas `funnel` function. While migrating from Lodash you can copy this
  * function as-is into your code base and use it as a drop-in replacement; but
  * we recommend eventually inlining the call to `funnel` so you can adjust the
  * function to your specific needs.
@@ -39,35 +40,32 @@ function throttle<F extends (...args: any) => void>(
   {
     leading = true,
     trailing = true,
-  }: { readonly leading?: boolean; readonly trailing?: boolean } = {},
-) {
+  }: { readonly leading?: boolean; readonly trailing?: boolean } = {}) {
   const {
     call,
-    // Lodash v4 doesn't provide access to the `isIdle` (called `pending` in Lodash v5) information.
+    // Lodash v4 doesn't provide access to the `isIdle` (called `pending` in
+    // Lodash v5) information.
     isIdle: _isIdle,
     ...rest
   } = funnel(
     (args: Parameters<F>) => {
       if (!leading && !trailing) {
-        /**
-         * In Lodash you can disable both the trailing and leading edges of the
-         * throttle window, effectively causing the function to never be
-         * invoked. Our's uses the invokedAt enum exactly to prevent such a
-         * situation; so to simulate Lodash we need to only pass the callback
-         * when at least one of them is enabled.
-         */
+        // In Lodash you can disable both the trailing and leading edges of the
+        // throttle window, effectively causing the function to never be
+        // invoked. Perkakas uses the invokedAt enum exactly to prevent such a
+        // situation; so to simulate Lodash we need to only pass the callback
+        // when at least one of them is enabled.
         return;
       }
 
-      /**
-       * Funnel provides more control over the args, but lodash simply passes
-       * them through, to replicate this behavior we need to spread the args
-       * array maintained via the reducer below.
-       */
+      // Funnel provides more control over the args, but lodash simply passes
+      // them through, to replicate this behavior we need to spread the args
+      // array maintained via the reducer below.
       func(...args);
     },
     {
-      // Throttle stores the latest args it was called with for the next invocation of the callback.
+      // Throttle stores the latest args it was called with for the next
+      // invocation of the callback.
       reducer: (_, ...args: Parameters<F>) => args,
       minQuietPeriodMs: wait,
       maxBurstDurationMs: wait,
@@ -78,22 +76,18 @@ function throttle<F extends (...args: any) => void>(
         : { triggerAt: 'start' }),
     },
   );
-  /**
-   * Lodash uses a legacy JS-ism to attach helper functions to the main
-   * callback of `throttle`. In our's we return a proper object where the
-   * callback is one of the available properties. Here we destructure and then
-   * reconstruct the object to fit the Lodash API.
-   */
+  // Lodash uses a legacy JS-ism to attach helper functions to the main
+  // callback of `throttle`. In Perkakas we return a proper object where the
+  // callback is one of the available properties. Here we destructure and then
+  // reconstruct the object to fit the Lodash API.
   return Object.assign(call, rest);
 }
 
-/**
- * We need some non-trivial duration to use in all our tests, to abstract the
- * actual chosen value we use this UnitOfTime (UT) constant. As long as it is a
- * positive integer, the actual value doesn't matter (but the larger it is,
- * the longer the tests would take to run); the value used by Lodash is 32.
- * The number is in milliseconds.
- */
+// We need some non-trivial duration to use in all our tests, to abstract the
+// actual chosen value we use this UnitOfTime (UT) constant. As long as it is a
+// positive integer, the actual value doesn't matter (but the larger it is,
+// the longer the tests would take to run); the value used by Lodash is 32.
+// The number is in milliseconds.
 const UT = 16;
 
 describe('https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L22768', () => {

@@ -27,6 +27,7 @@ it('callback function type', () => {
   const data = [1, 2, 3];
   countBy(data, (x) => {
     expectTypeOf(x).toEqualTypeOf<number>();
+
     return x;
   });
 });

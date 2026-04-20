@@ -6,10 +6,10 @@ import { curry } from './curry';
  * @param value - The number.
  * @param divisor - The number to divide the value by.
  * @signature
- *    P.divide(value, divisor);
+ *    divide(value, divisor);
  * @example
- *    P.divide(12, 3) // => 4
- *    P.reduce([1, 2, 3, 4], P.divide, 24) // => 1
+ *    divide(12, 3) // => 4
+ *    reduce([1, 2, 3, 4], divide, 24) // => 1
  * @dataFirst
  * @category Number
  */
@@ -21,10 +21,10 @@ export function divide(value: number, divisor: number): number;
  *
  * @param divisor - The number to divide the value by.
  * @signature
- *    P.divide(divisor)(value);
+ *    divide(divisor)(value);
  * @example
- *    P.divide(3)(12) // => 4
- *    P.map([2, 4, 6, 8], P.divide(2)) // => [1, 2, 3, 4]
+ *    divide(3)(12) // => 4
+ *    map([2, 4, 6, 8], divide(2)) // => [1, 2, 3, 4]
  * @dataLast
  * @category Number
  */
@@ -35,6 +35,9 @@ export function divide(...args: ReadonlyArray<unknown>): unknown {
   return curry(divideImplementation, args);
 }
 
+// The implementation only uses `number` types, but that's just because it's
+// hard to tell typescript that both value and divisor would be of the same
+// type.
 function divideImplementation(value: number, divisor: number): number {
   return value / divisor;
 }

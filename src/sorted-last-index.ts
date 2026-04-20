@@ -14,9 +14,9 @@ import { binarySearchCutoffIndex } from './internal/binary-search-cutoff-index';
  * @param item - The item to insert.
  * @returns Insertion index (In the range 0..data.length).
  * @signature
- *    P.sortedLastIndex(data, item)
+ *    sortedLastIndex(data, item)
  * @example
- *    P.sortedLastIndex(['a','a','b','c','c'], 'c') // => 5
+ *    sortedLastIndex(['a','a','b','c','c'], 'c') // => 5
  * @dataFirst
  * @category Array
  * @see sortedIndex, sortedIndexBy, sortedIndexWith, sortedLastIndexBy
@@ -35,9 +35,9 @@ export function sortedLastIndex<T>(data: ReadonlyArray<T>, item: T): number;
  * @param item - The item to insert.
  * @returns Insertion index (In the range 0..data.length).
  * @signature
- *    P.sortedLastIndex(item)(data)
+ *    sortedLastIndex(item)(data)
  * @example
- *    P.pipe(['a','a','b','c','c'], sortedLastIndex('c')) // => 5
+ *    pipe(['a','a','b','c','c'], sortedLastIndex('c')) // => 5
  * @dataLast
  * @category Array
  * @see sortedIndex, sortedIndexBy, sortedIndexWith, sortedLastIndexBy
@@ -48,10 +48,7 @@ export function sortedLastIndex(...args: ReadonlyArray<unknown>): unknown {
   return curry(sortedLastIndexImplementation, args);
 }
 
-function sortedLastIndexImplementation<T>(
-  array: ReadonlyArray<T>,
-  item: T,
-): number {
+function sortedLastIndexImplementation<T>(array: ReadonlyArray<T>, item: T): number {
   return binarySearchCutoffIndex(
     array,
     // The only difference between the regular implementation and the "last"

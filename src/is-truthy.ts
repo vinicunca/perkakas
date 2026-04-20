@@ -4,14 +4,14 @@
  * @param data - The variable to check.
  * @returns True if the passed input is truthy, false otherwise.
  * @signature
- *    P.isTruthy(data)
+ *    isTruthy(data)
  * @example
- *    P.isTruthy('somethingElse') //=> true
- *    P.isTruthy(null) //=> false
- *    P.isTruthy(undefined) //=> false
- *    P.isTruthy(false) //=> false
- *    P.isTruthy(0) //=> false
- *    P.isTruthy('') //=> false
+ *    isTruthy('somethingElse') //=> true
+ *    isTruthy(null) //=> false
+ *    isTruthy(undefined) //=> false
+ *    isTruthy(false) //=> false
+ *    isTruthy(0) //=> false
+ *    isTruthy('') //=> false
  * @category Guard
  */
 

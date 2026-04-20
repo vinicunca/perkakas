@@ -8,7 +8,7 @@ it('unique', () => {
   expect(unique([1, 2, 2, 5, 1, 6, 7] as const)).toStrictEqual([1, 2, 5, 6, 7]);
 });
 
-describe('pipe', () => {
+describe(pipe, () => {
   it('unique', () => {
     const counter = createLazyInvocationCounter();
     const result = pipe(

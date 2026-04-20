@@ -1,4 +1,5 @@
 /* eslint-disable ts/no-explicit-any */
+import { version } from 'node:process';
 import { describe, expect, it } from 'vitest';
 import { clone } from './clone';
 
@@ -162,6 +163,36 @@ describe('built-in types', () => {
   });
 });
 
+it.skipIf(
+  // TODO [>2]: Remove this skipIf once we drop support for Node 18.
+  !('File' in globalThis),
+)('clones File objects', async () => {
+  const original = new File(['Hello, World!'], 'foo.txt', {
+    type: 'text/plain',
+  });
+  const cloned = clone(original);
+
+  // Validate it's actually cloned...
+  expect(cloned).not.toBe(original);
+
+  expect(cloned.size).toBe(original.size);
+  expect(cloned.type).toBe(original.type);
+
+  // Older node versions didn't perform a full clone on Files.
+  const isPartialClone
+    // TODO [>3]: Remove this once we drop support for Node 20.
+    = version.startsWith('v20.')
+    // TODO [>4]: Remove this once we drop support for Node 22.
+      || version.startsWith('v22.');
+
+  expect(cloned.name).toBe(isPartialClone ? undefined : original.name);
+  expect(cloned.lastModified).toBe(
+    isPartialClone ? undefined : original.lastModified,
+  );
+
+  await expect(cloned.text()).resolves.toBe('Hello, World!');
+});
+
 describe('nested mixed objects', () => {
   it('clones array with objects', () => {
     const list: any = [{ a: { b: 1 } }, [{ c: { d: 1 } }]];
@@ -196,6 +227,7 @@ describe('nested mixed objects', () => {
       expect(cloned[1]?.b).toStrictEqual({ a: 1 });
 
       obj.a = 2;
+
       expect(cloned[0]?.b).toStrictEqual({ a: 1 });
       expect(cloned[1]?.b).toStrictEqual({ a: 1 });
     });
@@ -213,11 +245,13 @@ describe('edge cases', () => {
 
   it('empty object', () => {
     const obj = {} as const;
+
     expect(clone(obj)).not.toBe(obj);
   });
 
   it('empty array', () => {
     const array = [] as const;
+
     expect(clone(array)).not.toBe(array);
   });
 });

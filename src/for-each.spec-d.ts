@@ -5,6 +5,7 @@ import { pipe } from './pipe';
 
 it('doesn\'t return anything on dataFirst invocations', () => {
   const result = forEach([1, 2, 3], doNothing());
+
   expectTypeOf(result).toEqualTypeOf<void>();
 });
 

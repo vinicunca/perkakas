@@ -1,9 +1,10 @@
-import { expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import { isEmpty } from './is-empty';
 
 it('returns true for an empty array', () => {
   expect(isEmpty([])).toBe(true);
 });
+
 it('returns false for a non-empty array', () => {
   expect(isEmpty([1, 2, 3])).toBe(false);
 });
@@ -24,6 +25,9 @@ it('returns false for a non-empty object', () => {
   expect(isEmpty({ length: 0 })).toBe(false);
 });
 
-it('returns true for undefined', () => {
-  expect(isEmpty(undefined)).toBe(true);
+describe('deprecated `string | undefined` support', () => {
+  it('returns true for undefined', () => {
+    // eslint-disable-next-line sonar/deprecation
+    expect(isEmpty(undefined)).toBe(true);
+  });
 });

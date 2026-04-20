@@ -1,4 +1,5 @@
 /* eslint-disable node/prefer-global/buffer */
+/* eslint-disable sonar/no-primitive-wrappers */
 import { describe, expect, it } from 'vitest';
 import { isEmptyish } from './is-emptyish';
 
@@ -19,9 +20,9 @@ describe('strings', () => {
   });
 
   it('boxed', () => {
-    // eslint-disable-next-line no-new-wrappers, sonar/no-primitive-wrappers
+    // eslint-disable-next-line no-new-wrappers
     expect(isEmptyish(new String(''))).toBe(true);
-    // eslint-disable-next-line no-new-wrappers, sonar/no-primitive-wrappers
+    // eslint-disable-next-line no-new-wrappers
     expect(isEmptyish(new String('test'))).toBe(false);
   });
 });
@@ -111,7 +112,6 @@ describe('keyed collections', () => {
     // is minimal.
 
     expect(isEmptyish(Object.create(Object.create({})))).toBe(true);
-
     expect(isEmptyish(Object.create(Object.create({ a: 123 })))).toBe(false);
   });
 });
@@ -197,7 +197,6 @@ describe('unsupported types', () => {
     // It's hard to define what an empty class is; does it have private members?
     // are we considering it empty if one of it's fields is empty?
 
-    // eslint-disable-next-line ts/no-extraneous-class
     class Empty {}
     class NonEmpty {
       public a = 'hello';

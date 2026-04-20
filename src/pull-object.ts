@@ -1,5 +1,4 @@
 import type { BoundedPartial } from './internal/types/bounded-partial';
-
 import type { IterableContainer } from './internal/types/iterable-container';
 import { curry } from './curry';
 
@@ -14,23 +13,22 @@ import { curry } from './curry';
  * `fromKeys` - Builds an object from an array of *keys* and a mapper for values.
  * `indexBy` - Builds an object from an array of *values* and a mapper for keys.
  * `fromEntries` - Builds an object from an array of key-value pairs.
- * `mapToObj` - Builds an object from an array of items and a single mapper for key-value pairs.
  * Refer to the docs for more details.
  *
  * @param data - The items used to pull/extract the keys and values from.
  * @param keyExtractor - Computes the key for item.
  * @param valueExtractor - Computes the value for the item.
  * @signature
- *   P.pullObject(data, keyExtractor, valueExtractor);
+ *   pullObject(data, keyExtractor, valueExtractor);
  * @example
- *   P.pullObject(
+ *   pullObject(
  *     [
- *       { name: "john", email: "john@bebedag.com" },
- *       { name: "jane", email: "jane@bebedag.com" }
+ *       { name: "john", email: "john@perkakas.com" },
+ *       { name: "jane", email: "jane@perkakas.com" }
  *     ],
- *     P.prop("name"),
- *     P.prop("email"),
- *   ); // => { john: "john@bebedag.com", jane: "jane@bebedag.com" }
+ *     prop("name"),
+ *     prop("email"),
+ *   ); // => { john: "john@perkakas.com", jane: "jane@perkakas.com" }
  * @dataFirst
  * @category Object
  */
@@ -55,21 +53,20 @@ export function pullObject<
  * `fromKeys` - Builds an object from an array of *keys* and a mapper for values.
  * `indexBy` - Builds an object from an array of *values* and a mapper for keys.
  * `fromEntries` - Builds an object from an array of key-value pairs.
- * `mapToObj` - Builds an object from an array of items and a single mapper for key-value pairs.
  * Refer to the docs for more details.
  *
  * @param keyExtractor - Computes the key for item.
  * @param valueExtractor - Computes the value for the item.
  * @signature
- *   P.pullObject(keyExtractor, valueExtractor)(data);
+ *   pullObject(keyExtractor, valueExtractor)(data);
  * @example
- *   P.pipe(
+ *   pipe(
  *     [
- *       { name: "john", email: "john@bebedag.com" },
- *       { name: "jane", email: "jane@bebedag.com" }
+ *       { name: "john", email: "john@perkakas.com" },
+ *       { name: "jane", email: "jane@perkakas.com" }
  *     ],
- *     P.pullObject(P.prop("email"), P.prop("name")),
- *   ); // => { john: "john@bebedag.com", jane: "jane@bebedag.com" }
+ *     pullObject(prop("name"), prop("email")),
+ *   ); // => { john: "john@perkakas.com", jane: "jane@perkakas.com" }
  * @dataLast
  * @category Object
  */

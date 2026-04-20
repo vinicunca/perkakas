@@ -1,5 +1,4 @@
 import type { LazyEvaluator } from './internal/types/lazy-evaluator';
-
 import { curryFromLazy } from './internal/curry-from-lazy';
 import { SKIP_ITEM } from './internal/utility-evaluators';
 
@@ -13,9 +12,9 @@ type Comparator<TFirst, TSecond> = (a: TFirst, b: TSecond) => boolean;
  * @param other - The second array.
  * @param comparator - The custom comparator.
  * @signature
- *    P.intersectionWith(array, other, comparator)
+ *    intersectionWith(array, other, comparator)
  * @example
- *    P.intersectionWith(
+ *    intersectionWith(
  *      [
  *        { id: 1, name: 'Ryan' },
  *        { id: 3, name: 'Emma' },
@@ -40,9 +39,9 @@ export function intersectionWith<TFirst, TSecond>(
  * @param other - The second array.
  * @param comparator - The custom comparator.
  * @signature
- *    P.intersectionWith(other, comparator)(array)
+ *    intersectionWith(other, comparator)(array)
  * @example
- *    P.intersectionWith(
+ *    intersectionWith(
  *      [3, 5],
  *      (a, b) => a.id === b
  *      )([
@@ -66,10 +65,7 @@ export function intersectionWith(...args: ReadonlyArray<unknown>): unknown {
   return curryFromLazy(lazyImplementation, args);
 }
 
-function lazyImplementation<TFirst, TSecond>(
-  other: ReadonlyArray<TSecond>,
-  comparator: Comparator<TFirst, TSecond>,
-): LazyEvaluator<TFirst> {
+function lazyImplementation<TFirst, TSecond>(other: ReadonlyArray<TSecond>, comparator: Comparator<TFirst, TSecond>): LazyEvaluator<TFirst> {
   return (value) =>
     other.some((otherValue) => comparator(value, otherValue))
       ? { done: false, hasNext: true, next: value }

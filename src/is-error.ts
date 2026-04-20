@@ -6,10 +6,10 @@ type DefinitelyError<T>
  * @param data - The variable to check.
  * @returns True if the passed input is an Error, false otherwise.
  * @signature
- *    P.isError(data)
+ *    isError(data)
  * @example
- *    P.isError(new Error('message')) //=> true
- *    P.isError('somethingElse') //=> false
+ *    isError(new Error('message')) //=> true
+ *    isError('somethingElse') //=> false
  * @category Guard
  */
 export function isError<T>(data: Error | T): data is DefinitelyError<T> {

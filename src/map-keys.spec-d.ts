@@ -1,7 +1,45 @@
-import { expectTypeOf, it } from 'vitest';
+import { describe, expectTypeOf, it } from 'vitest';
 import { constant } from './constant';
+import { identity } from './identity';
 import { mapKeys } from './map-keys';
 import { pipe } from './pipe';
+
+declare const SYMBOL: unique symbol;
+
+describe('single bounded mapped key', () => {
+  it('empty object', () => {
+    expectTypeOf(mapKeys({}, constant('hello'))).toEqualTypeOf<{
+      hello?: never;
+    }>();
+  });
+
+  it('primitive unbounded record', () => {
+    expectTypeOf(
+      mapKeys({} as Record<string, string>, constant('hello')),
+    ).toEqualTypeOf<{ hello?: string }>();
+  });
+
+  it('possibly empty record', () => {
+    expectTypeOf(
+      mapKeys({} as { a?: 'world' }, constant('hello')),
+    ).toEqualTypeOf<{ hello?: 'world' }>();
+  });
+
+  it('object with single key', () => {
+    expectTypeOf(mapKeys({ foo: 69 } as const, identity())).toEqualTypeOf<{
+      foo: 69;
+    }>();
+    expectTypeOf(mapKeys({ foo: 69 } as const, constant('bar'))).toEqualTypeOf<{
+      bar: 69;
+    }>();
+  });
+
+  it('object with multiple keys', () => {
+    expectTypeOf(mapKeys({ a: 1, b: 2 }, constant('x'))).toEqualTypeOf<{
+      x: number;
+    }>();
+  });
+});
 
 it('simple string records', () => {
   const result = mapKeys(
@@ -28,7 +66,7 @@ it('mapping to a string literal', () => {
 });
 
 it('symbols are not passed to the mapper', () => {
-  mapKeys({ [Symbol('mySymbol')]: 1, b: 'hellO', c: true }, (key, value) => {
+  mapKeys({ [SYMBOL]: 1, b: 'hellO', c: true }, (key, value) => {
     expectTypeOf(key).toEqualTypeOf<'b' | 'c'>();
     expectTypeOf(value).toEqualTypeOf<boolean | string>();
 
@@ -37,11 +75,8 @@ it('symbols are not passed to the mapper', () => {
 });
 
 it('symbols can be used as the return value', () => {
-  const mySymbol = Symbol('mySymbol');
-  const result = mapKeys({ a: 1 }, constant(mySymbol));
-
-  expectTypeOf(result).toEqualTypeOf<
-    Partial<Record<typeof mySymbol, number>>
+  expectTypeOf(mapKeys({ a: 1 }, constant(SYMBOL))).toEqualTypeOf<
+    Record<typeof SYMBOL, number>
   >();
 });
 
@@ -56,7 +91,7 @@ it('number keys are converted to strings', () => {
 
 it('numbers returned from the mapper are used as-is', () => {
   expectTypeOf(mapKeys({ a: 'b' }, constant(123))).toEqualTypeOf<
-    Partial<Record<123, string>>
+    Record<123, string>
   >();
 });
 

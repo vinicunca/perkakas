@@ -28,6 +28,7 @@ export default vinicuncaESLint(
       'sonar/no-redundant-optional': 'off',
       'sonar/no-nested-conditional': 'off',
       'sonar/assertions-in-tests': 'off',
+      'sonar/different-types-comparison': 'off',
       'vinicunca/cognitive-complexity': 'off',
       'vinicunca/consistent-list-newline': 'off',
 
@@ -60,10 +61,13 @@ export default vinicuncaESLint(
   },
 
   {
-    files: ['**/docs/**'],
+    files: ['**/*.ts'],
     rules: {
-      'ts/explicit-function-return-type': 'off',
-      'ts/explicit-module-boundary-types': 'off',
+      'style/operator-linebreak': [
+        'error',
+        'before',
+        { overrides: { '?': 'ignore', ':': 'ignore' } },
+      ],
     },
   },
 );

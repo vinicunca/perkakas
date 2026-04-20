@@ -1,7 +1,6 @@
 import type { IterableContainer } from './internal/types/iterable-container';
 import type { LazyEvaluator } from './internal/types/lazy-evaluator';
 import type { Mapped } from './internal/types/mapped';
-
 import { curryFromLazy } from './internal/curry-from-lazy';
 
 /**
@@ -16,9 +15,9 @@ import { curryFromLazy } from './internal/curry-from-lazy';
  * @returns An array of successively computed values from the left side of the
  * array.
  * @signature
- *    P.mapWithFeedback(data, callbackfn, initialValue);
+ *    mapWithFeedback(data, callbackfn, initialValue);
  * @example
- *    P.mapWithFeedback(
+ *    mapWithFeedback(
  *      [1, 2, 3, 4, 5],
  *      (prev, x) => prev + x,
  *      100,
@@ -49,11 +48,11 @@ export function mapWithFeedback<T extends IterableContainer, U>(
  * @returns An array of successively computed values from the left side of the
  * array.
  * @signature
- *    P.mapWithFeedback(callbackfn, initialValue)(data);
+ *    mapWithFeedback(callbackfn, initialValue)(data);
  * @example
- *    P.pipe(
+ *    pipe(
  *      [1, 2, 3, 4, 5],
- *      P.mapWithFeedback((prev, x) => prev + x, 100),
+ *      mapWithFeedback((prev, x) => prev + x, 100),
  *    ); // => [101, 103, 106, 110, 115]
  * @dataLast
  * @lazy
@@ -73,18 +72,15 @@ export function mapWithFeedback(...args: ReadonlyArray<unknown>): unknown {
   return curryFromLazy(lazyImplementation, args);
 }
 
-function lazyImplementation<T, U>(
-  reducer: (
-    previousValue: U,
-    currentValue: T,
-    index: number,
-    data: ReadonlyArray<T>,
-  ) => U,
-  initialValue: U,
-): LazyEvaluator<T, U> {
+function lazyImplementation<T, U>(reducer: (
+  previousValue: U,
+  currentValue: T,
+  index: number,
+  data: ReadonlyArray<T>,
+) => U, initialValue: U): LazyEvaluator<T, U> {
   let previousValue = initialValue;
   return (currentValue, index, data) => {
     previousValue = reducer(previousValue, currentValue, index, data);
     return { done: false, hasNext: true, next: previousValue };
   };
-};
+}

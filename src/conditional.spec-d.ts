@@ -49,10 +49,7 @@ describe('data-first', () => {
   });
 
   it('narrows types when using `isNullish`/`isNonNullish` with complex data', () => {
-    const data = firstBy(
-      [{ x: 10 }, { x: 20 }] as Array<{ x: number }>,
-      prop('x'),
-    );
+    const data = firstBy([{ x: 10 }, { x: 20 }] as Array<{ x: number }>, prop('x'));
 
     conditional(
       data,
@@ -81,29 +78,11 @@ describe('data-first', () => {
         constant(undefined),
       ),
     ).toEqualTypeOf<'hello' | undefined>();
-
-    expectTypeOf(
-      conditional(
-        'Jokic',
-        [isString, () => 'hello' as const],
-        // eslint-disable-next-line sonar/deprecation -- It's safe to delete this check once defaultCase is removed, the check above does the same thing.
-        conditional.defaultCase(),
-      ),
-    ).toEqualTypeOf<'hello' | undefined>();
   });
 
   it('passes the defaultCase\'s type to the output', () => {
     expectTypeOf(
       conditional('Jokic', [isString, () => 'hello' as const], constant(123)),
-    ).toEqualTypeOf<'hello' | 123>();
-
-    expectTypeOf(
-      conditional(
-        'Jokic',
-        [isString, () => 'hello' as const],
-        // eslint-disable-next-line sonar/deprecation -- It's safe to delete this check once defaultCase is removed, the check above does the same thing.
-        conditional.defaultCase(() => 123 as const),
-      ),
     ).toEqualTypeOf<'hello' | 123>();
   });
 });
@@ -179,17 +158,6 @@ describe('data-last', () => {
         conditional([isString, () => 'hello' as const], constant(undefined)),
       ),
     ).toEqualTypeOf<'hello' | undefined>();
-
-    expectTypeOf(
-      pipe(
-        'Jokic',
-        conditional(
-          [isString, () => 'hello' as const],
-          // eslint-disable-next-line sonar/deprecation -- It's safe to delete this check once defaultCase is removed, the check above does the same thing.
-          conditional.defaultCase(),
-        ),
-      ),
-    ).toEqualTypeOf<'hello' | undefined>();
   });
 
   it('passes the defaultCase\'s type to the output', () => {
@@ -197,17 +165,6 @@ describe('data-last', () => {
       pipe(
         'Jokic',
         conditional([isString, () => 'hello' as const], constant(123)),
-      ),
-    ).toEqualTypeOf<'hello' | 123>();
-
-    expectTypeOf(
-      pipe(
-        'Jokic',
-        conditional(
-          [isString, () => 'hello' as const],
-          // eslint-disable-next-line sonar/deprecation -- It's safe to delete this check once defaultCase is removed, the check above does the same thing.
-          conditional.defaultCase(() => 123 as const),
-        ),
       ),
     ).toEqualTypeOf<'hello' | 123>();
   });

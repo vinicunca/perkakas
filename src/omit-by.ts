@@ -21,15 +21,15 @@ type PartialEnumerableKeys<T extends object>
   // union into a [distributive conditional type](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-8.html#distributive-conditional-types).
   = T extends unknown
     ? Simplify<
-        IsBoundedRecord<T> extends true ? PickSymbolKeys<T> & {
-          -readonly [P in keyof T as P extends symbol
-            ? never
-            : P]?: Required<T>[P];
-        }
-          // This is the type you'd get from doing:
-          // `Object.fromEntries(Object.entries(x))`.
-          : Record<EnumerableStringKeyOf<T>, EnumerableStringKeyedValueOf<T>>
-      >
+      IsBoundedRecord<T> extends true ? PickSymbolKeys<T> & {
+        -readonly [P in keyof T as P extends symbol
+          ? never
+          : P]?: Required<T>[P];
+      }
+        : // This is the type you'd get from doing:
+      // `Object.fromEntries(Object.entries(x))`.
+        Record<EnumerableStringKeyOf<T>, EnumerableStringKeyedValueOf<T>>
+    >
     : never;
 
 // When the predicate is a type-guard we have more information to work with when
@@ -65,15 +65,15 @@ type PartialProps<T, S> = {
 // excluded from it we can safely assume that the predicate would always return
 // `false` for any value of that property.
 type IsExactProp<T, P extends keyof T, S> = P extends symbol
-  // Symbols are passed through via the PickSymbolKeys type
-  ? false
+  ? // Symbols are passed through via the PickSymbolKeys type
+  false
   : T[P] extends Exclude<T[P], S>
     ? S extends T[P]
-      // If S extends the T[P] it means the type the predicate is narrowing to
-      // can't narrow the rejected value any further, so we can't say what
-      // would happen for a concrete value in runtime (e.g. if T[P] is
-      // `number` and S is `1`: `Exclude<number, 1> === number`.
-      ? false
+      ? // If S extends the T[P] it means the type the predicate is narrowing to
+    // can't narrow the rejected value any further, so we can't say what
+    // would happen for a concrete value in runtime (e.g. if T[P] is
+    // `number` and S is `1`: `Exclude<number, 1> === number`.
+      false
       : true
     : false;
 
@@ -83,8 +83,8 @@ type IsExactProp<T, P extends keyof T, S> = P extends symbol
 // false when passed to the predicate, hence it should be optional in the
 // output.
 type IsPartialProp<T, P extends keyof T, S> = P extends symbol
-  // Symbols are passed through via the PickSymbolKeys type
-  ? false
+  ? // Symbols are passed through via the PickSymbolKeys type
+  false
   : Or<IsExactProp<T, P, S>, IsNever<Exclude<Required<T>[P], S>>> extends true
     ? false
     : true;
@@ -105,9 +105,9 @@ type IsPartialProp<T, P extends keyof T, S> = P extends symbol
  * type would be narrowed accordingly.
  * @returns A shallow copy of the input object with the rejected entries
  * removed.
- * @signature P.omitBy(data, predicate)
+ * @signature omitBy(data, predicate)
  * @example
- *    P.omitBy({a: 1, b: 2, A: 3, B: 4}, (val, key) => key.toUpperCase() === key) // => {a: 1, b: 2}
+ *    omitBy({a: 1, b: 2, A: 3, B: 4}, (val, key) => key.toUpperCase() === key) // => {a: 1, b: 2}
  * @dataFirst
  * @category Object
  */
@@ -135,9 +135,9 @@ export function omitBy<T extends object>(
  * Returns a partial copy of an object omitting the keys matching predicate.
  *
  * @param predicate - The predicate.
- * @signature P.omitBy(fn)(object)
+ * @signature omitBy(fn)(object)
  * @example
- *    P.omitBy((val, key) => key.toUpperCase() === key)({a: 1, b: 2, A: 3, B: 4}) // => {a: 1, b: 2}
+ *    omitBy((val, key) => key.toUpperCase() === key)({a: 1, b: 2, A: 3, B: 4}) // => {a: 1, b: 2}
  * @dataLast
  * @category Object
  */

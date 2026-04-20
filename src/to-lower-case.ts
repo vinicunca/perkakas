@@ -17,9 +17,9 @@ import { curry } from './curry';
  *
  * @param data - A string.
  * @signature
- *   P.toLowerCase(data);
+ *   toLowerCase(data);
  * @example
- *   P.toLowerCase("Hello World"); // "hello world"
+ *   toLowerCase("Hello World"); // "hello world"
  * @dataFirst
  * @category String
  */
@@ -41,9 +41,9 @@ export function toLowerCase<T extends string>(data: T): Lowercase<T>;
  * `toTitleCase`.
  *
  * @signature
- *   P.toLowerCase()(data);
+ *   toLowerCase()(data);
  * @example
- *   P.pipe("Hello World", P.toLowerCase()); // "hello world"
+ *   pipe("Hello World", toLowerCase()); // "hello world"
  * @dataLast
  * @category String
  */
@@ -54,6 +54,5 @@ export function toLowerCase(...args: ReadonlyArray<unknown>): unknown {
 }
 
 function toLowerCaseImplementation<T extends string>(data: T): Lowercase<T> {
-  // @ts-expect-error [ts2322] -- TypeScript can't infer this from the code...
   return data.toLowerCase();
 }

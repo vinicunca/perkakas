@@ -10,7 +10,8 @@ import { curry } from './curry';
  * values.
  *
  * !IMPORTANT: TypedArrays and symbol properties of objects are not supported
- * right now and might result in unexpected behavior.
+ * right now and might result in unexpected behavior. Please open an issue in
+ * the Perkakas github project if you need support for these types.
  *
  * The result would be narrowed to the second value so that the function can be
  * used as a type guard.
@@ -24,11 +25,11 @@ import { curry } from './curry';
  * @param data - The first value to compare.
  * @param other - The second value to compare.
  * @signature
- *    P.isDeepEqual(data, other)
+ *    isDeepEqual(data, other)
  * @example
- *    P.isDeepEqual(1, 1) //=> true
- *    P.isDeepEqual(1, '1') //=> false
- *    P.isDeepEqual([1, 2, 3], [1, 2, 3]) //=> true
+ *    isDeepEqual(1, 1) //=> true
+ *    isDeepEqual(1, '1') //=> false
+ *    isDeepEqual([1, 2, 3], [1, 2, 3]) //=> true
  * @dataFirst
  * @category Guard
  */
@@ -48,7 +49,8 @@ export function isDeepEqual<T>(data: T, other: T): boolean;
  * values.
  *
  * !IMPORTANT: TypedArrays and symbol properties of objects are not supported
- * right now and might result in unexpected behavior.
+ * right now and might result in unexpected behavior. Please open an issue in
+ * the Perkakas github project if you need support for these types.
  *
  * The result would be narrowed to the second value so that the function can be
  * used as a type guard.
@@ -61,11 +63,11 @@ export function isDeepEqual<T>(data: T, other: T): boolean;
  *
  * @param other - The second value to compare.
  * @signature
- *    P.isDeepEqual(other)(data)
+ *    isDeepEqual(other)(data)
  * @example
- *    P.pipe(1, P.isDeepEqual(1)); //=> true
- *    P.pipe(1, P.isDeepEqual('1')); //=> false
- *    P.pipe([1, 2, 3], P.isDeepEqual([1, 2, 3])); //=> true
+ *    pipe(1, isDeepEqual(1)); //=> true
+ *    pipe(1, isDeepEqual('1')); //=> false
+ *    pipe([1, 2, 3], isDeepEqual([1, 2, 3])); //=> true
  * @dataLast
  * @category Guard
  */

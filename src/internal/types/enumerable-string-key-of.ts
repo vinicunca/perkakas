@@ -9,4 +9,5 @@ import type { ToString } from './to-string';
  *
  * @see EnumerableStringKeyedValueOf
  */
-export type EnumerableStringKeyOf<T> = Required<T> extends Record<infer K, unknown> ? ToString<K> : never;
+export type EnumerableStringKeyOf<T>
+  = Required<T> extends Record<infer K, unknown> ? ToString<K> : never;

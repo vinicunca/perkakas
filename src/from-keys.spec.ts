@@ -17,6 +17,7 @@ it('works with duplicates', () => {
 
 it('uses the last value', () => {
   let counter = 0;
+
   expect(
     fromKeys(['a', 'a'], () => {
       counter += 1;
@@ -31,11 +32,13 @@ it('works with number keys', () => {
 
 it('works with symbols', () => {
   const symbol = Symbol('a');
+
   expect(fromKeys([symbol], () => 1)).toStrictEqual({ [symbol]: 1 });
 });
 
 it('works with a mix of key types', () => {
   const symbol = Symbol('a');
+
   expect(fromKeys(['a', 123, symbol], (item) => typeof item)).toStrictEqual({
     a: 'string',
     123: 'number',
@@ -73,6 +76,7 @@ describe('dataLast', () => {
 
   it('uses the last value', () => {
     let counter = 0;
+
     expect(
       pipe(
         ['a', 'a'],
@@ -90,6 +94,7 @@ describe('dataLast', () => {
 
   it('works with symbols', () => {
     const symbol = Symbol('a');
+
     expect(
       pipe(
         [symbol],
@@ -100,6 +105,7 @@ describe('dataLast', () => {
 
   it('works with a mix of key types', () => {
     const symbol = Symbol('a');
+
     expect(
       pipe(
         ['a', 123, symbol],

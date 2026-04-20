@@ -18,9 +18,9 @@ import { curry } from './curry';
  * @returns The value that results from running the "reducer" callback function
  * to completion over the entire array.
  * @signature
- *    P.reduce(data, callbackfn, initialValue)
+ *    reduce(data, callbackfn, initialValue)
  * @example
- *    P.reduce([1, 2, 3, 4, 5], (acc, x) => acc + x, 100) // => 115
+ *    reduce([1, 2, 3, 4, 5], (acc, x) => acc + x, 100) // => 115
  * @dataFirst
  * @category Array
  */
@@ -52,9 +52,9 @@ export function reduce<T, U>(
  * @returns The value that results from running the "reducer" callback function
  * to completion over the entire array.
  * @signature
- *    P.reduce(fn, initialValue)(array)
+ *    reduce(fn, initialValue)(array)
  * @example
- *    P.pipe([1, 2, 3, 4, 5], P.reduce((acc, x) => acc + x, 100)) // => 115
+ *    pipe([1, 2, 3, 4, 5], reduce((acc, x) => acc + x, 100)) // => 115
  * @dataLast
  * @category Array
  */
@@ -72,15 +72,11 @@ export function reduce(...args: ReadonlyArray<unknown>): unknown {
   return curry(reduceImplementation, args);
 }
 
-function reduceImplementation<T, U>(
+function reduceImplementation<T, U>(data: ReadonlyArray<T>, callbackfn: (
+  previousValue: U,
+  currentValue: T,
+  currentIndex: number,
   data: ReadonlyArray<T>,
-  callbackfn: (
-    previousValue: U,
-    currentValue: T,
-    currentIndex: number,
-    data: ReadonlyArray<T>,
-  ) => U,
-  initialValue: U,
-): U {
+) => U, initialValue: U): U {
   return data.reduce(callbackfn, initialValue);
 }

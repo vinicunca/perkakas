@@ -1,6 +1,5 @@
 import type { IterableContainer } from './internal/types/iterable-container';
 import type { LazyEvaluator } from './internal/types/lazy-evaluator';
-
 import { curry } from './curry';
 
 type Zipped<Left extends IterableContainer, Right extends IterableContainer>
@@ -31,9 +30,9 @@ type Zipped<Left extends IterableContainer, Right extends IterableContainer>
  * @param first - The first input list.
  * @param second - The second input list.
  * @signature
- *   P.zip(first, second)
+ *   zip(first, second)
  * @example
- *   P.zip([1, 2], ['a', 'b']) // => [[1, 'a'], [2, 'b']]
+ *   zip([1, 2], ['a', 'b']) // => [[1, 'a'], [2, 'b']]
  * @dataFirst
  * @lazy
  * @category Array
@@ -50,9 +49,9 @@ export function zip<F extends IterableContainer, S extends IterableContainer>(
  *
  * @param second - The second input list.
  * @signature
- *   P.zip(second)(first)
+ *   zip(second)(first)
  * @example
- *   P.zip(['a', 'b'])([1, 2]) // => [[1, 'a'], [2, 'b']]
+ *   zip(['a', 'b'])([1, 2]) // => [[1, 'a'], [2, 'b']]
  * @dataLast
  * @lazy
  * @category Array
@@ -68,21 +67,16 @@ export function zip(...args: ReadonlyArray<unknown>): unknown {
 function zipImplementation<
   F extends IterableContainer,
   S extends IterableContainer,
->(
-  first: F,
-  second: S,
-): Zipped<F, S> {
+>(first: F, second: S): Zipped<F, S> {
   return (first.length < second.length
     ? first.map((item, index) => [item, second[index]])
     : second.map((item, index) => [first[index], item])) as Zipped<F, S>;
 }
 
-function lazyImplementation<F extends IterableContainer, S extends IterableContainer>(
-  second: S,
-): LazyEvaluator<F[number], [F[number], S[number]]> {
+function lazyImplementation<F extends IterableContainer, S extends IterableContainer>(second: S): LazyEvaluator<F[number], [F[number], S[number]]> {
   return (value, index) => ({
-    done: index >= second.length - 1,
     hasNext: true,
     next: [value, second[index]],
+    done: index >= second.length - 1,
   });
 }

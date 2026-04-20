@@ -9,11 +9,11 @@ import { curry } from './curry';
  * @param data - The array.
  * @param categorizationFn - The categorization function.
  * @signature
- *   P.countBy(data, categorizationFn)
+ *   countBy(data, categorizationFn)
  * @example
- *    P.countBy(
+ *    countBy(
  *      ["a", "b", "c", "B", "A", "a"],
- *      toLowerCase
+ *      toLowerCase()
  *    ); //=> { a: 3, b: 2, c: 1 }
  * @dataFirst
  * @category Array
@@ -34,11 +34,11 @@ export function countBy<T, K extends PropertyKey>(
  *
  * @param categorizationFn - The categorization function.
  * @signature
- *   P.countBy(categorizationFn)(data)
+ *   countBy(categorizationFn)(data)
  * @example
- *    P.pipe(
+ *    pipe(
  *      ["a", "b", "c", "B", "A", "a"],
- *      P.countBy(toLowerCase),
+ *      countBy(toLowerCase()),
  *    ); //=> { a: 3, b: 2, c: 1 }
  * @dataLast
  * @category Array

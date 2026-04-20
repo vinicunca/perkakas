@@ -16,6 +16,7 @@ it('removes nothing on empty other array', () => {
 it('returns a shallow clone when nothing is removed', () => {
   const data = [1, 2, 3];
   const result = difference(data, [4, 5, 6]);
+
   expect(result).toStrictEqual(data);
   expect(result).not.toBe(data);
 });
@@ -41,9 +42,13 @@ it('preserves the original order in source array', () => {
 });
 
 it('accounts and removes multiple copies', () => {
-  expect(difference([1, 2, 3, 1, 2, 3, 1, 2, 3], [1, 2, 1, 2])).toStrictEqual(
-    [3, 3, 1, 2, 3],
-  );
+  expect(difference([1, 2, 3, 1, 2, 3, 1, 2, 3], [1, 2, 1, 2])).toStrictEqual([
+    3,
+    3,
+    1,
+    2,
+    3,
+  ]);
 });
 
 it('works with strings', () => {
@@ -52,6 +57,7 @@ it('works with strings', () => {
 
 it('works with objects', () => {
   const item = { a: 2 };
+
   expect(difference([item, { b: 3 }, item], [item, item])).toStrictEqual([
     { b: 3 },
   ]);
@@ -72,6 +78,7 @@ it('lazy', () => {
     difference([2, 3]),
     take(2),
   );
+
   expect(mock).toHaveBeenCalledTimes(4);
   expect(result).toStrictEqual([1, 4]);
 });

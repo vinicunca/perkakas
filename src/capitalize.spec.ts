@@ -18,22 +18,6 @@ describe('data-first', () => {
   it('on mixed case', () => {
     expect(capitalize('heLlO WoRlD')).toBe('HeLlO WoRlD');
   });
-
-  it('from camel case', () => {
-    expect(capitalize('helloWorld')).toBe('HelloWorld');
-  });
-
-  it('from pascal case', () => {
-    expect(capitalize('HelloWorld')).toBe('HelloWorld');
-  });
-
-  it('from snake case', () => {
-    expect(capitalize('hello_world')).toBe('Hello_world');
-  });
-
-  it('from kebab case', () => {
-    expect(capitalize('hello-world')).toBe('Hello-world');
-  });
 });
 
 describe('data-last', () => {

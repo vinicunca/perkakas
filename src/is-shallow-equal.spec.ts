@@ -34,6 +34,7 @@ describe('primitives', () => {
 describe('objects', () => {
   it('arrays', () => {
     const data = [1, 2, 3];
+
     expect(isShallowEqual(data, [1, 2, 3])).toBe(true);
     expect(isShallowEqual(data, data)).toBe(true);
 
@@ -42,6 +43,7 @@ describe('objects', () => {
 
   it('objects', () => {
     const data = { a: 1, b: 2 } as Record<string, number>;
+
     expect(isShallowEqual(data, { a: 1, b: 2 })).toBe(true);
     expect(isShallowEqual(data, data)).toBe(true);
 
@@ -51,6 +53,7 @@ describe('objects', () => {
 
   it('uint arrays', () => {
     const data = new Uint8Array([1, 2, 3]);
+
     expect(isShallowEqual(data, new Uint8Array([1, 2, 3]))).toBe(true);
     expect(isShallowEqual(data, data)).toBe(true);
 
@@ -59,6 +62,7 @@ describe('objects', () => {
 
   it('maps', () => {
     const data = new Map([['a', 1]]);
+
     expect(isShallowEqual(data, new Map([['a', 1]]))).toBe(true);
     expect(isShallowEqual(data, data)).toBe(true);
 
@@ -76,6 +80,7 @@ describe('objects', () => {
 
   it('sets', () => {
     const data = new Set([1, 2, 3]);
+
     expect(isShallowEqual(data, new Set([1, 2, 3]))).toBe(true);
     expect(isShallowEqual(data, data)).toBe(true);
 
@@ -87,6 +92,7 @@ describe('objects', () => {
 describe('built-ins', () => {
   it('regex', () => {
     const data = /a/u;
+
     expect(isShallowEqual(data, /a/u)).toBe(true);
     expect(isShallowEqual(data, data)).toBe(true);
 
@@ -95,6 +101,7 @@ describe('built-ins', () => {
 
   it('dates', () => {
     const data = new Date();
+
     expect(isShallowEqual(data, new Date())).toBe(true);
     expect(isShallowEqual(data, data)).toBe(true);
 
@@ -103,6 +110,7 @@ describe('built-ins', () => {
 
   it('promises', () => {
     const data = Promise.resolve(1);
+
     expect(isShallowEqual(data, Promise.resolve(1))).toBe(true);
     expect(isShallowEqual(data, data)).toBe(true);
 
@@ -113,24 +121,28 @@ describe('built-ins', () => {
 describe('shallow inequality', () => {
   it('arrays of objects', () => {
     const a = { a: 1 };
+
     expect(isShallowEqual([a], [a])).toBe(true);
     expect(isShallowEqual([a], [{ a: 1 }])).toBe(false);
   });
 
   it('arrays of arrays', () => {
     const a = [1];
+
     expect(isShallowEqual([a], [a])).toBe(true);
     expect(isShallowEqual([a], [[1]])).toBe(false);
   });
 
   it('objects of arrays', () => {
     const a = [1];
+
     expect(isShallowEqual({ a }, { a })).toBe(true);
     expect(isShallowEqual({ a }, { a: [1] })).toBe(false);
   });
 
   it('objects of objects', () => {
     const a = { b: 1 };
+
     expect(isShallowEqual({ a }, { a })).toBe(true);
     expect(isShallowEqual({ a }, { a: { b: 1 } })).toBe(false);
   });

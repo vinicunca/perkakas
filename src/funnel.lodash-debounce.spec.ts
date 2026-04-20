@@ -1,5 +1,4 @@
 /* eslint-disable no-nested-ternary */
-/* eslint-disable antfu/consistent-list-newline */
 /* eslint-disable ts/explicit-function-return-type, ts/no-explicit-any --
  * These aren't useful for a reference implementation for a legacy library!
  */
@@ -10,7 +9,7 @@ import { sleep } from './sleep';
 
 /**
  * A reference implementation of the Lodash `debounce` function using the
- * Our `funnel` function. While migrating from Lodash you can copy this
+ * Perkakas `funnel` function. While migrating from Lodash you can copy this
  * function as-is into your code base and use it as a drop-in replacement; but
  * we recommend eventually inlining the call to `funnel` so you can adjust the
  * function to your specific needs.
@@ -38,42 +37,36 @@ import { sleep } from './sleep';
 function debounce<F extends (...args: any) => void>(
   func: F,
   wait = 0,
-  {
-    leading = false,
-    trailing = true,
-    maxWait,
-  }: {
+  { leading = false, trailing = true, maxWait }: {
     readonly leading?: boolean;
     readonly trailing?: boolean;
     readonly maxWait?: number;
   } = {}) {
   const {
     call,
-    // Lodash v4 doesn't provide access to the `isIdle` (called `pending` in Lodash v5) information.
+    // Lodash v4 doesn't provide access to the `isIdle` (called `pending` in
+    // Lodash v5) information.
     isIdle: _isIdle,
     ...rest
   } = funnel(
     (args: Parameters<F>) => {
       if (!trailing && !leading) {
-        /**
-         * In Lodash you can disable both the trailing and leading edges of the
-         * debounce window, effectively causing the function to never be
-         * invoked. Our's uses the invokedAt enum exactly to prevent such a
-         * situation; so to simulate Lodash we need to only pass the callback
-         * when at least one of them is enabled.
-         */
+        // In Lodash you can disable both the trailing and leading edges of the
+        // debounce window, effectively causing the function to never be
+        // invoked. Perkakas uses the invokedAt enum exactly to prevent such a
+        // situation; so to simulate Lodash we need to only pass the callback
+        // when at least one of them is enabled.
         return;
       }
 
-      /**
-       * Funnel provides more control over the args, but lodash simply passes
-       * them through, to replicate this behavior we need to spread the args
-       * array maintained via the reducer below.
-       */
+      // Funnel provides more control over the args, but lodash simply passes
+      // them through, to replicate this behavior we need to spread the args
+      // array maintained via the reducer below.
       func(...args);
     },
     {
-      // Debounce stores the latest args it was called with for the next invocation of the callback.
+      // Debounce stores the latest args it was called with for the next
+      // invocation of the callback.
       reducer: (_, ...args: Parameters<F>) => args,
       minQuietPeriodMs: wait,
       ...(maxWait !== undefined && { maxBurstDurationMs: maxWait }),
@@ -85,22 +78,18 @@ function debounce<F extends (...args: any) => void>(
     },
   );
 
-  /**
-   * Lodash uses a legacy JS-ism to attach helper functions to the main
-   * callback of `debounce`. In our's we return a proper object where the
-   * callback is one of the available properties. Here we destructure and then
-   * reconstruct the object to fit the Lodash API.
-   */
+  // Lodash uses a legacy JS-ism to attach helper functions to the main
+  // callback of `debounce`. In Perkakas we return a proper object where the
+  // callback is one of the available properties. Here we destructure and then
+  // reconstruct the object to fit the Lodash API.
   return Object.assign(call, rest);
 }
 
-/**
- * We need some non-trivial duration to use in all our tests, to abstract the
- * actual chosen value we use this UnitOfTime (UT) constant. As long as it is a
- * positive integer, the actual value doesn't matter (but the larger it is,
- * the longer the tests would take to run); the value used by Lodash is 32.
- * The number is in milliseconds.
- */
+// We need some non-trivial duration to use in all our tests, to abstract the
+// actual chosen value we use this UnitOfTime (UT) constant. As long as it is a
+// positive integer, the actual value doesn't matter (but the larger it is,
+// the longer the tests would take to run); the value used by Lodash is 32.
+// The number is in milliseconds.
 const UT = 16;
 
 describe('https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L4187', () => {
@@ -158,11 +147,9 @@ describe('https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L4187', () 
     const mockWithLeadingAndTrailing = vi.fn<() => void>();
     const withLeading = debounce(mockWithLeading, UT, {
       leading: true,
-      /**
-       * This Lodash test configures both debouncers with the same timing
-       * options which doesn't seem to be the intent of the test based on the test
-       * name and the debouncer names. We fixed it in our test.
-       */
+      // This Lodash test configures both debouncers with the same timing
+      // options which doesn't seem to be the intent of the test based on the test
+      // name and the debouncer names. We fixed it in our test.
       trailing: false,
     });
     const withLeadingAndTrailing = debounce(mockWithLeadingAndTrailing, UT, {
@@ -192,12 +179,10 @@ describe('https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L4187', () 
     const mockWith = vi.fn<() => void>();
     const mockWithout = vi.fn<() => void>();
     const withTrailing = debounce(mockWith, UT, { trailing: true });
-    /**
-     * The lodash test disabled `trailing` but doesn't enable `leading`
-     * resulting in a debouncer that has no effective timing policy. We handle
-     * this situation so we kept the test, but it might be have been what the
-     * test was supposed to test.
-     */
+    // The lodash test disabled `trailing` but doesn't enable `leading`
+    // resulting in a debouncer that has no effective timing policy. We handle
+    // this situation so we kept the test, but it might be have been what the
+    // test was supposed to test.
     const withoutTrailing = debounce(mockWithout, UT, { trailing: false });
     withTrailing();
 
@@ -246,18 +231,16 @@ describe('https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L4187', () 
       withoutMaxWait();
     }
 
-    /**
-     * There's a bug in the Lodash test where they take the result before the
-     * sleep (setTimeout); but it still worked for them coincidentally because
-     * of how maxWait is implemented:
-     * In Lodash, when the maxWait is reached, the callback is invoked within
-     * the same execution frame (without a setTimeout). In our's we use a
-     * setTimeout even when it's effective delay is 0ms. This means that we fail
-     * the lodash test if we don't first yield the execution frame to get the
-     * timeout to run; Oddly, the Lodash test already had this yield in place
-     * (although removing it won't break the lodash test), so to fix the test we
-     * simply added more expects to show the difference in implementations.
-     */
+    // There's a bug in the Lodash test where they take the result before the
+    // sleep (setTimeout); but it still worked for them coincidentally because
+    // of how maxWait is implemented:
+    // In Lodash, when the maxWait is reached, the callback is invoked within
+    // the same execution frame (without a setTimeout). In Perkakas we use a
+    // setTimeout even when it's effective delay is 0ms. This means that we fail
+    // the lodash test if we don't first yield the execution frame to get the
+    // timeout to run; Oddly, the Lodash test already had this yield in place
+    // (although removing it won't break the lodash test), so to fix the test we
+    // simply added more expects to show the difference in implementations.
 
     expect(mockWithout).toHaveBeenCalledTimes(0);
     expect(mockWith).toHaveBeenCalledTimes(0);
@@ -406,5 +389,5 @@ describe('https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L23038', ()
  * need to yield execution.
  */
 async function yieldExecution() {
-  return await sleep(0);
+  await sleep(0);
 }

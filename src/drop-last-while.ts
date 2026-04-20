@@ -1,5 +1,4 @@
 import type { IterableContainer } from './internal/types/iterable-container';
-
 import { curry } from './curry';
 
 /**
@@ -10,9 +9,9 @@ import { curry } from './curry';
  * @param data - The array.
  * @param predicate - The predicate.
  * @signature
- *    P.dropLastWhile(data, predicate)
+ *    dropLastWhile(data, predicate)
  * @example
- *    P.dropLastWhile([1, 2, 10, 3, 4], x => x < 10) // => [1, 2, 10]
+ *    dropLastWhile([1, 2, 10, 3, 4], x => x < 10) // => [1, 2, 10]
  * @dataFirst
  * @category Array
  */
@@ -28,9 +27,9 @@ export function dropLastWhile<T extends IterableContainer>(
  *
  * @param predicate - The predicate.
  * @signature
- *    P.dropLastWhile(predicate)(data)
+ *    dropLastWhile(predicate)(data)
  * @example
- *    P.pipe([1, 2, 10, 3, 4], P.dropLastWhile(x => x < 10))  // => [1, 2, 10]
+ *    pipe([1, 2, 10, 3, 4], dropLastWhile(x => x < 10))  // => [1, 2, 10]
  * @dataLast
  * @category Array
  */

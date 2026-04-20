@@ -13,18 +13,18 @@ type PropDeep<T, Path extends ReadonlyArray<unknown>> = Path extends readonly [
   ...infer Rest,
 ]
   ? PropDeep<Prop<T, Key>, Rest>
-  // Keys is a fixed tuple so we know we reach here only when we've reached
-  // the output object.
-  : T;
+  : // Keys is a fixed tuple so we know we reach here only when we've reached
+// the output object.
+  T;
 
 // Expanding on the built-in `T[Key]` operator to support arrays and unions.
 type Prop<T, Key>
   // Distribute the union to support unions of keys.
   = T extends unknown
-    // In a distributed union some of the union members might not be keys of a
-    // specific object within a union of objects, those cases don't contribute
-    // to the output type.
-    ? Key extends keyof T
+    ? // In a distributed union some of the union members might not be keys of a
+  // specific object within a union of objects, those cases don't contribute
+  // to the output type.
+    Key extends keyof T
       ? T extends ReadonlyArray<unknown>
         ? ArrayAt<T, Key>
         : T[Key]
@@ -53,11 +53,11 @@ type NonPropertyKey = object | null | undefined;
  * @param data - The object or array to access.
  * @param key - The key(s) for the property to extract.
  * @signature
- *   P.prop(data, ...keys);
+ *   prop(data, ...keys);
  * @example
- *   P.prop({ foo: { bar: 'baz' } }, 'foo'); //=> { bar: 'baz' }
- *   P.prop({ foo: { bar: 'baz' } }, 'foo', 'bar'); //=> 'baz'
- *   P.prop(["cat", "dog"], 1); //=> 'dog'
+ *   prop({ foo: { bar: 'baz' } }, 'foo'); //=> { bar: 'baz' }
+ *   prop({ foo: { bar: 'baz' } }, 'foo', 'bar'); //=> 'baz'
+ *   prop(["cat", "dog"], 1); //=> 'dog'
  * @dataFirst
  * @category Object
  */
@@ -248,11 +248,11 @@ export function prop<
  *
  * @param key - The key(s) for the property to extract.
  * @signature
- *   P.prop(...keys)(data);
+ *   prop(...keys)(data);
  * @example
- *   P.pipe({ foo: { bar: 'baz' } }, P.prop('foo')); //=> { bar: 'baz' }
- *   P.pipe({ foo: { bar: 'baz' } }, P.prop('foo', 'bar')); //=> 'baz'
- *   P.pipe(["cat", "dog"], P.prop(1)); //=> 'dog'
+ *   pipe({ foo: { bar: 'baz' } }, prop('foo')); //=> { bar: 'baz' }
+ *   pipe({ foo: { bar: 'baz' } }, prop('foo', 'bar')); //=> 'baz'
+ *   pipe(["cat", "dog"], prop(1)); //=> 'dog'
  * @dataLast
  * @category Object
  */

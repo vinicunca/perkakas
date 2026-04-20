@@ -1,18 +1,26 @@
 import { describe, expect, it } from 'vitest';
 import { conditional } from './conditional';
+import { constant } from './constant';
 import { isDeepEqual } from './is-deep-equal';
 import { pipe } from './pipe';
 
 describe('runtime (dataFirst)', () => {
-  it('falls back to trivial default', () => {
-    expect(conditional('Jokic', conditional.defaultCase())).toBeUndefined();
+  it('accepts and runs a default/fallback case', () => {
+    expect(
+      conditional(
+        'Jokic',
+        [constant(false), constant('hello')],
+        constant(undefined),
+      ),
+    ).toBeUndefined();
   });
 
   it('falls back to our default', () => {
     expect(
       conditional(
         'Jokic',
-        conditional.defaultCase(() => 'hello'),
+        [constant(false), constant('world')],
+        constant('hello'),
       ),
     ).toBe('hello');
   });
@@ -45,10 +53,9 @@ describe('runtime (dataFirst)', () => {
 
   it('throws when no matching case', () => {
     expect(() =>
-      conditional('Jokic', [() => false, () => 'world']))
-      .toThrowErrorMatchingInlineSnapshot(
-        '[Error: conditional: data failed for all cases]',
-      );
+      conditional('Jokic', [() => false, () => 'world'])).toThrowErrorMatchingInlineSnapshot(
+      '[Error: conditional: data failed for all cases]',
+    );
   });
 });
 
@@ -62,6 +69,7 @@ describe('runtime (dataLast)', () => {
         [isDeepEqual('Jokic'), () => 'mvp'],
       ),
     );
+
     expect(value).toBe('center');
   });
 });

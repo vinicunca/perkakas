@@ -44,7 +44,6 @@
     "lint": "eslint . --fix",
     "publish:ci": "pnpm publish --access public --no-git-checks",
     "release": "bumpp package.json",
-    "taze": "taze major -wIrl",
     "test": "vitest",
     "test:coverage": "vitest run --coverage --project runtime",
     "test:prop": "vitest --project prop",
@@ -53,12 +52,15 @@
   },
   "devDependencies": {
     "@arethetypeswrong/core": "^0.18.2",
+    "@fast-check/vitest": "^0.4.0",
     "@types/node": "^25.5.2",
     "@vinicunca/eslint-config": "5.0.0",
     "@vitest/coverage-v8": "^4.1.2",
     "bumpp": "^10.3.2",
     "eslint": "^10.2.0",
+    "fast-check": "^4.7.0",
     "publint": "^0.3.14",
+    "tsdown": "^0.21.7",
     "type-fest": "^5.5.0",
     "typescript": "^6.0.2",
     "vitest": "^4.1.2"

@@ -126,9 +126,9 @@ type CoercedNonEmptyValues<T extends Record<PropertyKey, IterableContainer>> = {
  * @param data - The items to group.
  * @param prop - The property name to group by.
  * @signature
- *    R.groupByProp(data, prop)
+ *    groupByProp(data, prop)
  * @example
- *    const result = R.groupByProp(
+ *    const result = groupByProp(
  *      //  ^? { cat: [{ a: 'cat' }], dog: [{ a: 'dog' }] }
  *      [{ a: 'cat' }, { a: 'dog' }] as const,
  *      'a',
@@ -163,12 +163,12 @@ export function groupByProp<
  *
  * @param prop - The property name to group by.
  * @signature
- *    R.groupByProp(prop)(data);
+ *    groupByProp(prop)(data);
  * @example
- *    const result = R.pipe(
+ *    const result = pipe(
  *      //  ^? { cat: [{ a: 'cat' }], dog: [{ a: 'dog' }] }
  *      [{ a: 'cat' }, { a: 'dog' }] as const,
- *      R.groupByProp('a'),
+ *      groupByProp('a'),
  *    );
  * @dataLast
  * @category Array
@@ -186,9 +186,8 @@ function groupByPropImplementation<
   T extends IterableContainer,
   Prop extends GroupableProps<T>,
 >(data: T, prop: Prop): GroupByProp<T, Prop> {
-  const output: BoundedPartial<
-    Record<AllPropValues<T, Prop>, Array<T[number]>>
-  > = Object.create(null);
+  const output: BoundedPartial<Record<AllPropValues<T, Prop>, Array<T[number]>>>
+    = Object.create(null);
 
   for (const item of data) {
     const key = item?.[prop];
@@ -208,7 +207,7 @@ function groupByPropImplementation<
         // It is more performant to add the items to an existing array instead
         // of creating a new array via spreading every time we add an item to
         // it (e.g., `[...current, item]`).
-        // @ts-expect-error [ts2339] -- `items` is still `never`.
+        // @ts-expect-error [ts2339] -- And again here `items` is still `never`.
         items.push(item);
       }
     }

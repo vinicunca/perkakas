@@ -1,5 +1,4 @@
 import type { BoundedPartial } from './internal/types/bounded-partial';
-
 import type { NonEmptyArray } from './internal/types/non-empty-array';
 import { curry } from './curry';
 
@@ -23,20 +22,16 @@ import { curry } from './curry';
  * @returns An object with properties for all groups, each assigned to an array
  * containing the elements of the associated group.
  * @signature
- *    P.groupBy(data, callbackfn)
+ *    groupBy(data, callbackfn)
  * @example
- *    P.groupBy([{a: 'cat'}, {a: 'dog'}] as const, P.prop('a')) // => {cat: [{a: 'cat'}], dog: [{a: 'dog'}]}
- *    P.groupBy([0, 1], x => x % 2 === 0 ? 'even' : undefined) // => {even: [0]}
+ *    groupBy([{a: 'cat'}, {a: 'dog'}] as const, prop('a')) // => {cat: [{a: 'cat'}], dog: [{a: 'dog'}]}
+ *    groupBy([0, 1], x => x % 2 === 0 ? 'even' : undefined) // => {even: [0]}
  * @dataFirst
  * @category Array
  */
 export function groupBy<T, Key extends PropertyKey = PropertyKey>(
   data: ReadonlyArray<T>,
-  callbackfn: (
-    value: T,
-    index: number,
-    data: ReadonlyArray<T>,
-  ) => Key | undefined,
+  callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => Key | undefined,
 ): BoundedPartial<Record<Key, NonEmptyArray<T>>>;
 
 /**
@@ -47,7 +42,7 @@ export function groupBy<T, Key extends PropertyKey = PropertyKey>(
  * return `undefined` in order to exclude the item from being added to any
  * group.
  *
- *  If you are grouping objects by a property of theirs (e.g.
+ * If you are grouping objects by a property of theirs (e.g.
  * `groupBy(data, ({ myProp }) => myProp)` or `groupBy(data, prop('myProp'))`)
  * consider using `groupByProp` (e.g. `groupByProp(data, 'myProp')`) instead,
  * as it would provide better typing.
@@ -58,40 +53,30 @@ export function groupBy<T, Key extends PropertyKey = PropertyKey>(
  * @returns An object with properties for all groups, each assigned to an array
  * containing the elements of the associated group.
  * @signature
- *    P.groupBy(callbackfn)(data);
+ *    groupBy(callbackfn)(data);
  * @example
- *    P.pipe(
+ *    pipe(
  *      [{a: 'cat'}, {a: 'dog'}] as const,
- *      P.groupBy(P.prop('a')),
+ *      groupBy(prop('a')),
  *    ); // => {cat: [{a: 'cat'}], dog: [{a: 'dog'}]}
- *    P.pipe(
+ *    pipe(
  *      [0, 1],
- *      P.groupBy(x => x % 2 === 0 ? 'even' : undefined),
+ *      groupBy(x => x % 2 === 0 ? 'even' : undefined),
  *    ); // => {even: [0]}
  * @dataLast
  * @category Array
  */
 export function groupBy<T, Key extends PropertyKey = PropertyKey>(
-  callbackfn: (
-    value: T,
-    index: number,
-    data: ReadonlyArray<T>,
-  ) => Key | undefined,
+  callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => Key | undefined,
 ): (items: ReadonlyArray<T>) => BoundedPartial<Record<Key, NonEmptyArray<T>>>;
 
 export function groupBy(...args: ReadonlyArray<unknown>): unknown {
   return curry(groupByImplementation, args);
 }
 
-function groupByImplementation<T, Key extends PropertyKey = PropertyKey>(
-  data: ReadonlyArray<T>,
-  callbackfn: (
-    value: T,
-    index: number,
-    data: ReadonlyArray<T>,
-  ) => Key | undefined,
-): BoundedPartial<Record<Key, NonEmptyArray<T>>> {
-  const output: BoundedPartial<Record<Key, NonEmptyArray<T>>> = Object.create(null);
+function groupByImplementation<T, Key extends PropertyKey = PropertyKey>(data: ReadonlyArray<T>, callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => Key | undefined): BoundedPartial<Record<Key, NonEmptyArray<T>>> {
+  const output: BoundedPartial<Record<Key, NonEmptyArray<T>>>
+    = Object.create(null);
 
   for (let index = 0; index < data.length; index++) {
     // Accessing the object directly instead of via an iterator on the `entries` showed significant performance benefits while benchmarking.
@@ -119,4 +104,4 @@ function groupByImplementation<T, Key extends PropertyKey = PropertyKey>(
   Object.setPrototypeOf(output, Object.prototype);
 
   return output;
-};
+}

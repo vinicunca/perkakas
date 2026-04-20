@@ -14,8 +14,8 @@ export function curryOn<T>(
   args: ReadonlyArray<unknown>,
 ): unknown {
   return isArg(args[0])
-    // @ts-expect-error [ts2556] - This is a low-level function that assumes the function declaration and setup is correct and won't result in typing issues when called dynamically.
-    ? (data: unknown) => implementation(data, ...args)
-    // @ts-expect-error [ts2556] - This is a low-level function that assumes the function declaration and setup is correct and won't result in typing issues when called dynamically.
-    : implementation(...args);
+    ? // @ts-expect-error [ts2556] - This is a low-level function that assumes the function declaration and setup is correct and won't result in typing issues when called dynamically.
+      (data: unknown) => implementation(data, ...args)
+    : // @ts-expect-error [ts2556] - This is a low-level function that assumes the function declaration and setup is correct and won't result in typing issues when called dynamically.
+      implementation(...args);
 }

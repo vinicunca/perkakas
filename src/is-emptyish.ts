@@ -14,7 +14,7 @@ import type {
 import type { HasWritableKeys } from './internal/types/has-writable-keys';
 import type { TupleParts } from './internal/types/tuple-parts';
 
-// eslint-disable-next-line ts/no-unused-vars -- we use a non-exported unique symbol to prevent users from faking our return type.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- we use a non-exported unique symbol to prevent users from faking our return type.
 declare const EMPTYISH_BRAND: unique symbol;
 
 // Because our function is a type-predicate and it narrows the input based on
@@ -36,67 +36,68 @@ type Emptyish<T>
 // Because of TypeScript's duck-typing, a lot of sub-types of `object` can
 // extend each other so we need to cascade between the different "kinds" of
 // objects.
-type EmptyishObjectLike<T extends object>
-  = T extends ReadonlyArray<unknown>
-    ? EmptyishArray<T>
-    : T extends ReadonlyMap<infer Key, unknown>
-      ? T extends Map<unknown, unknown>
-        // Mutable maps should remain mutable so we can't narrow them down.
-        ? Empty<T>
-        // But immutable maps could be rewritten to prevent any mutations.
-        : ReadonlyMap<Key, never>
-      : T extends ReadonlySet<unknown>
-        ? T extends Set<unknown>
-          // Mutable sets should remain mutable so we can't narrow them down.
-          ? Empty<T>
-          // But immutable sets could be rewritten to prevent any mutations.
-          : ReadonlySet<never>
-        : EmptyishObject<T>;
+type EmptyishObjectLike<T extends object> = T extends ReadonlyArray<unknown>
+  ? EmptyishArray<T>
+  : T extends ReadonlyMap<infer Key, unknown>
+    ? T extends Map<unknown, unknown>
+      ? // Mutable maps should remain mutable so we can't narrow them down.
+      Empty<T>
+      : // But immutable maps could be rewritten to prevent any mutations.
+      ReadonlyMap<Key, never>
+    : T extends ReadonlySet<unknown>
+      ? T extends Set<unknown>
+        ? // Mutable sets should remain mutable so we can't narrow them down.
+        Empty<T>
+        : // But immutable sets could be rewritten to prevent any mutations.
+        ReadonlySet<never>
+      : EmptyishObject<T>;
 
 type EmptyishArray<T extends ReadonlyArray<unknown>> = T extends readonly []
-  // By returning T we effectively narrow the "else" branch to `never`.
-  ? T
+  ? // By returning T we effectively narrow the "else" branch to `never`.
+  T
   : And<
     IsEqual<TupleParts<T>['required'], []>,
     IsEqual<TupleParts<T>['suffix'], []>
   > extends true
     ? T extends Array<unknown>
-      // A mutable array should remain mutable so we can't narrow it down.
-      ? Empty<T>
-      // But immutable arrays could be rewritten to prevent any mutations.
-      : readonly []
-    // An array with a required prefix or suffix would never be empty, we can
-    // use that fact to narrow the "if" branch to `never`.
-    : never;
+      ? // A mutable array should remain mutable so we can't narrow it down.
+      Empty<T>
+      : // But immutable arrays could be rewritten to prevent any mutations.
+      readonly []
+    : // An array with a required prefix or suffix would never be empty, we can
+  // use that fact to narrow the "if" branch to `never`.
+    never;
 
 type EmptyishObject<T extends object> = T extends {
   length: infer Length extends number;
 }
   ? T extends string
-    // When a string is tagged/branded it also extends `object` and also has
-    // a `length` prop so we need to prevent handling it because it's
-    // irrelevant here!
-    ? never
-    // Because of how the implementation works, we need to consider any object
-    // with a `length` prop as potentially "empty".
-    : EmptyishArbitrary<T, Length>
+    ? // When a string is tagged/branded it also extends `object` and also has
+  // a `length` prop so we need to prevent handling it because it's
+  // irrelevant here!
+    never
+    : // Because of how the implementation works, we need to consider any object
+  // with a `length` prop as potentially "empty".
+    EmptyishArbitrary<T, Length>
   : T extends { size: infer Size extends number }
-    // Because of how the implementation works, we need to consider any object
-    // with a `size` prop as potentially "empty".
-    ? EmptyishArbitrary<T, Size>
+    ? // Because of how the implementation works, we need to consider any object
+  // with a `size` prop as potentially "empty".
+    EmptyishArbitrary<T, Size>
     : IsNever<ValueOf<T>> extends true
-      // This handles empty objects; by returning T we effectively narrow the
-      // "else" branch to `never`.
-      ? T
+      ? // This handles empty objects; by returning T we effectively narrow the
+    // "else" branch to `never`.
+      T
       : HasRequiredKeys<OmitIndexSignature<T>> extends true
-        // If the object has required keys it can never be empty, we can use
-        // that fact to narrow the "if" branch to `never`.
-        ? never
+        ? // If the object has required keys it can never be empty, we can use
+      // that fact to narrow the "if" branch to `never`.
+        never
         : HasWritableKeys<T> extends true
-          // A mutable object should remain mutable so we can't narrow it down.
-          ? Empty<T>
-          // But immutable objects could be rewritten to prevent any mutations.
-          : { readonly [P in keyof T]: never };
+          ? // A mutable object should remain mutable so we can't narrow it
+        // down.
+          Empty<T>
+          : // But immutable objects could be rewritten to prevent any
+            // mutations.
+            { readonly [P in keyof T]: never };
 
 // We use certain props to check for emptiness effectively, but that means we
 // will return those values for any object that has them. Because we don't know
@@ -105,18 +106,18 @@ type EmptyishArbitrary<T, N>
   = IsNumericLiteral<N> extends true
     ? [0] extends [N]
         ? [N] extends [0]
-            // If the prop is a literal 0 the object is and always will be empty
-            // so we can return it to narrow the "else" branch as `never`.
-            ? T
-            // If it accepts 0, but might accept other values too we need to
-            // consider the object mutable and not narrow it down.
-            : Empty<T>
-        // If the prop will never be 0 we can say it will never be empty and can
+            ? // If the prop is a literal 0 the object is and always will be empty
+          // so we can return it to narrow the "else" branch as `never`.
+            T
+            : // If it accepts 0, but might accept other values too we need to
+          // consider the object mutable and not narrow it down.
+            Empty<T>
+        : // If the prop will never be 0 we can say it will never be empty and can
         // return `never` for the "if" branch.
-        : never
-    // If the prop isn't a literal value we don't know enough about the object
-    // and should consider it mutable.
-    : Empty<T>;
+        never
+    : // If the prop isn't a literal value we don't know enough about the object
+  // and should consider it mutable.
+    Empty<T>;
 
 // Overly generic types interfere with our already pretty complex return type.
 // To make our lives easier we can filter them out at the function declaration
@@ -156,27 +157,27 @@ type ShouldNotNarrow<T> = Or<
  *
  * @param data - The variable to check.
  * @signature
- *    P.isEmptyish(data)
+ *    isEmptyish(data)
  * @example
- *    P.isEmptyish(undefined); //=> true
- *    P.isEmptyish(null); //=> true
- *    P.isEmptyish(''); //=> true
- *    P.isEmptyish([]); //=> true
- *    P.isEmptyish({}); //=> true
- *    P.isEmptyish(new Map()); //=> true
- *    P.isEmptyish(new Set()); //=> true
- *    P.isEmptyish({ a: "hello", size: 0 }); //=> true
- *    P.isEmptyish(/abc/); //=> true
- *    P.isEmptyish(new Date()); //=> true
- *    P.isEmptyish(new WeakMap()); //=> true
+ *    isEmptyish(undefined); //=> true
+ *    isEmptyish(null); //=> true
+ *    isEmptyish(''); //=> true
+ *    isEmptyish([]); //=> true
+ *    isEmptyish({}); //=> true
+ *    isEmptyish(new Map()); //=> true
+ *    isEmptyish(new Set()); //=> true
+ *    isEmptyish({ a: "hello", size: 0 }); //=> true
+ *    isEmptyish(/abc/); //=> true
+ *    isEmptyish(new Date()); //=> true
+ *    isEmptyish(new WeakMap()); //=> true
  *
- *    P.isEmptyish('test'); //=> false
- *    P.isEmptyish([1, 2, 3]); //=> false
- *    P.isEmptyish({ a: "hello" }); //=> false
- *    P.isEmptyish({ length: 1 }); //=> false
- *    P.isEmptyish(0); //=> false
- *    P.isEmptyish(true); //=> false
- *    P.isEmptyish(() => {}); //=> false
+ *    isEmptyish('test'); //=> false
+ *    isEmptyish([1, 2, 3]); //=> false
+ *    isEmptyish({ a: "hello" }); //=> false
+ *    isEmptyish({ length: 1 }); //=> false
+ *    isEmptyish(0); //=> false
+ *    isEmptyish(true); //=> false
+ *    isEmptyish(() => {}); //=> false
  * @category Guard
  */
 export function isEmptyish<T>(
@@ -191,7 +192,7 @@ export function isEmptyish<T>(
 export function isEmptyish(data: unknown): boolean;
 
 export function isEmptyish(data: unknown): boolean {
-  // eslint-disable-next-line eqeqeq -- Less code to ship.
+  // eslint-disable-next-line eqeqeq -- Less code to ship...
   if (data == undefined || data === '') {
     // These are the only literal values that are considered emptyish.
     return true;
@@ -212,7 +213,7 @@ export function isEmptyish(data: unknown): boolean {
     return data.size === 0;
   }
 
-  // eslint-disable-next-line no-unreachable-loop, no-restricted-syntax -- Instead of taking Object.keys just to check its length, which will be inefficient if the object has a lot of keys, we have a backdoor into an iterator of the object's properties via the `for...in` loop.
+  // eslint-disable-next-line no-unreachable-loop -- Instead of taking Object.keys just to check its length, which will be inefficient if the object has a lot of keys, we have a backdoor into an iterator of the object's properties via the `for...in` loop.
   for (const _ in data) {
     return false;
   }

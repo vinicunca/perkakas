@@ -1,8 +1,8 @@
 import { curry } from './curry';
 
 interface Limits {
-  readonly max?: number;
   readonly min?: number;
+  readonly max?: number;
 }
 
 /**
@@ -11,7 +11,7 @@ interface Limits {
  * @param value - The number.
  * @param limits - The bounds limits.
  * @signature
- *    P.clamp(value, { min, max });
+ *    clamp(value, { min, max });
  * @example
  *    clamp(10, { min: 20 }) // => 20
  *    clamp(10, { max: 5 }) // => 5
@@ -26,7 +26,7 @@ export function clamp(value: number, limits: Limits): number;
  *
  * @param limits - The bounds limits.
  * @signature
- *    P.clamp({ min, max })(value);
+ *    clamp({ min, max })(value);
  * @example
  *    clamp({ min: 20 })(10) // => 20
  *    clamp({ max: 5 })(10) // => 5

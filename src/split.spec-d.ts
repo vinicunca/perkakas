@@ -37,12 +37,6 @@ it('trivial literals', () => {
   expectTypeOf(result).toEqualTypeOf<['a']>();
 });
 
-it('trivial literals', () => {
-  const result = split('a', ',');
-
-  expectTypeOf(result).toEqualTypeOf<['a']>();
-});
-
 it('string contains separator', () => {
   const result = split(',', ',');
 
@@ -125,4 +119,10 @@ it('0 limit', () => {
   const result = split('a,b,c', ',', 0);
 
   expectTypeOf(result).toEqualTypeOf<[]>();
+});
+
+it('optional prefix separator on literal unions', () => {
+  const result = split('a' as 'a' | '-a', '-');
+
+  expectTypeOf(result).toEqualTypeOf<['a'] | ['', 'a']>();
 });

@@ -9,8 +9,9 @@ const DATA = [1] as const;
 
 describe('data first', () => {
   it('should call function with input value', () => {
-    const fn = vi.fn();
+    const fn = vi.fn<() => void>();
     tap(DATA, fn);
+
     expect(fn).toHaveBeenCalledExactlyOnceWith(DATA);
   });
 
@@ -21,8 +22,9 @@ describe('data first', () => {
 
 describe('data last', () => {
   it('should call function with input value', () => {
-    const fn = vi.fn();
+    const fn = vi.fn<() => void>();
     pipe(DATA, tap(fn));
+
     expect(fn).toHaveBeenCalledExactlyOnceWith(DATA);
   });
 

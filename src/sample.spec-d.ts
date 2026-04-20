@@ -1,4 +1,4 @@
-import { describe, expectTypeOf, test } from 'vitest';
+import { describe, expectTypeOf, it } from 'vitest';
 import { sample } from './sample';
 
 // We rely on the tuple shapes defined and described in TupleParts. We extracted
@@ -59,63 +59,63 @@ const FIXED_ARRAY_RO = FIXED_ARRAY as readonly [
 describe('literal sampleSize === 0', () => {
   const SAMPLE_SIZE = 0;
 
-  test('empty', () => {
+  it('empty', () => {
     expectTypeOf(sample(EMPTY, SAMPLE_SIZE)).toEqualTypeOf<[]>();
   });
 
-  test('empty readonly', () => {
+  it('empty readonly', () => {
     expectTypeOf(sample(EMPTY_RO, SAMPLE_SIZE)).toEqualTypeOf<[]>();
   });
 
-  test('arrays', () => {
+  it('arrays', () => {
     expectTypeOf(sample(ARRAY, SAMPLE_SIZE)).toEqualTypeOf<[]>();
   });
 
-  test('readonly arrays', () => {
+  it('readonly arrays', () => {
     expectTypeOf(sample(ARRAY_RO, SAMPLE_SIZE)).toEqualTypeOf<[]>();
   });
 
-  test('fixed tuples', () => {
+  it('fixed tuples', () => {
     expectTypeOf(sample(FIXED, SAMPLE_SIZE)).toEqualTypeOf<[]>();
   });
 
-  test('fixed readonly tuples', () => {
+  it('fixed readonly tuples', () => {
     expectTypeOf(sample(FIXED_RO, SAMPLE_SIZE)).toEqualTypeOf<[]>();
   });
 
-  test('fixed-prefix arrays', () => {
+  it('fixed-prefix arrays', () => {
     expectTypeOf(sample(PREFIX, SAMPLE_SIZE)).toEqualTypeOf<[]>();
   });
 
-  test('fixed-suffix arrays', () => {
+  it('fixed-suffix arrays', () => {
     expectTypeOf(sample(SUFFIX, SAMPLE_SIZE)).toEqualTypeOf<[]>();
   });
 
-  test('fixed-prefix readonly arrays', () => {
+  it('fixed-prefix readonly arrays', () => {
     expectTypeOf(sample(PREFIX_RO, SAMPLE_SIZE)).toEqualTypeOf<[]>();
   });
 
-  test('fixed-suffix readonly arrays', () => {
+  it('fixed-suffix readonly arrays', () => {
     expectTypeOf(sample(SUFFIX_RO, SAMPLE_SIZE)).toEqualTypeOf<[]>();
   });
 
-  test('fixed array', () => {
+  it('fixed array', () => {
     expectTypeOf(sample(FIXED_ARRAY, SAMPLE_SIZE)).toEqualTypeOf<[]>();
   });
 
-  test('fixed readonly array', () => {
+  it('fixed readonly array', () => {
     expectTypeOf(sample(FIXED_ARRAY_RO, SAMPLE_SIZE)).toEqualTypeOf<[]>();
   });
 });
 
 describe('simple arrays', () => {
-  test('mutable', () => {
+  it('mutable', () => {
     expectTypeOf(sample(ARRAY, 4)).toEqualTypeOf<
       [] | [true] | [true, true] | [true, true, true] | [true, true, true, true]
     >();
   });
 
-  test('readonly', () => {
+  it('readonly', () => {
     expectTypeOf(sample(ARRAY_RO, 4)).toEqualTypeOf<
       [] | [true] | [true, true] | [true, true, true] | [true, true, true, true]
     >();
@@ -125,7 +125,7 @@ describe('simple arrays', () => {
 describe('literal sampleSize < n', () => {
   const SAMPLE_SIZE = 4;
 
-  test('fixed tuples', () => {
+  it('fixed tuples', () => {
     expectTypeOf(sample(FIXED, SAMPLE_SIZE)).toEqualTypeOf<
       | ['a', 'b', 'c', 'd']
       | ['a', 'b', 'c', 'e']
@@ -135,7 +135,7 @@ describe('literal sampleSize < n', () => {
     >();
   });
 
-  test('fixed readonly tuples', () => {
+  it('fixed readonly tuples', () => {
     expectTypeOf(sample(FIXED_RO, SAMPLE_SIZE)).toEqualTypeOf<
       | ['a', 'b', 'c', 'd']
       | ['a', 'b', 'c', 'e']
@@ -145,7 +145,7 @@ describe('literal sampleSize < n', () => {
     >();
   });
 
-  test('fixed-prefix arrays', () => {
+  it('fixed-prefix arrays', () => {
     expectTypeOf(sample(PREFIX, SAMPLE_SIZE)).toEqualTypeOf<
       | ['a', 'b', 'c', 'd']
       | ['a', 'b', 'c', 'e']
@@ -181,7 +181,7 @@ describe('literal sampleSize < n', () => {
     >();
   });
 
-  test('fixed-prefix readonly arrays', () => {
+  it('fixed-prefix readonly arrays', () => {
     expectTypeOf(sample(PREFIX_RO, SAMPLE_SIZE)).toEqualTypeOf<
       | ['a', 'b', 'c', 'd']
       | ['a', 'b', 'c', 'e']
@@ -217,7 +217,7 @@ describe('literal sampleSize < n', () => {
     >();
   });
 
-  test('fixed-suffix arrays', () => {
+  it('fixed-suffix arrays', () => {
     expectTypeOf(sample(SUFFIX, SAMPLE_SIZE)).toEqualTypeOf<
       | ['v', 'w', 'x', 'y']
       | ['v', 'w', 'x', 'z']
@@ -253,7 +253,7 @@ describe('literal sampleSize < n', () => {
     >();
   });
 
-  test('fixed-suffix readonly arrays', () => {
+  it('fixed-suffix readonly arrays', () => {
     expectTypeOf(sample(SUFFIX_RO, SAMPLE_SIZE)).toEqualTypeOf<
       | ['v', 'w', 'x', 'y']
       | ['v', 'w', 'x', 'z']
@@ -289,7 +289,7 @@ describe('literal sampleSize < n', () => {
     >();
   });
 
-  test('fixed array', () => {
+  it('fixed array', () => {
     expectTypeOf(sample(FIXED_ARRAY, SAMPLE_SIZE)).toEqualTypeOf<
       | ['a', 'b', 'c', 'y']
       | ['a', 'b', 'c', 'z']
@@ -325,7 +325,7 @@ describe('literal sampleSize < n', () => {
     >();
   });
 
-  test('fixed readonly array', () => {
+  it('fixed readonly array', () => {
     expectTypeOf(sample(FIXED_ARRAY_RO, SAMPLE_SIZE)).toEqualTypeOf<
       | ['a', 'b', 'c', 'y']
       | ['a', 'b', 'c', 'z']
@@ -365,19 +365,19 @@ describe('literal sampleSize < n', () => {
 describe('literal sampleSize === n', () => {
   const SAMPLE_SIZE = 5;
 
-  test('fixed tuples', () => {
+  it('fixed tuples', () => {
     expectTypeOf(sample(FIXED, SAMPLE_SIZE)).toEqualTypeOf<
       ['a', 'b', 'c', 'd', 'e']
     >();
   });
 
-  test('fixed readonly tuples', () => {
+  it('fixed readonly tuples', () => {
     expectTypeOf(sample(FIXED_RO, SAMPLE_SIZE)).toEqualTypeOf<
       ['a', 'b', 'c', 'd', 'e']
     >();
   });
 
-  test('fixed-prefix arrays', () => {
+  it('fixed-prefix arrays', () => {
     expectTypeOf(sample(PREFIX, SAMPLE_SIZE)).toEqualTypeOf<
       | ['a', 'b', 'c', 'd', 'e']
       | ['a', 'b', 'c', 'd', true]
@@ -414,7 +414,7 @@ describe('literal sampleSize === n', () => {
     >();
   });
 
-  test('fixed-prefix readonly arrays', () => {
+  it('fixed-prefix readonly arrays', () => {
     expectTypeOf(sample(PREFIX_RO, SAMPLE_SIZE)).toEqualTypeOf<
       | ['a', 'b', 'c', 'd', 'e']
       | ['a', 'b', 'c', 'd', true]
@@ -451,7 +451,7 @@ describe('literal sampleSize === n', () => {
     >();
   });
 
-  test('fixed-suffix arrays', () => {
+  it('fixed-suffix arrays', () => {
     expectTypeOf(sample(SUFFIX, SAMPLE_SIZE)).toEqualTypeOf<
       | ['v', 'w', 'x', 'y', 'z']
       | [true, 'v', 'w', 'x', 'y']
@@ -488,7 +488,7 @@ describe('literal sampleSize === n', () => {
     >();
   });
 
-  test('fixed-suffix readonly arrays', () => {
+  it('fixed-suffix readonly arrays', () => {
     expectTypeOf(sample(SUFFIX_RO, SAMPLE_SIZE)).toEqualTypeOf<
       | ['v', 'w', 'x', 'y', 'z']
       | [true, 'v', 'w', 'x', 'y']
@@ -525,7 +525,7 @@ describe('literal sampleSize === n', () => {
     >();
   });
 
-  test('fixed array', () => {
+  it('fixed array', () => {
     expectTypeOf(sample(FIXED_ARRAY, SAMPLE_SIZE)).toEqualTypeOf<
       | ['a', 'b', 'c', 'y', 'z']
       | ['a', 'b', 'c', true, 'y']
@@ -562,7 +562,7 @@ describe('literal sampleSize === n', () => {
     >();
   });
 
-  test('fixed readonly array', () => {
+  it('fixed readonly array', () => {
     expectTypeOf(sample(FIXED_ARRAY_RO, SAMPLE_SIZE)).toEqualTypeOf<
       | ['a', 'b', 'c', 'y', 'z']
       | ['a', 'b', 'c', true, 'y']
@@ -603,27 +603,27 @@ describe('literal sampleSize === n', () => {
 describe('literal sampleSize > n', () => {
   const SAMPLE_SIZE = 10;
 
-  test('empty', () => {
+  it('empty', () => {
     expectTypeOf(sample(EMPTY, SAMPLE_SIZE)).toEqualTypeOf<[]>();
   });
 
-  test('empty readonly', () => {
+  it('empty readonly', () => {
     expectTypeOf(sample(EMPTY_RO, SAMPLE_SIZE)).toEqualTypeOf<[]>();
   });
 
-  test('fixed tuples', () => {
+  it('fixed tuples', () => {
     expectTypeOf(sample(FIXED, SAMPLE_SIZE)).toEqualTypeOf<
       ['a', 'b', 'c', 'd', 'e']
     >();
   });
 
-  test('fixed readonly tuples', () => {
+  it('fixed readonly tuples', () => {
     expectTypeOf(sample(FIXED_RO, SAMPLE_SIZE)).toEqualTypeOf<
       ['a', 'b', 'c', 'd', 'e']
     >();
   });
 
-  test('fixed-prefix arrays', () => {
+  it('fixed-prefix arrays', () => {
     expectTypeOf(sample(PREFIX, SAMPLE_SIZE)).toEqualTypeOf<
       | ['a', 'b', 'c', 'd', 'e']
       | ['a', 'b', 'c', 'd', 'e', true]
@@ -665,7 +665,7 @@ describe('literal sampleSize > n', () => {
     >();
   });
 
-  test('fixed-prefix readonly arrays', () => {
+  it('fixed-prefix readonly arrays', () => {
     expectTypeOf(sample(PREFIX_RO, SAMPLE_SIZE)).toEqualTypeOf<
       | ['a', 'b', 'c', 'd', 'e']
       | ['a', 'b', 'c', 'd', 'e', true]
@@ -707,7 +707,7 @@ describe('literal sampleSize > n', () => {
     >();
   });
 
-  test('fixed-suffix arrays', () => {
+  it('fixed-suffix arrays', () => {
     expectTypeOf(sample(SUFFIX, SAMPLE_SIZE)).toEqualTypeOf<
       | ['v', 'w', 'x', 'y', 'z']
       | [true, 'v', 'w', 'x', 'y', 'z']
@@ -749,7 +749,7 @@ describe('literal sampleSize > n', () => {
     >();
   });
 
-  test('fixed-suffix readonly arrays', () => {
+  it('fixed-suffix readonly arrays', () => {
     expectTypeOf(sample(SUFFIX_RO, SAMPLE_SIZE)).toEqualTypeOf<
       | ['v', 'w', 'x', 'y', 'z']
       | [true, 'v', 'w', 'x', 'y', 'z']
@@ -791,7 +791,7 @@ describe('literal sampleSize > n', () => {
     >();
   });
 
-  test('fixed array', () => {
+  it('fixed array', () => {
     expectTypeOf(sample(FIXED_ARRAY, SAMPLE_SIZE)).toEqualTypeOf<
       | ['a', 'b', 'c', 'y', 'z']
       | ['a', 'b', 'c', true, 'y', 'z']
@@ -833,7 +833,7 @@ describe('literal sampleSize > n', () => {
     >();
   });
 
-  test('fixed readonly array', () => {
+  it('fixed readonly array', () => {
     expectTypeOf(sample(FIXED_ARRAY_RO, SAMPLE_SIZE)).toEqualTypeOf<
       | ['a', 'b', 'c', 'y', 'z']
       | ['a', 'b', 'c', true, 'y', 'z']
@@ -879,23 +879,23 @@ describe('literal sampleSize > n', () => {
 describe('primitive sampleSize', () => {
   const SAMPLE_SIZE = 1 as number;
 
-  test('empty', () => {
+  it('empty', () => {
     expectTypeOf(sample(EMPTY, SAMPLE_SIZE)).toEqualTypeOf<[]>();
   });
 
-  test('empty readonly', () => {
+  it('empty readonly', () => {
     expectTypeOf(sample(EMPTY_RO, SAMPLE_SIZE)).toEqualTypeOf<[]>();
   });
 
-  test('arrays', () => {
+  it('arrays', () => {
     expectTypeOf(sample(ARRAY, SAMPLE_SIZE)).toEqualTypeOf<Array<true>>();
   });
 
-  test('readonly arrays', () => {
+  it('readonly arrays', () => {
     expectTypeOf(sample(ARRAY_RO, SAMPLE_SIZE)).toEqualTypeOf<Array<true>>();
   });
 
-  test('fixed tuples', () => {
+  it('fixed tuples', () => {
     expectTypeOf(sample(FIXED, SAMPLE_SIZE)).toEqualTypeOf<
       | ['a', 'b', 'c', 'd', 'e']
       | ['a', 'b', 'c', 'd']
@@ -932,7 +932,7 @@ describe('primitive sampleSize', () => {
     >();
   });
 
-  test('fixed readonly tuples', () => {
+  it('fixed readonly tuples', () => {
     expectTypeOf(sample(FIXED_RO, SAMPLE_SIZE)).toEqualTypeOf<
       | ['a', 'b', 'c', 'd', 'e']
       | ['a', 'b', 'c', 'd']
@@ -969,7 +969,7 @@ describe('primitive sampleSize', () => {
     >();
   });
 
-  test('fixed-prefix arrays', () => {
+  it('fixed-prefix arrays', () => {
     expectTypeOf(sample(PREFIX, SAMPLE_SIZE)).toEqualTypeOf<
       | ['a', 'b', 'c', 'd', 'e', ...Array<true>]
       | ['a', 'b', 'c', 'd', ...Array<true>]
@@ -1006,7 +1006,7 @@ describe('primitive sampleSize', () => {
     >();
   });
 
-  test('fixed-prefix readonly arrays', () => {
+  it('fixed-prefix readonly arrays', () => {
     expectTypeOf(sample(PREFIX_RO, SAMPLE_SIZE)).toEqualTypeOf<
       | ['a', 'b', 'c', 'd', 'e', ...Array<true>]
       | ['a', 'b', 'c', 'd', ...Array<true>]
@@ -1043,7 +1043,7 @@ describe('primitive sampleSize', () => {
     >();
   });
 
-  test('fixed-suffix arrays', () => {
+  it('fixed-suffix arrays', () => {
     expectTypeOf(sample(SUFFIX, SAMPLE_SIZE)).toEqualTypeOf<
       | [...Array<true>, 'v', 'w', 'x', 'y', 'z']
       | [...Array<true>, 'v', 'w', 'x', 'y']
@@ -1080,7 +1080,7 @@ describe('primitive sampleSize', () => {
     >();
   });
 
-  test('fixed-suffix readonly arrays', () => {
+  it('fixed-suffix readonly arrays', () => {
     expectTypeOf(sample(SUFFIX_RO, SAMPLE_SIZE)).toEqualTypeOf<
       | [...Array<true>, 'v', 'w', 'x', 'y', 'z']
       | [...Array<true>, 'v', 'w', 'x', 'y']
@@ -1117,7 +1117,7 @@ describe('primitive sampleSize', () => {
     >();
   });
 
-  test('fixed array', () => {
+  it('fixed array', () => {
     expectTypeOf(sample(FIXED_ARRAY, SAMPLE_SIZE)).toEqualTypeOf<
       | ['a', 'b', 'c', ...Array<true>, 'y', 'z']
       | ['a', 'b', 'c', ...Array<true>, 'y']
@@ -1154,7 +1154,7 @@ describe('primitive sampleSize', () => {
     >();
   });
 
-  test('fixed readonly array', () => {
+  it('fixed readonly array', () => {
     expectTypeOf(sample(FIXED_ARRAY_RO, SAMPLE_SIZE)).toEqualTypeOf<
       | ['a', 'b', 'c', ...Array<true>, 'y', 'z']
       | ['a', 'b', 'c', ...Array<true>, 'y']

@@ -10,15 +10,14 @@ import { curry } from './curry';
  * `fromKeys` - Builds an object from an array of *keys* and a mapper for values.
  * `pullObject` - Builds an object from an array of items with mappers for *both* keys and values.
  * `fromEntries` - Builds an object from an array of key-value pairs.
- * `mapToObj` - Builds an object from an array of items and a single mapper for key-value pairs.
  * Refer to the docs for more details.
  *
  * @param data - The array.
  * @param mapper - The indexing function.
  * @signature
- *    P.indexBy(array, fn)
+ *    indexBy(array, fn)
  * @example
- *    P.indexBy(['one', 'two', 'three'], x => x.length) // => {3: 'two', 5: 'three'}
+ *    indexBy(['one', 'two', 'three'], x => x.length) // => {3: 'two', 5: 'three'}
  * @dataFirst
  * @category Array
  */
@@ -36,16 +35,15 @@ export function indexBy<T, K extends PropertyKey>(
  * `fromKeys` - Builds an object from an array of *keys* and a mapper for values.
  * `pullObject` - Builds an object from an array of items with mappers for *both* keys and values.
  * `fromEntries` - Builds an object from an array of key-value pairs.
- * `mapToObj` - Builds an object from an array of items and a single mapper for key-value pairs.
  * Refer to the docs for more details.
  *
  * @param mapper - The indexing function.
  * @signature
- *    P.indexBy(fn)(array)
+ *    indexBy(fn)(array)
  * @example
- *    P.pipe(
+ *    pipe(
  *      ['one', 'two', 'three'],
- *      P.indexBy(x => x.length)
+ *      indexBy(x => x.length)
  *    ) // => {3: 'two', 5: 'three'}
  * @dataLast
  * @category Array

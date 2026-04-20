@@ -5,7 +5,7 @@ import { take } from './take';
 
 it('dataFirst', () => {
   const data = [1, 2, 3];
-  const cb = vi.fn();
+  const cb = vi.fn<(x: number) => void>();
 
   forEach(data, cb);
 
@@ -16,7 +16,7 @@ it('dataFirst', () => {
 
 it('dataLast', () => {
   const data = [1, 2, 3];
-  const cb = vi.fn();
+  const cb = vi.fn<(x: number) => void>();
 
   // Because the callback is used before forEach "sees" `data`, we need to
   // explicitly tell it the how to type the `data` param..
@@ -33,9 +33,7 @@ it('dataLast', () => {
 it('pipe', () => {
   const data = [1, 2, 3];
 
-  // Callbacks take their type from the pipe itself, but because we construct
-  // it here outside of the pipe, we need to deliberately type it.
-  const cb = vi.fn((x: number) => x);
+  const cb = vi.fn<(x: number) => void>();
 
   const result = pipe(data, forEach(cb));
 
@@ -49,7 +47,7 @@ it('pipe', () => {
 });
 
 it('with take', () => {
-  const count = vi.fn();
+  const count = vi.fn<() => void>();
   const result = pipe(
     [1, 2, 3],
     forEach(() => {
@@ -57,6 +55,7 @@ it('with take', () => {
     }),
     take(2),
   );
+
   expect(count).toHaveBeenCalledTimes(2);
   expect(result).toStrictEqual([1, 2]);
 });

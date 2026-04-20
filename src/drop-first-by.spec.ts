@@ -49,6 +49,7 @@ describe('runtime (dataFirst)', () => {
       'b',
       'aaaaa',
     ];
+
     expect(dropFirstBy(data, 3, (x) => x.length, identity())).toStrictEqual([
       'bbbbb',
       'aaa',
@@ -130,6 +131,7 @@ describe('runtime (dataLast)', () => {
       'b',
       'aaaaa',
     ];
+
     expect(
       pipe(
         data,

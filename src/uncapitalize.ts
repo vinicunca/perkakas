@@ -17,9 +17,9 @@ import { curry } from './curry';
  *
  * @param data - A string.
  * @signature
- *   P.uncapitalize(data);
+ *   uncapitalize(data);
  * @example
- *   P.uncapitalize("HELLO WORLD"); // "hELLO WORLD"
+ *   uncapitalize("HELLO WORLD"); // "hELLO WORLD"
  * @dataFirst
  * @category String
  */
@@ -41,9 +41,9 @@ export function uncapitalize<T extends string>(data: T): Uncapitalize<T>;
  * `toCamelCase`, `toKebabCase`, `toSnakeCase`, and `toTitleCase`.
  *
  * @signature
- *   P.uncapitalize()(data);
+ *   uncapitalize()(data);
  * @example
- *   P.pipe("HELLO WORLD", P.uncapitalize()); // "hELLO WORLD"
+ *   pipe("HELLO WORLD", uncapitalize()); // "hELLO WORLD"
  * @dataLast
  * @category String
  */

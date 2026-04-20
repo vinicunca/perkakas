@@ -57,7 +57,8 @@ function batch<Params extends Array<any>, BatchResponse, Result>(
     // Passes all accumulated parameters to the callback and then extracts the response for each individual call via the extractor.
     (requests: ReadonlyArray<BatchRequest<Params, Result>>) => {
       callback(requests.map(({ params }) => params))
-        // On success we iterate again over all calls and allow the extractor to pull a value out of the aggregated response for each one.
+        // On success we iterate again over all calls and allow the extractor
+        // to pull a value out of the aggregated response for each one.
         .then((response) => {
           for (const [
             index,
@@ -81,7 +82,8 @@ function batch<Params extends Array<any>, BatchResponse, Result>(
         });
     },
     {
-      // Reducer: Accumulates the parameters for each call, together with the promise executor callbacks needed to resolve or reject the call.
+      // Reducer: Accumulates the parameters for each call, together with the
+      // promise executor callbacks needed to resolve or reject the call.
       reducer: (requests, request: BatchRequest<Params, Result>) => [
         ...(requests ?? []),
         request,
@@ -192,6 +194,6 @@ describe('showcase', () => {
 
     await expect(
       Promise.all([failingApi.call('hello'), failingApi.call('world')]),
-    ).rejects.toThrowError('Batch too big! [["hello"],["world"]]');
+    ).rejects.toThrow('Batch too big! [["hello"],["world"]]');
   });
 });
