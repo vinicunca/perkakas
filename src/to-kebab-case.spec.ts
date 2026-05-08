@@ -34,6 +34,10 @@ describe('data-first', () => {
   it('on string with multiple delimiters', () => {
     expect(toKebabCase('foo---bar')).toBe('foo-bar');
   });
+
+  it('keeps numbers attached to words', () => {
+    expect(toKebabCase('H1')).toBe('h1');
+  });
 });
 
 describe('data-last', () => {
@@ -59,6 +63,10 @@ describe('data-last', () => {
 
   it('on kebab case', () => {
     expect(pipe('hello-world', toKebabCase())).toBe('hello-world');
+  });
+
+  it('keeps numbers attached to words', () => {
+    expect(pipe('H1', toKebabCase())).toBe('h1');
   });
 });
 

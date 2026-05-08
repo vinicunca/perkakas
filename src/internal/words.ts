@@ -64,9 +64,6 @@ export function words<S extends string>(data: S): string extends S ? Array<strin
       word = word.slice(0, -1);
       flush();
       word = lastCharacter;
-    } else if (/\d$/u.test(word) !== /\d/u.test(character)) {
-      // 3. Digit to non-digit or non-digit to digit (e.g., "123abc" or "abc123")
-      flush();
     }
 
     // Add the current character to the current word.

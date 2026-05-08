@@ -97,18 +97,19 @@ describe('copied from the type-fest tests', () => {
   });
 
   it.each([
-    { input: 'item0', output: ['item', '0'] },
-    { input: 'item01', output: ['item', '01'] },
-    { input: 'item10', output: ['item', '10'] },
-    { input: 'item010', output: ['item', '010'] },
-    { input: '0item0', output: ['0', 'item', '0'] },
-    { input: '01item01', output: ['01', 'item', '01'] },
-    { input: '10item10', output: ['10', 'item', '10'] },
-    { input: '010item010', output: ['010', 'item', '010'] },
+    { input: 'item0', output: ['item0'] },
+    { input: 'item01', output: ['item01'] },
+    { input: 'item10', output: ['item10'] },
+    { input: 'item010', output: ['item010'] },
+    { input: '0item0', output: ['0item0'] },
+    { input: '01item01', output: ['01item01'] },
+    { input: '10item10', output: ['10item10'] },
+    { input: '010item010', output: ['010item010'] },
     {
       input: 'item0_item_1 item -2',
-      output: ['item', '0', 'item', '1', 'item', '2'],
+      output: ['item0', 'item', '1', 'item', '2'],
     },
+    { input: 'H1', output: ['H1'] },
   ])('digits: $input', ({ input, output }) => {
     expect(words(input)).toStrictEqual(output);
   });
