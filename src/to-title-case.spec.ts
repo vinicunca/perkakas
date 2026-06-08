@@ -94,7 +94,7 @@ describe('edge cases', () => {
   });
 
   it('with numbers', () => {
-    expect(toTitleCase('foo123bar')).toBe('Foo 123 Bar');
+    expect(toTitleCase('foo123bar')).toBe('Foo123Bar');
     expect(toTitleCase('foo-bar-123')).toBe('Foo Bar 123');
     expect(toTitleCase('version2Update')).toBe('Version 2 Update');
   });

@@ -50,6 +50,7 @@ export default vinicuncaESLint(
     rules: {
       'perfectionist/sort-union-types': 'off',
       'sonar/no-duplicate-string': 'off',
+      'test/consistent-test-it': 'error',
     },
   },
 

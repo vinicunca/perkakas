@@ -1,11 +1,4 @@
-import type {
-  FixedLengthArray,
-  IsEqual,
-  IsNever,
-  NonNegativeInteger,
-  Or,
-  Writable,
-} from 'type-fest';
+import type { IsNever, NonNegativeInteger, Writable } from 'type-fest';
 import type { CoercedArray } from './internal/types/coerced-array';
 import type { IterableContainer } from './internal/types/iterable-container';
 import type { NTuple } from './internal/types/n-tuple';
@@ -13,18 +6,19 @@ import type { PartialArray } from './internal/types/partial-array';
 import type { TupleParts } from './internal/types/tuple-parts';
 import { curry } from './curry';
 
-type Sampled<T extends IterableContainer, N extends number>
-  = Or<IsEqual<N, 0>, IsEqual<T['length'], 0>> extends true
-    ? // Short-circuit on trivial inputs.
-      []
-    : IsNever<NonNegativeInteger<N>> extends true
-      ? SampledPrimitive<T>
-      : IsLongerThan<T, N> extends true
-        ? SampledLiteral<T, N>
-        : // If our tuple can never fulfil the sample size the only valid sample
-      // is the whole input tuple. Because it's a shallow clone we also
-      // strip any readonly-ness.
-        Writable<T>;
+type Sampled<T extends IterableContainer, N extends number> = [N] extends [0]
+  ? // Short-circuit on trivial inputs.
+    []
+  : [T['length']] extends [0]
+      ? []
+      : IsNever<NonNegativeInteger<N>> extends true
+        ? SampledPrimitive<T>
+        : IsLongerThan<T, N> extends true
+          ? SampledLiteral<T, N>
+          : // If our tuple can never fulfil the sample size the only valid sample
+          // is the whole input tuple. Because it's a shallow clone we also
+          // strip any readonly-ness.
+          Writable<T>;
 
 /**
  * When N is not a non-negative integer **literal** we can't use it in our
@@ -44,22 +38,19 @@ type SampledPrimitive<T extends IterableContainer> = [
  * of T that are exactly N elements long.
  */
 type SampledLiteral<T extends IterableContainer, N extends number>
-  = | Extract<
-    FixedSubTuples<
-      [
-        ...TupleParts<T>['required'],
-        // TODO: This deliberately ignores optional elements which we don't have tests for either. In order to handle optional elements we can treat the "optional" tuple-part as more required elements.
-        // We add N elements of the `item` type to the tuple so that we
-        // consider any combination possible of elements of the prefix items,
-        // any amount of rest items, and suffix items.
-        ...(IsNever<TupleParts<T>['item']> extends true
-          ? []
-          : NTuple<TupleParts<T>['item'], N>),
-        ...TupleParts<T>['suffix'],
-      ]
-    >,
-    // This is just [unknown, unknown, ..., unknown] with N elements.
-    FixedLengthArray<unknown, N>
+  = | Combinations<
+    [
+      ...TupleParts<T>['required'],
+      // TODO: This deliberately ignores optional elements which we don't have tests for either. In order to handle optional elements we can treat the "optional" tuple-part as more required elements.
+      // We add N elements of the `item` type to the tuple so that we
+      // consider any combination possible of elements of the prefix items,
+      // any amount of rest items, and suffix items.
+      ...(IsNever<TupleParts<T>['item']> extends true
+        ? []
+        : NTuple<TupleParts<T>['item'], N>),
+      ...TupleParts<T>['suffix'],
+    ],
+    N
   >
   // In addition to all sub-tuples of length N, we also need to consider all
   // tuples where the input is shorter than N. This will contribute exactly
@@ -93,13 +84,35 @@ type IsLongerThan<T extends ReadonlyArray<unknown>, N extends number>
   // Checking for `undefined` is a neat trick to avoid needing to compare
   // integer literals because if N overflows the tuple then the type for that
   // element will be `undefined`. This only works for fixed tuples!
-  = IsEqual<T[N], undefined> extends true ? false : true;
+  = [T[N]] extends [undefined] ? false : true;
 
 // Assuming T is a fixed tuple we build all it's possible sub-tuples.
 type FixedSubTuples<T> = T extends readonly [infer Head, ...infer Rest]
   ? // For each element we either take it or skip it, and recurse over the rest.
       FixedSubTuples<Rest> | [Head, ...FixedSubTuples<Rest>]
   : [];
+
+/**
+ * Compute all combinations (sub-tuples) of T of exactly length N.
+ */
+type Combinations<
+  T extends IterableContainer,
+  N extends number,
+  // Used an an incrementor that keeps track of the depth of the recursion.
+  Counter extends ReadonlyArray<unknown> = [],
+>
+  // Distribute over N so the result is the union for all values, otherwise we
+  // will only compute combinations for the smallest literal in the union.
+  = N extends unknown
+    ? Counter['length'] extends N
+      ? []
+      : T extends readonly [infer Head, ...infer Rest]
+        ? // For each element we either take it or skip it, and recurse over
+      // the rest.
+        | [Head, ...Combinations<Rest, N, [unknown, ...Counter]>]
+        | Combinations<Rest, N, Counter>
+        : never
+    : never;
 
 /**
  * Returns a random subset of size `sampleSize` from `array`.

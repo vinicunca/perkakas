@@ -1,6 +1,7 @@
 import type { ArrayAt } from './array-at';
 import type { IterableContainer } from './iterable-container';
 import { describe, expectTypeOf, it } from 'vitest';
+import { $typed } from '../../../test/$typed';
 
 declare function arrayAt<const T extends IterableContainer, I extends number>(
   data: T,
@@ -8,7 +9,7 @@ declare function arrayAt<const T extends IterableContainer, I extends number>(
 ): ArrayAt<T, I>;
 
 it('primitive index', () => {
-  expectTypeOf(arrayAt([1, 2, 3], 0 as number)).toEqualTypeOf<
+  expectTypeOf(arrayAt([1, 2, 3], $typed<number>())).toEqualTypeOf<
     1 | 2 | 3 | undefined
   >();
 });
@@ -183,16 +184,21 @@ describe('fixed-elements arrays', () => {
 
 describe('unions', () => {
   it('union of indices, fixed tuples', () => {
-    expectTypeOf(arrayAt([1, 2, 3], 0 as 0 | 1)).toEqualTypeOf<1 | 2>();
+    expectTypeOf(arrayAt([1, 2, 3], $typed<0 | 1>())).toEqualTypeOf<1 | 2>();
   });
 
   it('union of indices, arrays', () => {
-    expectTypeOf(arrayAt([] as Array<1>, 0 as 0 | 1)).toEqualTypeOf<1 | undefined>();
+    expectTypeOf(arrayAt([] as Array<1>, $typed<0 | 1>())).toEqualTypeOf<
+      1 | undefined
+    >();
   });
 
   it('union of indices, fixed-elements array', () => {
     expectTypeOf(
-      arrayAt([1, 2, 3, 5, 6, 7] as [1, 2, 3, ...Array<4>, 5, 6, 7], 1 as 1 | 4),
+      arrayAt(
+        [1, 2, 3, 5, 6, 7] as [1, 2, 3, ...Array<4>, 5, 6, 7],
+        $typed<1 | 4>(),
+      ),
     ).toEqualTypeOf<2 | 4 | 5 | 6>();
   });
 

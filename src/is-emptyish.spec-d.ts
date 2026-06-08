@@ -491,7 +491,7 @@ describe('plain objects', () => {
   });
 
   it('plain object', () => {
-    const data = { a: 123, b: 'hello' } as { a: number; b: string };
+    const data = { a: 123, b: 'hello' };
     if (isEmptyish(data)) {
       expectTypeOf(data).toEqualTypeOf<never>();
     } else {
@@ -705,7 +705,7 @@ describe('keyed collections', () => {
 
 describe('self-declared sizes', () => {
   it('primitive length', () => {
-    const data = { length: 0, a: 'hello' } as { length: number; a: string };
+    const data = { length: 0, a: 'hello' };
     if (isEmptyish(data)) {
       expectTypeOf(data).toExtend<{ length: number; a: string }>();
     } else {
@@ -750,7 +750,7 @@ describe('self-declared sizes', () => {
   });
 
   it('primitive size', () => {
-    const data = { size: 0, a: 'hello' } as { size: number; a: string };
+    const data = { size: 0, a: 'hello' };
     if (isEmptyish(data)) {
       expectTypeOf(data).toExtend<{ size: number; a: string }>();
     } else {

@@ -163,15 +163,7 @@ describe('lodash spec', () => {
 
   it('should return `undefined` if parts of `path` are missing', () => {
     expect(
-      prop(
-        { a: [{ b: { c: 123 } }, null] } as {
-          a: Array<{ b: { c: number } } | null>;
-        },
-        'a',
-        1,
-        'b',
-        'c',
-      ),
+      prop({ a: [{ b: { c: 123 } }, null] }, 'a', 1, 'b', 'c'),
     ).toBeUndefined();
   });
 

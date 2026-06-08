@@ -1,6 +1,7 @@
 import type { ArrayRequiredPrefix } from './array-required-prefix';
 import type { IterableContainer } from './iterable-container';
 import { describe, expectTypeOf, it } from 'vitest';
+import { $typed } from '../../../test/$typed';
 
 declare function arrayRequiredPrefix<
   T extends IterableContainer,
@@ -348,7 +349,9 @@ describe('works with all array shapes', () => {
 });
 
 it('errs on non-literal param', () => {
-  expectTypeOf(arrayRequiredPrefix([] as Array<string>, 123 as number)).toBeNever();
+  expectTypeOf(
+    arrayRequiredPrefix([] as Array<string>, $typed<number>()),
+  ).toBeNever();
 });
 
 describe('union types', () => {
@@ -356,7 +359,7 @@ describe('union types', () => {
     expectTypeOf(
       arrayRequiredPrefix(
         [1, true] as [number, ...Array<string>, boolean],
-        3 as 3 | 20,
+        $typed<3 | 20>(),
       ),
     ).toEqualTypeOf<[number, string, ...Array<string>, boolean]>();
   });

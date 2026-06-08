@@ -12,11 +12,11 @@ type Only<T extends IterableContainer> = T extends
     : T[number] | undefined;
 
 /**
- * Returns the first and only element of `array`, or undefined otherwise.
+ * Returns the first and only element of `data`, or undefined otherwise.
  *
- * @param array - The target array.
+ * @param data - The target array.
  * @signature
- *    only(array)
+ *    only(data)
  * @example
  *    only([]) // => undefined
  *    only([1]) // => 1
@@ -24,13 +24,13 @@ type Only<T extends IterableContainer> = T extends
  * @dataFirst
  * @category Array
  */
-export function only<T extends IterableContainer>(array: Readonly<T>): Only<T>;
+export function only<T extends IterableContainer>(data: T): Only<T>;
 
 /**
- * Returns the first and only element of `array`, or undefined otherwise.
+ * Returns the first and only element of `data`, or undefined otherwise.
  *
  * @signature
- *    only()(array)
+ *    only()(data)
  * @example
  *    pipe([], only()); // => undefined
  *    pipe([1], only()); // => 1
@@ -38,14 +38,12 @@ export function only<T extends IterableContainer>(array: Readonly<T>): Only<T>;
  * @dataLast
  * @category Array
  */
-export function only<T extends IterableContainer>(): (
-  array: Readonly<T>,
-) => Only<T>;
+export function only<T extends IterableContainer>(): (data: T) => Only<T>;
 
 export function only(...args: ReadonlyArray<unknown>): unknown {
   return curry(onlyImplementation, args);
 }
 
-function onlyImplementation<T>(array: ReadonlyArray<T>): T | undefined {
-  return array.length === 1 ? array[0] : undefined;
+function onlyImplementation<T>(data: ReadonlyArray<T>): T | undefined {
+  return data.length === 1 ? data[0] : undefined;
 }

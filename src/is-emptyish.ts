@@ -1,20 +1,17 @@
 import type {
-  And,
   HasRequiredKeys,
   IsAny,
   IsEqual,
   IsNever,
   IsNumericLiteral,
-  IsUnknown,
   OmitIndexSignature,
-  Or,
   Tagged,
   ValueOf,
 } from 'type-fest';
 import type { HasWritableKeys } from './internal/types/has-writable-keys';
 import type { TupleParts } from './internal/types/tuple-parts';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars -- we use a non-exported unique symbol to prevent users from faking our return type.
+// eslint-disable-next-line ts/no-unused-vars -- we use a non-exported unique symbol to prevent users from faking our return type.
 declare const EMPTYISH_BRAND: unique symbol;
 
 // Because our function is a type-predicate and it narrows the input based on
@@ -55,18 +52,17 @@ type EmptyishObjectLike<T extends object> = T extends ReadonlyArray<unknown>
 type EmptyishArray<T extends ReadonlyArray<unknown>> = T extends readonly []
   ? // By returning T we effectively narrow the "else" branch to `never`.
   T
-  : And<
-    IsEqual<TupleParts<T>['required'], []>,
-    IsEqual<TupleParts<T>['suffix'], []>
-  > extends true
-    ? T extends Array<unknown>
-      ? // A mutable array should remain mutable so we can't narrow it down.
-      Empty<T>
-      : // But immutable arrays could be rewritten to prevent any mutations.
-      readonly []
-    : // An array with a required prefix or suffix would never be empty, we can
-  // use that fact to narrow the "if" branch to `never`.
-    never;
+  : TupleParts<T>['required'] extends readonly []
+    ? TupleParts<T>['suffix'] extends readonly []
+      ? T extends Array<unknown>
+        ? // A mutable array should remain mutable so we can't narrow it down.
+        Empty<T>
+        : // But immutable arrays could be rewritten to prevent any mutations.
+        readonly []
+      : // An array with a required prefix or suffix would never be empty, we
+    // can use that fact to narrow the "if" branch to `never`.
+      never
+    : never;
 
 type EmptyishObject<T extends object> = T extends {
   length: infer Length extends number;
@@ -122,14 +118,17 @@ type EmptyishArbitrary<T, N>
 // Overly generic types interfere with our already pretty complex return type.
 // To make our lives easier we can filter them out at the function declaration
 // step and we never need to think about them again.
-type ShouldNotNarrow<T> = Or<
-  Or<IsAny<T>, IsUnknown<T>>,
-  IsEqual<
-    T,
-    // eslint-disable-next-line ts/no-empty-object-type
-    {}
-  >
->;
+type ShouldNotNarrow<T> = unknown extends T
+  ? true
+  : IsAny<T> extends true
+    ? true
+    : IsEqual<
+      T,
+      // eslint-disable-next-line ts/no-empty-object-type
+      {}
+    > extends true
+      ? true
+      : false;
 
 /**
  * A function that checks if the input is empty. Empty is defined as anything
@@ -213,7 +212,7 @@ export function isEmptyish(data: unknown): boolean {
     return data.size === 0;
   }
 
-  // eslint-disable-next-line no-unreachable-loop -- Instead of taking Object.keys just to check its length, which will be inefficient if the object has a lot of keys, we have a backdoor into an iterator of the object's properties via the `for...in` loop.
+  // eslint-disable-next-line no-unreachable-loop, no-restricted-syntax -- Instead of taking Object.keys just to check its length, which will be inefficient if the object has a lot of keys, we have a backdoor into an iterator of the object's properties via the `for...in` loop.
   for (const _ in data) {
     return false;
   }

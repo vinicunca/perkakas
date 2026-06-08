@@ -1,4 +1,5 @@
 import { describe, expectTypeOf, it } from 'vitest';
+import { $typed } from '../test/$typed';
 import { constant } from './constant';
 import { identity } from './identity';
 import { mapKeys } from './map-keys';
@@ -44,14 +45,17 @@ describe('single bounded mapped key', () => {
 it('simple string records', () => {
   const result = mapKeys(
     {} as Record<string, string>,
-    constant('hello' as string),
+    constant($typed<string>()),
   );
 
   expectTypeOf(result).toEqualTypeOf<Record<string, string>>();
 });
 
 it('simple number records', () => {
-  const result = mapKeys({} as Record<number, number>, constant(123 as number));
+  const result = mapKeys(
+    {} as Record<number, number>,
+    constant($typed<number>()),
+  );
 
   expectTypeOf(result).toEqualTypeOf<Record<number, number>>();
 });
@@ -59,7 +63,7 @@ it('simple number records', () => {
 it('mapping to a string literal', () => {
   const result = mapKeys(
     {} as Record<number, number>,
-    constant('cat' as 'cat' | 'dog'),
+    constant($typed<'cat' | 'dog'>()),
   );
 
   expectTypeOf(result).toEqualTypeOf<Partial<Record<'cat' | 'dog', number>>>();
@@ -98,11 +102,11 @@ it('numbers returned from the mapper are used as-is', () => {
 it('union of records', () => {
   const data = {} as Record<PropertyKey, 'cat'> | Record<PropertyKey, 'dog'>;
 
-  const dataFirst = mapKeys(data, constant('hello' as string));
+  const dataFirst = mapKeys(data, constant($typed<string>()));
 
   expectTypeOf(dataFirst).toEqualTypeOf<Record<string, 'cat' | 'dog'>>();
 
-  const dataLast = pipe(data, mapKeys(constant('hello' as string)));
+  const dataLast = pipe(data, mapKeys(constant($typed<string>())));
 
   expectTypeOf(dataLast).toEqualTypeOf<Record<string, 'cat' | 'dog'>>();
 });

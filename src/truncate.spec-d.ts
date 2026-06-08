@@ -1,4 +1,5 @@
-import { describe, expectTypeOf, it } from 'vitest';
+import { describe, expectTypeOf, it, test } from 'vitest';
+import { $typed } from '../test/$typed';
 import { pipe } from './pipe';
 import { truncate } from './truncate';
 
@@ -75,26 +76,26 @@ describe('custom omission, no separator', () => {
 
   it('primitive \'omission\'', () => {
     expectTypeOf(
-      truncate('Hello, world!', 9, { omission: 'bye' as string }),
+      truncate('Hello, world!', 9, { omission: $typed<string>() }),
     ).toEqualTypeOf<string>();
   });
 
   it('primitive \'data\' and \'omission\'', () => {
     expectTypeOf(
-      truncate('Hello, world!' as string, 9, { omission: 'bye' as string }),
+      truncate('Hello, world!' as string, 9, { omission: $typed<string>() }),
     ).toEqualTypeOf<string>();
   });
 
   it('primitive \'n\' and \'omission\'', () => {
     expectTypeOf(
-      truncate('Hello, world!', 9 as number, { omission: 'bye' as string }),
+      truncate('Hello, world!', 9 as number, { omission: $typed<string>() }),
     ).toEqualTypeOf<string>();
   });
 
   it('all primitive', () => {
     expectTypeOf(
       truncate('Hello, world!' as string, 9 as number, {
-        omission: 'bye' as string,
+        omission: $typed<string>(),
       }),
     ).toEqualTypeOf<string>();
   });
@@ -120,7 +121,7 @@ describe('with separator', () => {
   });
 });
 
-it('n is in range ((data.length - omission.length)..data.length]', () => {
+test('n is in range ((data.length - omission.length)..data.length]', () => {
   expectTypeOf(truncate('Hello, world!', 11)).toEqualTypeOf<'Hello, w...'>();
   expectTypeOf(truncate('Hello, world!', 12)).toEqualTypeOf<'Hello, wo...'>();
   expectTypeOf(truncate('Hello, world!', 13)).toEqualTypeOf<'Hello, world!'>();

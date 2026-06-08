@@ -1,59 +1,80 @@
-import { curry } from './curry';
+import type { IterableContainer } from './internal/types/iterable-container';
+import { curryOn } from './internal/curry-on';
 
 /**
- * Removes elements from an array and, inserts new elements in their place.
+ * Removes elements from an array and, optionally, inserts new elements in
+ * their place.
  *
- * @param items - The array to splice.
+ * Related operations:
+ * - `drop` - to skip past the first `n` elements.
+ * - `dropLast` - to skip past the last `n` elements.
+ * - `filter` - to shape the array by *value* rather than by *position*.
+ * - `swapIndices` - to swap two elements by their indices.
+ * - `take` - to keep only the first `n` elements.
+ * - `takeLast` - to keep only the last `n` elements.
+ *
+ * @param data - The array to splice.
  * @param start - The index from which to start removing elements.
  * @param deleteCount - The number of elements to remove.
- * @param replacement - The elements to insert into the array in place of the deleted elements.
+ * @param replacement - Elements to insert at the cutoff point.
  * @signature
- *    splice(items, start, deleteCount, replacement)
+ *    splice(data, start, deleteCount);
+ *    splice(data, start, deleteCount, replacement);
  * @example
- *    splice([1,2,3,4,5,6,7,8], 2, 3, []); //=> [1,2,6,7,8]
+ *    splice([1,2,3,4,5,6,7,8], 2, 3); //=> [1,2,6,7,8]
  *    splice([1,2,3,4,5,6,7,8], 2, 3, [9, 10]); //=> [1,2,9,10,6,7,8]
  * @dataFirst
  * @category Array
  */
-export function splice<T>(
-  items: ReadonlyArray<T>,
+export function splice<T extends IterableContainer>(
+  data: T,
   start: number,
   deleteCount: number,
-  replacement: ReadonlyArray<T>,
-): Array<T>;
+  replacement?: ReadonlyArray<T[number]>,
+): Array<T[number]>;
 
 /**
- * Removes elements from an array and, inserts new elements in their place.
+ * Removes elements from an array and, optionally, inserts new elements in
+ * their place.
+ *
+ * Related operations:
+ * - `drop` - to skip past the first `n` elements.
+ * - `dropLast` - to skip past the last `n` elements.
+ * - `filter` - to shape the array by *value* rather than by *position*.
+ * - `swapIndices` - to swap two elements by their indices.
+ * - `take` - to keep only the first `n` elements.
+ * - `takeLast` - to keep only the last `n` elements.
  *
  * @param start - The index from which to start removing elements.
  * @param deleteCount - The number of elements to remove.
- * @param replacement - The elements to insert into the array in place of the deleted elements.
+ * @param replacement - Elements to insert at the cutoff point.
  * @signature
- *    splice(start, deleteCount, replacement)(items)
+ *    splice(start, deleteCount)(data);
+ *    splice(start, deleteCount, replacement)(data);
  * @example
- *    pipe([1,2,3,4,5,6,7,8], splice(2, 3, [])) // => [1,2,6,7,8]
+ *    pipe([1,2,3,4,5,6,7,8], splice(2, 3)) // => [1,2,6,7,8]
  *    pipe([1,2,3,4,5,6,7,8], splice(2, 3, [9, 10])) // => [1,2,9,10,6,7,8]
  * @dataLast
  * @category Array
  */
-export function splice<T>(
+export function splice<T extends IterableContainer>(
   start: number,
   deleteCount: number,
-  replacement: ReadonlyArray<T>,
-): (items: ReadonlyArray<T>) => Array<T>;
+  replacement?: ReadonlyArray<T[number]>,
+): (data: T) => Array<T[number]>;
 
 export function splice(...args: ReadonlyArray<unknown>): unknown {
-  return curry(spliceImplementation, args);
+  return curryOn(($) => typeof $ === 'number', spliceImplementation, args);
 }
 
-function spliceImplementation<T>(
-  items: ReadonlyArray<T>,
+function spliceImplementation<T extends IterableContainer>(
+  data: T,
   start: number,
   deleteCount: number,
-  replacement: ReadonlyArray<T>,
-): Array<T> {
+  replacement: ReadonlyArray<T[number]> = [],
+): Array<T[number]> {
   // TODO [>2]: When node 18 reaches end-of-life bump target lib to ES2023+ and use `Array.prototype.toSpliced` here.
-  const result = [...items];
+  const result = [...data];
   result.splice(start, deleteCount, ...replacement);
   return result;
 }

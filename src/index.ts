@@ -44,6 +44,7 @@ export * from './funnel';
 export * from './group-by';
 export * from './group-by-prop';
 export * from './has-at-least';
+export * from './has-prop';
 export * from './has-sub-object';
 export * from './human-readable-file-size';
 export * from './identity';

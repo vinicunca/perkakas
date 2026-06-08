@@ -1,9 +1,10 @@
-import { describe, expectTypeOf, it } from 'vitest';
+import { describe, expectTypeOf, it, test } from 'vitest';
+import { $typed } from '../test/$typed';
 import { constant } from './constant';
 import { pipe } from './pipe';
 import { sumBy } from './sum-by';
 
-it('empty array', () => {
+test('empty array', () => {
   const result1 = sumBy([], constant(1n));
 
   expectTypeOf(result1).toEqualTypeOf<0>();
@@ -13,8 +14,8 @@ it('empty array', () => {
   expectTypeOf(result2).toEqualTypeOf<0>();
 });
 
-it('disallow mixed mapper', () => {
-  const toNumberOrBigint = constant(1 as bigint | number);
+test('disallow mixed mapper', () => {
+  const toNumberOrBigint = constant($typed<bigint | number>());
   // @ts-expect-error [ts2769]: Type `number | bigint` is not assignable to type number
   // Type `number | bigint` is not assignable to type bigint
   sumBy([], toNumberOrBigint);

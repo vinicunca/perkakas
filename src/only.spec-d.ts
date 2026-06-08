@@ -120,3 +120,9 @@ it('readonly tuple with all optional', () => {
 
   expectTypeOf(result).toEqualTypeOf<number | string | undefined>();
 });
+
+it('union of tuple shapes', () => {
+  expectTypeOf(only(['a'] as ['a'] | ['b'] | ['c'])).toEqualTypeOf<
+    'a' | 'b' | 'c'
+  >();
+});

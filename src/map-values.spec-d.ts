@@ -1,5 +1,6 @@
 import type { Tagged } from 'type-fest';
 import { describe, expectTypeOf, it } from 'vitest';
+import { $typed } from '../test/$typed';
 import { constant } from './constant';
 import { mapValues } from './map-values';
 import { pipe } from './pipe';
@@ -140,13 +141,13 @@ it('maintains partiality', () => {
 it('unions of records', () => {
   const data = {} as Record<number, unknown> | Record<string, unknown>;
 
-  const dataFirst = mapValues(data, constant('hello' as string));
+  const dataFirst = mapValues(data, constant($typed<string>()));
 
   expectTypeOf(dataFirst).toEqualTypeOf<
     Record<number, string> | Record<string, string>
   >();
 
-  const dataLast = pipe(data, mapValues(constant('hello' as string)));
+  const dataLast = pipe(data, mapValues(constant($typed<string>())));
 
   expectTypeOf(dataLast).toEqualTypeOf<
     Record<number, string> | Record<string, string>

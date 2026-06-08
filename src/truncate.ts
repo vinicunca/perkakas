@@ -1,10 +1,4 @@
-import type {
-  And,
-  IsEqual,
-  IsNever,
-  IsStringLiteral,
-  NonNegativeInteger,
-} from 'type-fest';
+import type { IsNever, IsStringLiteral, NonNegativeInteger } from 'type-fest';
 import type { ClampedIntegerSubtract } from './internal/types/clamped-integer-subtract';
 import type { StringLength } from './internal/types/string-length';
 
@@ -49,31 +43,26 @@ type TruncateWithOptions<
   // Distribute the result over unions.
   = N extends unknown
     ? // We can short-circuit most of our logic when N is a literal 0.
-    IsEqual<N, 0> extends true
-      ? ''
-      : // Distribute the result over unions.
-      Omission extends unknown
-        ? // When Omission isn't literal we don't know how long it is.
-        IsStringLiteral<Omission> extends true
-          ? // This mirrors the runtime logic where if `n - omission.length`
-        // is not positive then what we end up truncating is Omission
-        // itself and not S.
-          IsEqual<
-            ClampedIntegerSubtract<N, StringLength<Omission>>,
-            0
-          > extends true
-            ? TruncateLiterals<Omission, N, ''>
-            : And<
-              // When S isn't literal the output wouldn't be literal
-              // either.
-              IsStringLiteral<S>,
-              // TODO: Handling non-trivial separators would add a ton of complexity to this type! It's possible (but hard!) to support string literals so I'm leaving this as a TODO; regular expressions are impossible because we can't get the type checker to run them.
-              IsEqual<Separator, undefined>
-            > extends true
-              ? TruncateLiterals<S, N, Omission>
-              : string
-          : string
-        : never
+      [N] extends [0]
+        ? ''
+        : // Distribute the result over unions.
+        Omission extends unknown
+          ? // When Omission isn't literal we don't know how long it is.
+          IsStringLiteral<Omission> extends true
+            ? // This mirrors the runtime logic where if `n - omission.length`
+            // is not positive then what we end up truncating is Omission
+            // itself and not S.
+              [ClampedIntegerSubtract<N, StringLength<Omission>>] extends [0]
+                ? TruncateLiterals<Omission, N, ''>
+                : // When S isn't literal the output wouldn't be literal either.
+                IsStringLiteral<S> extends true
+                  ? // TODO: Handling non-trivial separators would add a ton of complexity to this type! It's possible (but hard!) to support string literals so I'm leaving this as a TODO; regular expressions are impossible because we can't get the type checker to run them.
+                    [Separator] extends [undefined]
+                      ? TruncateLiterals<S, N, Omission>
+                      : string
+                  : string
+            : string
+          : never
     : never;
 
 /**

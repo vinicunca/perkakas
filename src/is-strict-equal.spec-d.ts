@@ -50,8 +50,8 @@ it('works deeply', () => {
 });
 
 it('doesn\'t narrow when comparing objects of the same type', () => {
-  const data1 = { a: 1 } as { a: number };
-  const data2 = { a: 2 } as { a: number };
+  const data1 = { a: 1 };
+  const data2 = { a: 2 };
   // eslint-disable-next-line sonar/no-all-duplicated-branches
   if (isStrictEqual(data1, data2)) {
     expectTypeOf(data1).toEqualTypeOf<{ a: number }>();

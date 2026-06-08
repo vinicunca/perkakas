@@ -1,3 +1,6 @@
+allowBuilds:
+  esbuild: true
+
 catalogMode: prefer
 shellEmulator: true
 trustPolicy: no-downgrade

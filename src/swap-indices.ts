@@ -1,4 +1,4 @@
-import type { And, IsEqual, Join } from 'type-fest';
+import type { IsEqual, Join } from 'type-fest';
 import type { IterableContainer } from './internal/types/iterable-container';
 import { curry } from './curry';
 
@@ -66,14 +66,18 @@ type SwapArray<
   K1 extends number,
   K2 extends number,
 >
-  = And<IsNonNegative<K1>, IsNonNegative<K2>> extends true
-    ? And<isLessThan<K1, T['length']>, isLessThan<K2, T['length']>> extends true
-      ? SwapArrayInternal<T, K1, K2>
-      : // If the indices are not within the input arrays range the result would
-    // be trivially the same as the input array.
-      T
-    :
-    Array<T[number]>;
+  = IsNonNegative<K1> extends true
+    ? IsNonNegative<K2> extends true
+      ? isLessThan<K1, T['length']> extends true
+        ? isLessThan<K2, T['length']> extends true
+          ? SwapArrayInternal<T, K1, K2>
+          : // If the indices are not within the input arrays range the result
+        // would be trivially the same as the input array.
+          T
+        : T
+      : // TODO [>3]: Because of limitations on the typescript version used in Remeda we can't build a proper Absolute number type so we can't implement proper typing for negative indices and have to opt for a less-strict type instead. Check out the history for the PR that introduced this TODO to see how it could be implemented.
+      Array<T[number]>
+    : Array<T[number]>;
 
 type SwappedIndices<
   T extends IterableContainer | string,
@@ -91,6 +95,9 @@ type SwappedIndices<
  * Negative indices are supported and would be treated as an offset from the end of the array. The resulting type thought would be less strict than when using positive indices.
  *
  * If either index is out of bounds the result would be a shallow copy of the input, as-is.
+ *
+ * Related operations:
+ * - `splice` - for more general positional edits (remove a slice, insert at an index).
  *
  * @param data - The item to be manipulated. This can be an array, or a string.
  * @param index1 - The first index.
@@ -117,6 +124,9 @@ export function swapIndices<
  * Negative indices are supported and would be treated as an offset from the end of the array. The resulting type thought would be less strict than when using positive indices.
  *
  * If either index is out of bounds the result would be a shallow copy of the input, as-is.
+ *
+ * Related operations:
+ * - `splice` - for more general positional edits (remove a slice, insert at an index).
  *
  * @param index1 - The first index.
  * @param index2 - The second index.

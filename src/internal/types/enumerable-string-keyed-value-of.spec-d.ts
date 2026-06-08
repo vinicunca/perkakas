@@ -1,6 +1,7 @@
 import type { EmptyObject } from 'type-fest';
 import type { EnumerableStringKeyedValueOf } from './enumerable-string-keyed-value-of';
-import { expectTypeOf, it } from 'vitest';
+import { expectTypeOf, test } from 'vitest';
+import { $typed } from '../../../test/$typed';
 
 declare const SYMBOL: unique symbol;
 
@@ -8,77 +9,81 @@ declare function enumerableStringKeyedValueOf<const T>(
   data: T,
 ): EnumerableStringKeyedValueOf<T>;
 
-it('string values', () => {
+test('string values', () => {
   expectTypeOf(
-    enumerableStringKeyedValueOf({} as Record<PropertyKey, string>),
+    enumerableStringKeyedValueOf($typed<Record<PropertyKey, string>>()),
   ).toEqualTypeOf<string>();
 });
 
-it('number values', () => {
+test('number values', () => {
   expectTypeOf(
-    enumerableStringKeyedValueOf({} as Record<PropertyKey, number>),
+    enumerableStringKeyedValueOf($typed<Record<PropertyKey, number>>()),
   ).toEqualTypeOf<number>();
 });
 
-it('union of records', () => {
+test('union of records', () => {
   expectTypeOf(
     enumerableStringKeyedValueOf(
-      {} as Record<PropertyKey, 'cat'> | Record<PropertyKey, 'dog'>,
+      $typed<Record<PropertyKey, 'cat'> | Record<PropertyKey, 'dog'>>(),
     ),
   ).toEqualTypeOf<'cat' | 'dog'>();
 
   expectTypeOf(
     enumerableStringKeyedValueOf(
-      {} as Record<PropertyKey, number> | Record<PropertyKey, string>,
+      $typed<Record<PropertyKey, number> | Record<PropertyKey, string>>(),
     ),
   ).toEqualTypeOf<number | string>();
 });
 
-it('union values', () => {
+test('union values', () => {
   expectTypeOf(
-    enumerableStringKeyedValueOf({} as Record<PropertyKey, number | string>),
+    enumerableStringKeyedValueOf(
+      $typed<Record<PropertyKey, number | string>>(),
+    ),
   ).toEqualTypeOf<number | string>();
 });
 
-it('literal values', () => {
+test('literal values', () => {
   expectTypeOf(
     enumerableStringKeyedValueOf({ a: 1 } as const),
   ).toEqualTypeOf<1>();
 
   expectTypeOf(
-    enumerableStringKeyedValueOf({ a: 1 } as { a: '1' | '2' | 1 }),
+    enumerableStringKeyedValueOf($typed<{ a: '1' | '2' | 1 }>()),
   ).toEqualTypeOf<'1' | '2' | 1>();
 });
 
-it('optional values', () => {
+test('optional values', () => {
   expectTypeOf(
-    enumerableStringKeyedValueOf({ a: 1 } as { a: 1; b?: 4 }),
+    enumerableStringKeyedValueOf($typed<{ a: 1; b?: 4 }>()),
   ).toEqualTypeOf<1 | 4>();
 
   expectTypeOf(
-    enumerableStringKeyedValueOf({ a: 'hello' } as { a: string; b?: number }),
+    enumerableStringKeyedValueOf($typed<{ a: string; b?: number }>()),
   ).toEqualTypeOf<number | string>();
 });
 
-it('nullish and undefined values', () => {
+test('nullish and undefined values', () => {
   expectTypeOf(
-    enumerableStringKeyedValueOf({ a: 'hello', b: 'world' } as {
-      a: string | undefined;
-      b: string | null;
-    }),
+    enumerableStringKeyedValueOf(
+      $typed<{
+        a: string | undefined;
+        b: string | null;
+      }>(),
+    ),
   ).toEqualTypeOf<string | null | undefined>();
 
   expectTypeOf(
     enumerableStringKeyedValueOf(
-      {} as {
+      $typed<{
         a?: number | null;
         b?: number | null | undefined;
-      },
+      }>(),
     ),
   ).toEqualTypeOf<number | null | undefined>();
 });
 
-it('symbol keys', () => {
+test('symbol keys', () => {
   expectTypeOf(
     enumerableStringKeyedValueOf({ [SYMBOL]: 'hello' } as const),
   ).toEqualTypeOf<never>();
@@ -89,18 +94,18 @@ it('symbol keys', () => {
 
   expectTypeOf(
     enumerableStringKeyedValueOf(
-      {} as Record<PropertyKey | typeof SYMBOL, string>,
+      $typed<Record<PropertyKey | typeof SYMBOL, string>>(),
     ),
   ).toEqualTypeOf<string>();
 });
 
-it('empty object', () => {
+test('empty object', () => {
   expectTypeOf(
-    enumerableStringKeyedValueOf({} as EmptyObject),
+    enumerableStringKeyedValueOf($typed<EmptyObject>()),
   ).toEqualTypeOf<never>();
 });
 
-it('parameterized record key', () => {
+test('parameterized record key', () => {
   const foo = <K extends string>(data: Record<K, { a: 'hello' }>): void => {
     // Because of the type parameter TypeScript doesn't infer the concrete
     // return type here, preventing us from being able to compare it to an

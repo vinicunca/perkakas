@@ -1,4 +1,5 @@
 import { describe, expectTypeOf, it } from 'vitest';
+import { $typed } from '../test/$typed';
 import { constant } from './constant';
 import { filter } from './filter';
 import { isDefined } from './is-defined';
@@ -42,7 +43,7 @@ describe('primitives arrays', () => {
 describe('arrays with literal unions', () => {
   it('predicate', () => {
     expectTypeOf(
-      filter([] as Array<'cat' | 'dog'>, constant(true as boolean)),
+      filter([] as Array<'cat' | 'dog'>, constant($typed<boolean>())),
     ).toEqualTypeOf<Array<'cat' | 'dog'>>();
   });
 
@@ -70,7 +71,7 @@ describe('fixed tuple', () => {
     expectTypeOf(
       filter(
         ['hello', 'world', 1, 2, 3, true, 'world', 3, 'hello'] as const,
-        constant(true as boolean),
+        constant($typed<boolean>()),
       ),
     ).toEqualTypeOf<Array<true | 1 | 2 | 3 | 'hello' | 'world'>>();
   });
@@ -132,7 +133,7 @@ describe('special tuple shapes', () => {
       Array<'world'> | ['world', ...Array<'world'>]
     >();
     expectTypeOf(filter(data, isString)).toEqualTypeOf<[string, ...Array<string>]>();
-    expectTypeOf(filter(data, constant(true as boolean))).toEqualTypeOf<
+    expectTypeOf(filter(data, constant($typed<boolean>()))).toEqualTypeOf<
       Array<string>
     >();
   });
@@ -152,7 +153,7 @@ describe('special tuple shapes', () => {
   it('non-empty array filtered with regular predicate', () => {
     const data = ['hello', 'world'] as [string, ...Array<number>, string];
 
-    expectTypeOf(filter(data, constant(true as boolean))).toEqualTypeOf<
+    expectTypeOf(filter(data, constant($typed<boolean>()))).toEqualTypeOf<
       Array<string | number>
     >();
   });

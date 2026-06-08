@@ -2,7 +2,7 @@
   "name": "@vinicunca/perkakas",
   "type": "module",
   "version": "1.15.0",
-  "packageManager": "pnpm@10.33.0",
+  "packageManager": "pnpm@11.5.2",
   "description": "Utility for JavaScript and Typescript.",
   "author": "praburangki<https://github.com/praburangki>",
   "license": "MIT",
@@ -51,18 +51,18 @@
     "test:types": "vitest --project types"
   },
   "devDependencies": {
-    "@arethetypeswrong/core": "^0.18.2",
-    "@fast-check/vitest": "^0.4.0",
-    "@types/node": "^25.5.2",
-    "@vinicunca/eslint-config": "5.0.0",
-    "@vitest/coverage-v8": "^4.1.2",
-    "bumpp": "^10.3.2",
-    "eslint": "^10.2.0",
+    "@arethetypeswrong/core": "^0.18.3",
+    "@fast-check/vitest": "^0.4.1",
+    "@types/node": "^25.9.2",
+    "@vinicunca/eslint-config": "5.2.0",
+    "@vitest/coverage-v8": "^4.1.8",
+    "bumpp": "^11.1.0",
+    "eslint": "^10.4.1",
     "fast-check": "^4.7.0",
-    "publint": "^0.3.14",
-    "tsdown": "^0.21.7",
+    "publint": "^0.3.21",
+    "tsdown": "^0.22.2",
     "type-fest": "^5.5.0",
     "typescript": "^6.0.2",
-    "vitest": "^4.1.2"
+    "vitest": "^4.1.8"
   }
 }

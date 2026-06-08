@@ -1,59 +1,60 @@
-import { describe, expectTypeOf, it } from 'vitest';
+import { describe, expectTypeOf, test } from 'vitest';
+import { $typed } from '../test/$typed';
 import { defaultTo } from './default-to';
 import { pipe } from './pipe';
 
 describe('primitive types (string)', () => {
   describe('data-first', () => {
-    it('undefinable primitive', () => {
+    test('undefinable primitive', () => {
       expectTypeOf(
         defaultTo('a' as string | undefined, 'value' as string),
       ).toEqualTypeOf<string>();
     });
 
-    it('nullable primitive', () => {
+    test('nullable primitive', () => {
       expectTypeOf(
         defaultTo('a' as string | null, 'value' as string),
       ).toEqualTypeOf<string>();
     });
 
-    it('nullish primitive', () => {
+    test('nullish primitive', () => {
       expectTypeOf(
         defaultTo('a' as string | null | undefined, 'value'),
       ).toEqualTypeOf<string>();
     });
 
-    it('undefinable primitive with literal fallback', () => {
+    test('undefinable primitive with literal fallback', () => {
       expectTypeOf(
         defaultTo('a' as string | undefined, 'value'),
       ).toEqualTypeOf<string>();
     });
 
-    it('nullable primitive with literal fallback', () => {
+    test('nullable primitive with literal fallback', () => {
       expectTypeOf(
         defaultTo('a' as string | null, 'value'),
       ).toEqualTypeOf<string>();
     });
 
-    it('nullish literal with literal fallback', () => {
+    test('nullish literal with literal fallback', () => {
       expectTypeOf(
         defaultTo('a' as 'a' | 'b' | null | undefined, 'a'),
       ).toEqualTypeOf<'a' | 'b'>();
     });
 
-    it('undefinable literal union', () => {
+    test('undefinable literal union', () => {
       expectTypeOf(defaultTo('a' as 'a' | 'b' | undefined, 'a')).toEqualTypeOf<
         'a' | 'b'
       >();
     });
 
-    it('nullable literal', () => {
+    test('nullable literal', () => {
       expectTypeOf(defaultTo('a' as 'a' | 'b' | null, 'a')).toEqualTypeOf<
         'a' | 'b'
       >();
     });
 
     describe('error cases', () => {
-      it('non-nullish primitive', () => {
+      test('non-nullish primitive', () => {
         defaultTo(
           'a' as string,
           // @ts-expect-error [ts2345] -- the fallback is never because it will
@@ -62,7 +63,7 @@ describe('primitive types (string)', () => {
         );
       });
 
-      it('non-nullish literal union', () => {
+      test('non-nullish literal union', () => {
         defaultTo(
           'a' as 'a' | 'b',
           // @ts-expect-error [ts2345] -- the fallback is never because it will
@@ -71,7 +72,7 @@ describe('primitive types (string)', () => {
         );
       });
 
-      it('incompatible primitive fallback', () => {
+      test('incompatible primitive fallback', () => {
         defaultTo(
           'a' as string | undefined,
           // @ts-expect-error [ts2345] -- the fallback is incompatible with the
@@ -80,7 +81,7 @@ describe('primitive types (string)', () => {
         );
       });
 
-      it('incompatible literal fallback', () => {
+      test('incompatible literal fallback', () => {
         defaultTo(
           'a' as 'a' | 'b' | undefined,
           // @ts-expect-error [ts2345] -- the fallback is incompatible with the
@@ -89,7 +90,7 @@ describe('primitive types (string)', () => {
         );
       });
 
-      it('incompatible widening', () => {
+      test('incompatible widening', () => {
         defaultTo(
           'a' as 'a' | 'b' | undefined,
           // @ts-expect-error [ts2345] -- the fallback is incompatible with the
@@ -98,7 +99,7 @@ describe('primitive types (string)', () => {
         );
       });
 
-      it('null for undefinable primitive', () => {
+      test('null for undefinable primitive', () => {
         defaultTo(
           'a' as string | undefined,
           // @ts-expect-error [ts2345] -- the fallback is incompatible with the
@@ -107,7 +108,7 @@ describe('primitive types (string)', () => {
         );
       });
 
-      it('undefined for nullable primitive', () => {
+      test('undefined for nullable primitive', () => {
         defaultTo(
           'a' as string | null,
           // @ts-expect-error [ts2345] -- the fallback is incompatible with the
@@ -119,44 +120,44 @@ describe('primitive types (string)', () => {
   });
 
   describe('data-last', () => {
-    it('undefinable primitive', () => {
+    test('undefinable primitive', () => {
       expectTypeOf(
         pipe('a' as string | undefined, defaultTo('value' as string)),
       ).toEqualTypeOf<string>();
     });
 
-    it('nullable primitive', () => {
+    test('nullable primitive', () => {
       expectTypeOf(
         pipe('a' as string | null, defaultTo('value' as string)),
       ).toEqualTypeOf<string>();
     });
 
-    it('nullish primitive', () => {
+    test('nullish primitive', () => {
       expectTypeOf(
         pipe('a' as string | null | undefined, defaultTo('value')),
       ).toEqualTypeOf<string>();
     });
 
-    it('undefinable literal union', () => {
+    test('undefinable literal union', () => {
       expectTypeOf(
         pipe('a' as 'a' | 'b' | undefined, defaultTo('a')),
       ).toEqualTypeOf<'a' | 'b'>();
     });
 
-    it('nullable literal', () => {
+    test('nullable literal', () => {
       expectTypeOf(pipe('a' as 'a' | 'b' | null, defaultTo('a'))).toEqualTypeOf<
         'a' | 'b'
       >();
     });
 
-    it('nullish literal', () => {
+    test('nullish literal', () => {
       expectTypeOf(
         pipe('a' as 'a' | 'b' | null | undefined, defaultTo('a')),
       ).toEqualTypeOf<'a' | 'b'>();
     });
 
     describe('error cases', () => {
-      it('non-nullish primitive', () => {
+      test('non-nullish primitive', () => {
         pipe(
           'a' as string,
           // @ts-expect-error [ts2345] -- the fallback is never because it will
@@ -165,7 +166,7 @@ describe('primitive types (string)', () => {
         );
       });
 
-      it('non-nullish literal union', () => {
+      test('non-nullish literal union', () => {
         pipe(
           'a' as 'a' | 'b',
           // @ts-expect-error [ts2345] -- the fallback is never because it will
@@ -174,7 +175,7 @@ describe('primitive types (string)', () => {
         );
       });
 
-      it('incompatible primitive fallback', () => {
+      test('incompatible primitive fallback', () => {
         pipe(
           'a' as string | undefined,
           // @ts-expect-error [ts2345] -- the fallback is incompatible with the
@@ -183,7 +184,7 @@ describe('primitive types (string)', () => {
         );
       });
 
-      it('incompatible literal fallback', () => {
+      test('incompatible literal fallback', () => {
         pipe(
           'a' as 'a' | 'b' | undefined,
           // @ts-expect-error [ts2345] -- the fallback is incompatible with the
@@ -192,7 +193,7 @@ describe('primitive types (string)', () => {
         );
       });
 
-      it('incompatible widening', () => {
+      test('incompatible widening', () => {
         pipe(
           'a' as 'a' | 'b' | undefined,
           // @ts-expect-error [ts2345] -- the fallback is incompatible with the
@@ -201,7 +202,7 @@ describe('primitive types (string)', () => {
         );
       });
 
-      it('null for undefinable primitive', () => {
+      test('null for undefinable primitive', () => {
         pipe(
           'a' as string | undefined,
           // @ts-expect-error [ts2345] -- the fallback is incompatible with the
@@ -210,7 +211,7 @@ describe('primitive types (string)', () => {
         );
       });
 
-      it('undefined for nullable primitive', () => {
+      test('undefined for nullable primitive', () => {
         pipe(
           'a' as string | null,
           // @ts-expect-error [ts2345] -- the fallback is incompatible with the
@@ -224,44 +225,41 @@ describe('primitive types (string)', () => {
 
 describe('object types', () => {
   describe('data-first', () => {
-    it('undefinable object', () => {
+    test('undefinable object', () => {
       expectTypeOf(
         defaultTo(
           { a: 'a' } as { a: string } | undefined,
-          { a: 'b' } as { a: string },
+          $typed<{ a: string }>(),
         ),
       ).toEqualTypeOf<{ a: string }>();
     });
 
-    it('nullable object', () => {
+    test('nullable object', () => {
       expectTypeOf(
-        defaultTo(
-          { a: 'a' } as { a: string } | null,
-          { a: 'b' } as { a: string },
-        ),
+        defaultTo({ a: 'a' } as { a: string } | null, $typed<{ a: string }>()),
       ).toEqualTypeOf<{ a: string }>();
     });
 
-    it('undefinable object with literal fallback', () => {
+    test('undefinable object with literal fallback', () => {
       expectTypeOf(
         defaultTo({ a: 'a' } as { a: string } | undefined, { a: 'b' } as const),
       ).toEqualTypeOf<{ a: string } | { readonly a: 'b' }>();
     });
 
-    it('nullable object with literal fallback', () => {
+    test('nullable object with literal fallback', () => {
       expectTypeOf(
         defaultTo({ a: 'a' } as { a: string } | null, { a: 'b' } as const),
       ).toEqualTypeOf<{ a: string } | { readonly a: 'b' }>();
     });
 
     describe('error cases', () => {
-      it('non-nullish object', () => {
+      test('non-nullish object', () => {
         // @ts-expect-error [ts2345] -- the fallback is never because it will
         // never be used.
-        defaultTo({ a: 'a' } as { a: string }, { a: 'b' });
+        defaultTo({ a: 'a' }, { a: 'b' });
       });
 
-      it('incompatible object fallback', () => {
+      test('incompatible object fallback', () => {
         // @ts-expect-error [ts2322] -- the fallback is incompatible with the
         // data type.
         defaultTo({ a: 'a' } as { a: 'a' } | undefined, { a: 'b' });
@@ -270,32 +268,32 @@ describe('object types', () => {
   });
 
   describe('data-last', () => {
-    it('undefinable object', () => {
+    test('undefinable object', () => {
       expectTypeOf(
         pipe(
           { a: 'a' } as { a: string } | undefined,
-          defaultTo({ a: 'b' } as { a: string }),
+          defaultTo($typed<{ a: string }>()),
         ),
       ).toEqualTypeOf<{ a: string }>();
     });
 
-    it('nullable object', () => {
+    test('nullable object', () => {
       expectTypeOf(
         pipe(
           { a: 'a' } as { a: string } | null,
-          defaultTo({ a: 'b' } as { a: string }),
+          defaultTo($typed<{ a: string }>()),
         ),
       ).toEqualTypeOf<{ a: string }>();
     });
 
     describe('error cases', () => {
-      it('non-nullish object', () => {
+      test('non-nullish object', () => {
         // @ts-expect-error [ts2345] -- the fallback is never because it will
         // never be used.
-        pipe({ a: 'a' } as { a: string }, defaultTo({ a: 'b' }));
+        pipe({ a: 'a' }, defaultTo({ a: 'b' }));
       });
 
-      it('incompatible object fallback', () => {
+      test('incompatible object fallback', () => {
         // @ts-expect-error [ts2322] -- the fallback is incompatible with the
         // data type.
         pipe({ a: 'a' } as { a: 'a' } | undefined, defaultTo({ a: 'b' }));
@@ -306,7 +304,7 @@ describe('object types', () => {
 
 describe('nullish fallbacks', () => {
   describe('data-first', () => {
-    it('undefined fallback', () => {
+    test('undefined fallback', () => {
       expectTypeOf(
         defaultTo(
           { a: 'a' } as { a: string } | undefined,
@@ -315,7 +313,7 @@ describe('nullish fallbacks', () => {
       ).toEqualTypeOf<{ a: string } | undefined>();
     });
 
-    it('null fallback', () => {
+    test('null fallback', () => {
       expectTypeOf(
         defaultTo(
           { a: 'a' } as { a: string } | null,
@@ -324,7 +322,7 @@ describe('nullish fallbacks', () => {
       ).toEqualTypeOf<{ a: string } | null>();
     });
 
-    it('nullish fallback', () => {
+    test('nullish fallback', () => {
       expectTypeOf(
         defaultTo(
           { a: 'a' } as { a: string } | null | undefined,
@@ -333,7 +331,7 @@ describe('nullish fallbacks', () => {
       ).toEqualTypeOf<{ a: string } | null | undefined>();
     });
 
-    it('narrowing nullish fallback to undefined', () => {
+    test('narrowing nullish fallback to undefined', () => {
       expectTypeOf(
         defaultTo(
           { a: 'a' } as { a: string } | null | undefined,
@@ -342,7 +340,7 @@ describe('nullish fallbacks', () => {
       ).toEqualTypeOf<{ a: string } | undefined>();
     });
 
-    it('narrowing nullish fallback to null', () => {
+    test('narrowing nullish fallback to null', () => {
       expectTypeOf(
         defaultTo(
           { a: 'a' } as { a: string } | null | undefined,
@@ -353,7 +351,7 @@ describe('nullish fallbacks', () => {
   });
 
   describe('data-last', () => {
-    it('undefined fallback', () => {
+    test('undefined fallback', () => {
       expectTypeOf(
         pipe(
           { a: 'a' } as { a: string } | undefined,
@@ -362,7 +360,7 @@ describe('nullish fallbacks', () => {
       ).toEqualTypeOf<{ a: string } | undefined>();
     });
 
-    it('null fallback', () => {
+    test('null fallback', () => {
       expectTypeOf(
         pipe(
           { a: 'a' } as { a: string } | null,
@@ -371,7 +369,7 @@ describe('nullish fallbacks', () => {
       ).toEqualTypeOf<{ a: string } | null>();
     });
 
-    it('nullish fallback', () => {
+    test('nullish fallback', () => {
       expectTypeOf(
         pipe(
           { a: 'a' } as { a: string } | null | undefined,
@@ -380,7 +378,7 @@ describe('nullish fallbacks', () => {
       ).toEqualTypeOf<{ a: string } | null | undefined>();
     });
 
-    it('narrowing nullish fallback to undefined', () => {
+    test('narrowing nullish fallback to undefined', () => {
       expectTypeOf(
         pipe(
           { a: 'a' } as { a: string } | null | undefined,
@@ -389,7 +387,7 @@ describe('nullish fallbacks', () => {
       ).toEqualTypeOf<{ a: string } | undefined>();
     });
 
-    it('narrowing nullish fallback to null', () => {
+    test('narrowing nullish fallback to null', () => {
       expectTypeOf(
         pipe(
           { a: 'a' } as { a: string } | null | undefined,
