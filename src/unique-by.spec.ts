@@ -1,4 +1,5 @@
-import { describe, expect, it } from 'vitest';
+import type { LazyCallback } from './internal/types/lazy-callback';
+import { describe, expect, it, vi } from 'vitest';
 import { createLazyInvocationCounter } from '../test/lazy-invocation-counter';
 import { identity } from './identity';
 import { pipe } from './pipe';
@@ -52,6 +53,18 @@ it('returns people with uniq first letter of name', () => {
     { name: 'Kim', age: 22 },
     { name: 'Emily', age: 42 },
   ]);
+});
+
+it('provides the items processed so far to the key function', () => {
+  const mock = vi.fn<LazyCallback<Array<unknown>, unknown>>(
+    (_item, _index, data) => [...data],
+  );
+  uniqueBy([1, 2, 2, 3], mock);
+
+  expect(mock).toHaveNthReturnedWith(1, [1]);
+  expect(mock).toHaveNthReturnedWith(2, [1, 2]);
+  expect(mock).toHaveNthReturnedWith(3, [1, 2, 2]);
+  expect(mock).toHaveNthReturnedWith(4, [1, 2, 2, 3]);
 });
 
 describe(pipe, () => {

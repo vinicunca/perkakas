@@ -1,4 +1,6 @@
 import type { IterableContainer } from './internal/types/iterable-container';
+import type { NarrowedArray } from './internal/types/narrowed-array';
+import type { NonRefinedFilteredArray } from './internal/types/non-refined-filtered-array';
 import { curry } from './curry';
 
 /**
@@ -6,7 +8,9 @@ import { curry } from './curry';
  * The returned elements will be in the same order as in the original array.
  *
  * @param data - The array.
- * @param predicate - The predicate.
+ * @param predicate - A function to execute for each element in the array,
+ * starting from the end. It should return `true` to keep taking elements, and
+ * `false` to stop. A type-predicate can also be used to narrow the result.
  * @signature
  *    takeLastWhile(data, predicate)
  * @example
@@ -14,20 +18,26 @@ import { curry } from './curry';
  * @dataFirst
  * @category Array
  */
-export function takeLastWhile<T extends IterableContainer, S extends T[number]>(
+export function takeLastWhile<T extends IterableContainer, Condition>(
   data: T,
-  predicate: (item: T[number], index: number, data: T) => item is S,
-): Array<S>;
-export function takeLastWhile<T extends IterableContainer>(
+  predicate: (item: T[number], index: number, data: T) => item is Condition,
+): NarrowedArray<T, Condition>;
+
+export function takeLastWhile<
+  T extends IterableContainer,
+  IsItemIncluded extends boolean,
+>(
   data: T,
-  predicate: (item: T[number], index: number, data: T) => boolean,
-): Array<T[number]>;
+  predicate: (item: T[number], index: number, data: T) => IsItemIncluded,
+): NonRefinedFilteredArray<T, IsItemIncluded>;
 
 /**
  * Returns elements from the end of the array until the predicate returns false.
  * The returned elements will be in the same order as in the original array.
  *
- * @param predicate - The predicate.
+ * @param predicate - A function to execute for each element in the array,
+ * starting from the end. It should return `true` to keep taking elements, and
+ * `false` to stop. A type-predicate can also be used to narrow the result.
  * @signature
  *    takeLastWhile(predicate)(data)
  * @example
@@ -35,12 +45,16 @@ export function takeLastWhile<T extends IterableContainer>(
  * @dataLast
  * @category Array
  */
-export function takeLastWhile<T extends IterableContainer, S extends T[number]>(
-  predicate: (item: T[number], index: number, data: T) => item is S,
-): (array: T) => Array<S>;
-export function takeLastWhile<T extends IterableContainer>(
-  predicate: (item: T[number], index: number, data: T) => boolean,
-): (data: T) => Array<T[number]>;
+export function takeLastWhile<T extends IterableContainer, Condition>(
+  predicate: (item: T[number], index: number, data: T) => item is Condition,
+): (data: T) => NarrowedArray<T, Condition>;
+
+export function takeLastWhile<
+  T extends IterableContainer,
+  IsItemIncluded extends boolean,
+>(
+  predicate: (item: T[number], index: number, data: T) => IsItemIncluded,
+): (data: T) => NonRefinedFilteredArray<T, IsItemIncluded>;
 
 export function takeLastWhile(...args: ReadonlyArray<unknown>): unknown {
   return curry(takeLastWhileImplementation, args);

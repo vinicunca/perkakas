@@ -1,6 +1,8 @@
 import type { IterableContainer } from './internal/types/iterable-container';
 import type { LazyEvaluator } from './internal/types/lazy-evaluator';
+import type { NonEmptyPrefix } from './internal/types/non-empty-prefix';
 import { lazyDataLastImpl } from './internal/lazy-data-last-impl';
+import { lazyEmptyEvaluator } from './internal/utility-evaluators';
 
 type ZippingFunction<
   T1 extends IterableContainer = IterableContainer,
@@ -11,6 +13,20 @@ type ZippingFunction<
   second: T2[number],
   index: number,
   data: readonly [first: T1, second: T2],
+) => Value;
+
+// Inside `pipe` the first list flows through lazily, so the callback only sees
+// the items processed so far, while the second list is provided upfront and is
+// always complete.
+type LazyZippingFunction<
+  T1 extends IterableContainer = IterableContainer,
+  T2 extends IterableContainer = IterableContainer,
+  Value = unknown,
+> = (
+  first: T1[number],
+  second: T2[number],
+  index: number,
+  data: readonly [first: Readonly<NonEmptyPrefix<T1>>, second: T2],
 ) => Value;
 
 /**
@@ -46,7 +62,7 @@ export function zipWith<
   T1 extends IterableContainer,
   T2 extends IterableContainer,
   Value,
->(second: T2, fn: ZippingFunction<T1, T2, Value>): (first: T1) => Array<Value>;
+>(second: T2, fn: LazyZippingFunction<T1, T2, Value>): (first: T1) => Array<Value>;
 
 /**
  * Creates a new list from two supplied lists by calling the supplied function
@@ -71,7 +87,7 @@ export function zipWith<
 
 export function zipWith(
   arg0: IterableContainer | ZippingFunction,
-  arg1?: IterableContainer | ZippingFunction,
+  arg1?: IterableContainer | LazyZippingFunction | ZippingFunction,
   arg2?: ZippingFunction,
 ): unknown {
   if (typeof arg0 === 'function') {
@@ -108,9 +124,11 @@ function zipWithImplementation<
 }
 
 function lazyImplementation<T1, T2 extends IterableContainer, Value>(second: T2, fn: ZippingFunction<ReadonlyArray<T1>, T2, Value>): LazyEvaluator<T1, Value> {
-  return (value, index, data) => ({
-    next: fn(value, second[index], index, [data, second]),
-    hasNext: true,
-    done: index >= second.length - 1,
-  });
+  return second.length === 0
+    ? lazyEmptyEvaluator
+    : (value, index, data) => ({
+        next: fn(value, second[index], index, [data, second]),
+        hasNext: true,
+        done: index >= second.length - 1,
+      });
 }

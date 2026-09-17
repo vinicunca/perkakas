@@ -1,15 +1,9 @@
+/* eslint-disable ts/no-use-before-define */
+import type { First } from './internal/types/first';
 import type { IterableContainer } from './internal/types/iterable-container';
 import type { LazyEvaluator } from './internal/types/lazy-evaluator';
 import { curry } from './curry';
 import { toSingle } from './internal/to-single';
-
-type First<T extends IterableContainer> = T extends []
-  ? undefined
-  : T extends readonly [unknown, ...Array<unknown>]
-    ? T[0]
-    : T extends readonly [...infer Pre, infer Last]
-      ? Last | Pre[0]
-      : T[0] | undefined;
 
 /**
  * Gets the first element of `array`.
@@ -54,6 +48,7 @@ const firstImplementation = <T>([item]: ReadonlyArray<T>): T | undefined => item
 
 const lazyImplementation = (): LazyEvaluator => firstLazy;
 
+// eslint-disable-next-line ts/explicit-function-return-type
 function firstLazy<T>(value: T) {
   return ({ hasNext: true, next: value, done: true }) as const;
 }

@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { pipe } from './pipe';
 import { zipWith } from './zip-with';
 
@@ -77,5 +77,39 @@ describe('data second with initial arg', () => {
         zipWith(['a', 'b', 'c'], (a, b) => `${a}${b}`),
       ),
     ).toStrictEqual(['1a', '2b']);
+  });
+
+  it('should return empty when second is empty', () => {
+    const mockFn = vi.fn<(a: string, b: string) => string>();
+
+    expect(pipe(['1', '2'], zipWith([], mockFn))).toStrictEqual([]);
+    expect(mockFn).toHaveBeenCalledTimes(0);
+  });
+
+  it('provides the first items processed so far', () => {
+    const other = ['a', 'b', 'c'];
+    const mock = vi.fn<
+      (
+        first: unknown,
+        second: unknown,
+        index: unknown,
+        data: readonly [ReadonlyArray<unknown>, ReadonlyArray<unknown>],
+      ) => unknown
+    >((_first, _second, _index, data) => structuredClone(data),
+    );
+    pipe([1, 2, 3], zipWith(other, mock));
+
+    expect(mock).toHaveNthReturnedWith(1, [[1], other]);
+    expect(mock).toHaveNthReturnedWith(2, [[1, 2], other]);
+    expect(mock).toHaveNthReturnedWith(3, [[1, 2, 3], other]);
+  });
+
+  it('should return empty when first is empty', () => {
+    expect(
+      pipe(
+        [],
+        zipWith(['a', 'b'], (a, b) => `${a}${b}`),
+      ),
+    ).toStrictEqual([]);
   });
 });

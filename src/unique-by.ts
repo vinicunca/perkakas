@@ -1,6 +1,7 @@
 import type { BrandedReturn } from './internal/types/branded-return';
 import type { Deduped } from './internal/types/deduped';
 import type { IterableContainer } from './internal/types/iterable-container';
+import type { LazyCallback } from './internal/types/lazy-callback';
 import type { LazyEvaluator } from './internal/types/lazy-evaluator';
 import { curryFromLazy } from './internal/curry-from-lazy';
 import { SKIP_ITEM } from './internal/utility-evaluators';
@@ -24,7 +25,7 @@ import { SKIP_ITEM } from './internal/utility-evaluators';
  */
 export function uniqueBy<T extends IterableContainer>(
   data: T,
-  keyFunction: (item: T[number], index: number, data: T) => unknown,
+  keyFunction: LazyCallback<T, unknown>,
 ): Deduped<T>;
 
 /**
@@ -45,7 +46,7 @@ export function uniqueBy<T extends IterableContainer>(
  * @category Array
  */
 export function uniqueBy<T extends IterableContainer>(
-  keyFunction: (item: T[number], index: number, data: T) => unknown,
+  keyFunction: LazyCallback<T, unknown>,
 ): (data: T) => Deduped<T>;
 
 export function uniqueBy(...args: ReadonlyArray<unknown>): unknown {

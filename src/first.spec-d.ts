@@ -1,114 +1,132 @@
-import { expectTypeOf, it } from 'vitest';
+import { expectTypeOf, test } from 'vitest';
 import { first } from './first';
 
-it('simple empty array', () => {
+test('simple empty array', () => {
   const arr: Array<number> = [];
   const result = first(arr);
 
   expectTypeOf(result).toEqualTypeOf<number | undefined>();
 });
 
-it('simple array', () => {
+test('simple array', () => {
   const arr: Array<number> = [1];
   const result = first(arr);
 
   expectTypeOf(result).toEqualTypeOf<number | undefined>();
 });
 
-it('simple non-empty array', () => {
+test('simple non-empty array', () => {
   const arr: [number, ...Array<number>] = [1];
   const result = first(arr);
 
   expectTypeOf(result).toEqualTypeOf<number>();
 });
 
-it('simple tuple', () => {
+test('simple tuple', () => {
   const arr: [number, string] = [1, 'a'];
   const result = first(arr);
 
   expectTypeOf(result).toEqualTypeOf<number>();
 });
 
-it('array with more than one item', () => {
+test('array with more than one item', () => {
   const arr: [number, number, ...Array<number>] = [1, 2];
   const result = first(arr);
 
   expectTypeOf(result).toEqualTypeOf<number>();
 });
 
-it('trivial empty array', () => {
+test('trivial empty array', () => {
   const arr: [] = [];
   const result = first(arr);
 
   expectTypeOf(result).toEqualTypeOf(undefined);
 });
 
-it('array with last', () => {
+test('array with last', () => {
   const arr: [...Array<number>, number] = [1];
   const result = first(arr);
 
   expectTypeOf(result).toEqualTypeOf<number>();
 });
 
-it('tuple with last', () => {
+test('tuple with last', () => {
   const arr: [...Array<string>, number] = ['a', 1];
   const result = first(arr);
 
   expectTypeOf(result).toEqualTypeOf<number | string>();
 });
 
-it('simple empty readonly array', () => {
+test('simple empty readonly array', () => {
   const arr: ReadonlyArray<number> = [];
   const result = first(arr);
 
   expectTypeOf(result).toEqualTypeOf<number | undefined>();
 });
 
-it('simple readonly array', () => {
+test('simple readonly array', () => {
   const arr: ReadonlyArray<number> = [1];
   const result = first(arr);
 
   expectTypeOf(result).toEqualTypeOf<number | undefined>();
 });
 
-it('simple non-empty readonly array', () => {
+test('simple non-empty readonly array', () => {
   const arr: readonly [number, ...Array<number>] = [1];
   const result = first(arr);
 
   expectTypeOf(result).toEqualTypeOf<number>();
 });
 
-it('simple readonly tuple', () => {
+test('simple readonly tuple', () => {
   const arr: readonly [number, string] = [1, 'a'];
   const result = first(arr);
 
   expectTypeOf(result).toEqualTypeOf<number>();
 });
 
-it('readonly array with more than one item', () => {
+test('readonly array with more than one item', () => {
   const arr: readonly [number, number, ...Array<number>] = [1, 2];
   const result = first(arr);
 
   expectTypeOf(result).toEqualTypeOf<number>();
 });
 
-it('readonly trivial empty array', () => {
+test('readonly trivial empty array', () => {
   const arr: readonly [] = [];
   const result = first(arr);
 
   expectTypeOf(result).toEqualTypeOf(undefined);
 });
 
-it('readonly array with last', () => {
+test('readonly array with last', () => {
   const arr: readonly [...Array<number>, number] = [1];
   const result = first(arr);
 
   expectTypeOf(result).toEqualTypeOf<number>();
 });
 
-it('readonly tuple with last', () => {
+test('readonly tuple with last', () => {
   const arr: readonly [...Array<string>, number] = ['a', 1];
   const result = first(arr);
 
   expectTypeOf(result).toEqualTypeOf<number | string>();
+});
+
+test('union of a tuple and an array', () => {
+  expectTypeOf(first([] as [number] | Array<string>)).toEqualTypeOf<
+    number | string | undefined
+  >();
+});
+
+test('union of optional and fixed tuples', () => {
+  expectTypeOf(first([] as [number?] | [string])).toEqualTypeOf<
+    number | string | undefined
+  >();
+});
+
+test('union of non-empty arrays', () => {
+  expectTypeOf(first(['a'] as [...Array<number>, string] | [boolean])).toEqualTypeOf<
+    number | string | boolean
+  >();
 });

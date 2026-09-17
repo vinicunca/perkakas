@@ -35,4 +35,4 @@
  * place and add an `eslint-disable-next-line` with the suspected bug noted in
  * the reason.
  */
-export declare function $typed<T = never>(): T;
+export declare function $typed<T>(): T;

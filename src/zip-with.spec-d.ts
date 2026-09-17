@@ -1,8 +1,8 @@
-import { expectTypeOf, it } from 'vitest';
+import { describe, expectTypeOf, it, test } from 'vitest';
 import { pipe } from './pipe';
 import { zipWith } from './zip-with';
 
-it('data first typings', () => {
+test('data first typings', () => {
   const actual = zipWith(
     ['1', '2', '3'],
     ['a', 'b', 'c'],
@@ -12,7 +12,7 @@ it('data first typings', () => {
   expectTypeOf(actual).toEqualTypeOf<Array<string>>();
 });
 
-it('data second typings', () => {
+test('data second typings', () => {
   const actual = zipWith((a: string, b: string) => `${a}${b}`)(
     ['1', '2', '3'],
     ['a', 'b', 'c'],
@@ -21,11 +21,40 @@ it('data second typings', () => {
   expectTypeOf(actual).toEqualTypeOf<Array<string>>();
 });
 
-it('data second with initial arg typings', () => {
+test('data second with initial arg typings', () => {
   const actual = pipe(
     ['1', '2', '3'],
     zipWith(['a', 'b', 'c'], (a, b) => `${a}${b}`),
   );
 
   expectTypeOf(actual).toEqualTypeOf<Array<string>>();
+});
+
+describe('callback data param', () => {
+  it('complete in data-first', () => {
+    zipWith(
+      [1, 2, 3] as const,
+      ['a', 'b'] as const,
+      (_first, _second, _index, data) => {
+        expectTypeOf(data).toEqualTypeOf<
+          readonly [readonly [1, 2, 3], readonly ['a', 'b']]
+        >();
+
+        return 0;
+      },
+    );
+  });
+
+  it('first datum is lazily reconstructed in data-last', () => {
+    pipe(
+      [1, 2, 3] as const,
+      zipWith(['a', 'b'] as const, (_first, _second, _index, data) => {
+        expectTypeOf(data).toEqualTypeOf<
+          readonly [readonly [1, 2?, 3?], readonly ['a', 'b']]
+        >();
+
+        return 0;
+      }),
+    );
+  });
 });

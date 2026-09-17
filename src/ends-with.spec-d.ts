@@ -1,38 +1,49 @@
+/* eslint-disable ts/explicit-function-return-type */
+/* eslint-disable sonar/no-all-duplicated-branches */
 import { describe, expectTypeOf, it } from 'vitest';
+import { $typed } from '../test/$typed';
 import { endsWith } from './ends-with';
+import { filter } from './filter';
+import { isNot } from './is-not';
+import { map } from './map';
 import { partition } from './partition';
+import { pipe } from './pipe';
 
 describe('data-first', () => {
-  it('doesn\'t narrow on \'string\' prefix', () => {
-    const data = 'foobar' as string;
-    // eslint-disable-next-line sonar/no-all-duplicated-branches
-    if (endsWith(data, 'bar' as string)) {
+  it('doesn\'t narrow on \'string\' suffix', () => {
+    const data = '' as string;
+
+    expectTypeOf(endsWith(data, '' as string)).toEqualTypeOf<boolean>();
+
+    if (endsWith(data, '' as string)) {
       expectTypeOf(data).toEqualTypeOf<string>();
     } else {
       expectTypeOf(data).toEqualTypeOf<string>();
+    }
+  });
+
+  it('doesn\'t narrow a literal union on \'string\' suffix', () => {
+    const data = 'cat' as 'cat' | 'dog';
+
+    expectTypeOf(endsWith(data, '' as string)).toEqualTypeOf<boolean>();
+
+    if (endsWith(data, '' as string)) {
+      expectTypeOf(data).toEqualTypeOf<'cat' | 'dog'>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<'cat' | 'dog'>();
     }
   });
 
   it('const data that matches', () => {
-    const data = 'foobar' as const;
-    if (endsWith(data, 'bar')) {
-      expectTypeOf(data).toEqualTypeOf<'foobar'>();
-    } else {
-      expectTypeOf(data).toEqualTypeOf<never>();
-    }
+    expectTypeOf(endsWith('foobar' as const, 'bar')).toEqualTypeOf<true>();
   });
 
-  it('const data that doesn\'t match', () => {
-    const data = 'helloworld' as const;
-    if (endsWith(data, 'bar')) {
-      expectTypeOf(data).toEqualTypeOf<never>();
-    } else {
-      expectTypeOf(data).toEqualTypeOf<'helloworld'>();
-    }
+  it('suffix equal to the data', () => {
+    expectTypeOf(endsWith('foo' as const, 'foo')).toEqualTypeOf<true>();
   });
 
   it('primitive string data', () => {
-    const data = 'foobar' as string;
+    const data = '' as string;
     if (endsWith(data, 'bar')) {
       expectTypeOf(data).toEqualTypeOf<`${string}bar`>();
     } else {
@@ -41,23 +52,9 @@ describe('data-first', () => {
   });
 
   it('template literal data that matches', () => {
-    const data = '1_bar' as `${number}_bar`;
-    if (endsWith(data, 'bar')) {
-      expectTypeOf(data).toEqualTypeOf<`${number}_bar`>();
-    } else {
-      expectTypeOf(data).toEqualTypeOf<never>();
-    }
-  });
-
-  it('template literal data that doesn\'t match', () => {
-    const data = '1_bar' as `${number}_bar`;
-    if (endsWith(data, 'world')) {
-      // These should be equivalent to `never` but TypeScript doesn't infer
-      // that...
-      expectTypeOf(data).toEqualTypeOf<`${number}_bar` & `${string}world`>();
-    } else {
-      expectTypeOf(data).toEqualTypeOf<`${number}_bar`>();
-    }
+    expectTypeOf(
+      endsWith('1_bar' as `${number}_bar`, 'bar'),
+    ).toEqualTypeOf<true>();
   });
 
   it('literal union', () => {
@@ -69,6 +66,14 @@ describe('data-first', () => {
     }
   });
 
+  it('empty suffix', () => {
+    expectTypeOf(endsWith('cat' as 'cat' | 'dog', '')).toEqualTypeOf<true>();
+  });
+
+  it('empty suffix on primitive string data', () => {
+    expectTypeOf(endsWith('' as string, '')).toEqualTypeOf<true>();
+  });
+
   it('template union', () => {
     const data = 'cat' as `${boolean}_dog` | `${number}_cat`;
     if (endsWith(data, 't')) {
@@ -77,28 +82,236 @@ describe('data-first', () => {
       expectTypeOf(data).toEqualTypeOf<`${boolean}_dog`>();
     }
   });
+
+  describe('compiles inside a generic wrapper', () => {
+    // Dead suffixes (#1432) are rejected through a conditional on the
+    // parameter type. While `T` or `Suffix` is still an unresolved type
+    // parameter that conditional stays deferred, and TypeScript accepts the
+    // argument only if every branch it can't rule out accepts it; a live
+    // rejection branch fails the whole call (ts2769). The call inside each
+    // wrapper is what's under test; the assertion pins which overload it
+    // resolved to.
+
+    it('generic data, literal suffix', () => {
+      const endsWithBar = <T extends string>(data: T) =>
+        endsWith(data, 'bar') ? data : undefined;
+
+      // The narrowing overload is the one picked through the wrapper; falling
+      // through to the boolean overload would leave `data` a plain `string`.
+      expectTypeOf(endsWithBar($typed<string>())).toEqualTypeOf<
+        `${string}bar` | undefined
+      >();
+    });
+
+    it('generic suffix, primitive data', () => {
+      const hasSuffix = <Suffix extends string>(data: string, suffix: Suffix) =>
+        endsWith(data, suffix);
+
+      expectTypeOf(hasSuffix('foobar', 'bar')).toEqualTypeOf<boolean>();
+    });
+
+    it('generic suffix, literal data', () => {
+      const hasSuffix = <Suffix extends string>(suffix: Suffix) =>
+        endsWith($typed<'cat' | 'dog'>(), suffix);
+
+      // An unresolved suffix can't narrow anything, so the boolean overload is
+      // the right one.
+      expectTypeOf(hasSuffix('bird')).toEqualTypeOf<boolean>();
+    });
+
+    it('generic data, primitive suffix', () => {
+      const hasSuffix = <T extends string>(data: T, suffix: string) =>
+        endsWith(data, suffix);
+
+      expectTypeOf(hasSuffix('foobar', 'bar')).toEqualTypeOf<boolean>();
+    });
+
+    it('generic data and suffix', () => {
+      const hasSuffix = <T extends string, Suffix extends string>(
+        data: T,
+        suffix: Suffix,
+      ) => endsWith(data, suffix);
+
+      expectTypeOf(hasSuffix('foobar', 'bar')).toEqualTypeOf<boolean>();
+    });
+
+    it('data constrained by the suffix', () => {
+      const endsWithBar = <T extends `${string}bar`>(data: T) =>
+        endsWith(data, 'bar') ? undefined : data;
+
+      // The narrowing overload empties the falsy branch; the boolean overload
+      // would leave `data` as `T` there.
+      expectTypeOf(endsWithBar('foobar')).toEqualTypeOf<undefined>();
+    });
+  });
+
+  it('literal union suffix', () => {
+    const data = '' as string;
+    if (endsWith(data, 'bar' as 'bar' | 'baz')) {
+      expectTypeOf(data).toEqualTypeOf<`${string}bar` | `${string}baz`>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<string>();
+    }
+  });
+
+  it('doesn\'t narrow when the suffix union splits the data', () => {
+    const data = 'foobar' as 'foobar' | 'hello' | 'world';
+
+    expectTypeOf(
+      endsWith(data, 'bar' as 'bar' | 'lo'),
+    ).toEqualTypeOf<boolean>();
+
+    if (endsWith(data, 'bar' as 'bar' | 'lo')) {
+      expectTypeOf(data).toEqualTypeOf<'foobar' | 'hello' | 'world'>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<'foobar' | 'hello' | 'world'>();
+    }
+  });
+
+  it('doesn\'t narrow when only some suffixes are disjoint', () => {
+    const data = 'cat' as 'cat' | 'dog';
+
+    expectTypeOf(endsWith(data, 't' as 't' | 'bird')).toEqualTypeOf<boolean>();
+
+    if (endsWith(data, 't' as 't' | 'bird')) {
+      expectTypeOf(data).toEqualTypeOf<'cat' | 'dog'>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<'cat' | 'dog'>();
+    }
+  });
+
+  it('narrows a union when every data member matches all suffixes or none', () => {
+    const data = 'catcat' as 'catcat' | 'dog';
+    if (endsWith(data, 'cat' as 'cat' | 't')) {
+      expectTypeOf(data).toEqualTypeOf<'catcat'>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<'dog'>();
+    }
+  });
+
+  it('doesn\'t narrow a matching const to \'never\' on a union suffix', () => {
+    const data = 'foobar' as const;
+
+    expectTypeOf(
+      endsWith(data, 'bar' as 'bar' | 'lo'),
+    ).toEqualTypeOf<boolean>();
+
+    if (endsWith(data, 'bar' as 'bar' | 'lo')) {
+      expectTypeOf(data).toEqualTypeOf<'foobar'>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<'foobar'>();
+    }
+  });
+
+  it('union suffix where every member matches', () => {
+    expectTypeOf(
+      endsWith('foobar' as const, 'bar' as 'bar' | 'r'),
+    ).toEqualTypeOf<true>();
+  });
+
+  it('union suffix mixing a literal and a template member', () => {
+    expectTypeOf(
+      endsWith('foobar' as const, 'bar' as 'bar' | `_${number}`),
+    ).toEqualTypeOf<boolean>();
+  });
+
+  it('every member of a literal union data matches a literal suffix', () => {
+    expectTypeOf(
+      endsWith('foobar' as 'foobar' | 'bazbar', 'bar'),
+    ).toEqualTypeOf<true>();
+  });
+
+  it('every member of a literal union data matches every member of a union suffix', () => {
+    expectTypeOf(
+      endsWith('foobar' as 'foobar' | 'bazbar', 'bar' as 'bar' | 'r'),
+    ).toEqualTypeOf<true>();
+  });
+
+  it('template suffix', () => {
+    const data = '' as string;
+    if (endsWith(data, '1' as `${number}`)) {
+      expectTypeOf(data).toEqualTypeOf<`${string}${number}`>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<string>();
+    }
+  });
+
+  it('doesn\'t narrow on a template suffix that splits the data', () => {
+    const data = 'cat_1' as 'cat_1' | 'dog';
+
+    expectTypeOf(endsWith(data, '_1' as `_${number}`)).toEqualTypeOf<boolean>();
+
+    if (endsWith(data, '_1' as `_${number}`)) {
+      expectTypeOf(data).toEqualTypeOf<'cat_1' | 'dog'>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<'cat_1' | 'dog'>();
+    }
+  });
+
+  it('doesn\'t narrow on a template suffix on template data', () => {
+    const data = '1_bar' as `${number}_bar`;
+
+    expectTypeOf(
+      endsWith(data, '_bar' as `_${string}`),
+    ).toEqualTypeOf<boolean>();
+
+    if (endsWith(data, '_bar' as `_${string}`)) {
+      expectTypeOf(data).toEqualTypeOf<`${number}_bar`>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<`${number}_bar`>();
+    }
+  });
+
+  it('doesn\'t narrow when a union suffix contains an empty string', () => {
+    const data = 'cat' as 'cat' | 'dog';
+
+    expectTypeOf(endsWith(data, '' as '' | 'z')).toEqualTypeOf<boolean>();
+
+    if (endsWith(data, '' as '' | 'z')) {
+      expectTypeOf(data).toEqualTypeOf<'cat' | 'dog'>();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<'cat' | 'dog'>();
+    }
+  });
+
+  it('template union suffix', () => {
+    const data = '' as string;
+    if (endsWith(data, '_1' as `_${number}` | `-${number}`)) {
+      expectTypeOf(data).toEqualTypeOf<
+        `${string}_${number}` | `${string}-${number}`
+      >();
+    } else {
+      expectTypeOf(data).toEqualTypeOf<string>();
+    }
+  });
 });
 
 describe('data-last', () => {
-  it('doesn\'t narrow on \'string\' prefix', () => {
-    const [yes, no] = partition([] as Array<string>, endsWith('bar' as string));
+  it('doesn\'t narrow on \'string\' suffix', () => {
+    const [yes, no] = partition([] as Array<string>, endsWith('' as string));
 
     expectTypeOf(yes).toEqualTypeOf<Array<string>>();
     expectTypeOf(no).toEqualTypeOf<Array<string>>();
   });
 
-  it('const data that matches', () => {
-    const [yes, no] = partition([] as Array<'foobar'>, endsWith('bar'));
+  it('doesn\'t narrow a literal union on \'string\' suffix', () => {
+    const [yes, no] = partition(
+      [] as Array<'cat' | 'dog'>,
+      endsWith('' as string),
+    );
 
-    expectTypeOf(yes).toEqualTypeOf<Array<'foobar'>>();
-    expectTypeOf(no).toEqualTypeOf<Array<never>>();
+    expectTypeOf(yes).toEqualTypeOf<Array<'cat' | 'dog'>>();
+    expectTypeOf(no).toEqualTypeOf<Array<'cat' | 'dog'>>();
   });
 
-  it('const data that doesn\'t match', () => {
-    const [yes, no] = partition([] as Array<'helloworld'>, endsWith('bar'));
+  it('const data that matches', () => {
+    expectTypeOf(
+      pipe('foobar' as const, endsWith('bar')),
+    ).toEqualTypeOf<true>();
+  });
 
-    expectTypeOf(yes).toEqualTypeOf<Array<never>>();
-    expectTypeOf(no).toEqualTypeOf<Array<'helloworld'>>();
+  it('suffix equal to the data', () => {
+    expectTypeOf(pipe('foo' as const, endsWith('foo'))).toEqualTypeOf<true>();
   });
 
   it('primitive string data', () => {
@@ -109,21 +322,9 @@ describe('data-last', () => {
   });
 
   it('template literal data that matches', () => {
-    const [yes, no] = partition([] as Array<`${number}_bar`>, endsWith('bar'));
-
-    expectTypeOf(yes).branded.toEqualTypeOf<Array<`${number}_bar`>>();
-    expectTypeOf(no).toEqualTypeOf<Array<never>>();
-  });
-
-  it('template literal data that doesn\'t match', () => {
-    const [yes, no] = partition([] as Array<`${number}_bar`>, endsWith('world'));
-
-    expectTypeOf(yes).toEqualTypeOf<
-      // These should be equivalent to `never` but TypeScript doesn't infer
-      // that...
-      Array<`${number}_bar` & `${string}world`>
-    >();
-    expectTypeOf(no).toEqualTypeOf<Array<`${number}_bar`>>();
+    expectTypeOf(
+      pipe('1_bar' as `${number}_bar`, endsWith('bar')),
+    ).toEqualTypeOf<true>();
   });
 
   it('literal union', () => {
@@ -131,6 +332,29 @@ describe('data-last', () => {
 
     expectTypeOf(yes).toEqualTypeOf<Array<'cat'>>();
     expectTypeOf(no).toEqualTypeOf<Array<'dog'>>();
+  });
+
+  it('empty suffix', () => {
+    expectTypeOf(
+      pipe('cat' as 'cat' | 'dog', endsWith('')),
+    ).toEqualTypeOf<true>();
+  });
+
+  it('empty suffix on primitive string data', () => {
+    expectTypeOf(pipe('' as string, endsWith(''))).toEqualTypeOf<true>();
+  });
+
+  it('guaranteed suffix through a callback consumer', () => {
+    expectTypeOf(map([] as Array<'foobar'>, endsWith('bar'))).toEqualTypeOf<
+      Array<true>
+    >();
+  });
+
+  it('guaranteed suffix through a filtering consumer', () => {
+    const [yes, no] = partition([] as Array<'foobar'>, endsWith('bar'));
+
+    expectTypeOf(yes).toEqualTypeOf<Array<'foobar'>>();
+    expectTypeOf(no).toEqualTypeOf<[]>();
   });
 
   it('template union', () => {
@@ -141,5 +365,381 @@ describe('data-last', () => {
 
     expectTypeOf(yes).branded.toEqualTypeOf<Array<`${number}_cat`>>();
     expectTypeOf(no).toEqualTypeOf<Array<`${boolean}_dog`>>();
+  });
+
+  it('type parameters inferred through composition', () => {
+    expectTypeOf(
+      filter([] as Array<'cat' | 'dog'>, isNot(endsWith('t'))),
+    ).toEqualTypeOf<Array<'dog'>>();
+  });
+
+  it('guaranteed suffix negated through composition', () => {
+    expectTypeOf(
+      filter([] as Array<'cat' | 'dog'>, isNot(endsWith(''))),
+    ).toEqualTypeOf<[]>();
+  });
+
+  it('generic data', () => {
+    const endsWithBarAll = <T extends string>(data: ReadonlyArray<T>) =>
+      filter(data, endsWith('bar'));
+
+    expectTypeOf(endsWithBarAll([] as Array<string>)).toEqualTypeOf<
+      Array<`${string}bar`>
+    >();
+  });
+
+  it('literal union suffix', () => {
+    const [yes, no] = partition(
+      [] as Array<string>,
+      endsWith('bar' as 'bar' | 'baz'),
+    );
+
+    expectTypeOf(yes).toEqualTypeOf<Array<`${string}bar` | `${string}baz`>>();
+    expectTypeOf(no).toEqualTypeOf<Array<string>>();
+  });
+
+  it('doesn\'t narrow when the suffix union splits the data', () => {
+    const [yes, no] = partition(
+      [] as Array<'foobar' | 'hello' | 'world'>,
+      endsWith('bar' as 'bar' | 'lo'),
+    );
+
+    expectTypeOf(yes).toEqualTypeOf<Array<'foobar' | 'hello' | 'world'>>();
+    expectTypeOf(no).toEqualTypeOf<Array<'foobar' | 'hello' | 'world'>>();
+  });
+
+  it('doesn\'t narrow when only some suffixes are disjoint', () => {
+    const [yes, no] = partition(
+      [] as Array<'cat' | 'dog'>,
+      endsWith('t' as 't' | 'bird'),
+    );
+
+    expectTypeOf(yes).toEqualTypeOf<Array<'cat' | 'dog'>>();
+    expectTypeOf(no).toEqualTypeOf<Array<'cat' | 'dog'>>();
+  });
+
+  it('doesn\'t narrow a matching const to \'never\' on a union suffix', () => {
+    const [yes, no] = partition(
+      [] as Array<'foobar'>,
+      endsWith('bar' as 'bar' | 'lo'),
+    );
+
+    expectTypeOf(yes).toEqualTypeOf<Array<'foobar'>>();
+    expectTypeOf(no).toEqualTypeOf<Array<'foobar'>>();
+  });
+
+  it('union suffix where every member matches', () => {
+    expectTypeOf(
+      pipe('foobar' as const, endsWith('bar' as 'bar' | 'r')),
+    ).toEqualTypeOf<true>();
+  });
+
+  it('union suffix mixing a literal and a template member', () => {
+    expectTypeOf(
+      pipe('foobar' as const, endsWith('bar' as 'bar' | `_${number}`)),
+    ).toEqualTypeOf<boolean>();
+  });
+
+  it('guaranteed suffix on a literal union data through a callback consumer', () => {
+    expectTypeOf(
+      map([] as Array<'foobar' | 'bazbar'>, endsWith('bar')),
+    ).toEqualTypeOf<Array<true>>();
+  });
+
+  it('template suffix', () => {
+    const [yes, no] = partition([] as Array<string>, endsWith('1' as `${number}`));
+
+    expectTypeOf(yes).toEqualTypeOf<Array<`${string}${number}`>>();
+    expectTypeOf(no).toEqualTypeOf<Array<string>>();
+  });
+
+  it('doesn\'t narrow on a template suffix that splits the data', () => {
+    const [yes, no] = partition(
+      [] as Array<'cat_1' | 'dog'>,
+      endsWith('_1' as `_${number}`),
+    );
+
+    expectTypeOf(yes).toEqualTypeOf<Array<'cat_1' | 'dog'>>();
+    expectTypeOf(no).toEqualTypeOf<Array<'cat_1' | 'dog'>>();
+  });
+
+  it('doesn\'t narrow on a template suffix on template data', () => {
+    const [yes, no] = partition(
+      [] as Array<`${number}_bar`>,
+      endsWith('_bar' as `_${string}`),
+    );
+
+    expectTypeOf(yes).toEqualTypeOf<Array<`${number}_bar`>>();
+    expectTypeOf(no).toEqualTypeOf<Array<`${number}_bar`>>();
+  });
+
+  it('doesn\'t narrow when a union suffix contains an empty string', () => {
+    const [yes, no] = partition(
+      [] as Array<'cat' | 'dog'>,
+      endsWith('' as '' | 'z'),
+    );
+
+    expectTypeOf(yes).toEqualTypeOf<Array<'cat' | 'dog'>>();
+    expectTypeOf(no).toEqualTypeOf<Array<'cat' | 'dog'>>();
+  });
+
+  it('template union suffix', () => {
+    const [yes, no] = partition(
+      [] as Array<string>,
+      endsWith('_1' as `_${number}` | `-${number}`),
+    );
+
+    expectTypeOf(yes).toEqualTypeOf<
+      Array<`${string}_${number}` | `${string}-${number}`>
+    >();
+    expectTypeOf(no).toEqualTypeOf<Array<string>>();
+  });
+});
+
+// @see https://github.com/remeda/remeda/issues/1432
+describe('reject disjoint suffixes (#1432)', () => {
+  it('const data that doesn\'t match', () => {
+    endsWith(
+      'helloworld' as const,
+      // @ts-expect-error [ts2769] -- Intentional! this is what we're testing...
+      'foo',
+    );
+  });
+
+  it('suffix longer than the data', () => {
+    endsWith(
+      'foo' as const,
+      // @ts-expect-error [ts2769] -- Intentional! this is what we're testing...
+      'barfoo',
+    );
+  });
+
+  it('literal union where no member matches', () => {
+    endsWith(
+      'cat' as 'cat' | 'dog',
+      // @ts-expect-error [ts2769] -- Intentional! this is what we're testing...
+      'bird',
+    );
+  });
+
+  it('union suffix where no member matches', () => {
+    endsWith(
+      'cat' as 'cat' | 'dog',
+      // @ts-expect-error [ts2769] -- Intentional! this is what we're testing...
+      'bird' as 'bird' | 'fish',
+    );
+  });
+
+  it('template suffix that no literal matches', () => {
+    endsWith(
+      'cat' as 'cat' | 'dog',
+      // @ts-expect-error [ts2769] -- Intentional! this is what we're testing...
+      '_1' as `_${number}`,
+    );
+  });
+
+  it('union suffix mixing a literal and a template member where neither matches', () => {
+    endsWith(
+      'foobar' as const,
+      // @ts-expect-error [ts2769] -- Intentional! this is what we're testing...
+      'x' as 'x' | `_${number}`,
+    );
+  });
+
+  describe('data-last', () => {
+    it('const data that doesn\'t match', () => {
+      filter(
+        [] as Array<'helloworld'>,
+        // @ts-expect-error [ts2769] -- Intentional! this is what we're testing...
+        endsWith('foo'),
+      );
+    });
+
+    it('suffix longer than the data', () => {
+      filter(
+        [] as Array<'foo'>,
+        // @ts-expect-error [ts2769] -- Intentional! this is what we're testing...
+        endsWith('barfoo'),
+      );
+    });
+
+    it('literal union where no member matches', () => {
+      filter(
+        [] as Array<'cat' | 'dog'>,
+        // @ts-expect-error [ts2769] -- Intentional! this is what we're testing...
+        endsWith('bird'),
+      );
+    });
+
+    it('union suffix where no member matches', () => {
+      filter(
+        [] as Array<'cat' | 'dog'>,
+        // @ts-expect-error [ts2769] -- Intentional! this is what we're testing...
+        endsWith('bird' as 'bird' | 'fish'),
+      );
+    });
+
+    it('template suffix that no literal matches', () => {
+      filter(
+        [] as Array<'cat' | 'dog'>,
+        // @ts-expect-error [ts2769] -- Intentional! this is what we're testing...
+        endsWith('_1' as `_${number}`),
+      );
+    });
+
+    it('in pipe', () => {
+      pipe(
+        // @ts-expect-error [ts2345] -- Intentional! this is what we're testing...
+        'cat' as 'cat' | 'dog',
+        endsWith('bird'),
+      );
+    });
+
+    it('native array methods', () => {
+      // eslint-disable-next-line unicorn/no-unused-array-method-return -- Intentional! just used for testing...
+      ([] as Array<'cat' | 'dog'>).filter(
+        // @ts-expect-error [ts2769] -- Intentional! this is what we're testing...
+        endsWith('bird'),
+      );
+    });
+  });
+});
+
+describe('known issues!', () => {
+  describe('dead suffixes aren\'t rejected through a type parameter', () => {
+    it('data-first', () => {
+      // Expected: the call is rejected, exactly like
+      // `endsWith("cat" as "cat" | "dog", "bird")` is (see "reject disjoint
+      // suffixes"); nothing that satisfies the constraint can end with
+      // "bird".
+      //
+      // Actual: it compiles. `IsDisjointSuffix` short-circuits to `false`
+      // while `T` is an unresolved type parameter so that wrappers over a
+      // plain `string` keep compiling, and that also waves through a suffix
+      // that is dead for a narrower constraint. TypeScript itself does know
+      // the check is dead: it narrows `data` to `never` in the truthy branch,
+      // which is why the result collapses to `undefined`.
+      const endsWithBird = <T extends 'cat' | 'dog'>(data: T) =>
+        endsWith(data, 'bird') ? data : undefined;
+
+      expectTypeOf(endsWithBird('cat')).toEqualTypeOf<undefined>();
+    });
+
+    it('data-last', () => {
+      // Expected: the call is rejected, exactly like it is on a concrete
+      // `("cat" | "dog")[]` (see "reject disjoint suffixes" > "data-last").
+      //
+      // Actual: it compiles. The rejection overload infers `T` from the
+      // wrapper's type parameter, hits the same short-circuit, and never
+      // matches; the narrowing overload then filters everything out.
+      const endsWithBirdAll = <T extends 'cat' | 'dog'>(data: ReadonlyArray<T>) =>
+        filter(data, endsWith('bird'));
+
+      expectTypeOf(endsWithBirdAll(['cat'])).toEqualTypeOf<[]>();
+    });
+  });
+
+  describe('guaranteed suffixes aren\'t typed `true` through a type parameter', () => {
+    it('data-first', () => {
+      // `IsGuaranteedSuffix` stays deferred while `T` is an unresolved type
+      // parameter, and TypeScript only proves a deferred conditional by
+      // instantiating it with the type parameter stripped of its constraint,
+      // which no suffix is guaranteed for; the narrowing guard is picked
+      // instead.
+      const hasBarSuffix = <T extends `${string}bar`>(data: T) =>
+        endsWith(data, 'bar');
+      const hasSuffix = hasBarSuffix('foobar');
+
+      expectTypeOf(hasSuffix).toEqualTypeOf<boolean>();
+      // Everything that satisfies the constraint ends with "bar".
+      expectTypeOf(hasSuffix).not.toEqualTypeOf<true>();
+    });
+
+    it('data-last', () => {
+      // The `true` overload infers `T` from the wrapper's type parameter, hits
+      // the same deferral, and never matches; the narrowing guard is picked
+      // instead.
+      const endsWithBarAll = <T extends `${string}bar`>(data: ReadonlyArray<T>) =>
+        map(data, endsWith('bar'));
+      const result = endsWithBarAll(['foobar']);
+
+      expectTypeOf(result).items.toEqualTypeOf<boolean>();
+      // Everything that satisfies the constraint ends with "bar".
+      expectTypeOf(result).items.not.toEqualTypeOf<true>();
+    });
+  });
+
+  describe('template literals with an impossible suffix aren\'t rejected', () => {
+    it('data-first', () => {
+      const data = '1_bar' as `${number}_bar`;
+
+      // If template literals worked the same as literals and union literals
+      // this call itself would be rejected.
+      const isEndsWith = endsWith(data, 'world');
+
+      if (isEndsWith) {
+        // Rejecting an impossible suffix relies on TypeScript reducing the
+        // intersection with the suffix template to `never`. It only does that
+        // for bounded types; an intersection of two unbounded template
+        // literals is left as-is even when they are disjoint, so the check is
+        // accepted and the `true` branch is typed with an uninhabitable
+        // intersection instead.
+        // @see https://github.com/microsoft/TypeScript/issues/60446
+        expectTypeOf(data).toEqualTypeOf<`${number}_bar` & `${string}world`>();
+
+        // No strings satisfy this type, so it should be equivalent to `never`.
+        expectTypeOf(data).not.toEqualTypeOf<never>();
+      } else {
+        expectTypeOf(data).toEqualTypeOf<`${number}_bar`>();
+      }
+    });
+
+    it('data-last', () => {
+      // Once the intersection in `yes` correctly reduces to `never` this call
+      // itself would be rejected.
+      const [yes, no] = partition([] as Array<`${number}_bar`>, endsWith('world'));
+
+      expectTypeOf(yes).toEqualTypeOf<Array<`${number}_bar` & `${string}world`>>();
+      expectTypeOf(no).toEqualTypeOf<Array<`${number}_bar`>>();
+    });
+  });
+
+  describe('consumers that don\'t reject a dead-code check', () => {
+    it('isNot', () => {
+      // `isNot` resolves `endsWith` without a concrete data type, since its
+      // predicate slot is typed against `isNot`'s own unfixed type parameter;
+      // `endsWith`'s `T` is never inferred, so the rejection overload, which
+      // needs `T` to find the suffix dead, doesn't match and the generic
+      // guard is returned instead. `filter` instantiates that guard with
+      // `"cat" | "dog"` only afterwards, past the check. If the rejection
+      // ever fired here, the call itself would fail to compile.
+      const result = filter([] as Array<'cat' | 'dog'>, isNot(endsWith('bird')));
+
+      expectTypeOf(result).toEqualTypeOf<Array<'cat' | 'dog'>>();
+    });
+  });
+
+  describe('isNot bypasses the unsound-narrowing guard', () => {
+    it('union suffix where only some members are disjoint', () => {
+      // For a direct call, an unsound union suffix falls through to the
+      // plain-`boolean` overload and `partition` doesn't narrow at all (see
+      // "doesn't narrow when only some suffixes are disjoint" above). `isNot`
+      // resolves `endsWith` without a concrete data type though (see
+      // "consumers that don't reject a dead-code check"), so the soundness
+      // check has no `T` to compare against, the `boolean` overload built to
+      // reject this case doesn't match, and the generic guard is returned.
+      // The result narrows to `"dog"[]`, which is unsound: at runtime the
+      // suffix could be `"bird"`, in which case nothing ends with it, `isNot`
+      // is `true` for every element, and `"cat"` survives the filter too.
+      const result = filter(
+        [] as Array<'cat' | 'dog'>,
+        isNot(endsWith('t' as 't' | 'bird')),
+      );
+
+      expectTypeOf(result).toEqualTypeOf<Array<'dog'>>();
+      // If `isNot` ever resolved this through the sound `boolean` overload,
+      // it wouldn't narrow at all, matching the direct-call behavior above.
+      expectTypeOf(result).not.toEqualTypeOf<Array<'cat' | 'dog'>>();
+    });
   });
 });

@@ -2,5 +2,7 @@ allowBuilds:
   esbuild: true
 
 catalogMode: prefer
+minimumReleaseAgeExclude:
+  - '@vinicunca/eslint-config@5.7.1'
 shellEmulator: true
 trustPolicy: no-downgrade
