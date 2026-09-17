@@ -1,3 +1,4 @@
+/* eslint-disable sonar/no-ignored-return */
 /* eslint-disable ts/explicit-function-return-type */
 /* eslint-disable sonar/no-all-duplicated-branches */
 import { describe, expectTypeOf, it } from 'vitest';
@@ -496,7 +497,6 @@ describe('data-last', () => {
   });
 });
 
-// @see https://github.com/remeda/remeda/issues/1432
 describe('reject disjoint suffixes (#1432)', () => {
   it('const data that doesn\'t match', () => {
     endsWith(
@@ -596,7 +596,6 @@ describe('reject disjoint suffixes (#1432)', () => {
     });
 
     it('native array methods', () => {
-      // eslint-disable-next-line unicorn/no-unused-array-method-return -- Intentional! just used for testing...
       ([] as Array<'cat' | 'dog'>).filter(
         // @ts-expect-error [ts2769] -- Intentional! this is what we're testing...
         endsWith('bird'),

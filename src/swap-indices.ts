@@ -75,7 +75,7 @@ type SwapArray<
         // would be trivially the same as the input array.
           T
         : T
-      : // TODO [>3]: Because of limitations on the typescript version used in Remeda we can't build a proper Absolute number type so we can't implement proper typing for negative indices and have to opt for a less-strict type instead. Check out the history for the PR that introduced this TODO to see how it could be implemented.
+      : // TODO [>3]: Because of limitations on the typescript version used in Perkakas we can't build a proper Absolute number type so we can't implement proper typing for negative indices and have to opt for a less-strict type instead. Check out the history for the PR that introduced this TODO to see how it could be implemented.
       Array<T[number]>
     : Array<T[number]>;
 

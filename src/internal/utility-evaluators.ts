@@ -17,7 +17,7 @@ export const lazyEmptyEvaluator = <T>(): LazyResult<T> => EMPTY_PIPE;
  * A helper evaluator when we want to return a shallow clone of the input. It
  * memoizes both the evaluator itself to reduce memory usage.
  */
-// eslint-disable-next-line ts/explicit-function-return-type
+// eslint-disable-next-line ts/explicit-function-return-type, ts/explicit-module-boundary-types
 export function lazyIdentityEvaluator<T>(value: T) {
   return ({
     hasNext: true,

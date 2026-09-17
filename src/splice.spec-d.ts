@@ -157,7 +157,6 @@ describe('data-last', () => {
     ).toEqualTypeOf<Array<number | string>>();
   });
 
-  // @see https://github.com/remeda/remeda/pull/1358
   it('doesn\'t infer `never` from an empty `replacement` literal (#1358)', () => {
     expectTypeOf(pipe([] as Array<number>, splice(0, 0, []))).toEqualTypeOf<
       Array<number>

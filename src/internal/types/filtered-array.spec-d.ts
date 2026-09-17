@@ -881,7 +881,6 @@ test('null filtering', () => {
   ).toEqualTypeOf<Array<string>>();
 });
 
-// @see https://github.com/remeda/remeda/issues/1231
 test('prop with literal union value filtered by overlapping value (issue #1231)', () => {
   expectTypeOf(
     filteredArray([] as Array<{ a: 'cat' | 'dog'; b: string }>, {

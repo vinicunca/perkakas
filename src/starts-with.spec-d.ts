@@ -506,7 +506,6 @@ describe('data-last', () => {
   });
 });
 
-// @see https://github.com/remeda/remeda/issues/1432
 describe('reject disjoint prefixes (#1432)', () => {
   it('const data that doesn\'t match', () => {
     startsWith(
