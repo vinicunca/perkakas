@@ -54,5 +54,6 @@ export function toLowerCase(...args: ReadonlyArray<unknown>): unknown {
 }
 
 function toLowerCaseImplementation<T extends string>(data: T): Lowercase<T> {
+  // @ts-expect-error [ts2322] -- TypeScript can't infer this from the code...
   return data.toLowerCase();
 }

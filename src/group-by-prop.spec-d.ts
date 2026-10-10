@@ -1,5 +1,5 @@
 import type { EmptyObject } from 'type-fest';
-import { describe, expectTypeOf, it, test } from 'vitest';
+import { describe, expectTypeOf, it } from 'vitest';
 import { groupByProp } from './group-by-prop';
 
 declare const SYMBOL: unique symbol;
@@ -65,7 +65,7 @@ describe('grouping prop types', () => {
   });
 });
 
-test('values which might not exist in the input are optional in the output', () => {
+it('values which might not exist in the input are optional in the output', () => {
   expectTypeOf(
     groupByProp(
       [{ a: 'cat' }] as [{ a: 'cat' }, { a: 'mouse' }?, ...Array<{ a: 'dog' }>],
@@ -113,7 +113,7 @@ describe('enforces strong typing on the grouping prop', () => {
   });
 });
 
-test('group by prop that doesn\'t exist on all items', () => {
+it('group by prop that doesn\'t exist on all items', () => {
   expectTypeOf(
     groupByProp([{ a: 'cat' }, { b: 'dog' }] as const, 'a'),
   ).toEqualTypeOf<{
@@ -155,13 +155,13 @@ describe('union of array types', () => {
   });
 });
 
-test('all values are undefined', () => {
+it('all values are undefined', () => {
   expectTypeOf(
     groupByProp([] as Array<{ a: undefined }>, 'a'),
   ).toEqualTypeOf<EmptyObject>();
 });
 
-test('grouping on a prop with literal union values', () => {
+it('grouping on a prop with literal union values', () => {
   expectTypeOf(
     groupByProp([] as Array<{ a: 'cat' | 'dog'; b: string }>, 'a' as const),
   ).branded.toEqualTypeOf<{

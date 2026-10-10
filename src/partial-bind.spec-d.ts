@@ -1,4 +1,5 @@
 import { describe, expectTypeOf, it } from 'vitest';
+import { $missingPropertyType } from '../test/$missing-property-type';
 import { partialBind } from './partial-bind';
 
 describe('simple case (all required, no rest params)', () => {
@@ -94,6 +95,15 @@ describe('simple rest param case', () => {
     expectTypeOf(partialBind(fn, ...([] as Array<string>))).toEqualTypeOf<
       (...parts: ReadonlyArray<string>) => string
     >();
+  });
+
+  it('rest param typed with TypeScript\'s internal `missing` type', () => {
+    const values = $missingPropertyType();
+
+    // `missing` is indistinguishable from `undefined` in the expected type.
+    expectTypeOf(
+      partialBind((...{ length }: typeof values) => length, ...values),
+    ).toEqualTypeOf<(...parts: ReadonlyArray<string | undefined>) => number>();
   });
 
   it('should accept tuple typed partial arg with prefix', () => {

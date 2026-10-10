@@ -1,4 +1,3 @@
-/* eslint-disable sonar/argument-type */
 /**
  * Extracts a section of a string between two indices.
  *

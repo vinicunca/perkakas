@@ -1,34 +1,34 @@
-import { expectTypeOf, test } from 'vitest';
+import { expectTypeOf, it } from 'vitest';
 import { last } from './last';
 import { pipe } from './pipe';
 
-test('works with empty arrays', () => {
+it('works with empty arrays', () => {
   expectTypeOf(last([] as const)).toEqualTypeOf<undefined>();
 });
 
-test('works with regular arrays', () => {
+it('works with regular arrays', () => {
   const result = last([1, 2, 3] as Array<number>);
 
   expectTypeOf(result).toEqualTypeOf<number | undefined>();
 });
 
-test('works with non-empty arrays', () => {
+it('works with non-empty arrays', () => {
   const result = last([1] as [number, ...Array<number>]);
 
   expectTypeOf(result).toEqualTypeOf<number>();
 });
 
-test('should infer type in pipes', () => {
+it('should infer type in pipes', () => {
   const result = pipe('this is a text', (text) => [...text], last());
 
   expectTypeOf(result).toEqualTypeOf<string | undefined>();
 });
 
-test('can infer last type from const arrays', () => {
+it('can infer last type from const arrays', () => {
   expectTypeOf(last([3, 'a', false] as const)).toEqualTypeOf<false>();
 });
 
-test('a bit more complex example', () => {
+it('a bit more complex example', () => {
   const result = last([['a', 1] as const, true, { foo: 'bar' }] as const);
 
   expectTypeOf(result).toEqualTypeOf<{ readonly foo: 'bar' }>();

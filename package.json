@@ -48,7 +48,8 @@
     "test:coverage": "vitest run --coverage --project runtime",
     "test:prop": "vitest --project prop",
     "test:runtime": "vitest --project runtime",
-    "test:types": "vitest --project types"
+    "test:types": "vitest --project types",
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "@arethetypeswrong/core": "^0.18.5",

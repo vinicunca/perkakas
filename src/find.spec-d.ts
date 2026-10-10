@@ -1,5 +1,5 @@
 import type { Cat, Legged, Named } from '../test/interfaces';
-import { describe, expectTypeOf, it, test } from 'vitest';
+import { describe, expectTypeOf, it } from 'vitest';
 import { $typed } from '../test/$typed';
 import {
   isLegged,
@@ -14,81 +14,81 @@ import { isString } from './is-string';
 import { isTruthy } from './is-truthy';
 import { pipe } from './pipe';
 
-test('can narrow types', () => {
+it('can narrow types', () => {
   expectTypeOf(find([] as Array<number | string>, isString)).toEqualTypeOf<
     string | undefined
   >();
 });
 
-test('array where every item matches', () => {
+it('array where every item matches', () => {
   expectTypeOf(find([] as Array<string>, isString)).toEqualTypeOf<
     string | undefined
   >();
 });
 
-test('narrows when the predicate is wider than the item', () => {
+it('narrows when the predicate is wider than the item', () => {
   expectTypeOf(
     find([[1], 'a'] as Array<Array<number> | string>, isArray),
   ).toEqualTypeOf<Array<number> | undefined>();
 });
 
-test('accepts a union of array types', () => {
+it('accepts a union of array types', () => {
   expectTypeOf(find([] as Array<string> | Array<number>, isString)).toEqualTypeOf<
     string | undefined
   >();
 });
 
-test('predicate disjoint from the item', () => {
+it('predicate disjoint from the item', () => {
   expectTypeOf(find([] as Array<number>, isArray)).toEqualTypeOf<undefined>();
 });
 
-test('readonly tuple', () => {
+it('readonly tuple', () => {
   expectTypeOf(find([1, 'a', true] as const, isString)).toEqualTypeOf<'a'>();
 });
 
-test('readonly array', () => {
+it('readonly array', () => {
   expectTypeOf(
     find([] as ReadonlyArray<number | string>, isString),
   ).toEqualTypeOf<string | undefined>();
 });
 
-test('narrows with a guard incomparable to the item', () => {
+it('narrows with a guard incomparable to the item', () => {
   expectTypeOf(find([] as Array<Cat>, isLegged)).toEqualTypeOf<
     (Cat & Legged) | undefined
   >();
 });
 
-test('guard incomparable to a tuple item', () => {
+it('guard incomparable to a tuple item', () => {
   expectTypeOf(find($typed<[Cat]>(), isLegged)).toEqualTypeOf<
     (Cat & Legged) | undefined
   >();
 });
 
-test('object guard sharing no keys with the item', () => {
+it('object guard sharing no keys with the item', () => {
   expectTypeOf(find([] as Array<Cat>, isNamed)).toEqualTypeOf<
     (Cat & Named) | undefined
   >();
 });
 
-test('isPlainObject guard on interface items', () => {
+it('isPlainObject guard on interface items', () => {
   expectTypeOf(find([] as Array<Cat>, isPlainObject)).toEqualTypeOf<
     (Cat & Record<PropertyKey, unknown>) | undefined
   >();
 });
 
-test('`unknown` data', () => {
+it('`unknown` data', () => {
   expectTypeOf(find([] as Array<unknown>, isString)).toEqualTypeOf<
     string | undefined
   >();
 });
 
-test('narrows with a generic guard', () => {
+it('narrows with a generic guard', () => {
   expectTypeOf(find(['a', 0] as Array<string | 0>, isTruthy)).toEqualTypeOf<
     string | undefined
   >();
 });
 
-test('narrows with a negated guard', () => {
+it('narrows with a negated guard', () => {
   expectTypeOf(
     find([1, 'a'] as Array<number | string>, isNot(isString)),
   ).toEqualTypeOf<number | undefined>();
@@ -254,7 +254,7 @@ describe('non-guard predicate', () => {
   });
 });
 
-test('predicate is typed correctly', () => {
+it('predicate is typed correctly', () => {
   find([] as Array<number | string>, (value, index, data) => {
     expectTypeOf(value).toEqualTypeOf<number | string>();
     expectTypeOf(index).toEqualTypeOf<number>();
@@ -264,7 +264,7 @@ test('predicate is typed correctly', () => {
   });
 });
 
-test('predicate is typed correctly for tuples', () => {
+it('predicate is typed correctly for tuples', () => {
   find([1, 'a'] as [number, string], (value, index, data) => {
     expectTypeOf(value).toEqualTypeOf<number | string>();
     expectTypeOf(index).toEqualTypeOf<number>();
@@ -274,7 +274,7 @@ test('predicate is typed correctly for tuples', () => {
   });
 });
 
-test('predicate with a mismatched param is an error', () => {
+it('predicate with a mismatched param is an error', () => {
   // @ts-expect-error [ts2769] -- The predicate must accept the item type.
   find([] as Array<number>, (x: string) => x.length > 0);
 });

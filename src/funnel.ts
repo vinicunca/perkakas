@@ -87,9 +87,22 @@ interface Funnel<Args extends RestArguments = []> {
  * execute anything when called. The returned object should be used to execute
  * the funnel via the its `call` method.
  *
- * - Debouncing: use `minQuietPeriodMs` and any `triggerAt`.
+ * The type of the funnel object is not exported; when you need to reference
+ * it explicitly (e.g., a class property holding a funnel) use
+ * `ReturnType<typeof funnel<[]>>`, replacing `[]` with the `reducer`'s rest
+ * params when one is used (e.g., `ReturnType<typeof funnel<[string]>>`).
+ *
+ * - Debouncing: use `minQuietPeriodMs` and any `triggerAt`. Copy-paste
+ * reference implementations are available for Perkakas's deprecated `debounce`
+ * function in [`funnel.perkakas-debounce.spec.ts`](https://github.com/vinicunca/perkakas/blob/main/src/funnel.perkakas-debounce.spec.ts),
+ * and for the Lodash `debounce` function in [`funnel.lodash-debounce.spec.ts`](https://github.com/vinicunca/perkakas/blob/main/src/funnel.lodash-debounce.spec.ts)
+ * and [`funnel.lodash-debounce-with-cached-value.spec.ts`](https://github.com/vinicunca/perkakas/blob/main/src/funnel.lodash-debounce-with-cached-value.spec.ts).
  * - Throttling: use `minGapMs` and `triggerAt: "start"` or `"both"`.
- * - Batching: See the reference implementation in [`funnel.reference-batch.test.ts`](https://github.com/vinicunca/perkakas/blob/main/src/funnel.reference-batch.test.ts).
+ * Copy-paste reference implementations for the Lodash `throttle` function
+ * (which maps onto the burst options `minQuietPeriodMs` and
+ * `maxBurstDurationMs` instead of `minGapMs`) are available in [`funnel.lodash-throttle.spec.ts`](https://github.com/vinicunca/perkakas/blob/main/src/funnel.lodash-throttle.spec.ts)
+ * and [`funnel.lodash-throttle-with-cached-value.spec.ts`](https://github.com/vinicunca/perkakas/blob/main/src/funnel.lodash-throttle-with-cached-value.spec.ts).
+ * - Batching: a copy-paste reference implementation is available in [`funnel.reference-batch.spec.ts`](https://github.com/vinicunca/perkakas/blob/main/src/funnel.reference-batch.spec.ts).
  *
  * @param callback - The main function that would be invoked periodically based
  * on `options`. The function would take the latest result of the `reducer`; if

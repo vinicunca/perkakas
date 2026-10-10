@@ -164,7 +164,6 @@ it('maintains readonly-ness', () => {
 
 it('only narrows on literal numbers', () => {
   const array = [] as Array<number>;
-  // eslint-disable-next-line sonar/no-all-duplicated-branches
   if (hasAtLeast(array, 3 as number)) {
     expectTypeOf(array).toEqualTypeOf<Array<number>>();
   } else {

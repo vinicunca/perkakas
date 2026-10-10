@@ -1,18 +1,18 @@
-import { describe, expectTypeOf, it, test } from 'vitest';
+import { describe, expectTypeOf, it } from 'vitest';
 import { $typed } from '../test/$typed';
 import { stringToPath } from './string-to-path';
 
 // ! IMPORTANT: The tests in this file need to be synced with the runtime tests so that we can ensure that the function's runtime implementation returns the same values as the functions type computes. This is critical for this utility because its main purpose is to couple the path string parsing logic with the type so that it could be used in utility functions that take a strictly typed path array as input (e.g. `prop`, `setPath`, etc...).
 
-test('empty string', () => {
+it('empty string', () => {
   expectTypeOf(stringToPath('')).toEqualTypeOf<[]>();
 });
 
-test('single property', () => {
+it('single property', () => {
   expectTypeOf(stringToPath('foo')).toEqualTypeOf<['foo']>();
 });
 
-test('single array index', () => {
+it('single array index', () => {
   expectTypeOf(stringToPath('0')).toEqualTypeOf<[0]>();
   expectTypeOf(stringToPath('123')).toEqualTypeOf<[123]>();
 });

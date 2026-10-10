@@ -1,6 +1,4 @@
-/* eslint-disable sonar/no-ignored-return */
 /* eslint-disable ts/explicit-function-return-type */
-/* eslint-disable sonar/no-all-duplicated-branches */
 import { describe, expectTypeOf, it } from 'vitest';
 import { $typed } from '../test/$typed';
 import { endsWith } from './ends-with';

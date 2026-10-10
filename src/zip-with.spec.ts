@@ -95,8 +95,7 @@ describe('data second with initial arg', () => {
         index: unknown,
         data: readonly [ReadonlyArray<unknown>, ReadonlyArray<unknown>],
       ) => unknown
-    >((_first, _second, _index, data) => structuredClone(data),
-    );
+    >((_first, _second, _index, data) => structuredClone(data));
     pipe([1, 2, 3], zipWith(other, mock));
 
     expect(mock).toHaveNthReturnedWith(1, [[1], other]);

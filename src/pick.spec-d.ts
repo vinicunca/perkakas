@@ -1,5 +1,5 @@
 import type { EmptyObject } from 'type-fest';
-import { describe, expectTypeOf, it, test } from 'vitest';
+import { describe, expectTypeOf, it } from 'vitest';
 import { $typed } from '../test/$typed';
 import { keys } from './keys';
 import { pick } from './pick';
@@ -136,49 +136,49 @@ describe('bounded object types', () => {
   });
 
   describe('single union key', () => {
-    test('required or optional', () => {
+    it('required or optional', () => {
       expectTypeOf(pick(DATA, [$typed<'a' | 'b'>()])).toEqualTypeOf<{
         a?: 'required';
         b?: 'optional';
       }>();
     });
 
-    test('required or undefinable', () => {
+    it('required or undefinable', () => {
       expectTypeOf(pick(DATA, [$typed<'a' | 'c'>()])).toEqualTypeOf<{
         a?: 'required';
         c?: 'undefinable' | undefined;
       }>();
     });
 
-    test('required or optional-undefinable', () => {
+    it('required or optional-undefinable', () => {
       expectTypeOf(pick(DATA, [$typed<'a' | 'd'>()])).toEqualTypeOf<{
         a?: 'required';
         d?: 'optional-undefinable' | undefined;
       }>();
     });
 
-    test('optional or undefinable', () => {
+    it('optional or undefinable', () => {
       expectTypeOf(pick(DATA, [$typed<'b' | 'c'>()])).toEqualTypeOf<{
         b?: 'optional';
         c?: 'undefinable' | undefined;
       }>();
     });
 
-    test('optional or optional-undefinable', () => {
+    it('optional or optional-undefinable', () => {
       expectTypeOf(pick(DATA, [$typed<'b' | 'd'>()])).toEqualTypeOf<{
         b?: 'optional';
         d?: 'optional-undefinable' | undefined;
       }>();
     });
 
-    test('undefinable or optional-undefinable', () => {
+    it('undefinable or optional-undefinable', () => {
       expectTypeOf(pick(DATA, [$typed<'c' | 'd'>()])).toEqualTypeOf<{
         c?: 'undefinable' | undefined;
         d?: 'optional-undefinable' | undefined;
       }>();
     });
 
-    test('required, optional, and undefinable', () => {
+    it('required, optional, and undefinable', () => {
       expectTypeOf(pick(DATA, [$typed<'a' | 'b' | 'c'>()])).toEqualTypeOf<{
         a?: 'required';
         b?: 'optional';
@@ -186,7 +186,7 @@ describe('bounded object types', () => {
       }>();
     });
 
-    test('required, optional, and optional-undefinable', () => {
+    it('required, optional, and optional-undefinable', () => {
       expectTypeOf(pick(DATA, [$typed<'a' | 'b' | 'd'>()])).toEqualTypeOf<{
         a?: 'required';
         b?: 'optional';
@@ -194,7 +194,7 @@ describe('bounded object types', () => {
       }>();
     });
 
-    test('required, undefinable, and optional-undefinable', () => {
+    it('required, undefinable, and optional-undefinable', () => {
       expectTypeOf(pick(DATA, [$typed<'a' | 'c' | 'd'>()])).toEqualTypeOf<{
         a?: 'required';
         c?: 'undefinable' | undefined;
@@ -202,7 +202,7 @@ describe('bounded object types', () => {
       }>();
     });
 
-    test('optional, undefinable, and optional-undefinable', () => {
+    it('optional, undefinable, and optional-undefinable', () => {
       expectTypeOf(pick(DATA, [$typed<'b' | 'c' | 'd'>()])).toEqualTypeOf<{
         b?: 'optional';
         c?: 'undefinable' | undefined;
@@ -210,7 +210,7 @@ describe('bounded object types', () => {
       }>();
     });
 
-    test('all key types', () => {
+    it('all key types', () => {
       expectTypeOf(
         pick(DATA, [$typed<'a' | 'b' | 'c' | 'd'>()]),
       ).toEqualTypeOf<{
@@ -223,7 +223,7 @@ describe('bounded object types', () => {
   });
 
   describe('multiple union keys', () => {
-    test('with partial overlap', () => {
+    it('with partial overlap', () => {
       expectTypeOf(
         pick(DATA, [$typed<'a' | 'b'>(), $typed<'b' | 'c'>()]),
       ).toEqualTypeOf<{
@@ -233,7 +233,7 @@ describe('bounded object types', () => {
       }>();
     });
 
-    test('with full overlap', () => {
+    it('with full overlap', () => {
       expectTypeOf(
         pick(DATA, [$typed<'a' | 'b'>(), $typed<'a' | 'b'>()]),
       ).toEqualTypeOf<{
@@ -242,7 +242,7 @@ describe('bounded object types', () => {
       }>();
     });
 
-    test('without overlap', () => {
+    it('without overlap', () => {
       expectTypeOf(
         pick(DATA, [$typed<'a' | 'b'>(), $typed<'c' | 'd'>()]),
       ).toEqualTypeOf<{
@@ -255,14 +255,14 @@ describe('bounded object types', () => {
   });
 
   describe('mixed literal and union keys', () => {
-    test('with partial overlap', () => {
+    it('with partial overlap', () => {
       expectTypeOf(pick(DATA, ['a', $typed<'a' | 'b'>()])).toEqualTypeOf<{
         a: 'required';
         b?: 'optional';
       }>();
     });
 
-    test('without overlap', () => {
+    it('without overlap', () => {
       expectTypeOf(pick(DATA, ['a', $typed<'b' | 'c'>()])).toEqualTypeOf<{
         a: 'required';
         b?: 'optional';

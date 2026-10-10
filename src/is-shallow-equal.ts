@@ -74,7 +74,7 @@ export function isShallowEqual<T>(data: T, other: T): boolean;
  *    pipe(1, isShallowEqual('1')) //=> false
  *    pipe([1, 2, 3], isShallowEqual([1, 2, 3])) //=> true
  *    pipe([[1], [2], [3]], isShallowEqual([[1], [2], [3]])) //=> false
- * @dataFirst
+ * @dataLast
  * @category Guard
  */
 export function isShallowEqual<T, S extends T>(

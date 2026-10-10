@@ -1,6 +1,6 @@
 import type { EmptyObject } from 'type-fest';
 import type { EnumerableStringKeyedValueOf } from './enumerable-string-keyed-value-of';
-import { expectTypeOf, test } from 'vitest';
+import { expectTypeOf, it } from 'vitest';
 import { $typed } from '../../../test/$typed';
 
 declare const SYMBOL: unique symbol;
@@ -9,19 +9,19 @@ declare function enumerableStringKeyedValueOf<const T>(
   data: T,
 ): EnumerableStringKeyedValueOf<T>;
 
-test('string values', () => {
+it('string values', () => {
   expectTypeOf(
     enumerableStringKeyedValueOf($typed<Record<PropertyKey, string>>()),
   ).toEqualTypeOf<string>();
 });
 
-test('number values', () => {
+it('number values', () => {
   expectTypeOf(
     enumerableStringKeyedValueOf($typed<Record<PropertyKey, number>>()),
   ).toEqualTypeOf<number>();
 });
 
-test('union of records', () => {
+it('union of records', () => {
   expectTypeOf(
     enumerableStringKeyedValueOf(
       $typed<Record<PropertyKey, 'cat'> | Record<PropertyKey, 'dog'>>(),
@@ -35,7 +35,7 @@ test('union of records', () => {
   ).toEqualTypeOf<number | string>();
 });
 
-test('union values', () => {
+it('union values', () => {
   expectTypeOf(
     enumerableStringKeyedValueOf(
       $typed<Record<PropertyKey, number | string>>(),
@@ -43,7 +43,7 @@ test('union values', () => {
   ).toEqualTypeOf<number | string>();
 });
 
-test('literal values', () => {
+it('literal values', () => {
   expectTypeOf(
     enumerableStringKeyedValueOf({ a: 1 } as const),
   ).toEqualTypeOf<1>();
@@ -53,7 +53,7 @@ test('literal values', () => {
   ).toEqualTypeOf<'1' | '2' | 1>();
 });
 
-test('optional values', () => {
+it('optional values', () => {
   expectTypeOf(
     enumerableStringKeyedValueOf($typed<{ a: 1; b?: 4 }>()),
   ).toEqualTypeOf<1 | 4>();
@@ -63,7 +63,7 @@ test('optional values', () => {
   ).toEqualTypeOf<number | string>();
 });
 
-test('nullish and undefined values', () => {
+it('nullish and undefined values', () => {
   expectTypeOf(
     enumerableStringKeyedValueOf(
       $typed<{
@@ -83,7 +83,7 @@ test('nullish and undefined values', () => {
   ).toEqualTypeOf<number | null | undefined>();
 });
 
-test('symbol keys', () => {
+it('symbol keys', () => {
   expectTypeOf(
     enumerableStringKeyedValueOf({ [SYMBOL]: 'hello' } as const),
   ).toEqualTypeOf<never>();
@@ -99,13 +99,13 @@ test('symbol keys', () => {
   ).toEqualTypeOf<string>();
 });
 
-test('empty object', () => {
+it('empty object', () => {
   expectTypeOf(
     enumerableStringKeyedValueOf($typed<EmptyObject>()),
   ).toEqualTypeOf<never>();
 });
 
-test('parameterized record key', () => {
+it('parameterized record key', () => {
   const foo = <K extends string>(data: Record<K, { a: 'hello' }>): void => {
     // Because of the type parameter TypeScript doesn't infer the concrete
     // return type here, preventing us from being able to compare it to an
@@ -123,6 +123,5 @@ test('parameterized record key', () => {
   // surfacing it as unused (`js/unused-local-variable`), which it technically
   // is, albeit this being a **type test** where execution is meaningless to
   // begin with...
-  // eslint-disable-next-line sonar/void-use
   void foo;
 });

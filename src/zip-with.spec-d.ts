@@ -1,8 +1,8 @@
-import { describe, expectTypeOf, it, test } from 'vitest';
+import { describe, expectTypeOf, it } from 'vitest';
 import { pipe } from './pipe';
 import { zipWith } from './zip-with';
 
-test('data first typings', () => {
+it('data first typings', () => {
   const actual = zipWith(
     ['1', '2', '3'],
     ['a', 'b', 'c'],
@@ -12,7 +12,7 @@ test('data first typings', () => {
   expectTypeOf(actual).toEqualTypeOf<Array<string>>();
 });
 
-test('data second typings', () => {
+it('data second typings', () => {
   const actual = zipWith((a: string, b: string) => `${a}${b}`)(
     ['1', '2', '3'],
     ['a', 'b', 'c'],
@@ -21,7 +21,7 @@ test('data second typings', () => {
   expectTypeOf(actual).toEqualTypeOf<Array<string>>();
 });
 
-test('data second with initial arg typings', () => {
+it('data second with initial arg typings', () => {
   const actual = pipe(
     ['1', '2', '3'],
     zipWith(['a', 'b', 'c'], (a, b) => `${a}${b}`),

@@ -1,58 +1,58 @@
-import { describe, expectTypeOf, it, test } from 'vitest';
+import { describe, expectTypeOf, it } from 'vitest';
 import { pipe } from './pipe';
 import { splice } from './splice';
 
-test('regular array', () => {
+it('regular array', () => {
   expectTypeOf(splice([] as Array<number>, 0, 0, [9])).toEqualTypeOf<Array<number>>();
 });
 
-test('readonly array', () => {
+it('readonly array', () => {
   expectTypeOf(splice([] as ReadonlyArray<number>, 0, 0, [9])).toEqualTypeOf<
     Array<number>
   >();
 });
 
-test('regular array with union element type', () => {
+it('regular array with union element type', () => {
   expectTypeOf(splice([] as Array<number | string>, 0, 0, [9, 'a'])).toEqualTypeOf<
     Array<number | string>
   >();
 });
 
-test('empty replacement preserves element type', () => {
+it('empty replacement preserves element type', () => {
   expectTypeOf(splice([] as Array<number>, 0, 0, [])).toEqualTypeOf<Array<number>>();
 });
 
-test('prefix tuple', () => {
+it('prefix tuple', () => {
   expectTypeOf(
     splice([1] as [number, ...Array<boolean>], 0, 0, [true]),
   ).toEqualTypeOf<Array<boolean | number>>();
 });
 
-test('suffix tuple', () => {
+it('suffix tuple', () => {
   expectTypeOf(
     splice([1] as [...Array<boolean>, number], 0, 0, [true]),
   ).toEqualTypeOf<Array<boolean | number>>();
 });
 
-test('prefix + suffix tuple', () => {
+it('prefix + suffix tuple', () => {
   expectTypeOf(
     splice([1, 'a'] as [number, ...Array<boolean>, string], 0, 0, [true]),
   ).toEqualTypeOf<Array<boolean | number | string>>();
 });
 
-test('const tuple', () => {
+it('const tuple', () => {
   expectTypeOf(splice([1, 'a', true] as const, 0, 0, [1])).toEqualTypeOf<
     Array<'a' | 1 | true>
   >();
 });
 
-test('union of arrays', () => {
+it('union of arrays', () => {
   expectTypeOf(splice([] as Array<boolean> | Array<string>, 0, 0, [true])).toEqualTypeOf<
     Array<boolean | string>
   >();
 });
 
-test('accepts replacement element subtype', () => {
+it('accepts replacement element subtype', () => {
   expectTypeOf(splice([] as Array<number | string>, 0, 0, [9])).toEqualTypeOf<
     Array<number | string>
   >();
@@ -75,7 +75,7 @@ describe('rejects invalid replacement', () => {
   });
 });
 
-test('replacement is optional', () => {
+it('replacement is optional', () => {
   expectTypeOf(splice([] as Array<number>, 0, 0)).toEqualTypeOf<Array<number>>();
 });
 

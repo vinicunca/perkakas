@@ -80,22 +80,17 @@ type TuplePartsWithoutRequired<
 type TuplePartsWithoutFixed<
   T extends IterableContainer,
   Optional extends Array<unknown> = [],
-> = T extends readonly [(infer Head)?, ...infer Tail]
-  ? // Optional elements behave differently than required ones, and TypeScript
-    // has a hard time telling which is which based on inference alone. This
-    // requires we do additional checks on the inferred types in order to
-    // determine if the optional part has been fully extracted yet or not.
-    (
-      T extends readonly []
-        ? // The first check is obvious and allows us to stop the recursion when
-      // dealing with tuples that don't have a rest element.
-        true
-        : Array<T[number]> extends Tail
-          ? // The second check is to catch cases where T is just an array (e.g.
-        // `string[]`).
-          true
-          : false
-    ) extends true ? {
+>
+  // Don't infer the head yet: for arrays of TypeScript's internal `missing`
+  // type, TypeScript strips `missing` from an inferred optional element but
+  // not from the array's items, so the array would fail to match. Inferring is
+  // safe once we know the head is an optional tuple element.
+  // @see `$missingPropertyType`
+  = T extends readonly [unknown?, ...infer Tail]
+    // Arrays match with themselves as the tail, and the empty tuple matches
+    // with `unknown[]`; either way all of T's items fit in the tail, which
+    // means there are no optional elements left to extract.
+    ? Array<T[number]> extends Tail ? {
       /**
        * A *fixed* tuple that defines the part of a tuple where all its
        * elements are suffixed with the optional operator (`?`); but with
@@ -111,12 +106,18 @@ type TuplePartsWithoutFixed<
        */
       optional: Optional;
     } & TuplePartsRest<T>
-      : TuplePartsWithoutFixed<Tail, [...Optional, Head]>
-  : PerkakasTypeError<
-    'TupleParts',
-    'Unexpected tuple shape',
-    { type: never; metadata: T }
-  >;
+      : T extends readonly [(infer Head)?, ...Array<unknown>]
+        ? TuplePartsWithoutFixed<Tail, [...Optional, Head]>
+        : PerkakasTypeError<
+          'TupleParts',
+          'Could not infer optional tuple element',
+          { type: never; metadata: T }
+        >
+    : PerkakasTypeError<
+      'TupleParts',
+      'Unexpected tuple shape',
+      { type: never; metadata: T }
+    >;
 
 // This is an internal type and assumes that the tuple is either an empty tuple
 // `[]` or a simple array, all other parts of the tuple should be stripped

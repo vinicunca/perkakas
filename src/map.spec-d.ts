@@ -1,4 +1,4 @@
-import { describe, expectTypeOf, it, test } from 'vitest';
+import { describe, expectTypeOf, it } from 'vitest';
 import { add } from './add';
 import { constant } from './constant';
 import { identity } from './identity';
@@ -6,31 +6,31 @@ import { map } from './map';
 import { pipe } from './pipe';
 import { sortBy } from './sort-by';
 
-test('number array', () => {
+it('number array', () => {
   const result = map([1, 2, 3] as Array<number>, add(1));
 
   expectTypeOf(result).toEqualTypeOf<Array<number>>();
 });
 
-test('readonly number array', () => {
+it('readonly number array', () => {
   const result = map([1, 2, 3] as ReadonlyArray<number>, add(1));
 
   expectTypeOf(result).toEqualTypeOf<Array<number>>();
 });
 
-test('number 3-tuple', () => {
+it('number 3-tuple', () => {
   const result = map([1, 2, 3] as [number, number, number], add(1));
 
   expectTypeOf(result).toEqualTypeOf<[number, number, number]>();
 });
 
-test('readonly number 3-tuple', () => {
+it('readonly number 3-tuple', () => {
   const result = map([1, 2, 3] as readonly [number, number, number], add(1));
 
   expectTypeOf(result).toEqualTypeOf<[number, number, number]>();
 });
 
-test('named number 3-tuple', () => {
+it('named number 3-tuple', () => {
   const result = map(
     [1, 2, 3] as [item1: number, item2: number, item3: number],
     add(1),
@@ -43,47 +43,47 @@ test('named number 3-tuple', () => {
   >();
 });
 
-test('mixed type tuple', () => {
+it('mixed type tuple', () => {
   expectTypeOf(
     map([1, '2', true] as [number, string, boolean], constant(1)),
   ).toEqualTypeOf<[1, 1, 1]>();
 });
 
-test('readonly mixed type tuple', () => {
+it('readonly mixed type tuple', () => {
   expectTypeOf(
     map([1, '2', true] as readonly [number, string, boolean], constant(1)),
   ).toEqualTypeOf<[1, 1, 1]>();
 });
 
-test('nonempty (tail) number array', () => {
+it('nonempty (tail) number array', () => {
   const result = map([1, 2, 3] as [number, ...Array<number>], add(1));
 
   expectTypeOf(result).toEqualTypeOf<[number, ...Array<number>]>();
 });
 
-test('nonempty (tail) readonly number array', () => {
+it('nonempty (tail) readonly number array', () => {
   const result = map([1, 2, 3] as readonly [number, ...Array<number>], add(1));
 
   expectTypeOf(result).toEqualTypeOf<[number, ...Array<number>]>();
 });
 
-test('nonempty (head) number array', () => {
+it('nonempty (head) number array', () => {
   const result = map([1, 2, 3] as [...Array<number>, number], add(1));
 
   expectTypeOf(result).toEqualTypeOf<[...Array<number>, number]>();
 });
 
-test('nonempty readonly (head) number array', () => {
+it('nonempty readonly (head) number array', () => {
   const result = map([1, 2, 3] as readonly [...Array<number>, number], add(1));
 
   expectTypeOf(result).toEqualTypeOf<[...Array<number>, number]>();
 });
 
-test('empty tuple', () => {
+it('empty tuple', () => {
   expectTypeOf(map([], add(1))).toEqualTypeOf<[]>();
 });
 
-test('all-optional tuple', () => {
+it('all-optional tuple', () => {
   expectTypeOf(map([] as [a?: number, b?: number], identity())).toEqualTypeOf<
     [a?: number, b?: number]
   >();

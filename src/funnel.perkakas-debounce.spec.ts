@@ -2,12 +2,18 @@
  * These aren't useful for a reference implementation!
  */
 
-import type { StrictFunction } from './internal/types/strict-function';
 import { describe, expect, it, vi } from 'vitest';
 import { constant } from './constant';
 import { funnel } from './funnel';
 import { identity } from './identity';
 import { sleep } from './sleep';
+
+// Copy everything between the REFERENCE START and REFERENCE END markers into
+// your project, importing `funnel` from '@vinicunca/perkakas'.
+// --- REFERENCE START -------------------------------------------------------
+
+// Using `never` as the type for args allows this to extend *any* function.
+type StrictFunction = (...args: never) => unknown;
 
 interface Debouncer<F extends StrictFunction, IsNullable extends boolean = true> {
   readonly call: (
@@ -25,15 +31,11 @@ interface DebounceOptions {
 }
 
 /**
- * A reference implementation of the now deprecated `debounce` function using
- * the `funnel` function instead. While you update your codebase you can copy
- * this function as-is and use it as a drop-in replacement; but we recommend
- * eventually inlining the call to `funnel` so you can adjust the function to
- * your specific needs.
+ * A drop-in replacement for Perkakas's deprecated `debounce` function,
+ * implemented on top of `funnel`. We recommend eventually inlining the call
+ * to `funnel` and adjusting the implementation to your specific needs.
  *
- * The following tests in this file are the original tests for debounce.
- *
- * @see debounce
+ * @see funnel
  */
 function debounce<F extends StrictFunction>(
   func: F,
@@ -77,6 +79,7 @@ function debounce<F extends StrictFunction>(
       reducer: (_, ...args: Parameters<F>) => args,
       minQuietPeriodMs: waitMs ?? maxWaitMs ?? 0,
       ...(maxWaitMs !== undefined && { maxBurstDurationMs: maxWaitMs }),
+      // eslint-disable-next-line no-nested-ternary -- Kept as in the upstream remeda reference implementation
       ...(timing === 'leading'
         ? { triggerAt: 'start' }
         : timing === 'both'
@@ -109,6 +112,11 @@ function debounce<F extends StrictFunction>(
     },
   };
 }
+// --- REFERENCE END ---------------------------------------------------------
+
+// The following tests are the original tests for the deprecated `debounce`
+// function. The names of the test cases have been preserved to ease comparing
+// them to the original tests.
 
 describe('main functionality', () => {
   it('should debounce a function', async () => {

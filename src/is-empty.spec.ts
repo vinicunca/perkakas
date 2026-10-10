@@ -27,7 +27,6 @@ it('returns false for a non-empty object', () => {
 
 describe('deprecated `string | undefined` support', () => {
   it('returns true for undefined', () => {
-    // eslint-disable-next-line sonar/deprecation
     expect(isEmpty(undefined)).toBe(true);
   });
 });

@@ -1,131 +1,131 @@
-import { expectTypeOf, test } from 'vitest';
+import { expectTypeOf, it } from 'vitest';
 import { first } from './first';
 
-test('simple empty array', () => {
+it('simple empty array', () => {
   const arr: Array<number> = [];
   const result = first(arr);
 
   expectTypeOf(result).toEqualTypeOf<number | undefined>();
 });
 
-test('simple array', () => {
+it('simple array', () => {
   const arr: Array<number> = [1];
   const result = first(arr);
 
   expectTypeOf(result).toEqualTypeOf<number | undefined>();
 });
 
-test('simple non-empty array', () => {
+it('simple non-empty array', () => {
   const arr: [number, ...Array<number>] = [1];
   const result = first(arr);
 
   expectTypeOf(result).toEqualTypeOf<number>();
 });
 
-test('simple tuple', () => {
+it('simple tuple', () => {
   const arr: [number, string] = [1, 'a'];
   const result = first(arr);
 
   expectTypeOf(result).toEqualTypeOf<number>();
 });
 
-test('array with more than one item', () => {
+it('array with more than one item', () => {
   const arr: [number, number, ...Array<number>] = [1, 2];
   const result = first(arr);
 
   expectTypeOf(result).toEqualTypeOf<number>();
 });
 
-test('trivial empty array', () => {
+it('trivial empty array', () => {
   const arr: [] = [];
   const result = first(arr);
 
   expectTypeOf(result).toEqualTypeOf(undefined);
 });
 
-test('array with last', () => {
+it('array with last', () => {
   const arr: [...Array<number>, number] = [1];
   const result = first(arr);
 
   expectTypeOf(result).toEqualTypeOf<number>();
 });
 
-test('tuple with last', () => {
+it('tuple with last', () => {
   const arr: [...Array<string>, number] = ['a', 1];
   const result = first(arr);
 
   expectTypeOf(result).toEqualTypeOf<number | string>();
 });
 
-test('simple empty readonly array', () => {
+it('simple empty readonly array', () => {
   const arr: ReadonlyArray<number> = [];
   const result = first(arr);
 
   expectTypeOf(result).toEqualTypeOf<number | undefined>();
 });
 
-test('simple readonly array', () => {
+it('simple readonly array', () => {
   const arr: ReadonlyArray<number> = [1];
   const result = first(arr);
 
   expectTypeOf(result).toEqualTypeOf<number | undefined>();
 });
 
-test('simple non-empty readonly array', () => {
+it('simple non-empty readonly array', () => {
   const arr: readonly [number, ...Array<number>] = [1];
   const result = first(arr);
 
   expectTypeOf(result).toEqualTypeOf<number>();
 });
 
-test('simple readonly tuple', () => {
+it('simple readonly tuple', () => {
   const arr: readonly [number, string] = [1, 'a'];
   const result = first(arr);
 
   expectTypeOf(result).toEqualTypeOf<number>();
 });
 
-test('readonly array with more than one item', () => {
+it('readonly array with more than one item', () => {
   const arr: readonly [number, number, ...Array<number>] = [1, 2];
   const result = first(arr);
 
   expectTypeOf(result).toEqualTypeOf<number>();
 });
 
-test('readonly trivial empty array', () => {
+it('readonly trivial empty array', () => {
   const arr: readonly [] = [];
   const result = first(arr);
 
   expectTypeOf(result).toEqualTypeOf(undefined);
 });
 
-test('readonly array with last', () => {
+it('readonly array with last', () => {
   const arr: readonly [...Array<number>, number] = [1];
   const result = first(arr);
 
   expectTypeOf(result).toEqualTypeOf<number>();
 });
 
-test('readonly tuple with last', () => {
+it('readonly tuple with last', () => {
   const arr: readonly [...Array<string>, number] = ['a', 1];
   const result = first(arr);
 
   expectTypeOf(result).toEqualTypeOf<number | string>();
 });
 
-test('union of a tuple and an array', () => {
+it('union of a tuple and an array', () => {
   expectTypeOf(first([] as [number] | Array<string>)).toEqualTypeOf<
     number | string | undefined
   >();
 });
 
-test('union of optional and fixed tuples', () => {
+it('union of optional and fixed tuples', () => {
   expectTypeOf(first([] as [number?] | [string])).toEqualTypeOf<
     number | string | undefined
   >();
 });
 
-test('union of non-empty arrays', () => {
+it('union of non-empty arrays', () => {
   expectTypeOf(first(['a'] as [...Array<number>, string] | [boolean])).toEqualTypeOf<
     number | string | boolean
   >();

@@ -1,5 +1,4 @@
 /* eslint-disable no-nested-ternary */
-/* eslint-disable sonar/deprecation -- We know! */
 
 import { expectTypeOf, it } from 'vitest';
 import { debounce } from './debounce';

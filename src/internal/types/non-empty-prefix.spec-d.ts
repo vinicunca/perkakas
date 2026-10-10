@@ -1,7 +1,7 @@
 import type { IterableContainer } from './iterable-container';
 import type { NonEmptyArray } from './non-empty-array';
 import type { NonEmptyPrefix } from './non-empty-prefix';
-import { describe, expectTypeOf, it, test } from 'vitest';
+import { describe, expectTypeOf, it } from 'vitest';
 
 declare function nonEmptyPrefix<T extends IterableContainer>(
   data: T,
@@ -88,7 +88,7 @@ describe('structurally non-empty', () => {
   });
 });
 
-test('union of tuples with different shapes', () => {
+it('union of tuples with different shapes', () => {
   expectTypeOf(
     nonEmptyPrefix(['a', 'b'] as ['a', 'b'] | ['c', ...Array<'d'>]),
   ).toEqualTypeOf<['a', 'b'?] | ['c', ...Array<'d'>]>();

@@ -138,5 +138,6 @@ export function stringToPath<const Path extends string>(
     );
   }
 
+  // @ts-expect-error [ts2322] -- It's impossible for TypeScript to infer that our algorithm actually computes StringToPath.
   return result;
 }

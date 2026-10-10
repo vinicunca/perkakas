@@ -7,7 +7,7 @@
  *  P.humanReadableFileSize(bytes, base)
  * @example
  *  P.humanReadableFileSize(1000); // => '1.0 kB'
- *  P.humanReadableFileSize(2097152, 1024); // => '2.0 Mib'
+ *  P.humanReadableFileSize(2097152, 1024); // => '2.0 MiB'
  * @category String
  */
 export function humanReadableFileSize(bytes: number, base: 1000 | 1024 = 1000): string {

@@ -1,4 +1,4 @@
-import { describe, expectTypeOf, it, test } from 'vitest';
+import { describe, expectTypeOf, it } from 'vitest';
 import { $typed } from '../test/$typed';
 import { pipe } from './pipe';
 import { truncate } from './truncate';
@@ -121,7 +121,7 @@ describe('with separator', () => {
   });
 });
 
-test('n is in range ((data.length - omission.length)..data.length]', () => {
+it('n is in range ((data.length - omission.length)..data.length]', () => {
   expectTypeOf(truncate('Hello, world!', 11)).toEqualTypeOf<'Hello, w...'>();
   expectTypeOf(truncate('Hello, world!', 12)).toEqualTypeOf<'Hello, wo...'>();
   expectTypeOf(truncate('Hello, world!', 13)).toEqualTypeOf<'Hello, world!'>();

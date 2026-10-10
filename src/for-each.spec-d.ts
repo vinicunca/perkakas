@@ -1,15 +1,15 @@
-import { expectTypeOf, test } from 'vitest';
+import { expectTypeOf, it } from 'vitest';
 import { doNothing } from './do-nothing';
 import { forEach } from './for-each';
 import { pipe } from './pipe';
 
-test('doesn\'t return anything on dataFirst invocations', () => {
+it('doesn\'t return anything on dataFirst invocations', () => {
   const result = forEach([1, 2, 3], doNothing());
 
   expectTypeOf(result).toEqualTypeOf<void>();
 });
 
-test('passes the item type to the callback', () => {
+it('passes the item type to the callback', () => {
   pipe(
     [1, 2, 3] as const,
     forEach((x) => {
@@ -18,7 +18,7 @@ test('passes the item type to the callback', () => {
   );
 });
 
-test('maintains the array shape', () => {
+it('maintains the array shape', () => {
   const data = [1, 'a'] as [1 | 2, 'a' | 'b', ...Array<boolean>];
 
   pipe(data, forEach(doNothing()), (x) => {
@@ -26,7 +26,7 @@ test('maintains the array shape', () => {
   });
 });
 
-test('makes the result mutable', () => {
+it('makes the result mutable', () => {
   const data = [] as ReadonlyArray<number>;
 
   pipe(data, forEach(doNothing()), (x) => {
@@ -34,13 +34,13 @@ test('makes the result mutable', () => {
   });
 });
 
-test('data param is complete in data-first', () => {
+it('data param is complete in data-first', () => {
   forEach([1, 2, 3] as const, (_value, _index, data) => {
     expectTypeOf(data).toEqualTypeOf<readonly [1, 2, 3]>();
   });
 });
 
-test('data param is lazily reconstructed in data-last', () => {
+it('data param is lazily reconstructed in data-last', () => {
   pipe(
     [1, 2, 3] as const,
     forEach((_value, _index, data) => {

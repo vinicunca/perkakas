@@ -84,7 +84,6 @@ export function sumBy(...args: ReadonlyArray<unknown>): unknown {
   return curry(sumByImplementation, args);
 }
 
-// eslint-disable-next-line sonar/function-return-type
 function sumByImplementation<T>(array: ReadonlyArray<T>, callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => bigint | number): bigint | number {
   const iter = array.entries();
 

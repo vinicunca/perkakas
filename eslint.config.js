@@ -16,7 +16,7 @@ export default vinicuncaESLint(
 
   {
     rules: {
-      'function-paren-newline': ['error', 'consistent'],
+      'style/function-paren-newline': ['error', 'consistent'],
       'perfectionist/sort-intersection-types': 'off',
       'perfectionist/sort-object-types': 'off',
       'perfectionist/sort-objects': 'off',
@@ -50,7 +50,8 @@ export default vinicuncaESLint(
     rules: {
       'perfectionist/sort-union-types': 'off',
       'sonar/no-duplicate-string': 'off',
-      'test/consistent-test-it': 'error',
+      // `*.spec-d.ts` isn't in the shared test globs, so pass the options too
+      'test/consistent-test-it': ['error', { fn: 'it', withinDescribe: 'it' }],
     },
   },
 
@@ -69,6 +70,17 @@ export default vinicuncaESLint(
         'before',
         { overrides: { '?': 'ignore', ':': 'ignore' } },
       ],
+    },
+  },
+
+  {
+    // Markdown code blocks aren't in `tsconfig.eslint.json`, so parse them
+    // without type information
+    files: ['**/*.md/**'],
+    languageOptions: {
+      parserOptions: {
+        project: null,
+      },
     },
   },
 );

@@ -1,54 +1,54 @@
-import { describe, expectTypeOf, it, test } from 'vitest';
+import { describe, expectTypeOf, it } from 'vitest';
 import { pipe } from './pipe';
 import { toTitleCase } from './to-title-case';
 
-test('empty string', () => {
+it('empty string', () => {
   expectTypeOf(toTitleCase('')).toEqualTypeOf<''>();
 });
 
-test('basic words', () => {
+it('basic words', () => {
   expectTypeOf(toTitleCase('hello world')).toEqualTypeOf<'Hello World'>();
 });
 
-test('camelCase', () => {
+it('camelCase', () => {
   expectTypeOf(toTitleCase('fooBar')).toEqualTypeOf<'Foo Bar'>();
 });
 
-test('pascalCase', () => {
+it('pascalCase', () => {
   expectTypeOf(toTitleCase('FooBar')).toEqualTypeOf<'Foo Bar'>();
 });
 
-test('kebab-case', () => {
+it('kebab-case', () => {
   expectTypeOf(toTitleCase('foo-bar')).toEqualTypeOf<'Foo Bar'>();
 });
 
-test('snake_case', () => {
+it('snake_case', () => {
   expectTypeOf(toTitleCase('foo_bar')).toEqualTypeOf<'Foo Bar'>();
 });
 
-test('sCREAMING_SNAKE_CASE', () => {
+it('sCREAMING_SNAKE_CASE', () => {
   expectTypeOf(toTitleCase('FOO_BAR')).toEqualTypeOf<'Foo Bar'>();
 });
 
-test('sCREAMING-KEBAB-CASE', () => {
+it('sCREAMING-KEBAB-CASE', () => {
   expectTypeOf(toTitleCase('FOO-BAR')).toEqualTypeOf<'Foo Bar'>();
 });
 
-test('single word lowercase', () => {
+it('single word lowercase', () => {
   expectTypeOf(toTitleCase('foo')).toEqualTypeOf<'Foo'>();
 });
 
-test('single word uppercase', () => {
+it('single word uppercase', () => {
   expectTypeOf(toTitleCase('FOO')).toEqualTypeOf<'Foo'>();
 });
 
-test('mixed separators', () => {
+it('mixed separators', () => {
   expectTypeOf(
     toTitleCase('foo-bar_baz qux'),
   ).toEqualTypeOf<'Foo Bar Baz Qux'>();
 });
 
-test('data-last', () => {
+it('data-last', () => {
   expectTypeOf(
     pipe('fooBar' as const, toTitleCase()),
   ).toEqualTypeOf<'Foo Bar'>();

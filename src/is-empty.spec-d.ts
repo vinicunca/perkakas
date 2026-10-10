@@ -118,10 +118,6 @@ describe('strings', () => {
 });
 
 describe('deprecated `string | undefined` support', () => {
-  /* eslint-disable sonar/deprecation --
-   * The function is deprecated!
-   */
-
   it('just undefined', () => {
     const data = undefined;
     if (isEmpty(data)) {

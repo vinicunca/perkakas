@@ -1,5 +1,6 @@
 import type { Cat, Kitten, Named } from '../test/interfaces';
-import { describe, expectTypeOf, it, test } from 'vitest';
+import { describe, expectTypeOf, it } from 'vitest';
+import { $missingPropertyType } from '../test/$missing-property-type';
 import { $typed } from '../test/$typed';
 import {
   isCat,
@@ -180,7 +181,7 @@ describe('special tuple shapes', () => {
   });
 });
 
-test('discriminated union filtering', () => {
+it('discriminated union filtering', () => {
   const data = [] as Array<{ type: 'cat'; hates: string } | { type: 'dog'; numFriends: number }>;
 
   expectTypeOf(
@@ -241,7 +242,7 @@ describe('accepts readonly arrays, returns mutable ones', () => {
   });
 });
 
-test('null filtering', () => {
+it('null filtering', () => {
   expectTypeOf(
     filter([] as Array<string | undefined>, isNonNullish),
   ).toEqualTypeOf<Array<string>>();
@@ -261,6 +262,20 @@ test('null filtering', () => {
   expectTypeOf(
     filter([] as Array<string | null | undefined>, isNonNullish),
   ).toEqualTypeOf<Array<string>>();
+});
+
+describe('items typed with TypeScript\'s internal `missing` type', () => {
+  it('data-first', () => {
+    expectTypeOf(filter($missingPropertyType(), isDefined)).toEqualTypeOf<
+      Array<string>
+    >();
+  });
+
+  it('data-last', () => {
+    expectTypeOf(pipe($missingPropertyType(), filter(isDefined))).toEqualTypeOf<
+      Array<string>
+    >();
+  });
 });
 
 describe('data last', () => {
@@ -401,7 +416,7 @@ describe('condition isn\'t a subtype of the item', () => {
   });
 });
 
-test('`unknown` data', () => {
+it('`unknown` data', () => {
   expectTypeOf(filter([] as Array<unknown>, isString)).toEqualTypeOf<Array<string>>();
 });
 

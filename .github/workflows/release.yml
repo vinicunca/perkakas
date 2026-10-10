@@ -6,8 +6,15 @@ on:
       - 'v*'
 
 jobs:
+  # The shared release workflow only builds and publishes, so gate it here
+  verify:
+    uses: ./.github/workflows/ci.yml
+    permissions:
+      contents: read
+
   release:
-    uses: sxzz/workflows/.github/workflows/release.yml@v1
+    needs: verify
+    uses: vinicunca/workflows/.github/workflows/release.yml@v1
     with:
       publish: true
     permissions:

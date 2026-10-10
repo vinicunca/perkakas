@@ -65,6 +65,7 @@ function lazyImplementation<T, K>(callbackfn: (
   index: number,
   data: ReadonlyArray<T>,
 ) => K | ReadonlyArray<K>): LazyEvaluator<T, K> {
+  // @ts-expect-error [ts2322] - We need to make LazyMany better so it accommodate the typing here...
   return (value, index, data) => {
     const next = callbackfn(value, index, data);
     return Array.isArray(next)

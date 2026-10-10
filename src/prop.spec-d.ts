@@ -7,6 +7,11 @@ import { stringToPath } from './string-to-path';
 
 declare const SYMBOL: unique symbol;
 
+interface InterfaceWithIndexSignature {
+  [key: string]: number;
+  a: 1;
+}
+
 describe('data-last', () => {
   it('inferred directly', () => {
     expectTypeOf(sortBy([{ a: 1 }] as const, prop('a'))).toEqualTypeOf<
@@ -418,6 +423,112 @@ describe('optional props', () => {
         'content',
       ),
     ).toEqualTypeOf<string | undefined>();
+  });
+});
+
+// @see https://github.com/remeda/remeda/issues/1274
+describe('unbounded records (remeda issue #1274)', () => {
+  it('unbounded string record', () => {
+    expectTypeOf(prop({} as Record<string, number>, 'x')).toEqualTypeOf<
+      number | undefined
+    >();
+  });
+
+  it('unbounded number record', () => {
+    expectTypeOf(prop({} as Record<number, boolean>, 123)).toEqualTypeOf<
+      boolean | undefined
+    >();
+  });
+
+  it('unbounded symbol record', () => {
+    const result = prop({} as Record<symbol, Date>, SYMBOL);
+
+    expectTypeOf(result).toEqualTypeOf<Date | undefined>();
+  });
+
+  it('template-literal record', () => {
+    expectTypeOf(
+      prop({} as Record<`data-${string}`, number>, 'data-foo'),
+    ).toEqualTypeOf<number | undefined>();
+  });
+
+  it('bounded record', () => {
+    expectTypeOf(
+      prop({} as Record<'a' | 'b', number>, 'a'),
+    ).toEqualTypeOf<number>();
+  });
+
+  it('partial bounded record', () => {
+    expectTypeOf(
+      prop({} as Partial<Record<'a' | 'b', number>>, 'a'),
+    ).toEqualTypeOf<number | undefined>();
+  });
+
+  it('declared props alongside an index signature', () => {
+    const data = {} as { [key: string]: number; a: 1 };
+
+    expectTypeOf(prop(data, 'a')).toEqualTypeOf<1>();
+    expectTypeOf(prop(data, 'b')).toEqualTypeOf<number | undefined>();
+  });
+
+  it('declared props alongside a template-literal index signature', () => {
+    const data = {} as { [key: `data-${string}`]: number; a: 1 };
+
+    expectTypeOf(prop(data, 'a')).toEqualTypeOf<1>();
+    expectTypeOf(prop(data, 'data-foo')).toEqualTypeOf<number | undefined>();
+  });
+
+  it('record intersected with declared props', () => {
+    const data = {} as Record<string, number> & { a: boolean };
+
+    expectTypeOf(prop(data, 'a')).toEqualTypeOf<boolean>();
+    expectTypeOf(prop(data, 'b')).toEqualTypeOf<number | undefined>();
+  });
+
+  it('interface with an index signature', () => {
+    const data = {} as InterfaceWithIndexSignature;
+
+    expectTypeOf(prop(data, 'a')).toEqualTypeOf<1>();
+    expectTypeOf(prop(data, 'b')).toEqualTypeOf<number | undefined>();
+  });
+
+  it('union of records', () => {
+    expectTypeOf(
+      prop({} as Record<string, number> | Record<string, boolean>, 'x'),
+    ).toEqualTypeOf<number | boolean | undefined>();
+  });
+
+  it('record in a deep path', () => {
+    const data = {} as {
+      a: Record<string, { b: { c: 'hello'; d: boolean; e: string } }>;
+    };
+    const recordEntry = prop(data, 'a', 'x');
+    const insideRecordEntry = prop(data, 'a', 'x', 'b');
+
+    expectTypeOf(prop(data, 'a')).toEqualTypeOf<
+      Record<string, { b: { c: 'hello'; d: boolean; e: string } }>
+    >();
+    expectTypeOf(recordEntry).toEqualTypeOf<
+      { b: { c: 'hello'; d: boolean; e: string } } | undefined
+    >();
+    expectTypeOf(insideRecordEntry).toEqualTypeOf<
+      { c: 'hello'; d: boolean; e: string } | undefined
+    >();
+    expectTypeOf(prop(data, 'a', 'x', 'b', 'c')).toEqualTypeOf<
+      'hello' | undefined
+    >();
+    expectTypeOf(prop(data, 'a', 'x', 'b', 'd')).toEqualTypeOf<
+      boolean | undefined
+    >();
+  });
+
+  it('data-last', () => {
+    expectTypeOf(pipe({} as Record<string, number>, prop('x'))).toEqualTypeOf<
+      number | undefined
+    >();
+    expectTypeOf(
+      pipe({} as { a: Record<string, number> }, prop('a', 'x')),
+    ).toEqualTypeOf<number | undefined>();
   });
 });
 

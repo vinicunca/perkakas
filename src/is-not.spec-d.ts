@@ -1,6 +1,5 @@
-/* eslint-disable sonar/no-ignored-return */
 import type { AllTypesDataProviderTypes, TestClass, TypedArray } from '../test/types-data-provider';
-import { describe, expectTypeOf, it, test } from 'vitest';
+import { describe, expectTypeOf, it } from 'vitest';
 import { $typed } from '../test/$typed';
 import {
   ALL_TYPES_DATA_PROVIDER,
@@ -16,7 +15,7 @@ import { isString } from './is-string';
 import { isTruthy } from './is-truthy';
 import { startsWith } from './starts-with';
 
-test('should work as type guard', () => {
+it('should work as type guard', () => {
   const data = TYPES_DATA_PROVIDER.promise as AllTypesDataProviderTypes;
   if (isNot(isString)(data)) {
     expectTypeOf(data).toEqualTypeOf<
@@ -42,7 +41,7 @@ test('should work as type guard', () => {
   }
 });
 
-test('should work as type guard in filter', () => {
+it('should work as type guard in filter', () => {
   const data = ALL_TYPES_DATA_PROVIDER.filter(isNot(isPromise));
 
   expectTypeOf(data).toEqualTypeOf<
@@ -67,7 +66,7 @@ test('should work as type guard in filter', () => {
   >();
 });
 
-test('negates a predicate wider than the data', () => {
+it('negates a predicate wider than the data', () => {
   expectTypeOf(
     $typed<Array<string | null>>().filter(
       isNot(
@@ -77,13 +76,13 @@ test('negates a predicate wider than the data', () => {
   ).items.toEqualTypeOf<string>();
 });
 
-test('type predicates that take a type parameter', () => {
+it('type predicates that take a type parameter', () => {
   expectTypeOf(
     $typed<Array<boolean>>().filter(isNot(isTruthy)),
   ).items.toEqualTypeOf<false>();
 });
 
-test('type predicates which are too narrow for the wrapper', () => {
+it('type predicates which are too narrow for the wrapper', () => {
   $typed<Array<string | number>>().filter(
     // @ts-expect-error [ts2769] -- Intentional! This is what we want to test
     // here. The `number` in the data type cannot be processed by the type
@@ -92,7 +91,7 @@ test('type predicates which are too narrow for the wrapper', () => {
   );
 });
 
-test('type predicates which are disjoint for the wrapper', () => {
+it('type predicates which are disjoint for the wrapper', () => {
   $typed<Array<number>>().filter(
     // @ts-expect-error [ts2769] -- Intentional! This is what we want to test
     // here. The `number` in the data type cannot be processed by the type
@@ -101,13 +100,13 @@ test('type predicates which are disjoint for the wrapper', () => {
   );
 });
 
-test('negates a generic guard', () => {
+it('negates a generic guard', () => {
   expectTypeOf(
     $typed<Array<string | null>>().filter(isNot(isNullish)),
   ).items.toEqualTypeOf<string>();
 });
 
-test('non-narrowing predicates stay non-narrowing', () => {
+it('non-narrowing predicates stay non-narrowing', () => {
   expectTypeOf(
     $typed<Array<string>>().filter(isNot((data: string) => data.length > 3)),
   ).items.toEqualTypeOf<string>();

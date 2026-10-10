@@ -1,7 +1,3 @@
-/* eslint-disable sonar/deprecation --
- * The function is deprecated!
- */
-
 import { describe, expectTypeOf, it } from 'vitest';
 import { pathOr } from './path-or';
 import { stringToPath } from './string-to-path';

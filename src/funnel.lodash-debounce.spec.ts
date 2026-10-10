@@ -7,28 +7,23 @@ import { describe, expect, it, vi } from 'vitest';
 import { funnel } from './funnel';
 import { sleep } from './sleep';
 
+// Copy everything between the REFERENCE START and REFERENCE END markers into
+// your project, importing `funnel` from '@vinicunca/perkakas'.
+// --- REFERENCE START -------------------------------------------------------
+
 /**
- * A reference implementation of the Lodash `debounce` function using the
- * Perkakas `funnel` function. While migrating from Lodash you can copy this
- * function as-is into your code base and use it as a drop-in replacement; but
- * we recommend eventually inlining the call to `funnel` so you can adjust the
- * function to your specific needs.
+ * A drop-in replacement for the Lodash `debounce` function, implemented on
+ * top of Perkakas's `funnel`. This is a simplified implementation which
+ * ignores the Lodash capability to track the return value of the callback
+ * function, but it is most likely the more common use-case; a more complete
+ * (and more complex) variant that also handles that requirement is available
+ * in [`funnel.lodash-debounce-with-cached-value.spec.ts`](https://github.com/vinicunca/perkakas/blob/main/src/funnel.lodash-debounce-with-cached-value.spec.ts).
+ * Whenever Lodash offered a concrete spec this implementation respects it,
+ * but there might be untested use-cases that would have differing runtime
+ * behaviors.
  *
- * This is a simplified implementation which ignores the Lodash capability to
- * track the return value of the callback function, but it is most likely the
- * more common use-case. For a more complete (and more complex) implementation
- * that also handles that requirement see the reference implementation for
- * `debounceWithCachedValue` in the other test file.
- *
- * The following tests in this file are based on the Lodash tests for debounce.
- * They have been adapted to work with our testing framework, have been fixed
- * or expanded slightly were it felt necessary, and have been modernized for
- * better readability. The names of the test cases have been preserved to ease
- * comparing them to the original tests.
- *
- * Note that this means that whenever Lodash offered a concrete spec, we made
- * sure our reference implementation respects it, but there might be untested
- * use-cases that would have differing runtime behaviors.
+ * We recommend eventually inlining the call to `funnel` and adjusting the
+ * implementation to your specific needs.
  *
  * @see Lodash Documentation: https://lodash.com/docs/4.17.15#debounce
  * @see Lodash Implementation: https://github.com/lodash/lodash/blob/4.17.21/lodash.js#L10372
@@ -41,7 +36,8 @@ function debounce<F extends (...args: any) => void>(
     readonly leading?: boolean;
     readonly trailing?: boolean;
     readonly maxWait?: number;
-  } = {}) {
+  } = {},
+) {
   const {
     call,
     // Lodash v4 doesn't provide access to the `isIdle` (called `pending` in
@@ -53,9 +49,9 @@ function debounce<F extends (...args: any) => void>(
       if (!trailing && !leading) {
         // In Lodash you can disable both the trailing and leading edges of the
         // debounce window, effectively causing the function to never be
-        // invoked. Perkakas uses the invokedAt enum exactly to prevent such a
-        // situation; so to simulate Lodash we need to only pass the callback
-        // when at least one of them is enabled.
+        // invoked. Perkakas's `triggerAt` option exists exactly to prevent
+        // such a situation; so to simulate Lodash we need to only pass the
+        // callback when at least one of them is enabled.
         return;
       }
 
@@ -84,6 +80,13 @@ function debounce<F extends (...args: any) => void>(
   // reconstruct the object to fit the Lodash API.
   return Object.assign(call, rest);
 }
+// --- REFERENCE END ---------------------------------------------------------
+
+// The following tests are based on the Lodash tests for debounce. They have
+// been adapted to work with our testing framework, have been fixed or
+// expanded slightly where it felt necessary, and have been modernized for
+// better readability. The names of the test cases have been preserved to ease
+// comparing them to the original tests.
 
 // We need some non-trivial duration to use in all our tests, to abstract the
 // actual chosen value we use this UnitOfTime (UT) constant. As long as it is a

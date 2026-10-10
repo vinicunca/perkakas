@@ -1,4 +1,3 @@
-/* eslint-disable sonar/argument-type */
 import type {
   ArraySlice,
   IsFloat,

@@ -1,4 +1,3 @@
-/* eslint-disable sonar/no-all-duplicated-branches */
 /* eslint-disable ts/explicit-function-return-type --
  * Our "generics" tests can only be constructed via generic function wrappers,
  * but because we only care about how the parameters are passed through to our
@@ -605,7 +604,6 @@ describe('reject disjoint prefixes (#1432)', () => {
     });
 
     it('native array methods', () => {
-      // eslint-disable-next-line unicorn/no-unused-array-method-return -- Intentional! just used for testing...
       ([] as Array<'cat' | 'dog'>).filter(
         // @ts-expect-error [ts2769] -- Intentional! this is what we're testing...
         startsWith('bird'),

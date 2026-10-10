@@ -1,31 +1,31 @@
-import { expectTypeOf, test } from 'vitest';
+import { expectTypeOf, it } from 'vitest';
 import { mergeDeep } from './merge-deep';
 
-test('trivially merges disjoint objects', () => {
+it('trivially merges disjoint objects', () => {
   const result = mergeDeep({ foo: 'bar' }, { bar: 'baz' });
 
   expectTypeOf(result).toEqualTypeOf<{ foo: string; bar: string }>();
 });
 
-test('merges fully overlapping types', () => {
+it('merges fully overlapping types', () => {
   const result = mergeDeep({ foo: 'bar' }, { foo: 'baz' });
 
   expectTypeOf(result).toEqualTypeOf<{ foo: string }>();
 });
 
-test('merges semi-overlapping types', () => {
+it('merges semi-overlapping types', () => {
   const result = mergeDeep({ foo: 'bar', x: 1 }, { foo: 'baz', y: 2 });
 
   expectTypeOf(result).toEqualTypeOf<{ foo: string; x: number; y: number }>();
 });
 
-test('deeply merges', () => {
+it('deeply merges', () => {
   const result = mergeDeep({ foo: { bar: 'bar' } }, { foo: { qux: 'qux' } });
 
   expectTypeOf(result).toEqualTypeOf<{ foo: { bar: string; qux: string } }>();
 });
 
-test('overrides types', () => {
+it('overrides types', () => {
   const a = { foo: { bar: 'baz' } };
   const b = { foo: 'qux' };
 
@@ -38,7 +38,7 @@ test('overrides types', () => {
   expectTypeOf(resultBA).toEqualTypeOf<{ foo: { bar: string } }>();
 });
 
-test('doesn\'t spread arrays', () => {
+it('doesn\'t spread arrays', () => {
   const result = mergeDeep(
     { foo: ['bar'] } as const,
     { foo: ['baz'] } as const,
@@ -47,7 +47,7 @@ test('doesn\'t spread arrays', () => {
   expectTypeOf(result).toEqualTypeOf<{ readonly foo: readonly ['baz'] }>();
 });
 
-test('doesn\'t recurse into arrays', () => {
+it('doesn\'t recurse into arrays', () => {
   const result = mergeDeep(
     { foo: [{ bar: 'baz', x: 123 }] },
     { foo: [{ bar: 'hello, world', y: 456 }] },
@@ -58,7 +58,7 @@ test('doesn\'t recurse into arrays', () => {
   }>();
 });
 
-test('works with interfaces', () => {
+it('works with interfaces', () => {
   interface Foo {
     a: string;
     b: number;

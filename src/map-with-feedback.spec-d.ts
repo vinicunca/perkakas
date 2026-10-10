@@ -1,8 +1,8 @@
-import { expectTypeOf, test } from 'vitest';
+import { expectTypeOf, it } from 'vitest';
 import { mapWithFeedback } from './map-with-feedback';
 import { pipe } from './pipe';
 
-test('should return a mutable tuple type whose length matches input container\'s length, consisting of the type of the initial value', () => {
+it('should return a mutable tuple type whose length matches input container\'s length, consisting of the type of the initial value', () => {
   const result = mapWithFeedback([1, 2, 3, 4, 5], (acc, x) => acc + x, 100);
 
   expectTypeOf(result).toEqualTypeOf<
@@ -10,7 +10,7 @@ test('should return a mutable tuple type whose length matches input container\'s
   >();
 });
 
-test('should maintain the input shape via a pipe', () => {
+it('should maintain the input shape via a pipe', () => {
   const result = pipe(
     [1, 2, 3, 4, 5] as const,
     mapWithFeedback((acc, x) => acc + x, 100),
@@ -21,7 +21,7 @@ test('should maintain the input shape via a pipe', () => {
   >();
 });
 
-test('should return a tuple consisting of the initial value type even if the initial iterable contains a different type', () => {
+it('should return a tuple consisting of the initial value type even if the initial iterable contains a different type', () => {
   const result = mapWithFeedback(
     ['1', '2', '3', '4', '5'],
     (acc, x) => acc + Number(x),
@@ -33,7 +33,7 @@ test('should return a tuple consisting of the initial value type even if the ini
   >();
 });
 
-test('should correctly infer type with a non-literal array type', () => {
+it('should correctly infer type with a non-literal array type', () => {
   const result = mapWithFeedback(
     [1, 2, 3, 4, 5] as Array<number>,
     (acc, x) => acc + x,
@@ -43,7 +43,7 @@ test('should correctly infer type with a non-literal array type', () => {
   expectTypeOf(result).toEqualTypeOf<Array<number>>();
 });
 
-test('data param is lazily reconstructed in data-first', () => {
+it('data param is lazily reconstructed in data-first', () => {
   mapWithFeedback(
     [1, 2, 3] as const,
     (_previousValue, _currentValue, _currentIndex, data) => {
@@ -55,7 +55,7 @@ test('data param is lazily reconstructed in data-first', () => {
   );
 });
 
-test('data param is lazily reconstructed in data-last', () => {
+it('data param is lazily reconstructed in data-last', () => {
   pipe(
     [1, 2, 3] as const,
     mapWithFeedback((_previousValue, _currentValue, _currentIndex, data) => {

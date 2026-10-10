@@ -1,5 +1,3 @@
-/* eslint-disable sonar/deprecation -- We know! */
-
 import { describe, expect, it, vi } from 'vitest';
 import { constant } from './constant';
 import { debounce } from './debounce';

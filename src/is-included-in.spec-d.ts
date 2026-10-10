@@ -1,4 +1,3 @@
-/* eslint-disable sonar/no-all-duplicated-branches */
 import { describe, expectTypeOf, it } from 'vitest';
 import { isIncludedIn } from './is-included-in';
 

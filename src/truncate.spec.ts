@@ -38,7 +38,6 @@ it('multiple string separators within maxLength', () => {
 
 it('multiple regex separators within maxLength', () => {
   expect(
-    // eslint-disable-next-line sonar/single-character-alternation
     truncate('cat. dog, mouse. elephant', 20, { separator: /,|\./gu }),
   ).toBe('cat. dog, mouse...');
 });
@@ -70,7 +69,7 @@ it('regex separator matches after maxLength', () => {
 it('regex separator never matches', () => {
   expect(
     truncate('A long sentence without the chosen separator', 20, {
-      // eslint-disable-next-line regexp/no-dupe-disjunctions, regexp/no-empty-alternative, sonar/no-empty-alternatives
+      // eslint-disable-next-line regexp/no-dupe-disjunctions, regexp/no-empty-alternative
       separator: /|/u,
     }),
   ).toBe('A long sentence w...');

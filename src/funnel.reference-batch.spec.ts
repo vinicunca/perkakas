@@ -7,6 +7,10 @@ import { doNothing } from './do-nothing';
 import { fromKeys } from './from-keys';
 import { funnel } from './funnel';
 
+// Copy everything between the REFERENCE START and REFERENCE END markers into
+// your project, importing `funnel` from '@vinicunca/perkakas'.
+// --- REFERENCE START -------------------------------------------------------
+
 interface BatchRequest<Params extends Array<any>, Result> {
   readonly params: Params;
   readonly promiseCallbacks: Readonly<
@@ -25,9 +29,8 @@ interface BatchRequest<Params extends Array<any>, Result> {
  * This allows synchronizing multiple async calls while keeping each call site
  * isolated from the rest (for example, as react components).
  *
- * This reference implementation can be copied into your project as-is, or you
- * can use it as the basis for a more complex implementation with additional
- * features.
+ * You can use this implementation as-is, or as the basis for a more complex
+ * implementation with additional features.
  *
  * @param callback - The main function that takes a batch and returns an
  * aggregated response. The typing for the it's parameters will derive the
@@ -43,6 +46,7 @@ interface BatchRequest<Params extends Array<any>, Result> {
  * default value.
  * @returns A Funnel object with the `call` method augmented to support async
  * response.
+ * @see funnel
  */
 function batch<Params extends Array<any>, BatchResponse, Result>(
   callback: (requests: ReadonlyArray<Params>) => Promise<BatchResponse>,
@@ -96,12 +100,17 @@ function batch<Params extends Array<any>, BatchResponse, Result>(
   return {
     ...batchFunnel,
 
+    get isIdle() {
+      return batchFunnel.isIdle;
+    },
+
     call: async (...params: Params) =>
       new Promise<Result>((...promiseCallbacks) => {
         batchFunnel.call({ promiseCallbacks, params });
       }),
   };
 }
+// --- REFERENCE END ---------------------------------------------------------
 
 describe('showcase', () => {
   it('results as object', async () => {

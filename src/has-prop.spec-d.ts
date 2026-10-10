@@ -1,10 +1,9 @@
-/* eslint-disable sonar/no-all-duplicated-branches */
-import { describe, expectTypeOf, it, test } from 'vitest';
+import { describe, expectTypeOf, it } from 'vitest';
 import { filter } from './filter';
 import { hasProp } from './has-prop';
 import { pipe } from './pipe';
 
-test('narrowing is a no-op when the key is already required', () => {
+it('narrowing is a no-op when the key is already required', () => {
   const data = {} as { a: string };
 
   if (hasProp(data, 'a')) {
@@ -14,7 +13,7 @@ test('narrowing is a no-op when the key is already required', () => {
   }
 });
 
-test('accepts a union of literal keys', () => {
+it('accepts a union of literal keys', () => {
   const data = {} as { a?: string; b?: number };
   const key = 'a' as 'a' | 'b';
 
@@ -27,7 +26,7 @@ test('accepts a union of literal keys', () => {
   }
 });
 
-test('falls back to boolean for unbounded primitive string keys', () => {
+it('falls back to boolean for unbounded primitive string keys', () => {
   const data = {} as Record<string, number>;
   const key = 'foo' as string;
 
@@ -40,7 +39,7 @@ test('falls back to boolean for unbounded primitive string keys', () => {
   }
 });
 
-test('falls back to boolean for unbounded template-literal keys', () => {
+it('falls back to boolean for unbounded template-literal keys', () => {
   const data = {} as Record<string, number>;
   const key = 'prefix_x' as `prefix_${string}`;
 
@@ -51,7 +50,7 @@ test('falls back to boolean for unbounded template-literal keys', () => {
   }
 });
 
-test('falls back to boolean for array inputs', () => {
+it('falls back to boolean for array inputs', () => {
   const data = [] as Array<number>;
 
   // Arrays route to the non-narrowing overload — neither branch collapses
@@ -64,7 +63,7 @@ test('falls back to boolean for array inputs', () => {
   }
 });
 
-test('narrows interfaces', () => {
+it('narrows interfaces', () => {
   interface AB {
     a: number;
     b?: string;
@@ -78,7 +77,7 @@ test('narrows interfaces', () => {
   }
 });
 
-test('preserves an explicit `undefined` in the value type', () => {
+it('preserves an explicit `undefined` in the value type', () => {
   const data = {} as { a?: string | undefined };
 
   if (hasProp(data, 'a')) {
@@ -88,7 +87,7 @@ test('preserves an explicit `undefined` in the value type', () => {
   }
 });
 
-test('removes optionality from a known optional property', () => {
+it('removes optionality from a known optional property', () => {
   const data = {} as { a?: string; b: number };
 
   if (hasProp(data, 'a')) {
@@ -98,7 +97,7 @@ test('removes optionality from a known optional property', () => {
   }
 });
 
-test('narrows a Record by surfacing the explicit key', () => {
+it('narrows a Record by surfacing the explicit key', () => {
   const data = {} as Record<string, number>;
 
   if (hasProp(data, 'foo')) {
@@ -111,7 +110,7 @@ test('narrows a Record by surfacing the explicit key', () => {
   }
 });
 
-test('preserves readonly modifier', () => {
+it('preserves readonly modifier', () => {
   const data = {} as { readonly a?: string };
 
   if (hasProp(data, 'a')) {
@@ -121,7 +120,7 @@ test('preserves readonly modifier', () => {
   }
 });
 
-test('narrows symbol keys', () => {
+it('narrows symbol keys', () => {
   const symbol = Symbol('test');
   const data = {} as { [symbol]?: number };
 
@@ -132,7 +131,7 @@ test('narrows symbol keys', () => {
   }
 });
 
-test('narrows number keys', () => {
+it('narrows number keys', () => {
   const data = {} as { 0?: string };
 
   if (hasProp(data, 0)) {
@@ -142,7 +141,7 @@ test('narrows number keys', () => {
   }
 });
 
-test('drops union members that don\'t have the key', () => {
+it('drops union members that don\'t have the key', () => {
   const data = {} as { a: number } | { b: string };
 
   if (hasProp(data, 'a')) {
@@ -152,7 +151,7 @@ test('drops union members that don\'t have the key', () => {
   }
 });
 
-test('removes optionality across union members that share the key', () => {
+it('removes optionality across union members that share the key', () => {
   const data = {} as { a?: number; tag: 'x' } | { a?: string; tag: 'y' };
 
   if (hasProp(data, 'a')) {
@@ -166,7 +165,7 @@ test('removes optionality across union members that share the key', () => {
   }
 });
 
-test('rejects keys that can\'t exist on the data', () => {
+it('rejects keys that can\'t exist on the data', () => {
   hasProp(
     {} as { name: string },
     // @ts-expect-error [ts2345] - "naem" is a typo

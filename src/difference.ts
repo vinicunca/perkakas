@@ -31,7 +31,7 @@ export function difference<T>(data: ReadonlyArray<T>, other: ReadonlyArray<T>): 
  * @example
  *    pipe([1, 2, 3, 4], difference([2, 5, 3])); // => [1, 4]
  *    pipe([1, 1, 2, 2], difference([1])); // => [1, 2, 2]
- * @dataFirst
+ * @dataLast
  * @lazy
  * @category Array
  */

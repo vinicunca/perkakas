@@ -1,6 +1,7 @@
 import type { IterableContainer } from './iterable-container';
 import type { TupleParts } from './tuple-parts';
 import { describe, expectTypeOf, it } from 'vitest';
+import { $missingPropertyType } from '../../../test/$missing-property-type';
 
 declare function tupleParts<T extends IterableContainer>(x: T): TupleParts<T>;
 
@@ -300,6 +301,16 @@ describe('handling of undefined values', () => {
       required: [];
       optional: [];
       item: number | undefined;
+      suffix: [];
+    }>();
+  });
+
+  it('rest item typed with TypeScript\'s internal `missing` type', () => {
+    // `missing` is indistinguishable from `undefined` in the expected type.
+    expectTypeOf(tupleParts($missingPropertyType())).toEqualTypeOf<{
+      required: [];
+      optional: [];
+      item: string | undefined;
       suffix: [];
     }>();
   });

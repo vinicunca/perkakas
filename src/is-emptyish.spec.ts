@@ -1,5 +1,4 @@
 /* eslint-disable node/prefer-global/buffer */
-/* eslint-disable sonar/no-primitive-wrappers */
 import { describe, expect, it } from 'vitest';
 import { isEmptyish } from './is-emptyish';
 
@@ -246,7 +245,7 @@ describe('unsupported types', () => {
       // There is no value in an empty regexp because it catches nothing so it's
       // unlikely that this would be needed.
 
-      // eslint-disable-next-line prefer-regex-literals, sonar/no-empty-group
+      // eslint-disable-next-line prefer-regex-literals
       expect(isEmptyish(new RegExp(''))).toBe(true);
       expect(isEmptyish(/abc/u)).toBe(true);
     });

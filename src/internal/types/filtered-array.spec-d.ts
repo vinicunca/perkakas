@@ -1,6 +1,6 @@
 import type { FilteredArray } from './filtered-array';
 import type { IterableContainer } from './iterable-container';
-import { describe, expectTypeOf, it, test } from 'vitest';
+import { describe, expectTypeOf, it } from 'vitest';
 import { $typed } from '../../../test/$typed';
 
 interface ItemInterface {
@@ -29,11 +29,11 @@ declare function filteredArray<
   IsNegated extends boolean = false,
 >(data: T, condition: C, isNegated?: IsNegated): FilteredArray<T, C, IsNegated>;
 
-test('empty array', () => {
+it('empty array', () => {
   expectTypeOf(filteredArray([], $typed<string>())).toEqualTypeOf<[]>();
 });
 
-test('empty readonly array', () => {
+it('empty readonly array', () => {
   expectTypeOf(filteredArray([] as const, $typed<string>())).toEqualTypeOf<
     []
   >();
@@ -875,13 +875,13 @@ describe('tuples with optional elements', () => {
   });
 });
 
-test('null filtering', () => {
+it('null filtering', () => {
   expectTypeOf(
     filteredArray([] as Array<string | undefined>, $typed<string>()),
   ).toEqualTypeOf<Array<string>>();
 });
 
-test('prop with literal union value filtered by overlapping value (issue #1231)', () => {
+it('prop with literal union value filtered by overlapping value (issue #1231)', () => {
   expectTypeOf(
     filteredArray([] as Array<{ a: 'cat' | 'dog'; b: string }>, {
       a: 'cat' as const,
@@ -889,7 +889,7 @@ test('prop with literal union value filtered by overlapping value (issue #1231)'
   ).branded.toEqualTypeOf<Array<{ a: 'cat'; b: string }>>();
 });
 
-test('prop with literal union value filtered by disjoint value', () => {
+it('prop with literal union value filtered by disjoint value', () => {
   expectTypeOf(
     filteredArray([] as Array<{ a: 'cat' | 'dog'; b: string }>, {
       a: 'bird' as const,

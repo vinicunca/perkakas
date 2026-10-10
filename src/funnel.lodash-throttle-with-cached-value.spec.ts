@@ -3,39 +3,34 @@
  * These aren't useful for a reference implementation for a legacy library!
  */
 
-import type { StrictFunction } from './internal/types/strict-function';
 import { describe, expect, it, vi } from 'vitest';
 import { constant } from './constant';
 import { funnel } from './funnel';
 import { identity } from './identity';
 import { sleep } from './sleep';
 
+// Copy everything between the REFERENCE START and REFERENCE END markers into
+// your project, importing `funnel` from '@vinicunca/perkakas'.
+// --- REFERENCE START -------------------------------------------------------
+
+// Using `never` as the type for args allows this to extend *any* function.
+type StrictFunction = (...args: never) => unknown;
+
 /**
- * A reference implementation of the Lodash `throttle` function using the
- * Perkakas `funnel` function. While migrating from Lodash you can copy this
- * function as-is into your codebase and use it as a drop-in replacement; but
- * we recommend eventually inlining the call to `funnel` so you can adjust the
- * function to your specific needs.
+ * A drop-in replacement for the Lodash `throttle` function, implemented on
+ * top of Perkakas's `funnel`. This is a more complex implementation which
+ * respects Lodash's capability to track the return value of the callback
+ * function; in most cases you are more likely to prefer the simpler variant
+ * available in [`funnel.lodash-throttle.spec.ts`](https://github.com/vinicunca/perkakas/blob/main/src/funnel.lodash-throttle.spec.ts).
+ * Whenever Lodash offered a concrete spec this implementation respects it,
+ * but there might be untested use-cases that would have differing runtime
+ * behaviors.
  *
- * This is a more complex implementation which respects Lodash capability to
- * track the return value of the callback function. In most cases you are more
- * likely to prefer the simpler reference implementation `throttle` which can
- * be found in the other test file.
- *
- * The following tests in this file are based on the Lodash tests for throttle.
- * They have been adapted to work with our testing framework, have been fixed
- * or expanded slightly were it felt necessary, and have been modernized for
- * better readability. The names of the test cases have been preserved to ease
- * comparing them to the original tests. Tests that are unrelated to the cache
- * capability have been removed to avoid duplication with the other test file.
- *
- * Note that this means that whenever Lodash offered a concrete spec, we made
- * sure our reference implementation respects it, but there might be untested
- * use-cases that would have differing runtime behaviors.
+ * We recommend eventually inlining the call to `funnel` and adjusting the
+ * implementation to your specific needs.
  *
  * @see Lodash Documentation: https://lodash.com/docs/4.17.15#throttle
  * @see Lodash Implementation: https://github.com/lodash/lodash/blob/4.17.21/lodash.js#L10965
- * @see Lodash Tests: https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L22768
  * @see Lodash Typing: https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/lodash/common/function.d.ts#L1347
  */
 function throttleWithCachedValue<F extends StrictFunction>(
@@ -53,9 +48,9 @@ function throttleWithCachedValue<F extends StrictFunction>(
       if (!leading && !trailing) {
         // In Lodash you can disable both the trailing and leading edges of the
         // throttle window, effectively causing the function to never be
-        // invoked. Perkakas uses the invokedAt enum exactly to prevent such a
-        // situation; so to simulate Lodash we need to only pass the callback
-        // when at least one of them is enabled.
+        // invoked. Perkakas's `triggerAt` option exists exactly to prevent
+        // such a situation; so to simulate Lodash we need to only pass the
+        // callback when at least one of them is enabled.
         return;
       }
 
@@ -101,6 +96,15 @@ function throttleWithCachedValue<F extends StrictFunction>(
     },
   );
 }
+// --- REFERENCE END ---------------------------------------------------------
+
+// The following tests are based on the Lodash tests for throttle
+// (https://github.com/lodash/lodash/blob/4.17.21/test/test.js#L22768). They
+// have been adapted to work with our testing framework, have been fixed or
+// expanded slightly where it felt necessary, and have been modernized for
+// better readability. The names of the test cases have been preserved to ease
+// comparing them to the original tests. Tests that are unrelated to the cache
+// capability have been removed to avoid duplication with the other test file.
 
 // We need some non-trivial duration to use in all our tests, to abstract the
 // actual chosen value we use this UnitOfTime (UT) constant. As long as it is a

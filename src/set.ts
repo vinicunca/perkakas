@@ -48,5 +48,6 @@ export function set(...args: ReadonlyArray<unknown>): unknown {
 }
 
 function setImplementation<T, K extends keyof T, V extends Required<T>[K]>(obj: T, prop: K, value: V): UpsertProp<T, K, V> {
+  // @ts-expect-error [ts2322] - Hard to type
   return { ...obj, [prop]: value };
 }

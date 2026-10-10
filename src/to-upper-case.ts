@@ -54,5 +54,6 @@ export function toUpperCase(...args: ReadonlyArray<unknown>): unknown {
 }
 
 function toUpperCaseImplementation<T extends string>(data: T): Uppercase<T> {
+  // @ts-expect-error [ts2322] -- TypeScript can't infer this from the code...
   return data.toUpperCase();
 }

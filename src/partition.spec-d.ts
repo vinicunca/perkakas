@@ -1,5 +1,5 @@
 import type { Cat, Kitten, Legged, Named } from '../test/interfaces';
-import { describe, expectTypeOf, it, test } from 'vitest';
+import { describe, expectTypeOf, it } from 'vitest';
 import { $typed } from '../test/$typed';
 import {
   isCat,
@@ -15,85 +15,85 @@ import { isString } from './is-string';
 import { partition } from './partition';
 import { pipe } from './pipe';
 
-test('partition with type guard', () => {
+it('partition with type guard', () => {
   expectTypeOf(partition([1, 'a', 2, 'b'], isNumber)).toEqualTypeOf<
     [[number, number], [string, string]]
   >();
 });
 
-test('narrows both sides when the predicate is wider than the item', () => {
+it('narrows both sides when the predicate is wider than the item', () => {
   expectTypeOf(
     partition(['a', null] as Array<string | null>, isNullish),
   ).toEqualTypeOf<[Array<null>, Array<string>]>();
 });
 
-test('narrows tuples down to the matching items', () => {
+it('narrows tuples down to the matching items', () => {
   expectTypeOf(
     partition([1, 'a', true] as [1, 'a', true], isString),
   ).toEqualTypeOf<[['a'], [1, true]]>();
 });
 
-test('readonly tuple', () => {
+it('readonly tuple', () => {
   expectTypeOf(partition([1, 'a', true] as const, isString)).toEqualTypeOf<
     [['a'], [1, true]]
   >();
 });
 
-test('tuple with a rest item', () => {
+it('tuple with a rest item', () => {
   expectTypeOf(
     partition($typed<[string, ...Array<number>, boolean]>(), isString),
   ).toEqualTypeOf<[[string], [...Array<number>, boolean]]>();
 });
 
-test('tuple with an optional item', () => {
+it('tuple with an optional item', () => {
   expectTypeOf(partition($typed<[string, number?]>(), isString)).toEqualTypeOf<
     [[string], [number?]]
   >();
 });
 
-test('union of arrays', () => {
+it('union of arrays', () => {
   expectTypeOf(partition([] as Array<string> | Array<number>, isString)).toEqualTypeOf<
     [[] | Array<string>, [] | Array<number>]
   >();
 });
 
-test('narrows with a guard incomparable to the item', () => {
+it('narrows with a guard incomparable to the item', () => {
   expectTypeOf(partition([] as Array<Cat>, isLegged)).toEqualTypeOf<
     [Array<Cat & Legged>, Array<Cat>]
   >();
 });
 
-test('object guard sharing no keys with the item', () => {
+it('object guard sharing no keys with the item', () => {
   expectTypeOf(partition([] as Array<Cat>, isNamed)).toEqualTypeOf<
     [Array<Cat & Named>, Array<Cat>]
   >();
 });
 
-test('object guard sharing no keys with a tuple item', () => {
+it('object guard sharing no keys with a tuple item', () => {
   expectTypeOf(partition($typed<[Cat]>(), isNamed)).toEqualTypeOf<
     [[] | [Cat & Named], [] | [Cat]]
   >();
 });
 
-test('guard for a supertype of the item can\'t reject', () => {
+it('guard for a supertype of the item can\'t reject', () => {
   expectTypeOf(partition([] as Array<Kitten>, isCat)).toEqualTypeOf<
     [Array<Kitten>, []]
   >();
 });
 
-test('narrows with a generic guard', () => {
+it('narrows with a generic guard', () => {
   expectTypeOf(
     partition([1, undefined] as Array<number | undefined>, isDefined),
   ).toEqualTypeOf<[Array<number>, Array<undefined>]>();
 });
 
-test('narrows with a negated guard', () => {
+it('narrows with a negated guard', () => {
   expectTypeOf(
     partition([1, 'a'] as Array<number | string>, isNot(isString)),
   ).toEqualTypeOf<[Array<number>, Array<string>]>();
 });
 
-test('predicate is typed correctly', () => {
+it('predicate is typed correctly', () => {
   partition([] as Array<number | string>, (value, index, data) => {
     expectTypeOf(value).toEqualTypeOf<number | string>();
     expectTypeOf(index).toEqualTypeOf<number>();
@@ -103,48 +103,48 @@ test('predicate is typed correctly', () => {
   });
 });
 
-test('predicate disjoint from the item', () => {
+it('predicate disjoint from the item', () => {
   expectTypeOf(partition([] as Array<string>, isNullish)).toEqualTypeOf<
     [[], Array<string>]
   >();
 });
 
-test('`unknown` data', () => {
+it('`unknown` data', () => {
   expectTypeOf(partition([] as Array<unknown>, isString)).toEqualTypeOf<
     [Array<string>, Array<unknown>]
   >();
 });
 
-test('predicate with a mismatched param is an error', () => {
+it('predicate with a mismatched param is an error', () => {
   // @ts-expect-error [ts2769] -- The predicate must accept the item type.
   partition([] as Array<number>, (x: string) => x.length > 0);
 });
 
-test('non-guard predicate keeps both sides unnarrowed', () => {
+it('non-guard predicate keeps both sides unnarrowed', () => {
   expectTypeOf(partition([1, 'a'], constant($typed<boolean>()))).toEqualTypeOf<
     [Array<number | string>, Array<number | string>]
   >();
 });
 
-test('always-true predicate', () => {
+it('always-true predicate', () => {
   expectTypeOf(partition([1, 'a'], constant(true))).toEqualTypeOf<
     [[number, string], []]
   >();
 });
 
-test('always-false predicate', () => {
+it('always-false predicate', () => {
   expectTypeOf(partition([1, 'a'], constant(false))).toEqualTypeOf<
     [[], [number, string]]
   >();
 });
 
-test('all-optional tuple with a trivial rejector', () => {
+it('all-optional tuple with a trivial rejector', () => {
   expectTypeOf(
     partition([] as readonly [string?, number?], constant(false)),
   ).toEqualTypeOf<[[], [string?, number?]]>();
 });
 
-test('readonly array with a non-guard predicate', () => {
+it('readonly array with a non-guard predicate', () => {
   expectTypeOf(
     partition([] as ReadonlyArray<number>, constant($typed<boolean>())),
   ).toEqualTypeOf<[Array<number>, Array<number>]>();

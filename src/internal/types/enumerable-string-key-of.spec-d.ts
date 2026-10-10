@@ -1,25 +1,25 @@
 import type { Tagged } from 'type-fest';
 import type { EnumerableStringKeyOf } from './enumerable-string-key-of';
-import { expectTypeOf, test } from 'vitest';
+import { expectTypeOf, it } from 'vitest';
 import { $typed } from '../../../test/$typed';
 
 declare const SYMBOL: unique symbol;
 
 declare function enumerableStringKeyOf<T>(data: T): EnumerableStringKeyOf<T>;
 
-test('string keys', () => {
+it('string keys', () => {
   expectTypeOf(
     enumerableStringKeyOf($typed<Record<string, unknown>>()),
   ).toEqualTypeOf<string>();
 });
 
-test('number keys', () => {
+it('number keys', () => {
   expectTypeOf(
     enumerableStringKeyOf($typed<Record<number, unknown>>()),
   ).toEqualTypeOf<`${number}`>();
 });
 
-test('union of records', () => {
+it('union of records', () => {
   expectTypeOf(
     enumerableStringKeyOf(
       $typed<Record<`prefix_${string}`, unknown> | Record<number, unknown>>(),
@@ -27,7 +27,7 @@ test('union of records', () => {
   ).toEqualTypeOf<`${number}` | `prefix_${string}`>();
 });
 
-test('union keys', () => {
+it('union keys', () => {
   expectTypeOf(
     enumerableStringKeyOf(
       $typed<Record<number | `prefix_${string}`, unknown>>(),
@@ -35,7 +35,7 @@ test('union keys', () => {
   ).toEqualTypeOf<`${number}` | `prefix_${string}`>();
 });
 
-test('union of records with branded keys', () => {
+it('union of records with branded keys', () => {
   expectTypeOf(
     enumerableStringKeyOf(
       $typed<
@@ -46,7 +46,7 @@ test('union of records with branded keys', () => {
   ).toEqualTypeOf<Tagged<string, 'coke'> | Tagged<string, 'pepsi'>>();
 });
 
-test('union of branded keys', () => {
+it('union of branded keys', () => {
   expectTypeOf(
     enumerableStringKeyOf(
       {} as Record<Tagged<string, 'coke'> | Tagged<string, 'pepsi'>, unknown>,
@@ -54,7 +54,7 @@ test('union of branded keys', () => {
   ).toEqualTypeOf<Tagged<string, 'coke'> | Tagged<string, 'pepsi'>>();
 });
 
-test('union with a mix of branded and number keys', () => {
+it('union with a mix of branded and number keys', () => {
   expectTypeOf(
     enumerableStringKeyOf(
       $typed<Record<Tagged<string, 'brand'> | number, unknown>>(),
@@ -62,7 +62,7 @@ test('union with a mix of branded and number keys', () => {
   ).toEqualTypeOf<Tagged<string, 'brand'> | `${number}`>();
 });
 
-test('union of records with branded key and number key', () => {
+it('union of records with branded key and number key', () => {
   expectTypeOf(
     enumerableStringKeyOf(
       $typed<
@@ -72,7 +72,7 @@ test('union of records with branded key and number key', () => {
   ).toEqualTypeOf<Tagged<string, 'brand'> | `${number}`>();
 });
 
-test('symbol keys', () => {
+it('symbol keys', () => {
   expectTypeOf(
     enumerableStringKeyOf($typed<Record<string | symbol, unknown>>()),
   ).toEqualTypeOf<string>();
@@ -86,13 +86,13 @@ test('symbol keys', () => {
   ).toEqualTypeOf<string>();
 });
 
-test('optional keys', () => {
+it('optional keys', () => {
   expectTypeOf(
     enumerableStringKeyOf($typed<{ a: unknown; b?: unknown }>()),
   ).toEqualTypeOf<'a' | 'b'>();
 });
 
-test('branded types', () => {
+it('branded types', () => {
   expectTypeOf(
     enumerableStringKeyOf({} as Record<Tagged<string, 'brand'>, unknown>),
   ).toEqualTypeOf<Tagged<string, 'brand'>>();

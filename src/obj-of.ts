@@ -30,5 +30,6 @@ export function objOf(...args: ReadonlyArray<unknown>): unknown {
 }
 
 function objOfImplementation<T, K extends string>(value: T, key: K): Record<K, T> {
+  // @ts-expect-error [ts2322] - I'm not sure how to get the type right here...
   return { [key]: value };
 }
