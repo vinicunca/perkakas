@@ -1,6 +1,9 @@
+import type { LazyResult } from './internal/lazy-control';
 import type { LazyCallback } from './internal/types/lazy-callback';
 import type { LazyEvaluator } from './internal/types/lazy-evaluator';
-import { curry } from './curry';
+import { curryWithLazy } from './internal/curry-with-lazy';
+import { manyLazyValues } from './internal/lazy-control';
+import { requireDataByArity } from './internal/require-data';
 
 /**
  * Returns a new array formed by applying a given callback function to each
@@ -53,23 +56,22 @@ export function flatMap<T, U>(
 ): (data: ReadonlyArray<T>) => Array<U>;
 
 export function flatMap(...args: ReadonlyArray<unknown>): unknown {
-  return curry(flatMapImplementation, args, lazyImplementation);
+  return curryWithLazy(flatMapImplementation, args, lazyImplementation);
 }
 
 function flatMapImplementation<T, U>(data: ReadonlyArray<T>, callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => ReadonlyArray<U> | U): Array<U> {
   return data.flatMap(callbackfn);
 }
 
-function lazyImplementation<T, K>(callbackfn: (
-  input: T,
-  index: number,
-  data: ReadonlyArray<T>,
-) => K | ReadonlyArray<K>): LazyEvaluator<T, K> {
-  // @ts-expect-error [ts2322] - We need to make LazyMany better so it accommodate the typing here...
-  return (value, index, data) => {
-    const next = callbackfn(value, index, data);
-    return Array.isArray(next)
-      ? { done: false, hasNext: true, hasMany: true, next }
-      : { done: false, hasNext: true, next };
-  };
+function lazyImplementation<T, K>(callbackfn: (input: T, index: number, data: ReadonlyArray<T>) => K | ReadonlyArray<K>): LazyEvaluator<T, K> {
+  return requireDataByArity(callbackfn, (value, index, data, slot): LazyResult<K> => {
+    const mapped = callbackfn(value, index, data);
+    return Array.isArray(mapped)
+      ? manyLazyValues(mapped, slot)
+      : // @ts-expect-error [ts2322] -- Array.isArray doesn't narrow readonly
+    // arrays (https://github.com/microsoft/TypeScript/issues/17002), so
+    // `mapped` is still typed as K | readonly K[] here even though it is
+    // never an array at runtime.
+      mapped;
+  });
 }

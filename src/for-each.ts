@@ -2,7 +2,8 @@ import type { Writable } from 'type-fest';
 import type { IterableContainer } from './internal/types/iterable-container';
 import type { LazyCallback } from './internal/types/lazy-callback';
 import type { LazyEvaluator } from './internal/types/lazy-evaluator';
-import { curry } from './curry';
+import { curryWithLazy } from './internal/curry-with-lazy';
+import { requireDataByArity } from './internal/require-data';
 
 /**
  * Executes a provided function once for each array element. Equivalent to
@@ -58,7 +59,7 @@ export function forEach<T extends IterableContainer>(
 ): (data: T) => Writable<T>;
 
 export function forEach(...args: ReadonlyArray<unknown>): unknown {
-  return curry(forEachImplementation, args, lazyImplementation);
+  return curryWithLazy(forEachImplementation, args, lazyImplementation);
 }
 
 function forEachImplementation<T>(
@@ -71,8 +72,8 @@ function forEachImplementation<T>(
 }
 
 function lazyImplementation<T>(callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => void): LazyEvaluator<T> {
-  return (value, index, data) => {
+  return requireDataByArity(callbackfn, (value, index, data) => {
     callbackfn(value, index, data);
-    return { done: false, hasNext: true, next: value };
-  };
+    return value;
+  });
 }

@@ -142,5 +142,7 @@ export function fromEntries(): <Entries extends IterableContainer<Entry>>(
 ) => Simplify<FromEntries<Entries>>;
 
 export function fromEntries(...args: ReadonlyArray<unknown>): unknown {
-  return curry(Object.fromEntries, args);
+  // To avoid getting the `any` return type from `Object.fromEntries` we select
+  // a different overloaded signature by explicitly stating the type parameter.
+  return curry(Object.fromEntries<unknown>, args);
 }

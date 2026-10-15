@@ -4,8 +4,6 @@ import { filter } from './filter';
 import { first } from './first';
 import { pipe } from './pipe';
 
-const assertIsDefined = <T>(v: T | null | undefined): T => v!;
-
 it('should return first', () => {
   expect(first([1, 2, 3] as const)).toBe(1);
 });
@@ -191,3 +189,7 @@ it('readonly tuple with last', () => {
 
   expect(result).toBe('a');
 });
+
+function assertIsDefined<T>(v: T | null | undefined): T {
+  return v!;
+}

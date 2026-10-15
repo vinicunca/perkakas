@@ -1,18 +1,18 @@
 import type { LazyEvaluator } from './internal/types/lazy-evaluator';
-import { curryFromLazy } from './internal/curry-from-lazy';
-import { SKIP_ITEM } from './internal/utility-evaluators';
+import { curryWithLazy } from './internal/curry-with-lazy';
+import { SKIP_ITEM } from './internal/lazy-control';
 
-type Comparator<TFirst, TSecond> = (a: TFirst, b: TSecond) => boolean;
+type IsEqual<T, S> = (a: T, b: S) => boolean;
 
 /**
  * Returns a list of intersecting values based on a custom
  * comparator function that compares elements of both arrays.
  *
- * @param array - The source array.
- * @param other - The second array.
- * @param comparator - The custom comparator.
+ * @param data - The source data.
+ * @param other - The other data.
+ * @param isEqual - The custom comparator.
  * @signature
- *    intersectionWith(array, other, comparator)
+ *    intersectionWith(data, other, isEqual)
  * @example
  *    intersectionWith(
  *      [
@@ -26,20 +26,20 @@ type Comparator<TFirst, TSecond> = (a: TFirst, b: TSecond) => boolean;
  * @lazy
  * @category Array
  */
-export function intersectionWith<TFirst, TSecond>(
-  array: ReadonlyArray<TFirst>,
-  other: ReadonlyArray<TSecond>,
-  comparator: Comparator<TFirst, TSecond>,
-): Array<TFirst>;
+export function intersectionWith<T, S>(
+  data: ReadonlyArray<T>,
+  other: ReadonlyArray<S>,
+  isEqual: IsEqual<T, S>,
+): Array<T>;
 
 /**
  * Returns a list of intersecting values based on a custom
  * comparator function that compares elements of both arrays.
  *
- * @param other - The second array.
- * @param comparator - The custom comparator.
+ * @param other - The other data.
+ * @param isEqual - The custom comparator.
  * @signature
- *    intersectionWith(other, comparator)(array)
+ *    intersectionWith(other, isEqual)(data)
  * @example
  *    intersectionWith(
  *      [3, 5],
@@ -52,22 +52,39 @@ export function intersectionWith<TFirst, TSecond>(
  * @lazy
  * @category Array
  */
-export function intersectionWith<TFirst, TSecond>(
-  other: ReadonlyArray<TSecond>,
+export function intersectionWith<T, S>(
+  other: ReadonlyArray<S>,
   /**
    * Type inference doesn't work properly for the comparator's first parameter
    * in data last variant.
    */
-  comparator: Comparator<TFirst, TSecond>,
-): (array: ReadonlyArray<TFirst>) => Array<TFirst>;
+  isEqual: IsEqual<T, S>,
+): (data: ReadonlyArray<T>) => Array<T>;
 
 export function intersectionWith(...args: ReadonlyArray<unknown>): unknown {
-  return curryFromLazy(lazyImplementation, args);
+  return curryWithLazy(
+    intersectionWithImplementation,
+    args,
+    lazyImplementation,
+  );
 }
 
-function lazyImplementation<TFirst, TSecond>(other: ReadonlyArray<TSecond>, comparator: Comparator<TFirst, TSecond>): LazyEvaluator<TFirst> {
+function intersectionWithImplementation<T, S>(
+  data: ReadonlyArray<T>,
+  other: ReadonlyArray<S>,
+  isEqual: IsEqual<T, S>,
+): Array<T> {
+  const result: Array<T> = [];
+  for (const value of data) {
+    if (other.some((otherValue) => isEqual(value, otherValue))) {
+      result.push(value);
+    }
+  }
+
+  return result;
+}
+
+function lazyImplementation<T, S>(other: ReadonlyArray<S>, isEqual: IsEqual<T, S>): LazyEvaluator<T> {
   return (value) =>
-    other.some((otherValue) => comparator(value, otherValue))
-      ? { done: false, hasNext: true, next: value }
-      : SKIP_ITEM;
+    other.some((otherValue) => isEqual(value, otherValue)) ? value : SKIP_ITEM;
 }

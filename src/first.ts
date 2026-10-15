@@ -1,8 +1,11 @@
-/* eslint-disable ts/no-use-before-define */
+import type { LazyResult, LazySlot } from './internal/lazy-control';
 import type { First } from './internal/types/first';
 import type { IterableContainer } from './internal/types/iterable-container';
-import type { LazyEvaluator } from './internal/types/lazy-evaluator';
-import { curry } from './curry';
+import { curryWithLazy } from './internal/curry-with-lazy';
+import {
+  lastLazyValue,
+
+} from './internal/lazy-control';
 import { toSingle } from './internal/to-single';
 
 /**
@@ -41,14 +44,16 @@ export function first<T extends IterableContainer>(data: T): First<T>;
 export function first(): <T extends IterableContainer>(data: T) => First<T>;
 
 export function first(...args: ReadonlyArray<unknown>): unknown {
-  return curry(firstImplementation, args, toSingle(lazyImplementation));
+  // eslint-disable-next-line ts/no-use-before-define -- implementations follow the overloaded signatures
+  return curryWithLazy(firstImplementation, args, lazyImplementation);
 }
 
-const firstImplementation = <T>([item]: ReadonlyArray<T>): T | undefined => item;
+function firstImplementation<T>([item]: ReadonlyArray<T>): T | undefined {
+  return item;
+}
 
-const lazyImplementation = (): LazyEvaluator => firstLazy;
+const lazyImplementation = toSingle(() => emitAndStop);
 
-// eslint-disable-next-line ts/explicit-function-return-type
-function firstLazy<T>(value: T) {
-  return ({ hasNext: true, next: value, done: true }) as const;
+function emitAndStop<T>(value: T, _index: number, _data: ReadonlyArray<T>, slot: LazySlot): LazyResult<T> {
+  return lastLazyValue(value, slot);
 }

@@ -6,8 +6,9 @@ import type {
 } from './internal/types/lazy-callback';
 import type { LazyEvaluator } from './internal/types/lazy-evaluator';
 import type { NonRefinedFilteredArray } from './internal/types/non-refined-filtered-array';
-import { curry } from './curry';
-import { SKIP_ITEM } from './internal/utility-evaluators';
+import { curryWithLazy } from './internal/curry-with-lazy';
+import { SKIP_ITEM } from './internal/lazy-control';
+import { requireDataByArity } from './internal/require-data';
 
 /**
  * Creates a shallow copy of a portion of a given array, filtered down to just
@@ -77,7 +78,7 @@ export function filter<
 ): (data: T) => NonRefinedFilteredArray<T, IsItemIncluded>;
 
 export function filter(...args: ReadonlyArray<unknown>): unknown {
-  return curry(filterImplementation, args, lazyImplementation);
+  return curryWithLazy(filterImplementation, args, lazyImplementation);
 }
 
 function filterImplementation<T>(data: ReadonlyArray<T>, predicate: (value: T, index: number, array: ReadonlyArray<T>) => boolean): Array<T> {
@@ -85,8 +86,6 @@ function filterImplementation<T>(data: ReadonlyArray<T>, predicate: (value: T, i
 }
 
 function lazyImplementation<T>(predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean): LazyEvaluator<T> {
-  return (value, index, data) =>
-    predicate(value, index, data)
-      ? { done: false, hasNext: true, next: value }
-      : SKIP_ITEM;
+  return requireDataByArity(predicate, (value, index, data) =>
+    predicate(value, index, data) ? value : SKIP_ITEM);
 }

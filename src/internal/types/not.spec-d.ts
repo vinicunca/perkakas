@@ -1,17 +1,17 @@
 import type { Not } from './not';
-import { expectTypeOf, test } from 'vitest';
+import { expectTypeOf, it } from 'vitest';
 import { $typed } from '../../../test/$typed';
 
 declare function not<T extends boolean>(data: T): Not<T>;
 
-test('true', () => {
+it('true', () => {
   expectTypeOf(not(true)).toEqualTypeOf<false>();
 });
 
-test('false', () => {
+it('false', () => {
   expectTypeOf(not(false)).toEqualTypeOf<true>();
 });
 
-test('boolean', () => {
+it('boolean', () => {
   expectTypeOf(not($typed<boolean>())).toEqualTypeOf<boolean>();
 });

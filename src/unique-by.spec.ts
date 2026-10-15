@@ -26,6 +26,14 @@ it('handles uniq by identity', () => {
   ]);
 });
 
+it('returns a shallow clone when no key repeats', () => {
+  const data = [1, 2, 3];
+  const result = uniqueBy(data, identity());
+
+  expect(result).toStrictEqual(data);
+  expect(result).not.toBe(data);
+});
+
 it('returns people with uniq names', () => {
   expect(uniqueBy(PEOPLE, (p) => p.name)).toStrictEqual([
     { name: 'John', age: 42 },
@@ -55,19 +63,43 @@ it('returns people with uniq first letter of name', () => {
   ]);
 });
 
-it('provides the items processed so far to the key function', () => {
-  const mock = vi.fn<LazyCallback<Array<unknown>, unknown>>(
-    (_item, _index, data) => [...data],
-  );
-  uniqueBy([1, 2, 2, 3], mock);
+it('provides the whole input to the key function', () => {
+  const data = [1, 2, 2, 3];
+  const keyFunction = vi.fn<
+    (item: unknown, index: number, items: ReadonlyArray<unknown>) => unknown
+  >((_item, _index, items) => [...items]);
+  uniqueBy(data, keyFunction);
 
-  expect(mock).toHaveNthReturnedWith(1, [1]);
-  expect(mock).toHaveNthReturnedWith(2, [1, 2]);
-  expect(mock).toHaveNthReturnedWith(3, [1, 2, 2]);
-  expect(mock).toHaveNthReturnedWith(4, [1, 2, 2, 3]);
+  expect(keyFunction).toHaveNthReturnedWith(1, data);
+  expect(keyFunction).toHaveNthReturnedWith(2, data);
+  expect(keyFunction).toHaveNthReturnedWith(3, data);
+  expect(keyFunction).toHaveNthReturnedWith(4, data);
 });
 
 describe(pipe, () => {
+  it('provides the items processed so far to the key function', () => {
+    const keyFunction = vi.fn<LazyCallback<Array<unknown>, unknown>>(
+      (_item, _index, data) => [...data],
+    );
+    pipe([1, 2, 2, 3], uniqueBy(keyFunction));
+
+    expect(keyFunction).toHaveNthReturnedWith(1, [1]);
+    expect(keyFunction).toHaveNthReturnedWith(2, [1, 2]);
+    expect(keyFunction).toHaveNthReturnedWith(3, [1, 2, 2]);
+    expect(keyFunction).toHaveNthReturnedWith(4, [1, 2, 2, 3]);
+  });
+
+  it('doesn\'t collect the items processed so far for a key function without `data`', () => {
+    // `vi.fn` keeps its implementation's `length`, which is all the arity
+    // check reads.
+    const keyFunction = vi.fn<
+      (item: number, index: number, data: ReadonlyArray<number>) => number
+    >((item, index) => item + index);
+    pipe([1, 2, 3], uniqueBy(keyFunction));
+
+    expect(() => keyFunction.mock.calls[0]?.[2]?.at(0)).toThrow(/^Perkakas: /u);
+  });
+
   it('gets executed until target length is reached', () => {
     const counter = createLazyInvocationCounter();
     const result = pipe(

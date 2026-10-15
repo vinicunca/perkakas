@@ -2,8 +2,10 @@ import type { Cat, Legged, Named } from '../test/interfaces';
 import { describe, expectTypeOf, it } from 'vitest';
 import { $typed } from '../test/$typed';
 import {
+
   isLegged,
   isNamed,
+
 } from '../test/interfaces';
 import { constant } from './constant';
 import { find } from './find';

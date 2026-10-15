@@ -1,10 +1,10 @@
-import type { BrandedReturn } from './internal/types/branded-return';
 import type { Deduped } from './internal/types/deduped';
 import type { IterableContainer } from './internal/types/iterable-container';
 import type { LazyCallback } from './internal/types/lazy-callback';
 import type { LazyEvaluator } from './internal/types/lazy-evaluator';
-import { curryFromLazy } from './internal/curry-from-lazy';
-import { SKIP_ITEM } from './internal/utility-evaluators';
+import { curryWithLazy } from './internal/curry-with-lazy';
+import { SKIP_ITEM } from './internal/lazy-control';
+import { requireDataByArity } from './internal/require-data';
 
 /**
  * Returns a new array containing only one copy of each element in the original
@@ -25,7 +25,7 @@ import { SKIP_ITEM } from './internal/utility-evaluators';
  */
 export function uniqueBy<T extends IterableContainer>(
   data: T,
-  keyFunction: LazyCallback<T, unknown>,
+  keyFunction: (value: T[number], index: number, data: Readonly<T>) => unknown,
 ): Deduped<T>;
 
 /**
@@ -50,23 +50,43 @@ export function uniqueBy<T extends IterableContainer>(
 ): (data: T) => Deduped<T>;
 
 export function uniqueBy(...args: ReadonlyArray<unknown>): unknown {
-  return curryFromLazy(lazyImplementation, args);
+  return curryWithLazy(uniqueByImplementation, args, lazyImplementation);
+}
+
+function uniqueByImplementation<T>(
+  data: ReadonlyArray<T>,
+  keyFunction: (value: T, index: number, data: ReadonlyArray<T>) => unknown,
+): Array<T> {
+  const seenKeys = new Set<unknown>();
+
+  const result: Array<T> = [];
+  let index = 0;
+  for (const value of data) {
+    const key = keyFunction(value, index, data);
+    // `add` leaves the set unchanged for a key it already holds, so the size
+    // tells duplicates apart with a single hash lookup per item.
+    const sizeBefore = seenKeys.size;
+    seenKeys.add(key);
+    if (seenKeys.size > sizeBefore) {
+      result.push(value);
+    }
+    index += 1;
+  }
+
+  return result;
 }
 
 function lazyImplementation<T>(
   keyFunction: (item: T, index: number, data: ReadonlyArray<T>) => unknown,
 ): LazyEvaluator<T> {
-  // @see https://github.com/typescript-eslint/typescript-eslint/issues/9885
-  const brandedKeyFunction = keyFunction as BrandedReturn<typeof keyFunction>;
+  const seenKeys = new Set<unknown>();
 
-  const set = new Set<ReturnType<typeof brandedKeyFunction>>();
-  return (value, index, data) => {
-    const key = brandedKeyFunction(value, index, data);
-    if (set.has(key)) {
-      return SKIP_ITEM;
-    }
-
-    set.add(key);
-    return { done: false, hasNext: true, next: value };
-  };
+  return requireDataByArity(keyFunction, (value, index, data) => {
+    const key = keyFunction(value, index, data);
+    // `add` leaves the set unchanged for a key it already holds, so the size
+    // tells duplicates apart with a single hash lookup per item.
+    const sizeBefore = seenKeys.size;
+    seenKeys.add(key);
+    return seenKeys.size === sizeBefore ? SKIP_ITEM : value;
+  });
 }

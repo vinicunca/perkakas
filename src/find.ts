@@ -8,9 +8,10 @@ import type {
 import type { LazyEvaluator } from './internal/types/lazy-evaluator';
 import type { Narrowed } from './internal/types/narrowed';
 import type { TupleParts } from './internal/types/tuple-parts';
-import { curry } from './curry';
+import { curryWithLazy } from './internal/curry-with-lazy';
+import { lastLazyValue, SKIP_ITEM } from './internal/lazy-control';
+import { requireDataByArity } from './internal/require-data';
 import { toSingle } from './internal/to-single';
-import { SKIP_ITEM } from './internal/utility-evaluators';
 
 type Found<T extends IterableContainer, Condition>
   // We distribute the array type to support unions of arrays/tuples.
@@ -154,16 +155,18 @@ export function find<
 ): (data: T) => FoundNonRefined<T, IsItemIncluded>;
 
 export function find(...args: ReadonlyArray<unknown>): unknown {
-  return curry(findImplementation, args, toSingle(lazyImplementation));
+  // eslint-disable-next-line ts/no-use-before-define -- implementations follow the overloaded signatures
+  return curryWithLazy(findImplementation, args, lazyImplementation);
 }
 
 function findImplementation<T, S extends T>(data: ReadonlyArray<T>, predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S): S | undefined {
   return data.find(predicate);
 }
 
-function lazyImplementation<T, S extends T>(predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S): LazyEvaluator<T, S> {
-  return (value, index, data) =>
-    predicate(value, index, data)
-      ? { done: true, hasNext: true, next: value }
-      : SKIP_ITEM;
-}
+const lazyImplementation = toSingle(
+  <T, S extends T>(
+    predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S,
+  ): LazyEvaluator<T, S> =>
+    requireDataByArity(predicate, (value, index, data, slot) =>
+      predicate(value, index, data) ? lastLazyValue(value, slot) : SKIP_ITEM),
+);

@@ -38,18 +38,24 @@ describe('data first', () => {
     expect(result).not.toBe(data);
   });
 
-  it('should track index and provide entire items array', () => {
+  it('should provide the whole input', () => {
     const data = [1, 2, 3, 4, 5];
+    const callback = vi.fn<
+      (
+        acc: unknown,
+        x: unknown,
+        index: unknown,
+        items: ReadonlyArray<unknown>,
+      ) => unknown
+    >((_acc, _x, _index, items) => [...items]);
 
-    const mockedReducer = vi.fn<(acc: number, x: number) => number>((acc, x) => acc + x);
+    mapWithFeedback(data, callback, []);
 
-    mapWithFeedback(data, mockedReducer, 100);
-
-    expect(mockedReducer).toHaveBeenNthCalledWith(1, 100, 1, 0, data);
-    expect(mockedReducer).toHaveBeenNthCalledWith(2, 101, 2, 1, data);
-    expect(mockedReducer).toHaveBeenNthCalledWith(3, 103, 3, 2, data);
-    expect(mockedReducer).toHaveBeenNthCalledWith(4, 106, 4, 3, data);
-    expect(mockedReducer).toHaveBeenNthCalledWith(5, 110, 5, 4, data);
+    expect(callback).toHaveNthReturnedWith(1, data);
+    expect(callback).toHaveNthReturnedWith(2, data);
+    expect(callback).toHaveNthReturnedWith(3, data);
+    expect(callback).toHaveNthReturnedWith(4, data);
+    expect(callback).toHaveNthReturnedWith(5, data);
   });
 });
 
@@ -95,5 +101,19 @@ describe('data last', () => {
       [1, 2, 3, 4],
       [1, 2, 3, 4, 5],
     ]);
+  });
+
+  it('doesn\'t collect the items processed so far for a reducer without `data`', () => {
+    const reducer = vi.fn<
+      (
+        accumulator: number,
+        value: number,
+        index: number,
+        data: ReadonlyArray<number>,
+      ) => number
+    >((accumulator, value, index) => accumulator + value + index);
+    pipe([1, 2, 3], mapWithFeedback(reducer, 0));
+
+    expect(() => reducer.mock.calls[0]?.[3]?.at(0)).toThrow(/^Perkakas: /u);
   });
 });

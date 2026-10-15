@@ -1,4 +1,5 @@
 /* eslint-disable ts/no-explicit-any */
+
 import { version } from 'node:process';
 import { describe, expect, it } from 'vitest';
 import { clone } from './clone';
@@ -235,6 +236,15 @@ describe('nested mixed objects', () => {
 });
 
 describe('edge cases', () => {
+  it('point-free in a callback', () => {
+    const data = [{ a: 1 }, { b: [2] }];
+
+    const result = data.map(clone);
+
+    expect(result).toStrictEqual(data);
+    expect(result[0]).not.toBe(data[0]);
+  });
+
   it('undefined', () => {
     expect(clone(undefined)).toBeUndefined();
   });

@@ -3,9 +3,17 @@ import { pipe } from './pipe';
 import { uniqueBy } from './unique-by';
 
 describe('callback data param', () => {
-  it('lazily reconstructed in data-first', () => {
+  it('complete in data-first', () => {
     uniqueBy([1, 2, 3] as const, (_item, _index, data) => {
-      expectTypeOf(data).toEqualTypeOf<readonly [1, 2?, 3?]>();
+      expectTypeOf(data).toEqualTypeOf<readonly [1, 2, 3]>();
+
+      return 0;
+    });
+  });
+
+  it('readonly for a mutable array in data-first', () => {
+    uniqueBy([1, 2, 3] as Array<number>, (_item, _index, data) => {
+      expectTypeOf(data).toEqualTypeOf<ReadonlyArray<number>>();
 
       return 0;
     });

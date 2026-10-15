@@ -82,3 +82,11 @@ it('lazy', () => {
   expect(mock).toHaveBeenCalledTimes(4);
   expect(result).toStrictEqual([1, 4]);
 });
+
+it('lazily removes nothing on empty other array', () => {
+  expect(pipe([1, 2, 3], difference([] as Array<number>))).toStrictEqual([1, 2, 3]);
+});
+
+it('lazily maintains multi-set semantics (removes only one copy)', () => {
+  expect(pipe([1, 1, 2, 2], difference([1]))).toStrictEqual([1, 2, 2]);
+});

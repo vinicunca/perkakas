@@ -2,7 +2,8 @@ import type { IterableContainer } from './internal/types/iterable-container';
 import type { LazyCallback } from './internal/types/lazy-callback';
 import type { LazyEvaluator } from './internal/types/lazy-evaluator';
 import type { Mapped } from './internal/types/mapped';
-import { curry } from './curry';
+import { curryWithLazy } from './internal/curry-with-lazy';
+import { canReadData, requireData } from './internal/require-data';
 
 /**
  * Creates a new array populated with the results of calling a provided function
@@ -51,7 +52,7 @@ export function map<T extends IterableContainer, U>(
 ): (data: T) => Mapped<T, U>;
 
 export function map(...args: ReadonlyArray<unknown>): unknown {
-  return curry(mapImplementation, args, lazyImplementation);
+  return curryWithLazy(mapImplementation, args, lazyImplementation);
 }
 
 function mapImplementation<T, U>(data: ReadonlyArray<T>, callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => U): Array<U> {
@@ -59,9 +60,9 @@ function mapImplementation<T, U>(data: ReadonlyArray<T>, callbackfn: (value: T, 
 }
 
 function lazyImplementation<T, U>(callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => U): LazyEvaluator<T, U> {
-  return (value, index, data) => ({
-    done: false,
-    hasNext: true,
-    next: callbackfn(value, index, data),
-  });
+  return canReadData(callbackfn)
+    ? requireData((value, index, data) => callbackfn(value, index, data))
+    : // A callback that doesn't read `data` already is a complete evaluator,
+  // and using it directly saves a call per item.
+    callbackfn;
 }

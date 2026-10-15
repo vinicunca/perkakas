@@ -127,6 +127,22 @@ describe('dataLast', () => {
       ),
     ).toStrictEqual(['10', 3, '32', 7]);
   });
+
+  it('provides `data` to the functions in a lazy pipe step', () => {
+    expect(
+      pipe(
+        [3, 1, 4, 1, 5],
+        map(
+          when(
+            // In a lazy step `data` is the items processed so far, so this
+            // matches each new running maximum.
+            (x, _index, data) => x === Math.max(...data),
+            (x) => x * 100,
+          ),
+        ),
+      ),
+    ).toStrictEqual([300, 1, 400, 1, 500]);
+  });
 });
 
 it('can return other types', () => {
@@ -164,14 +180,15 @@ describe('recipes', () => {
     ).toStrictEqual([42, 42, 1]);
 
     // NaN
-    expect(
-      map([Number.NaN, 1], when(Number.isNaN, constant(42))),
-    ).toStrictEqual([42, 1]);
+    expect(map([NaN, 1], when(Number.isNaN, constant(42)))).toStrictEqual([
+      42,
+      1,
+    ]);
 
     // All
     expect(
       map(
-        [Number.NaN, undefined, null, 1],
+        [NaN, undefined, null, 1],
         when(
           (x) => Number.isNaN(x) || x === null || x === undefined,
           constant(42),

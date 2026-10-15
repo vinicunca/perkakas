@@ -43,7 +43,9 @@ describe(pipe, () => {
   });
 
   it('invoked lazily (indexed)', () => {
-    const count = vi.fn<(_: unknown, index: number) => number>((_, index) => index);
+    const count = vi.fn<(_: unknown, index: number) => number>(
+      (_, index) => index,
+    );
 
     expect(pipe([0, 0, 0], map(count), take(2))).toStrictEqual([0, 1]);
 
@@ -84,6 +86,39 @@ describe(pipe, () => {
     ]);
     expect(anyItems2).toStrictEqual([[1], [1, 3], [1, 3, 5]]);
   });
+
+  it('doesn\'t collect the items processed so far for a callback without `data`', () => {
+    const callbackfn = vi.fn<
+      (value: number, index: number, data: ReadonlyArray<number>) => number
+    >((value, index) => value + index);
+    pipe([1, 2, 3], map(callbackfn));
+
+    expect(() => callbackfn.mock.calls[0]?.[2]?.at(0)).toThrow(/^Perkakas: /u);
+  });
+
+  it('never marks the callback itself', () => {
+    pipe([1, 2, 3], map(double), map(addDataLength));
+
+    expect(double).not.toHaveProperty('requiresData');
+    expect(addDataLength).not.toHaveProperty('requiresData');
+  });
+
+  it('calls the callback without a receiver', () => {
+    const receivers: Array<unknown> = [];
+
+    pipe(
+      [1, 2],
+      map(function recordReceiver(this: unknown, x: number) {
+        receivers.push(this);
+        return x;
+      }),
+      // A lone lazy step runs its evaluator from a local; only a run of steps
+      // keeps it on a step object it could be called as a method of.
+      map((x) => x),
+    );
+
+    expect(receivers).toStrictEqual([undefined, undefined]);
+  });
 });
 
 it('number array', () => {
@@ -118,3 +153,11 @@ describe('indexed', () => {
     expect(map([1, '2', true], (_, index) => index)).toStrictEqual([0, 1, 2]);
   });
 });
+
+function double(x: number): number {
+  return x * 2;
+}
+
+function addDataLength(x: number, _index: number, data: ReadonlyArray<number>): number {
+  return x + data.length;
+}

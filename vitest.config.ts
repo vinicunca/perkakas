@@ -27,6 +27,7 @@ export default defineConfig({
             enabled: true,
             only: true,
             ignoreSourceErrors: true,
+            tsconfig: './tsconfig.test-d.json',
           },
         },
       },

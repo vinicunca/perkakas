@@ -43,11 +43,23 @@ it('should correctly infer type with a non-literal array type', () => {
   expectTypeOf(result).toEqualTypeOf<Array<number>>();
 });
 
-it('data param is lazily reconstructed in data-first', () => {
+it('data param is complete in data-first', () => {
   mapWithFeedback(
     [1, 2, 3] as const,
     (_previousValue, _currentValue, _currentIndex, data) => {
-      expectTypeOf(data).toEqualTypeOf<readonly [1, 2?, 3?]>();
+      expectTypeOf(data).toEqualTypeOf<readonly [1, 2, 3]>();
+
+      return 0;
+    },
+    0,
+  );
+});
+
+it('data param is readonly for a mutable array in data-first', () => {
+  mapWithFeedback(
+    [1, 2, 3] as Array<number>,
+    (_previousValue, _currentValue, _currentIndex, data) => {
+      expectTypeOf(data).toEqualTypeOf<ReadonlyArray<number>>();
 
       return 0;
     },

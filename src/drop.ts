@@ -5,8 +5,8 @@ import type { IterableContainer } from './internal/types/iterable-container';
 import type { LazyEvaluator } from './internal/types/lazy-evaluator';
 import type { PartialArray } from './internal/types/partial-array';
 import type { TupleParts } from './internal/types/tuple-parts';
-import { curry } from './curry';
-import { lazyIdentityEvaluator, SKIP_ITEM } from './internal/utility-evaluators';
+import { curryWithLazy } from './internal/curry-with-lazy';
+import { SKIP_ITEM } from './internal/lazy-control';
 
 type Drop<T extends IterableContainer, N extends number>
   = IsNegative<N> extends true
@@ -138,7 +138,7 @@ export function drop<N extends number>(
 ): <T extends IterableContainer>(array: T) => Drop<T, N>;
 
 export function drop(...args: ReadonlyArray<unknown>): unknown {
-  return curry(dropImplementation, args, lazyImplementation);
+  return curryWithLazy(dropImplementation, args, lazyImplementation);
 }
 
 function dropImplementation<T extends IterableContainer>(array: T, n: number): Array<T[number]> {
@@ -147,7 +147,7 @@ function dropImplementation<T extends IterableContainer>(array: T, n: number): A
 
 function lazyImplementation<T>(n: number): LazyEvaluator<T> {
   if (n <= 0) {
-    return lazyIdentityEvaluator;
+    return (value) => value;
   }
 
   let left = n;
@@ -156,6 +156,6 @@ function lazyImplementation<T>(n: number): LazyEvaluator<T> {
       left -= 1;
       return SKIP_ITEM;
     }
-    return { done: false, hasNext: true, next: value };
+    return value;
   };
 }

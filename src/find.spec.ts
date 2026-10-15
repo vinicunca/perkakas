@@ -76,4 +76,26 @@ describe('data last', () => {
     expect(counter).toHaveBeenCalledTimes(2);
     expect(actual).toStrictEqual({ a: 1, b: 2 });
   });
+
+  it('provides the items processed so far to the predicate', () => {
+    const dataSnapshots: Array<Array<number>> = [];
+    pipe(
+      [1, 2, 3],
+      find((_value, _index, data) => {
+        dataSnapshots.push([...data]);
+        return false;
+      }),
+    );
+
+    expect(dataSnapshots).toStrictEqual([[1], [1, 2], [1, 2, 3]]);
+  });
+
+  it('doesn\'t collect the items processed so far for a predicate without `data`', () => {
+    const predicate = vi.fn<
+      (value: number, index: number, data: ReadonlyArray<number>) => boolean
+    >((value, index) => value > index);
+    pipe([1, 2, 3], find(predicate));
+
+    expect(() => predicate.mock.calls[0]?.[2]?.at(0)).toThrow(/^Perkakas: /u);
+  });
 });

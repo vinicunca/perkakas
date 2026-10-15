@@ -37,11 +37,13 @@ export function clone(...args: ReadonlyArray<unknown>): unknown {
   return curry(cloneImplementation, args);
 }
 
-function cloneImplementation<T>(
-  value: T,
-  refFrom: Array<unknown> = [],
-  refTo: Array<unknown> = [],
-): T {
+// A thin wrapper so `Function.length` is 1 (no defaulted params). That lets
+// `curry` treat a single-argument call as data-first.
+function cloneImplementation<T>(value: T): T {
+  return cloneValue(value, [], []);
+}
+
+function cloneValue<T>(value: T, refFrom: Array<unknown>, refTo: Array<unknown>): T {
   if (typeof value === 'function') {
     // Functions aren't cloned, we return the same instance.
     return value;
@@ -55,11 +57,11 @@ function cloneImplementation<T>(
 
   const prototype = Object.getPrototypeOf(value);
   if (
-    !Array.isArray(value)
     // Keep this check in sync with the same check in the impl of
     // `isPlainObject`.
-    && prototype !== null
+    prototype !== null
     && prototype !== Object.prototype
+    && !Array.isArray(value)
   ) {
     // Our cloning logic is only designed for plain objects and arrays; other
     // object types (like `Date`, `RegExp`, `File`, and user-defined classes)
@@ -95,7 +97,7 @@ function deepCloneObject<T extends object>(
   refTo.push(copiedValue);
 
   for (const [k, v] of Object.entries(value)) {
-    copiedValue[k] = cloneImplementation(v, refFrom, refTo);
+    copiedValue[k] = cloneValue(v, refFrom, refTo);
   }
 
   return copiedValue as T;
@@ -113,7 +115,7 @@ function deepCloneArray<T extends ReadonlyArray<unknown>>(
   refTo.push(copiedValue);
 
   for (const [index, item] of value.entries()) {
-    copiedValue[index] = cloneImplementation(item, refFrom, refTo);
+    copiedValue[index] = cloneValue(item, refFrom, refTo);
   }
 
   return copiedValue as unknown as T;

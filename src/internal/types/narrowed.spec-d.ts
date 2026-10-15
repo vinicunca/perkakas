@@ -2,33 +2,33 @@ import type { Tagged } from 'type-fest';
 import type { CatClass, LeggedClass, NamedClass } from '../../../test/classes';
 import type { Cat, Legged, Named } from '../../../test/interfaces';
 import type { Narrowed } from './narrowed';
-import { describe, expectTypeOf, test } from 'vitest';
+import { describe, expectTypeOf, it } from 'vitest';
 import { $typed } from '../../../test/$typed';
 
 declare function narrowed<const T0, const T1>(t0: T0, t1: T1): Narrowed<T0, T1>;
 
-test('identical types', () => {
+it('identical types', () => {
   expectTypeOf(
     narrowed($typed<string>(), $typed<string>()),
   ).toEqualTypeOf<string>();
 });
 
 describe('one type extends the other', () => {
-  test('first is narrower', () => {
+  it('first is narrower', () => {
     expectTypeOf(narrowed('a', $typed<string>())).toEqualTypeOf<'a'>();
   });
 
-  test('second is narrower', () => {
+  it('second is narrower', () => {
     expectTypeOf(narrowed($typed<string>(), 'a')).toEqualTypeOf<'a'>();
   });
 
-  test('interface narrower than a type literal', () => {
+  it('interface narrower than a type literal', () => {
     expectTypeOf(
       narrowed($typed<Cat>(), $typed<{ readonly legs: number }>()),
     ).toEqualTypeOf<Cat>();
   });
 
-  test('function satisfies an object type through `Function`\'s props', () => {
+  it('function satisfies an object type through `Function`\'s props', () => {
     expectTypeOf(narrowed($typed<() => void>(), $typed<Named>())).toEqualTypeOf<
       () => void
     >();
@@ -36,77 +36,77 @@ describe('one type extends the other', () => {
 });
 
 describe('incomparable types', () => {
-  test('primitives', () => {
+  it('primitives', () => {
     expectTypeOf(
       narrowed($typed<string>(), $typed<number>()),
     ).toEqualTypeOf<never>();
   });
 
-  test('disjoint literals', () => {
+  it('disjoint literals', () => {
     expectTypeOf(narrowed('a', 'b')).toEqualTypeOf<never>();
   });
 
-  test('primitive and object', () => {
+  it('primitive and object', () => {
     expectTypeOf(
       narrowed($typed<string>(), $typed<Cat>()),
     ).toEqualTypeOf<never>();
   });
 
-  test('functions', () => {
+  it('functions', () => {
     expectTypeOf(
       narrowed($typed<() => string>(), $typed<() => number>()),
     ).toEqualTypeOf<never>();
   });
 
-  test('function and an object', () => {
+  it('function and an object', () => {
     expectTypeOf(
       narrowed($typed<() => void>(), $typed<Cat>()),
     ).toEqualTypeOf<never>();
   });
 
-  test('function and an array', () => {
+  it('function and an array', () => {
     expectTypeOf(
       narrowed($typed<() => void>(), $typed<Array<string>>()),
     ).toEqualTypeOf<never>();
   });
 
-  test('branded strings', () => {
+  it('branded strings', () => {
     expectTypeOf(
       narrowed($typed<Tagged<string, 'a'>>(), $typed<Tagged<string, 'b'>>()),
     ).toEqualTypeOf<Tagged<string, 'a'> & Tagged<string, 'b'>>();
   });
 
-  test('branded string and an object sharing a prop', () => {
+  it('branded string and an object sharing a prop', () => {
     expectTypeOf(
       narrowed($typed<Tagged<string, 'a'>>(), $typed<{ readonly length: 3 }>()),
     ).toEqualTypeOf<never>();
   });
 
-  test('branded numbers', () => {
+  it('branded numbers', () => {
     expectTypeOf(
       narrowed($typed<Tagged<number, 'a'>>(), $typed<Tagged<number, 'b'>>()),
     ).toEqualTypeOf<Tagged<number, 'a'> & Tagged<number, 'b'>>();
   });
 
-  test('branded number and an object', () => {
+  it('branded number and an object', () => {
     expectTypeOf(
       narrowed($typed<Tagged<number, 'a'>>(), $typed<Cat>()),
     ).toEqualTypeOf<never>();
   });
 
-  test('branded boolean and an object', () => {
+  it('branded boolean and an object', () => {
     expectTypeOf(
       narrowed($typed<Tagged<boolean, 'a'>>(), $typed<Cat>()),
     ).toEqualTypeOf<never>();
   });
 
-  test('branded bigint and an object', () => {
+  it('branded bigint and an object', () => {
     expectTypeOf(
       narrowed($typed<Tagged<bigint, 'a'>>(), $typed<Cat>()),
     ).toEqualTypeOf<never>();
   });
 
-  test('branded symbol and an object', () => {
+  it('branded symbol and an object', () => {
     expectTypeOf(
       narrowed($typed<Tagged<symbol, 'a'>>(), $typed<Cat>()),
     ).toEqualTypeOf<never>();
@@ -114,25 +114,25 @@ describe('incomparable types', () => {
 });
 
 describe('template literals', () => {
-  test('literal extends the template', () => {
+  it('literal extends the template', () => {
     expectTypeOf(
       narrowed('abc', $typed<`a${string}`>()),
     ).toEqualTypeOf<'abc'>();
   });
 
-  test('literal disjoint from the template', () => {
+  it('literal disjoint from the template', () => {
     expectTypeOf(
       narrowed('foo', $typed<`bar${string}`>()),
     ).toEqualTypeOf<never>();
   });
 
-  test('overlapping templates', () => {
+  it('overlapping templates', () => {
     expectTypeOf(
       narrowed($typed<`a${string}`>(), $typed<`${string}b`>()),
     ).toEqualTypeOf<`a${string}` & `${string}b`>();
   });
 
-  test('disjoint templates', () => {
+  it('disjoint templates', () => {
     expectTypeOf(
       narrowed($typed<`foo_${number}`>(), $typed<`hello${string}`>()),
     ).toEqualTypeOf<`foo_${number}` & `hello${string}`>();
@@ -140,37 +140,37 @@ describe('template literals', () => {
 });
 
 describe('unions', () => {
-  test('union on the first type', () => {
+  it('union on the first type', () => {
     expectTypeOf(narrowed($typed<'a' | 'b'>(), 'a')).toEqualTypeOf<'a'>();
   });
 
-  test('union on the second type', () => {
+  it('union on the second type', () => {
     expectTypeOf(narrowed('a', $typed<'a' | 'b'>())).toEqualTypeOf<'a'>();
   });
 
-  test('overlapping unions', () => {
+  it('overlapping unions', () => {
     expectTypeOf(
       narrowed($typed<'a' | 'b'>(), $typed<'b' | 'c'>()),
     ).toEqualTypeOf<'b'>();
   });
 
-  test('disjoint unions', () => {
+  it('disjoint unions', () => {
     expectTypeOf(
       narrowed($typed<'a' | 'b'>(), $typed<'c' | 'd'>()),
     ).toEqualTypeOf<never>();
   });
 
-  test('union wider than the other type', () => {
+  it('union wider than the other type', () => {
     expectTypeOf(narrowed($typed<string>(), $typed<'a' | 'b'>())).toEqualTypeOf<
       'a' | 'b'
     >();
   });
 
-  test('boolean distributes as a union of its literals', () => {
+  it('boolean distributes as a union of its literals', () => {
     expectTypeOf(narrowed($typed<boolean>(), true)).toEqualTypeOf<true>();
   });
 
-  test('union of objects on the first type', () => {
+  it('union of objects on the first type', () => {
     expectTypeOf(
       narrowed(
         $typed<{ readonly a: string } | { readonly b: number }>(),
@@ -181,7 +181,7 @@ describe('unions', () => {
     >();
   });
 
-  test('union of objects on the second type', () => {
+  it('union of objects on the second type', () => {
     expectTypeOf(
       narrowed(
         $typed<{ readonly a: string }>(),
@@ -192,21 +192,21 @@ describe('unions', () => {
 });
 
 describe('top and bottom types', () => {
-  test('any as the first type', () => {
+  it('any as the first type', () => {
     expectTypeOf(
       // eslint-disable-next-line ts/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
       narrowed($typed<any>(), $typed<string>()),
     ).toEqualTypeOf<string>();
   });
 
-  test('any as the second type', () => {
+  it('any as the second type', () => {
     expectTypeOf(
       // eslint-disable-next-line ts/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
       narrowed($typed<string>(), $typed<any>()),
     ).toEqualTypeOf<string>();
   });
 
-  test('any as both types', () => {
+  it('any as both types', () => {
     expectTypeOf(
       // eslint-disable-next-line ts/no-explicit-any -- Testing how the type reacts to `any` is the point of this test.
       narrowed($typed<any>(), $typed<any>()),
@@ -214,25 +214,25 @@ describe('top and bottom types', () => {
     ).toEqualTypeOf<any>();
   });
 
-  test('unknown as the first type', () => {
+  it('unknown as the first type', () => {
     expectTypeOf(
       narrowed($typed<unknown>(), $typed<string>()),
     ).toEqualTypeOf<string>();
   });
 
-  test('unknown as the second type', () => {
+  it('unknown as the second type', () => {
     expectTypeOf(
       narrowed($typed<string>(), $typed<unknown>()),
     ).toEqualTypeOf<string>();
   });
 
-  test('never as the first type', () => {
+  it('never as the first type', () => {
     expectTypeOf(
       narrowed($typed<never>(), $typed<string>()),
     ).toEqualTypeOf<never>();
   });
 
-  test('never as the second type', () => {
+  it('never as the second type', () => {
     expectTypeOf(
       narrowed($typed<string>(), $typed<never>()),
     ).toEqualTypeOf<never>();
@@ -240,7 +240,7 @@ describe('top and bottom types', () => {
 });
 
 describe('objects', () => {
-  test('one object extends the other', () => {
+  it('one object extends the other', () => {
     expectTypeOf(
       narrowed(
         $typed<{ readonly a: string; readonly b: number }>(),
@@ -249,7 +249,7 @@ describe('objects', () => {
     ).toEqualTypeOf<{ readonly a: string; readonly b: number }>();
   });
 
-  test('incomparable objects with common props', () => {
+  it('incomparable objects with common props', () => {
     expectTypeOf(
       narrowed(
         $typed<{ readonly a: string; readonly b: number }>(),
@@ -266,7 +266,7 @@ describe('objects', () => {
     >();
   });
 
-  test('incomparable objects without common props', () => {
+  it('incomparable objects without common props', () => {
     expectTypeOf(
       narrowed(
         $typed<{ readonly a: string }>(),
@@ -275,7 +275,7 @@ describe('objects', () => {
     ).toEqualTypeOf<{ readonly a: string } & { readonly b: number }>();
   });
 
-  test('incomparable objects with a conflicting common prop', () => {
+  it('incomparable objects with a conflicting common prop', () => {
     expectTypeOf(
       narrowed(
         $typed<{ readonly a: string; readonly b: number }>(),
@@ -294,7 +294,7 @@ describe('objects', () => {
 
   // Sharing a key doesn't prove the intersection is inhabited; when the shared
   // key's literal types conflict TypeScript reduces it for us.
-  test('conflicting literal common prop', () => {
+  it('conflicting literal common prop', () => {
     expectTypeOf(
       narrowed(
         $typed<{ readonly a: 'cat' }>(),
@@ -303,31 +303,31 @@ describe('objects', () => {
     ).toEqualTypeOf<never>();
   });
 
-  test('index-signature type and an interface', () => {
+  it('index-signature type and an interface', () => {
     expectTypeOf(
       narrowed($typed<Record<string, unknown>>(), $typed<Cat>()),
     ).toEqualTypeOf<Record<string, unknown> & Cat>();
   });
 
-  test('incomparable interfaces without common props', () => {
+  it('incomparable interfaces without common props', () => {
     expectTypeOf(narrowed($typed<Cat>(), $typed<Named>())).toEqualTypeOf<
       Cat & Named
     >();
   });
 
-  test('incomparable interfaces with common props', () => {
+  it('incomparable interfaces with common props', () => {
     expectTypeOf(narrowed($typed<Cat>(), $typed<Legged>())).toEqualTypeOf<
       Cat & Legged
     >();
   });
 
-  test('incomparable classes without common props', () => {
+  it('incomparable classes without common props', () => {
     expectTypeOf(
       narrowed($typed<CatClass>(), $typed<NamedClass>()),
     ).toEqualTypeOf<CatClass & NamedClass>();
   });
 
-  test('incomparable classes with common props', () => {
+  it('incomparable classes with common props', () => {
     expectTypeOf(
       narrowed($typed<CatClass>(), $typed<LeggedClass>()),
     ).toEqualTypeOf<CatClass & LeggedClass>();
@@ -335,13 +335,13 @@ describe('objects', () => {
 });
 
 describe('arrays', () => {
-  test('one array extends the other', () => {
+  it('one array extends the other', () => {
     expectTypeOf(
       narrowed($typed<Array<string>>(), $typed<Array<string | number>>()),
     ).toEqualTypeOf<Array<string>>();
   });
 
-  test('incomparable arrays', () => {
+  it('incomparable arrays', () => {
     expectTypeOf(
       narrowed($typed<Array<string>>(), $typed<Array<number>>()),
     ).toEqualTypeOf<never>();
@@ -349,25 +349,25 @@ describe('arrays', () => {
 
   // Arrays share props with object types (e.g. `length`) but the intersection
   // fallback intentionally skips them.
-  test('array and an incomparable object sharing a prop', () => {
+  it('array and an incomparable object sharing a prop', () => {
     expectTypeOf(
       narrowed($typed<Array<string>>(), $typed<{ readonly length: 3 }>()),
     ).toEqualTypeOf<never>();
   });
 
-  test('tuples of different lengths', () => {
+  it('tuples of different lengths', () => {
     expectTypeOf(
       narrowed($typed<[string, number]>(), $typed<[string]>()),
     ).toEqualTypeOf<never>();
   });
 
-  test('mutable array extends the readonly array', () => {
+  it('mutable array extends the readonly array', () => {
     expectTypeOf(
       narrowed($typed<Array<string>>(), $typed<ReadonlyArray<string>>()),
     ).toEqualTypeOf<Array<string>>();
   });
 
-  test('mutable tuple extends the readonly tuple', () => {
+  it('mutable tuple extends the readonly tuple', () => {
     expectTypeOf(
       narrowed($typed<[string]>(), $typed<readonly [string]>()),
     ).toEqualTypeOf<[string]>();
@@ -375,7 +375,7 @@ describe('arrays', () => {
 });
 
 describe('argument order doesn\'t matter', () => {
-  test('incomparable objects with common props', () => {
+  it('incomparable objects with common props', () => {
     expectTypeOf(
       narrowed(
         $typed<{ readonly a: string; readonly c: boolean }>(),
@@ -392,37 +392,37 @@ describe('argument order doesn\'t matter', () => {
     >();
   });
 
-  test('array and an incomparable object sharing a prop', () => {
+  it('array and an incomparable object sharing a prop', () => {
     expectTypeOf(
       narrowed($typed<{ readonly length: 3 }>(), $typed<Array<string>>()),
     ).toEqualTypeOf<never>();
   });
 
-  test('branded string and an object sharing a prop', () => {
+  it('branded string and an object sharing a prop', () => {
     expectTypeOf(
       narrowed($typed<{ readonly length: 3 }>(), $typed<Tagged<string, 'a'>>()),
     ).toEqualTypeOf<never>();
   });
 
-  test('branded number and an object', () => {
+  it('branded number and an object', () => {
     expectTypeOf(
       narrowed($typed<Cat>(), $typed<Tagged<number, 'a'>>()),
     ).toEqualTypeOf<never>();
   });
 
-  test('index-signature type and an interface', () => {
+  it('index-signature type and an interface', () => {
     expectTypeOf(
       narrowed($typed<Cat>(), $typed<Record<string, unknown>>()),
     ).toEqualTypeOf<Cat & Record<string, unknown>>();
   });
 
-  test('function and an object', () => {
+  it('function and an object', () => {
     expectTypeOf(
       narrowed($typed<Cat>(), $typed<() => void>()),
     ).toEqualTypeOf<never>();
   });
 
-  test('function and an array', () => {
+  it('function and an array', () => {
     expectTypeOf(
       narrowed($typed<Array<string>>(), $typed<() => void>()),
     ).toEqualTypeOf<never>();

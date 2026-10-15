@@ -1,8 +1,9 @@
 import type { Deduped } from './internal/types/deduped';
 import type { IterableContainer } from './internal/types/iterable-container';
 import type { LazyEvaluator } from './internal/types/lazy-evaluator';
-import { curryFromLazy } from './internal/curry-from-lazy';
-import { SKIP_ITEM } from './internal/utility-evaluators';
+import { curryWithLazy } from './internal/curry-with-lazy';
+import { SKIP_ITEM } from './internal/lazy-control';
+import { requireData } from './internal/require-data';
 
 type IsEquals<T> = (a: T, b: T) => boolean;
 
@@ -52,19 +53,34 @@ export function uniqueWith<T extends IterableContainer>(
 ): (data: T) => Deduped<T>;
 
 export function uniqueWith(...args: ReadonlyArray<unknown>): unknown {
-  return curryFromLazy(lazyImplementation, args);
+  return curryWithLazy(uniqueWithImplementation, args, lazyImplementation);
+}
+
+function uniqueWithImplementation<T>(
+  data: ReadonlyArray<T>,
+  isEquals: IsEquals<T>,
+): Array<T> {
+  const result: Array<T> = [];
+  for (const [index, value] of data.entries()) {
+    if (
+      data.findIndex(
+        (otherValue, otherIndex) =>
+          index === otherIndex || isEquals(value, otherValue),
+      ) === index
+    ) {
+      result.push(value);
+    }
+  }
+
+  return result;
 }
 
 function lazyImplementation<T>(isEquals: IsEquals<T>): LazyEvaluator<T> {
-  return (value, index, data) => {
-    const firstEqualIndex = data.findIndex(
+  return requireData((value, index, data) =>
+    data.findIndex(
       (otherValue, otherIndex) =>
         index === otherIndex || isEquals(value, otherValue),
-    );
-
-    // skip items that aren't at the first equal index.
-    return firstEqualIndex === index
-      ? { done: false, hasNext: true, next: value }
-      : SKIP_ITEM;
-  };
+    ) === index
+      ? value
+      : SKIP_ITEM);
 }

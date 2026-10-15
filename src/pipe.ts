@@ -1,19 +1,37 @@
-/* eslint-disable jsdoc/check-param-names -- we don't document the op params, it'd be redundant */
+/* eslint-disable jsdoc/check-param-names --
+ * We document pipe's function params as a single parameter entry in the docs.
+ */
 
-import type { LazyDefinition } from './internal/types/lazy-definition';
+import type { UnaryFunction } from './internal/data-last-implementation';
+import type { LazySlot } from './internal/lazy-control';
+import type { LazyUnaryFunction } from './internal/lazy-data-last-implementation';
 import type { LazyEvaluator } from './internal/types/lazy-evaluator';
-import type { LazyResult } from './internal/types/lazy-result';
-import { SKIP_ITEM } from './internal/utility-evaluators';
+import {
+  createLazySlot,
+  LAST,
 
-interface LazyStep {
+  MANY,
+  SKIP_ITEM,
+  STOP,
+} from './internal/lazy-control';
+import { processSingleLazyStep } from './internal/process-single-lazy-step';
+import { UNEXPECTED_ACCESS_SENTINEL } from './internal/unexpected-access-sentinel';
+
+type LazyStep = {
   readonly lazyEvaluator: LazyEvaluator;
-  readonly isSingle: boolean;
-  // Notice the array is mutable, we will be adding items as the pipe is
-  // evaluating them.
-  readonly items: Array<unknown>;
-}
-
-type LazyFunction = LazyDefinition & ((input: unknown) => unknown);
+  index: number;
+} & (
+  | {
+    readonly requiresData: true;
+    // Notice the array is mutable, we will be adding items as the pipe is
+    // evaluating them. It is shared with every invocation of the evaluator.
+    readonly items: Array<unknown>;
+  }
+  | {
+    readonly requiresData: false;
+    readonly items: typeof UNEXPECTED_ACCESS_SENTINEL;
+  }
+);
 
 /**
  * Performs left-to-right function composition, passing data through functions
@@ -33,8 +51,8 @@ type LazyFunction = LazyDefinition & ((input: unknown) => unknown);
  * arrow functions: `($) => map($, callback)` instead of `map(callback)`.
  *
  * Any function can be used in pipes, not just Perkakas utilities. For creating
- * custom functions with currying and lazy evaluation support, see the `curry`
- * utility.
+ * custom functions that support both data-first and data-last calls, see the
+ * `curry` utility.
  *
  * A "headless" variant `piped` is available for creating reusable pipe
  * functions without initial data.
@@ -94,7 +112,7 @@ type LazyFunction = LazyDefinition & ((input: unknown) => unknown);
  *    }); //=> "[1, 2, 3, 4]" logged 4 times
  *
  *    // But with `pipe` data would only contain the items up to the current
- *    // index
+ *    // index.
  *    pipe([1, 2, 3, 4], forEach((_item, _index, data) => {
  *      console.log(data);
  *    })); //=> "[1]", "[1, 2]", "[1, 2, 3]", "[1, 2, 3, 4]"
@@ -282,54 +300,97 @@ export function pipe<A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P>(
 
 export function pipe(
   input: unknown,
-  ...functions: ReadonlyArray<LazyFunction | ((value: unknown) => unknown)>
+  ...functions: ReadonlyArray<UnaryFunction | LazyUnaryFunction>
 ): unknown {
+  if (functions.length === 0) {
+    return input;
+  }
+
+  if (functions.length === 1) {
+    // The most common pipe, a single function, skips the loop below.
+    const func = functions[0]!;
+    return 'lazy' in func
+      ? processSingleLazyStep(
+          // @ts-expect-error [ts2345] -- The overloads only pipe a value into a function that accepts it, and lazy functions only accept iterables.
+          input,
+          func.lazy,
+          func.lazyArgs,
+        )
+      : func(input);
+  }
+
   let output = input;
-
-  const lazySteps = functions.map((op) =>
-    'lazy' in op
-      ? {
-          lazyEvaluator: op.lazy(...op.lazyArgs),
-          isSingle: op.lazy.single ?? false,
-          index: 0,
-          items: [],
-        }
-      : undefined);
-
   let functionIndex = 0;
   while (functionIndex < functions.length) {
-    const lazyStep = lazySteps[functionIndex];
-    if (lazyStep === undefined || !isIterable(output)) {
-      const func = functions[functionIndex]!;
+    const func = functions[functionIndex]!;
+    if (!('lazy' in func)) {
       output = func(output);
       functionIndex += 1;
       continue;
     }
 
-    const lazySequence = extractLazySequence(lazySteps, functionIndex);
-    const accumulator = processIterable(output, lazySequence);
+    const nextFunc = functions[functionIndex + 1];
+    if (nextFunc === undefined || !('lazy' in nextFunc) || func.lazy.single) {
+      // A run of one lazy function is a lazy sequence of one step, which has
+      // no cross-step bookkeeping to set up: the step array, the step object,
+      // and the hand-off through them are all overhead.
+      output = processSingleLazyStep(
+        // @ts-expect-error [ts2345] -- The overloads only pipe a value into a function that accepts it, and lazy functions only accept iterables.
+        output,
+        func.lazy,
+        func.lazyArgs,
+      );
+      functionIndex += 1;
+      continue;
+    }
 
-    const { isSingle } = lazySequence.at(-1)!;
-    output = isSingle ? accumulator[0] : accumulator;
+    const lazySequence = buildLazySequence(functions, functionIndex);
+
+    output = runLazySequence(output, lazySequence);
     functionIndex += lazySequence.length;
+
+    // @ts-expect-error [ts2322] -- TypeScript can't follow the logic that `functionIndex - 1` is pointing to the last function in `lazySequence`.
+    const lastLazyFunction: LazyUnaryFunction = functions[functionIndex - 1];
+    if (lastLazyFunction.lazy.single) {
+      // @ts-expect-error [ts18046] -- output is always an array when the last lazy function in the sequence was single.
+      output = output[0];
+    }
   }
+
   return output;
 }
 
-function extractLazySequence(
-  lazySteps: ReadonlyArray<LazyStep | undefined>,
+function buildLazySequence(
+  functions: ReadonlyArray<UnaryFunction | LazyUnaryFunction>,
   startIndex: number,
 ): ReadonlyArray<LazyStep> {
   const lazySequence: Array<LazyStep> = [];
 
-  for (let index = startIndex; index < lazySteps.length; index++) {
-    const lazyStep = lazySteps[index];
-    if (lazyStep === undefined) {
+  for (let index = startIndex; index < functions.length; index++) {
+    const func = functions[index]!;
+    if (!('lazy' in func)) {
       break;
     }
 
-    lazySequence.push(lazyStep);
-    if (lazyStep.isSingle) {
+    const lazyEvaluator = func.lazy(...func.lazyArgs);
+    lazySequence.push(
+      lazyEvaluator.requiresData
+        ? {
+            lazyEvaluator,
+            index: 0,
+            requiresData: true,
+            items: [],
+          }
+        : {
+            lazyEvaluator,
+            index: 0,
+            requiresData: false,
+            items: UNEXPECTED_ACCESS_SENTINEL,
+          },
+    );
+
+    if (func.lazy.single) {
+      // Functions that generate a single value always end the sequence.
       break;
     }
   }
@@ -337,16 +398,30 @@ function extractLazySequence(
   return lazySequence;
 }
 
-function processIterable(
-  iterable: Iterable<unknown>,
+function runLazySequence(
+  input: unknown,
+
   lazySequence: ReadonlyArray<LazyStep>,
 ): Array<unknown> {
   const accumulator: Array<unknown> = [];
+  const slot = createLazySlot();
 
-  for (const value of iterable) {
-    const shouldExitEarly = processItem(value, accumulator, lazySequence);
-    if (shouldExitEarly) {
-      break;
+  if (Array.isArray(input)) {
+    // Iterated rather than indexed, so a reactive array that instruments
+    // iteration tracks one dependency instead of one per index.
+    for (const item of input) {
+      const isDone = processItem(lazySequence, accumulator, item, slot, 0);
+      if (isDone) {
+        break;
+      }
+    }
+  } else {
+    // @ts-expect-error [ts18046] -- The overloads only pipe a value into a function that accepts it, and lazy functions only accept iterables.
+    for (const item of input) {
+      const isDone = processItem(lazySequence, accumulator, item, slot, 0);
+      if (isDone) {
+        break;
+      }
     }
   }
 
@@ -354,65 +429,67 @@ function processIterable(
 }
 
 function processItem(
-  item: unknown,
-
-  accumulator: Array<unknown>,
 
   lazySequence: ReadonlyArray<LazyStep>,
+
+  accumulator: Array<unknown>,
+  item: unknown,
+  slot: LazySlot,
+  startIndex: number,
 ): boolean {
-  if (lazySequence.length === 0) {
-    accumulator.push(item);
-    return false;
-  }
-
   let currentItem = item;
-
-  let lazyResult: LazyResult = SKIP_ITEM;
   let isDone = false;
-  for (const [
-    functionsIndex,
-    { items, lazyEvaluator },
-  ] of lazySequence.entries()) {
-    items.push(currentItem);
-    lazyResult = lazyEvaluator(currentItem, items.length - 1, items);
+  for (
+    let stepIndex = startIndex;
+    stepIndex < lazySequence.length;
+    stepIndex++
+  ) {
+    const step = lazySequence[stepIndex]!;
 
-    if (lazyResult.done) {
-      isDone = true;
+    if (step.requiresData) {
+      step.items.push(currentItem);
     }
 
-    if (lazyResult.hasNext) {
-      if (lazyResult.hasMany ?? false) {
-        for (const subItem of lazyResult.next as ReadonlyArray<unknown>) {
-          const shouldExitEarly = processItem(
-            subItem,
-            accumulator,
-            lazySequence.slice(functionsIndex + 1),
-          );
-          if (shouldExitEarly) {
+    // Pull the evaluator out of the step to nullify its `this`.
+    const { lazyEvaluator } = step;
+    const result = lazyEvaluator(currentItem, step.index, step.items, slot);
+
+    step.index += 1;
+
+    if (typeof result === 'symbol') {
+      if (result === SKIP_ITEM) {
+        return isDone;
+      }
+
+      if (result === MANY) {
+        for (const subItem of slot.values) {
+          if (
+            processItem(lazySequence, accumulator, subItem, slot, stepIndex + 1)
+          ) {
             return true;
           }
         }
+
         return isDone;
       }
-      currentItem = lazyResult.next;
-    } else {
-      break;
+
+      if (result === LAST) {
+        currentItem = slot.value;
+        isDone = true;
+        continue;
+      }
+
+      if (result === STOP) {
+        return true;
+      }
     }
+
+    // The common case: the evaluator emitted an item, hand it to the next
+    // step as-is.
+    currentItem = result;
   }
 
-  if (lazyResult.hasNext) {
-    accumulator.push(currentItem);
-  }
+  accumulator.push(currentItem);
 
   return isDone;
-}
-
-function isIterable(something: unknown): something is Iterable<unknown> {
-  // Check for null and undefined to avoid errors when accessing Symbol.iterator
-  return (
-    typeof something === 'string'
-    || (typeof something === 'object'
-      && something !== null
-      && Symbol.iterator in something)
-  );
 }

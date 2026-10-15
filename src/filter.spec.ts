@@ -60,10 +60,31 @@ describe('data_last', () => {
     expect(counter).toHaveBeenCalledTimes(2);
     expect(result).toStrictEqual([1, 3]);
   });
+
+  it('provides the items processed so far to the predicate', () => {
+    const dataSnapshots: Array<Array<number>> = [];
+    pipe(
+      [1, 2, 3],
+      filter((_value, _index, data) => {
+        dataSnapshots.push([...data]);
+        return true;
+      }),
+    );
+
+    expect(dataSnapshots).toStrictEqual([[1], [1, 2], [1, 2, 3]]);
+  });
+
+  it('doesn\'t collect the items processed so far for a predicate without `data`', () => {
+    const predicate = vi.fn<
+      (value: number, index: number, data: ReadonlyArray<number>) => boolean
+    >((value, index) => value > index);
+    pipe([1, 2, 3], filter(predicate));
+
+    expect(() => predicate.mock.calls[0]?.[2]?.at(0)).toThrow(/^Perkakas: /u);
+  });
 });
 
-// TODO: Our `isNumber` utility isn't narrowing our types correctly for
-// our tests here.
+// TODO: The Perkakas `isNumber` utility isn't narrowing our types correctly for our tests here.
 function isNumber<T>(x: T): x is Extract<T, number> {
   return typeof x === 'number';
-};
+}

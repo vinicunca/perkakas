@@ -1,8 +1,9 @@
 import type { IterableContainer } from './internal/types/iterable-container';
 import type { LazyEvaluator } from './internal/types/lazy-evaluator';
 import type { NonEmptyPrefix } from './internal/types/non-empty-prefix';
-import { lazyDataLastImpl } from './internal/lazy-data-last-impl';
-import { lazyEmptyEvaluator } from './internal/utility-evaluators';
+import { lastLazyValue, lazyEmptyEvaluator } from './internal/lazy-control';
+import { lazyDataLastImplementation } from './internal/lazy-data-last-implementation';
+import { requireDataByArity } from './internal/require-data';
 
 type ZippingFunction<
   T1 extends IterableContainer = IterableContainer,
@@ -98,9 +99,13 @@ export function zipWith(
 
   if (typeof arg1 === 'function') {
     // dataLast
-    return lazyDataLastImpl(
+    return lazyDataLastImplementation(
       zipWithImplementation,
-      [arg0, arg1],
+      [
+        arg0,
+        // @ts-expect-error [ts2322] -- Outside a pipe the data-last function hands the implementation the full first list, which is a valid non-empty prefix whenever `fn` is invoked (it never is for an empty list); TypeScript can't relate `T1` to `NonEmptyPrefix<T1>`.
+        arg1,
+      ],
       lazyImplementation,
     );
   }
@@ -126,9 +131,14 @@ function zipWithImplementation<
 function lazyImplementation<T1, T2 extends IterableContainer, Value>(second: T2, fn: ZippingFunction<ReadonlyArray<T1>, T2, Value>): LazyEvaluator<T1, Value> {
   return second.length === 0
     ? lazyEmptyEvaluator
-    : (value, index, data) => ({
-        next: fn(value, second[index], index, [data, second]),
-        hasNext: true,
-        done: index >= second.length - 1,
-      });
+    : requireDataByArity(
+        fn,
+        (value, index, data, slot) => {
+          const zipped = fn(value, second[index], index, [data, second]);
+          return index >= second.length - 1
+            ? lastLazyValue(zipped, slot)
+            : zipped;
+        },
+        { dataParameterIndex: 3 },
+      );
 }

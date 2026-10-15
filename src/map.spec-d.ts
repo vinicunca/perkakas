@@ -188,6 +188,7 @@ describe('indexed', () => {
   });
 });
 
+// @see https://github.com/remeda/remeda/issues/1364
 describe('limited type inference through `NoInfer` (#1364)', () => {
   it('data-first returns a plain array', () => {
     expectTypeOf(map([] as NoInfer<Array<number>>, identity())).toEqualTypeOf<

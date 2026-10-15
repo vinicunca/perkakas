@@ -1,9 +1,12 @@
 import type { IsNumericLiteral } from 'type-fest';
+import type { LazyResult, LazySlot } from './internal/lazy-control';
 import type { IterableContainer } from './internal/types/iterable-container';
 import type { LazyEvaluator } from './internal/types/lazy-evaluator';
-import type { LazyResult } from './internal/types/lazy-result';
-import { lazyDataLastImpl } from './internal/lazy-data-last-impl';
-import { lazyIdentityEvaluator } from './internal/utility-evaluators';
+import {
+
+  manyLazyValues,
+} from './internal/lazy-control';
+import { lazyDataLastImplementation } from './internal/lazy-data-last-implementation';
 
 type FlatArray<
   T,
@@ -16,7 +19,7 @@ type FlatArray<
     ? // Trivial result when the array is empty.
       []
     : T extends readonly [infer Item, ...infer Rest]
-      ? // Tuples could be special-cased by "iterating" over each item
+      ? // Tuples could be special-cased by 'iterating' over each item
         // separately so that we maintain more information from the input type,
         // instead of putting all values in a union.
         [
@@ -107,15 +110,13 @@ export function flat(
   dataOrDepth?: IterableContainer | number,
   depth?: number,
 ): unknown {
-  if (typeof dataOrDepth === 'object') {
-    return flatImplementation(dataOrDepth, depth);
-  }
-
-  return lazyDataLastImpl(
-    flatImplementation,
-    dataOrDepth === undefined ? [] : [dataOrDepth],
-    lazyImplementation,
-  );
+  return typeof dataOrDepth === 'object'
+    ? flatImplementation(dataOrDepth, depth)
+    : lazyDataLastImplementation(
+        flatImplementation,
+        dataOrDepth === undefined ? [] : [dataOrDepth],
+        lazyImplementation,
+      );
 }
 
 function flatImplementation(data: IterableContainer, depth?: number): IterableContainer {
@@ -126,27 +127,18 @@ function lazyImplementation(depth?: number): LazyEvaluator {
   if (depth === undefined || depth === 1) {
     return lazyShallow;
   }
-
   if (depth <= 0) {
-    return lazyIdentityEvaluator;
+    return (value) => value;
   }
-
-  return (value) =>
+  return (value, _index, _data, slot) =>
     Array.isArray(value)
-      ? {
-          next: value.flat(depth - 1),
-          hasNext: true,
-          hasMany: true,
-          done: false,
-        }
-      : { next: value, hasNext: true, done: false }; ;
+      ? manyLazyValues(value.flat(depth - 1), slot)
+      : value;
 }
 
-// This function is pulled out so that we don't generate a new arrow function
-// each time. Because it doesn't need to run with recursion it could be pulled
-// out from the lazyImplementation and be reused for all invocations.
-function lazyShallow<T>(value: T): LazyResult<T> {
-  return Array.isArray(value)
-    ? { next: value, hasNext: true, hasMany: true, done: false }
-    : { next: value, hasNext: true, done: false };
+// Pulled out to module scope because, unlike the deeper-than-one branch, it
+// doesn't close over `depth`, so one function serves every `flat()` /
+// `flat(1)` call instead of allocating a closure per call.
+function lazyShallow<T>(value: T, _index: number, _data: ReadonlyArray<T>, slot: LazySlot): LazyResult<T> {
+  return Array.isArray(value) ? manyLazyValues(value, slot) : value;
 }
