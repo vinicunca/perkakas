@@ -171,8 +171,8 @@ describe('data first', () => {
         number: add(1),
         // @ts-expect-error [ts2322] - Type 'string' is not assignable to type 'number'.
         array: (array: ReadonlyArray<number>) => array.length,
-        // @ts-expect-error [ts2322] - Type 'string' is not assignable to type 'number'.
         nestedObj: {
+          // @ts-expect-error [ts2322] - Type 'string' is not assignable to type 'number'.
           a: set<{ b: number }, 'b'>('b', 0),
         },
         // @ts-expect-error [ts2322] - Type 'string' is not assignable to type 'number'.

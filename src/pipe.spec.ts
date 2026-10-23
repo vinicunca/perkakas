@@ -521,9 +521,9 @@ describe('lazy', () => {
       'an array',
       (): ReadonlyArray<number> => [1, 2, 3, 4],
     ],
-    // @ts-expect-error [ts2740] -- The utilities only type arrays, but `pipe` iterates any iterable at runtime, which is what this test exercises.
     [
       'a generator',
+      // @ts-expect-error [ts2740] -- The utilities only type arrays, but `pipe` iterates any iterable at runtime, which is what this test exercises.
       (): ReadonlyArray<number> => upTo(4),
     ],
   ])(
@@ -570,9 +570,9 @@ describe('lazy', () => {
       'an array',
       (): ReadonlyArray<number> => [1, 2, 3, 4],
     ],
-    // @ts-expect-error [ts2740] -- The utilities only type arrays, but `pipe` iterates any iterable at runtime, which is what this test exercises.
     [
       'a generator',
+      // @ts-expect-error [ts2740] -- The utilities only type arrays, but `pipe` iterates any iterable at runtime, which is what this test exercises.
       (): ReadonlyArray<number> => upTo(4),
     ],
   ])(

@@ -25,14 +25,14 @@ describe('data-first', () => {
     // @ts-expect-error [ts2322] - `number` isn't assignable to `string`
     hasSubObject({ a: 'a' }, { a: 1 });
 
-    // @ts-expect-error [ts2322] - object isn't assignable to `string`
     hasSubObject({ a: 'a' }, {
+      // @ts-expect-error [ts2322] - object isn't assignable to `string`
       a: { b: 2 },
     });
 
-    // @ts-expect-error [ts2322] - `string` isn't assignable to object
     hasSubObject({
       a: { b: 2 },
+      // @ts-expect-error [ts2322] - `string` isn't assignable to object
     }, { a: 'a' });
   });
 
@@ -106,16 +106,16 @@ describe('data-first', () => {
   });
 
   it('doesn\'t allow nested objects to have missing keys', () => {
-    // @ts-expect-error [ts2322] - nested sub-object doesn't have `c` key
     hasSubObject({
       a: { b: 1, c: 2 },
     }, {
+      // @ts-expect-error [ts2322] - nested sub-object doesn't have `c` key
       a: { b: 1 },
     });
 
-    // @ts-expect-error [ts2379] - nested sub-object doesn't have `c` key (works with optional key)
     hasSubObject({
       a: { b: 1, c: 2 },
+      // @ts-expect-error [ts2379] - nested sub-object doesn't have `c` key (works with optional key)
     }, {
       a: { b: 1 },
     } as {
@@ -124,10 +124,10 @@ describe('data-first', () => {
   });
 
   it('doesn\'t allow nested objects to have extra keys', () => {
-    // @ts-expect-error [ts2322] - nested sub-object has extra key `c`
     hasSubObject({
       a: { b: 1 },
     }, {
+      // @ts-expect-error [ts2322] - nested sub-object has extra key `c`
       a: { b: 1, c: 2 },
     });
 
@@ -140,39 +140,39 @@ describe('data-first', () => {
   });
 
   it('doesn\'t allow nested objects keys to have different types', () => {
-    // @ts-expect-error [ts2322] - nested sub-object has wrong value types
     hasSubObject({
       a: { b: 4, c: 'c' },
     }, {
+      // @ts-expect-error [ts2322] - nested sub-object has wrong value types
       a: { b: 1, c: 2 },
     });
 
-    // @ts-expect-error [ts2322] - deep-nested sub-object has wrong value types
     hasSubObject({
       a: {
         b: { c: 2 },
       },
     }, {
       a: {
+        // @ts-expect-error [ts2322] - deep-nested sub-object has wrong value types
         b: { c: '2' },
       },
     });
 
-    // @ts-expect-error [ts2322] - properly compares primitive and non-primitive types
     hasSubObject({
       a: { b: 'a' },
     }, {
       a: {
+        // @ts-expect-error [ts2322] - properly compares primitive and non-primitive types
         b: { c: 2 },
       },
     });
 
-    // @ts-expect-error [ts2322] - properly compares primitive and non-primitive types
     hasSubObject({
       a: {
         b: { c: 2 },
       },
     }, {
+      // @ts-expect-error [ts2322] - properly compares primitive and non-primitive types
       a: { b: 'a' },
     });
   });
@@ -391,22 +391,22 @@ describe('data-last', () => {
     // @ts-expect-error [ts2345] - `string` isn't assignable to `number`
     pipe({ a: 'a' }, hasSubObject({ a: 1 }));
 
-    // @ts-expect-error [ts2322] - `string` isn't assignable to object
     hasSubObject({
       a: { b: 2 },
+      // @ts-expect-error [ts2322] - `string` isn't assignable to object
     })({ a: 'a' });
     // @ts-expect-error [ts2345] - `string` isn't assignable to object
     pipe({ a: 'a' }, hasSubObject({
       a: { b: 2 },
     }));
 
-    // @ts-expect-error [ts2322] - object isn't assignable to `string`
     hasSubObject({ a: 'a' })({
+      // @ts-expect-error [ts2322] - object isn't assignable to `string`
       a: { b: 2 },
     });
-    // @ts-expect-error [ts2345] - object isn't assignable to `string`
     pipe({
       a: { b: 2 },
+      // @ts-expect-error [ts2345] - object isn't assignable to `string`
     }, hasSubObject({ a: 'a' }));
   });
 
@@ -518,15 +518,15 @@ describe('data-last', () => {
   });
 
   it('doesn\'t allow nested objects to have missing keys', () => {
-    // @ts-expect-error [ts2322] - nested sub-object doesn't have `c` key
     hasSubObject({
       a: { b: 1 },
     })({
+      // @ts-expect-error [ts2322] - nested sub-object doesn't have `c` key
       a: { b: 1, c: 2 },
     });
-    // @ts-expect-error [ts2345] - nested sub-object doesn't have `c` key
     pipe({
       a: { b: 1, c: 2 },
+      // @ts-expect-error [ts2345] - nested sub-object doesn't have `c` key
     }, hasSubObject({
       a: { b: 1 },
     }));
@@ -549,22 +549,22 @@ describe('data-last', () => {
   });
 
   it('doesn\'t allow nested objects to have extra keys', () => {
-    // @ts-expect-error [ts2322] - nested sub-object has extra key `c`
     hasSubObject({
       a: { b: 1, c: 2 },
     })({
+      // @ts-expect-error [ts2322] - nested sub-object has extra key `c`
       a: { b: 1 },
     });
-    // @ts-expect-error [ts2345] - nested sub-object has extra key `c`
     pipe({
       a: { b: 1 },
+      // @ts-expect-error [ts2345] - nested sub-object has extra key `c`
     }, hasSubObject({
       a: { b: 1, c: 2 },
     }));
 
-    // @ts-expect-error [ts2379] - nested sub-object has extra key `c` (works with optional key)
     hasSubObject({
       a: { b: 1, c: 2 },
+      // @ts-expect-error [ts2379] - nested sub-object has extra key `c` (works with optional key)
     })({
       a: { b: 1 },
     } as {
@@ -582,70 +582,70 @@ describe('data-last', () => {
   });
 
   it('doesn\'t allow nested objects keys to have different types', () => {
-    // @ts-expect-error [ts2322] - nested sub-object has wrong value types
     hasSubObject({
       a: { b: 1, c: 2 },
     })({
+      // @ts-expect-error [ts2322] - nested sub-object has wrong value types
       a: { b: 4, c: 'c' },
     });
-    // @ts-expect-error [ts2345] - nested sub-object has wrong value types
     pipe({
       a: { b: 4, c: 'c' },
+      // @ts-expect-error [ts2345] - nested sub-object has wrong value types
     }, hasSubObject({
       a: { b: 1, c: 2 },
     }));
 
-    // @ts-expect-error [ts2322] - deep-nested sub-object has wrong value types
     hasSubObject({
       a: {
         b: { c: '2' },
       },
     })({
       a: {
+        // @ts-expect-error [ts2322] - deep-nested sub-object has wrong value types
         b: { c: 2 },
       },
     });
-    // @ts-expect-error [ts2345] - deep-nested sub-object has wrong value types
     pipe({
       a: {
         b: { c: 2 },
       },
+      // @ts-expect-error [ts2345] - deep-nested sub-object has wrong value types
     }, hasSubObject({
       a: {
         b: { c: '2' },
       },
     }));
 
-    // @ts-expect-error [ts2322] - properly compares primitive and non-primitive types
     hasSubObject({
       a: {
         b: { c: 2 },
       },
     })({
+      // @ts-expect-error [ts2322] - properly compares primitive and non-primitive types
       a: { b: 'a' },
     });
-    // @ts-expect-error [ts2345] - properly compares primitive and non-primitive types
     pipe({
       a: { b: 'a' },
+      // @ts-expect-error [ts2345] - properly compares primitive and non-primitive types
     }, hasSubObject({
       a: {
         b: { c: 2 },
       },
     }));
 
-    // @ts-expect-error [ts2322] - properly compares primitive and non-primitive types
     hasSubObject({
       a: { b: 'a' },
     })({
       a: {
+        // @ts-expect-error [ts2322] - properly compares primitive and non-primitive types
         b: { c: 2 },
       },
     });
-    // @ts-expect-error [ts2345] - properly compares primitive and non-primitive types
     pipe({
       a: {
         b: { c: 2 },
       },
+      // @ts-expect-error [ts2345] - properly compares primitive and non-primitive types
     }, hasSubObject({
       a: { b: 'a' },
     }));

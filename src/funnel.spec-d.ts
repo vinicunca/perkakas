@@ -102,11 +102,13 @@ describe('prevent bad options', () => {
   it('minGapMs cannot be the only option with timing: end', () => {
     funnel(
       doNothing(),
+      // @ts-expect-error [ts(2345)] -- minGapMs cannot be set alone]
       { minGapMs: 100 },
     );
 
     funnel(
       doNothing(),
+      // @ts-expect-error [ts(2345)] -- minGapMs cannot be set alone]
       { triggerAt: 'end', minGapMs: 100 },
     );
 

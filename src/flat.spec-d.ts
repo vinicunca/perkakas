@@ -244,15 +244,19 @@ it('works with depths beyond 20', () => {
 });
 
 it('doesn\'t accept non-literal depths', () => {
+  // @ts-expect-error [ts2345] - non-literal numbers can't be used as depth.
   flat([], 1 as number);
 });
 
 it('doesn\'t accept built-in \'infinite\' numbers', () => {
   // They are all typed as `number` by typescript's libs.
 
+  // @ts-expect-error [ts2345] - Infinity is typed as a non-literal number. - https://github.com/microsoft/TypeScript/blob/main/src/lib/es5.d.ts#L9
   flat([], Infinity);
 
+  // @ts-expect-error [ts2345] - Max number is typed as a non-literal number. - https://github.com/microsoft/TypeScript/blob/main/src/lib/es5.d.ts#L576
   flat([], Number.MAX_VALUE);
 
+  // @ts-expect-error [ts2345] - Infinity is typed as a non-literal number. - https://github.com/microsoft/TypeScript/blob/main/src/lib/es5.d.ts#L597
   flat([], Infinity);
 });
