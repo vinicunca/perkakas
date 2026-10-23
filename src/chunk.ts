@@ -242,7 +242,9 @@ function chunkImplementation<T>(data: ReadonlyArray<T>, size: number): Array<Arr
 
   if (size >= data.length) {
     // Optimized for when there is only one chunk.
-    return [[...data]];
+    return [
+      [...data],
+    ];
   }
 
   const chunks = Math.ceil(data.length / size);

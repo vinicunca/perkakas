@@ -91,7 +91,7 @@ export function curryOrderRules<T>(
 }
 
 /**
- * Some functions need an extra number argument, this helps facilitate that.
+ * Some functions need an extra number argument. This makes that work.
  */
 export function curryOrderRulesWithArgument(
   func: <T>(
@@ -124,9 +124,13 @@ function orderRuleComparer<T>(
   ...otherRules: ReadonlyArray<OrderRule<T>>
 ): (a: T, b: T) => number {
   const projector
-    = typeof primaryRule === 'function' ? primaryRule : primaryRule[0];
+    = typeof primaryRule === 'function'
+      ? primaryRule
+      : primaryRule[0];
 
-  const direction = typeof primaryRule === 'function' ? 'asc' : primaryRule[1];
+  const direction = typeof primaryRule === 'function'
+    ? 'asc'
+    : primaryRule[1];
   const comparator = COMPARATORS[direction];
 
   const nextComparer

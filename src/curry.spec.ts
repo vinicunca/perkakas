@@ -81,6 +81,8 @@ function purriedFn(...args: ReadonlyArray<unknown>): unknown {
 function concatenateNumberArgs(_a: number, _b: number): string {
   // eslint-disable-next-line prefer-rest-params -- Intentional, we want to bypass the function shape (which is observable at runtime via `Function.length`) to lock in how excess arguments are passed through.
   return [...arguments]
-    .map((x) => (typeof x === 'number' ? x.toString() : '<NaN>'))
+    .map((x) => (typeof x === 'number'
+      ? x.toString()
+      : '<NaN>'))
     .join('');
 }

@@ -42,6 +42,12 @@ function splitWhenImplementation<T>(
 ): [Array<T>, Array<T>] {
   const index = data.findIndex(predicate);
   return index === -1
-    ? [[...data], []]
-    : [data.slice(0, index), data.slice(index)];
+    ? [
+        [...data],
+        [],
+      ]
+    : [
+        data.slice(0, index),
+        data.slice(index),
+      ];
 }

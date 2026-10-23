@@ -14,7 +14,10 @@ it('data-last', () => {
 it('factory function', () => {
   const propA = prop('a');
 
-  expect(indexBy([{ a: 1 }, { a: 2 }], propA)).toStrictEqual({
+  expect(indexBy([
+    { a: 1 },
+    { a: 2 },
+  ], propA)).toStrictEqual({
     1: { a: 1 },
     2: { a: 2 },
   });
@@ -22,29 +25,101 @@ it('factory function', () => {
 
 it('deep prop', () => {
   const DATA = {
-    a: { b: { c: { d: { e: { f: { g: { h: { i: { j: 10 } } } } } } } } },
+    a: {
+      b: {
+        c: {
+          d: {
+            e: {
+              f: {
+                g: {
+                  h: {
+                    i: { j: 10 },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   } as const;
 
   expect(prop(DATA, 'a')).toStrictEqual({
-    b: { c: { d: { e: { f: { g: { h: { i: { j: 10 } } } } } } } },
+    b: {
+      c: {
+        d: {
+          e: {
+            f: {
+              g: {
+                h: {
+                  i: { j: 10 },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   });
   expect(prop(DATA, 'a', 'b')).toStrictEqual({
-    c: { d: { e: { f: { g: { h: { i: { j: 10 } } } } } } },
+    c: {
+      d: {
+        e: {
+          f: {
+            g: {
+              h: {
+                i: { j: 10 },
+              },
+            },
+          },
+        },
+      },
+    },
   });
   expect(prop(DATA, 'a', 'b', 'c')).toStrictEqual({
-    d: { e: { f: { g: { h: { i: { j: 10 } } } } } },
+    d: {
+      e: {
+        f: {
+          g: {
+            h: {
+              i: { j: 10 },
+            },
+          },
+        },
+      },
+    },
   });
   expect(prop(DATA, 'a', 'b', 'c', 'd')).toStrictEqual({
-    e: { f: { g: { h: { i: { j: 10 } } } } },
+    e: {
+      f: {
+        g: {
+          h: {
+            i: { j: 10 },
+          },
+        },
+      },
+    },
   });
   expect(prop(DATA, 'a', 'b', 'c', 'd', 'e')).toStrictEqual({
-    f: { g: { h: { i: { j: 10 } } } },
+    f: {
+      g: {
+        h: {
+          i: { j: 10 },
+        },
+      },
+    },
   });
   expect(prop(DATA, 'a', 'b', 'c', 'd', 'e', 'f')).toStrictEqual({
-    g: { h: { i: { j: 10 } } },
+    g: {
+      h: {
+        i: { j: 10 },
+      },
+    },
   });
   expect(prop(DATA, 'a', 'b', 'c', 'd', 'e', 'f', 'g')).toStrictEqual({
-    h: { i: { j: 10 } },
+    h: {
+      i: { j: 10 },
+    },
   });
   expect(prop(DATA, 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h')).toStrictEqual({
     i: { j: 10 },
@@ -58,7 +133,11 @@ it('deep prop', () => {
 it('stops at optional props', () => {
   expect(
     prop(
-      { a: { b: { c: {} } } } as {
+      {
+        a: {
+          b: { c: {} },
+        },
+      } as {
         a?: { b?: { c?: { d?: { e?: { f?: { g?: { h?: number } } } } } } };
       },
       'a',
@@ -74,16 +153,32 @@ it('stops at optional props', () => {
 });
 
 it('multi-dimensional arrays', () => {
-  const data = [[[['cat']]]] as Array<Array<Array<Array<'cat'>>>>;
+  const data = [
+    [
+      [
+        ['cat'],
+      ],
+    ],
+  ] as Array<Array<Array<Array<'cat'>>>>;
 
-  expect(prop(data, 0)).toStrictEqual([[['cat']]]);
-  expect(prop(data, 0, 0)).toStrictEqual([['cat']]);
+  expect(prop(data, 0)).toStrictEqual([
+    [
+      ['cat'],
+    ],
+  ]);
+  expect(prop(data, 0, 0)).toStrictEqual([
+    ['cat'],
+  ]);
   expect(prop(data, 0, 0, 0)).toStrictEqual(['cat']);
   expect(prop(data, 0, 0, 0, 0)).toBe('cat');
 });
 
 it('mixed arrays and objects', () => {
-  const data = [{ a: 'cat' }, { b: 'dog' }, { c: 'mouse' }] as const;
+  const data = [
+    { a: 'cat' },
+    { b: 'dog' },
+    { c: 'mouse' },
+  ] as const;
 
   expect(prop(data, 0)).toStrictEqual({ a: 'cat' });
   expect(prop(data, 0, 'a')).toBe('cat');
@@ -106,19 +201,31 @@ describe('lodash spec', () => {
   });
 
   it('should get deep property values', () => {
-    expect(prop({ a: { b: 2 } }, 'a', 'b')).toBe(2);
+    expect(prop({
+      a: { b: 2 },
+    }, 'a', 'b')).toBe(2);
   });
 
   it('should get a key over a path', () => {
-    expect(prop({ 'a.b': 1, 'a': { b: 2 } }, 'a.b')).toBe(1);
+    expect(prop({
+      'a.b': 1,
+      'a': { b: 2 },
+    }, 'a.b')).toBe(1);
   });
 
   it('should not coerce array paths to strings', () => {
-    expect(prop({ 'a,b,c': 3, 'a': { b: { c: 4 } } }, 'a', 'b', 'c')).toBe(4);
+    expect(prop({
+      'a,b,c': 3,
+      'a': {
+        b: { c: 4 },
+      },
+    }, 'a', 'b', 'c')).toBe(4);
   });
 
   it('should not ignore empty brackets', () => {
-    expect(prop({ a: { '': 1 } }, 'a', '')).toBe(1);
+    expect(prop({
+      a: { '': 1 },
+    }, 'a', '')).toBe(1);
   });
 
   it('should handle empty paths', () => {
@@ -131,7 +238,15 @@ describe('lodash spec', () => {
         {
           a: {
             '-1.23': {
-              '["b"]': { c: { '[\'d\']': { '\ne\n': { f: { g: 8 } } } } },
+              '["b"]': {
+                c: {
+                  '[\'d\']': {
+                    '\ne\n': {
+                      f: { g: 8 },
+                    },
+                  },
+                },
+              },
             },
           },
         },
@@ -163,12 +278,21 @@ describe('lodash spec', () => {
 
   it('should return `undefined` if parts of `path` are missing', () => {
     expect(
-      prop({ a: [{ b: { c: 123 } }, null] }, 'a', 1, 'b', 'c'),
+      prop({
+        a: [
+          {
+            b: { c: 123 },
+          },
+          null,
+        ],
+      }, 'a', 1, 'b', 'c'),
     ).toBeUndefined();
   });
 
   it('should be able to return `null` values', () => {
-    expect(prop({ a: { b: null } }, 'a', 'b')).toBeNull();
+    expect(prop({
+      a: { b: null },
+    }, 'a', 'b')).toBeNull();
   });
 
   it('should follow `path` over non-plain objects', () => {

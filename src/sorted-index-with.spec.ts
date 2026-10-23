@@ -13,7 +13,18 @@ it('regular', () => {
 it('indexed', () => {
   expect(
     sortedIndexWith(
-      ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'],
+      [
+        'a',
+        'b',
+        'c',
+        'd',
+        'e',
+        'f',
+        'g',
+        'h',
+        'i',
+        'j',
+      ],
       (_, index) => index < 5,
     ),
   ).toBe(5);

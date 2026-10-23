@@ -171,7 +171,7 @@ export function pathOr<
   defaultValue: PathValue3<T, A, B, C>,
 ): (object: T) => PathValue3<T, A, B, C>;
 
-// TODO [>2]: Remove this function!
+/** TODO [>2]: Remove this function! */
 export function pathOr(...args: ReadonlyArray<unknown>): unknown {
   return curry(pathOrImplementation, args);
 }

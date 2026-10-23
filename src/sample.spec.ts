@@ -4,7 +4,11 @@ import { sample } from './sample';
 import { times } from './times';
 import { unique } from './unique';
 
-describe.each([[generateRandomArray()]])('mathy stuff', (array) => {
+describe.each([
+  [
+    generateRandomArray(),
+  ],
+])('mathy stuff', (array) => {
   it.each(allIndices(array))(
     'returns the right number of items',
     (sampleSize) => {

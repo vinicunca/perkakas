@@ -86,6 +86,7 @@ export function hasProp(...args: ReadonlyArray<unknown>): unknown {
   return curry(hasPropImplementation, args);
 }
 
+// eslint-disable-next-line slop/no-trivial-functions
 function hasPropImplementation<T extends object, Key extends KeysOfUnion<T>>(
   data: T,
   key: Key,

@@ -52,7 +52,9 @@ export function take(...args: ReadonlyArray<unknown>): unknown {
 }
 
 function takeImplementation<T extends IterableContainer>(array: T, n: number): Array<T[number]> {
-  return n < 0 ? [] : array.slice(0, n);
+  return n < 0
+    ? []
+    : array.slice(0, n);
 }
 
 function lazyImplementation<T>(n: number): LazyEvaluator<T> {
@@ -63,6 +65,8 @@ function lazyImplementation<T>(n: number): LazyEvaluator<T> {
   let remaining = n;
   return (value, _index, _data, slot) => {
     remaining -= 1;
-    return remaining <= 0 ? lastLazyValue(value, slot) : value;
+    return remaining <= 0
+      ? lastLazyValue(value, slot)
+      : value;
   };
 }

@@ -18,7 +18,7 @@ type CamelCaseOptionsWithDefaults<Options extends CamelCaseOptions>
     CamelCaseOptions,
     Options,
     {
-      // We use the runtime const for the default type so they stay coupled.
+      /** We use the runtime const for the default type so they stay coupled. */
       preserveConsecutiveUppercase: typeof DEFAULT_PRESERVE_CONSECUTIVE_UPPERCASE;
     }
   >;
@@ -128,8 +128,12 @@ function toCamelCaseImplementation(data: string, {
       (word, index) =>
         `${
           // The first word is uncapitalized, the rest are capitalized
-          index === 0 ? word[0]!.toLowerCase() : word[0]!.toUpperCase()
-        }${preserveConsecutiveUppercase ? word.slice(1) : word.slice(1).toLowerCase()}`,
+          index === 0
+            ? word[0]!.toLowerCase()
+            : word[0]!.toUpperCase()
+        }${preserveConsecutiveUppercase
+          ? word.slice(1)
+          : word.slice(1).toLowerCase()}`,
     )
     .join('');
 }

@@ -142,7 +142,9 @@ export function drop(...args: ReadonlyArray<unknown>): unknown {
 }
 
 function dropImplementation<T extends IterableContainer>(array: T, n: number): Array<T[number]> {
-  return n < 0 ? [...array] : array.slice(n);
+  return n < 0
+    ? [...array]
+    : array.slice(n);
 }
 
 function lazyImplementation<T>(n: number): LazyEvaluator<T> {

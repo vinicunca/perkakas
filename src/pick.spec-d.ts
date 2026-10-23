@@ -137,49 +137,63 @@ describe('bounded object types', () => {
 
   describe('single union key', () => {
     it('required or optional', () => {
-      expectTypeOf(pick(DATA, [$typed<'a' | 'b'>()])).toEqualTypeOf<{
+      expectTypeOf(pick(DATA, [
+        $typed<'a' | 'b'>(),
+      ])).toEqualTypeOf<{
         a?: 'required';
         b?: 'optional';
       }>();
     });
 
     it('required or undefinable', () => {
-      expectTypeOf(pick(DATA, [$typed<'a' | 'c'>()])).toEqualTypeOf<{
+      expectTypeOf(pick(DATA, [
+        $typed<'a' | 'c'>(),
+      ])).toEqualTypeOf<{
         a?: 'required';
         c?: 'undefinable' | undefined;
       }>();
     });
 
     it('required or optional-undefinable', () => {
-      expectTypeOf(pick(DATA, [$typed<'a' | 'd'>()])).toEqualTypeOf<{
+      expectTypeOf(pick(DATA, [
+        $typed<'a' | 'd'>(),
+      ])).toEqualTypeOf<{
         a?: 'required';
         d?: 'optional-undefinable' | undefined;
       }>();
     });
 
     it('optional or undefinable', () => {
-      expectTypeOf(pick(DATA, [$typed<'b' | 'c'>()])).toEqualTypeOf<{
+      expectTypeOf(pick(DATA, [
+        $typed<'b' | 'c'>(),
+      ])).toEqualTypeOf<{
         b?: 'optional';
         c?: 'undefinable' | undefined;
       }>();
     });
 
     it('optional or optional-undefinable', () => {
-      expectTypeOf(pick(DATA, [$typed<'b' | 'd'>()])).toEqualTypeOf<{
+      expectTypeOf(pick(DATA, [
+        $typed<'b' | 'd'>(),
+      ])).toEqualTypeOf<{
         b?: 'optional';
         d?: 'optional-undefinable' | undefined;
       }>();
     });
 
     it('undefinable or optional-undefinable', () => {
-      expectTypeOf(pick(DATA, [$typed<'c' | 'd'>()])).toEqualTypeOf<{
+      expectTypeOf(pick(DATA, [
+        $typed<'c' | 'd'>(),
+      ])).toEqualTypeOf<{
         c?: 'undefinable' | undefined;
         d?: 'optional-undefinable' | undefined;
       }>();
     });
 
     it('required, optional, and undefinable', () => {
-      expectTypeOf(pick(DATA, [$typed<'a' | 'b' | 'c'>()])).toEqualTypeOf<{
+      expectTypeOf(pick(DATA, [
+        $typed<'a' | 'b' | 'c'>(),
+      ])).toEqualTypeOf<{
         a?: 'required';
         b?: 'optional';
         c?: 'undefinable' | undefined;
@@ -187,7 +201,9 @@ describe('bounded object types', () => {
     });
 
     it('required, optional, and optional-undefinable', () => {
-      expectTypeOf(pick(DATA, [$typed<'a' | 'b' | 'd'>()])).toEqualTypeOf<{
+      expectTypeOf(pick(DATA, [
+        $typed<'a' | 'b' | 'd'>(),
+      ])).toEqualTypeOf<{
         a?: 'required';
         b?: 'optional';
         d?: 'optional-undefinable' | undefined;
@@ -195,7 +211,9 @@ describe('bounded object types', () => {
     });
 
     it('required, undefinable, and optional-undefinable', () => {
-      expectTypeOf(pick(DATA, [$typed<'a' | 'c' | 'd'>()])).toEqualTypeOf<{
+      expectTypeOf(pick(DATA, [
+        $typed<'a' | 'c' | 'd'>(),
+      ])).toEqualTypeOf<{
         a?: 'required';
         c?: 'undefinable' | undefined;
         d?: 'optional-undefinable' | undefined;
@@ -203,7 +221,9 @@ describe('bounded object types', () => {
     });
 
     it('optional, undefinable, and optional-undefinable', () => {
-      expectTypeOf(pick(DATA, [$typed<'b' | 'c' | 'd'>()])).toEqualTypeOf<{
+      expectTypeOf(pick(DATA, [
+        $typed<'b' | 'c' | 'd'>(),
+      ])).toEqualTypeOf<{
         b?: 'optional';
         c?: 'undefinable' | undefined;
         d?: 'optional-undefinable' | undefined;
@@ -212,7 +232,9 @@ describe('bounded object types', () => {
 
     it('all key types', () => {
       expectTypeOf(
-        pick(DATA, [$typed<'a' | 'b' | 'c' | 'd'>()]),
+        pick(DATA, [
+          $typed<'a' | 'b' | 'c' | 'd'>(),
+        ]),
       ).toEqualTypeOf<{
         a?: 'required';
         b?: 'optional';
@@ -225,7 +247,10 @@ describe('bounded object types', () => {
   describe('multiple union keys', () => {
     it('with partial overlap', () => {
       expectTypeOf(
-        pick(DATA, [$typed<'a' | 'b'>(), $typed<'b' | 'c'>()]),
+        pick(DATA, [
+          $typed<'a' | 'b'>(),
+          $typed<'b' | 'c'>(),
+        ]),
       ).toEqualTypeOf<{
         a?: 'required';
         b?: 'optional';
@@ -235,7 +260,10 @@ describe('bounded object types', () => {
 
     it('with full overlap', () => {
       expectTypeOf(
-        pick(DATA, [$typed<'a' | 'b'>(), $typed<'a' | 'b'>()]),
+        pick(DATA, [
+          $typed<'a' | 'b'>(),
+          $typed<'a' | 'b'>(),
+        ]),
       ).toEqualTypeOf<{
         a?: 'required';
         b?: 'optional';
@@ -244,7 +272,10 @@ describe('bounded object types', () => {
 
     it('without overlap', () => {
       expectTypeOf(
-        pick(DATA, [$typed<'a' | 'b'>(), $typed<'c' | 'd'>()]),
+        pick(DATA, [
+          $typed<'a' | 'b'>(),
+          $typed<'c' | 'd'>(),
+        ]),
       ).toEqualTypeOf<{
         a?: 'required';
         b?: 'optional';
@@ -256,14 +287,20 @@ describe('bounded object types', () => {
 
   describe('mixed literal and union keys', () => {
     it('with partial overlap', () => {
-      expectTypeOf(pick(DATA, ['a', $typed<'a' | 'b'>()])).toEqualTypeOf<{
+      expectTypeOf(pick(DATA, [
+        'a',
+        $typed<'a' | 'b'>(),
+      ])).toEqualTypeOf<{
         a: 'required';
         b?: 'optional';
       }>();
     });
 
     it('without overlap', () => {
-      expectTypeOf(pick(DATA, ['a', $typed<'b' | 'c'>()])).toEqualTypeOf<{
+      expectTypeOf(pick(DATA, [
+        'a',
+        $typed<'b' | 'c'>(),
+      ])).toEqualTypeOf<{
         a: 'required';
         b?: 'optional';
         c?: 'undefinable' | undefined;

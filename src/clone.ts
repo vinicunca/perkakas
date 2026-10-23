@@ -118,5 +118,6 @@ function deepCloneArray<T extends ReadonlyArray<unknown>>(
     copiedValue[index] = cloneValue(item, refFrom, refTo);
   }
 
+  // eslint-disable-next-line slop/no-chained-type-assertions
   return copiedValue as unknown as T;
 }

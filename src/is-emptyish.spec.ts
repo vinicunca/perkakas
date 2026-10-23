@@ -94,7 +94,9 @@ describe('keyed collections', () => {
 
   it('maps', () => {
     expect(isEmptyish(new Map())).toBe(true);
-    expect(isEmptyish(new Map([['key', 'value']]))).toBe(false);
+    expect(isEmptyish(new Map([
+      ['key', 'value'],
+    ]))).toBe(false);
   });
 
   it('url search params', () => {

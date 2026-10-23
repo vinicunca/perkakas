@@ -202,7 +202,10 @@ describe('showcase', () => {
     await expect(failingApi.call('a')).resolves.toBeUndefined();
 
     await expect(
-      Promise.all([failingApi.call('hello'), failingApi.call('world')]),
+      Promise.all([
+        failingApi.call('hello'),
+        failingApi.call('world'),
+      ]),
     ).rejects.toThrow('Batch too big! [["hello"],["world"]]');
   });
 });

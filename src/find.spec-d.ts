@@ -30,7 +30,10 @@ it('array where every item matches', () => {
 
 it('narrows when the predicate is wider than the item', () => {
   expectTypeOf(
-    find([[1], 'a'] as Array<Array<number> | string>, isArray),
+    find([
+      [1],
+      'a',
+    ] as Array<Array<number> | string>, isArray),
   ).toEqualTypeOf<Array<number> | undefined>();
 });
 
@@ -140,7 +143,10 @@ describe('guaranteed match', () => {
   });
 
   it('predicate wider than the item', () => {
-    expectTypeOf(find([[1], 'a'] as [Array<number>, string], isArray)).toEqualTypeOf<
+    expectTypeOf(find([
+      [1],
+      'a',
+    ] as [Array<number>, string], isArray)).toEqualTypeOf<
       Array<number>
     >();
   });
@@ -290,7 +296,10 @@ describe('data-last', () => {
 
   it('predicate is wider than the item', () => {
     expectTypeOf(
-      pipe([[1], 'a'] as Array<Array<number> | string>, find(isArray)),
+      pipe([
+        [1],
+        'a',
+      ] as Array<Array<number> | string>, find(isArray)),
     ).toEqualTypeOf<Array<number> | undefined>();
   });
 

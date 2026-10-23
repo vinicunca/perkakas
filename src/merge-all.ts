@@ -61,7 +61,10 @@ export function mergeAll(objects: ReadonlyArray<object>): object {
   let out = {};
 
   for (const item of objects) {
-    out = { ...out, ...item };
+    out = {
+      ...out,
+      ...item,
+    };
   }
 
   return out;

@@ -45,7 +45,9 @@ function shiftDecimalPoint(value: number, shift: number): number {
   const [n, exponent] = asString.split('e');
 
   const shiftedExponent
-    = (exponent === undefined ? 0 : Number.parseInt(exponent, RADIX)) + shift;
+    = (exponent === undefined
+      ? 0
+      : Number.parseInt(exponent, RADIX)) + shift;
 
   const shiftedValueAsString = `${n!}e${shiftedExponent.toString()}`;
 

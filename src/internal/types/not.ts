@@ -1,2 +1,2 @@
-// Does what it says on the tin...
+/** Does what it says on the tin... */
 export type Not<T extends boolean> = T extends true ? false : true;

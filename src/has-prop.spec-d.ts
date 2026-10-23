@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/no-all-duplicated-branches */
 import { describe, expectTypeOf, it } from 'vitest';
 import { filter } from './filter';
 import { hasProp } from './has-prop';

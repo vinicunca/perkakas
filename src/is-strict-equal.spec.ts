@@ -54,9 +54,13 @@ describe('objects', () => {
   });
 
   it('maps', () => {
-    const data = new Map([['a', 1]]);
+    const data = new Map([
+      ['a', 1],
+    ]);
 
-    expect(isStrictEqual(data, new Map([['a', 1]]))).toBe(false);
+    expect(isStrictEqual(data, new Map([
+      ['a', 1],
+    ]))).toBe(false);
     expect(isStrictEqual(data, data)).toBe(true);
   });
 

@@ -58,13 +58,22 @@ it('works with strings', () => {
 it('works with objects', () => {
   const item = { a: 2 };
 
-  expect(difference([item, { b: 3 }, item], [item, item])).toStrictEqual([
+  expect(difference([
+    item,
+    { b: 3 },
+    item,
+  ], [item, item])).toStrictEqual([
     { b: 3 },
   ]);
 });
 
 it('compares objects by reference', () => {
-  expect(difference([{ a: 2 }, { b: 3 }], [{ a: 2 }])).toStrictEqual([
+  expect(difference([
+    { a: 2 },
+    { b: 3 },
+  ], [
+    { a: 2 },
+  ])).toStrictEqual([
     { a: 2 },
     { b: 3 },
   ]);

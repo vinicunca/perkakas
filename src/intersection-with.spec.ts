@@ -60,19 +60,35 @@ describe('data last', () => {
           isDeepEqual,
         ),
       ),
-    ).toStrictEqual([{ x: 1, y: 2 }]);
+    ).toStrictEqual([
+      { x: 1, y: 2 },
+    ]);
   });
 
   it('evaluates lazily', () => {
     const counter = createLazyInvocationCounter();
     const result = pipe(
-      [{ a: 1 }, { a: 2 }, { a: 3 }, { a: 4 }, { a: 5 }, { a: 6 }],
+      [
+        { a: 1 },
+        { a: 2 },
+        { a: 3 },
+        { a: 4 },
+        { a: 5 },
+        { a: 6 },
+      ],
       counter.fn(),
-      intersectionWith([{ a: 2 }, { a: 3 }, { a: 4 }], isDeepEqual),
+      intersectionWith([
+        { a: 2 },
+        { a: 3 },
+        { a: 4 },
+      ], isDeepEqual),
       take(2),
     );
 
     expect(counter.count).toHaveBeenCalledTimes(3);
-    expect(result).toStrictEqual([{ a: 2 }, { a: 3 }]);
+    expect(result).toStrictEqual([
+      { a: 2 },
+      { a: 3 },
+    ]);
   });
 });

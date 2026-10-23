@@ -84,7 +84,11 @@ describe(pipe, () => {
       [1, 2, 3, 4],
       [1, 2, 3, 4, 5],
     ]);
-    expect(anyItems2).toStrictEqual([[1], [1, 3], [1, 3, 5]]);
+    expect(anyItems2).toStrictEqual([
+      [1],
+      [1, 3],
+      [1, 3, 5],
+    ]);
   });
 
   it('doesn\'t collect the items processed so far for a callback without `data`', () => {

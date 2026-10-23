@@ -24,7 +24,10 @@ describe('data first', () => {
       {
         id: add(1),
         quartile: sum,
-        time: { elapsed: add(1), remaining: add(-1) },
+        time: {
+          elapsed: add(1),
+          remaining: add(-1),
+        },
       },
     );
 
@@ -36,15 +39,25 @@ describe('data first', () => {
   });
 
   it('is not destructive and is immutable', () => {
-    const result = evolve({ n: 100 }, { n: add(1) });
+    const result = evolve({ n: 100 }, {
+      n: add(1),
+    });
 
     expectTypeOf(result).toEqualTypeOf<{ n: number }>();
   });
 
   it('is recursive', () => {
     const result = evolve(
-      { first: 1, nested: { second: 2, third: 3 } },
-      { nested: { second: add(-1), third: add(1) } },
+      {
+        first: 1,
+        nested: { second: 2, third: 3 },
+      },
+      {
+        nested: {
+          second: add(-1),
+          third: add(1),
+        },
+      },
     );
 
     expectTypeOf(result).toEqualTypeOf<{
@@ -57,7 +70,9 @@ describe('data first', () => {
     const result = evolve(
       {
         array: ['1', '2', '3'],
-        nestedObj: { a: { b: 'c' } },
+        nestedObj: {
+          a: { b: 'c' },
+        },
         objAry: [
           { a: 0, b: 0 },
           { a: 1, b: 1 },
@@ -65,7 +80,9 @@ describe('data first', () => {
       },
       {
         array: length(),
-        nestedObj: { a: (x) => set(x, 'b', 'Set') },
+        nestedObj: {
+          a: (x) => set(x, 'b', 'Set'),
+        },
         objAry: (x) => map(x, omit(['b'])),
       },
     );
@@ -121,7 +138,10 @@ describe('data first', () => {
           // defined in data
           count: (x: number) => x,
           quartile: (x) => x,
-          time: { elapsed: (x) => x, remaining: (x) => x },
+          time: {
+            elapsed: (x) => x,
+            remaining: (x) => x,
+          },
         },
       );
 
@@ -138,7 +158,9 @@ describe('data first', () => {
       {
         number: '1',
         array: ['1', '2', '3'],
-        nestedObj: { a: { b: 'c' } },
+        nestedObj: {
+          a: { b: 'c' },
+        },
         objAry: [
           { a: '0', b: 0 },
           { a: 1, b: 1 },
@@ -150,7 +172,9 @@ describe('data first', () => {
         // @ts-expect-error [ts2322] - Type 'string' is not assignable to type 'number'.
         array: (array: ReadonlyArray<number>) => array.length,
         // @ts-expect-error [ts2322] - Type 'string' is not assignable to type 'number'.
-        nestedObj: { a: set<{ b: number }, 'b'>('b', 0) },
+        nestedObj: {
+          a: set<{ b: number }, 'b'>('b', 0),
+        },
         // @ts-expect-error [ts2322] - Type 'string' is not assignable to type 'number'.
         objAry: map(omit<{ a: number; b: number }, 'b'>(['b'])),
       },
@@ -188,10 +212,15 @@ describe('data first', () => {
 
   it('can not handle function arrays.', () => {
     evolve(
-      { quartile: [1, 2] },
+      {
+        quartile: [1, 2],
+      },
       {
         // @ts-expect-error [ts2322] - Type '((value: number) => number)[]' provides no match for the signature '(data: number[]): unknown'.
-        quartile: [add(1), add(-1)],
+        quartile: [
+          add(1),
+          add(-1),
+        ],
       },
     );
   });
@@ -218,7 +247,10 @@ describe('data last', () => {
       evolve({
         id: add(1),
         quartile: sum,
-        time: { elapsed: add(1), remaining: add(-1) },
+        time: {
+          elapsed: add(1),
+          remaining: add(-1),
+        },
       }),
     );
 
@@ -230,15 +262,25 @@ describe('data last', () => {
   });
 
   it('is not destructive and is immutable', () => {
-    const result = pipe({ n: 100 }, evolve({ n: add(1) }));
+    const result = pipe({ n: 100 }, evolve({
+      n: add(1),
+    }));
 
     expectTypeOf(result).toEqualTypeOf<{ n: number }>();
   });
 
   it('is recursive', () => {
     const result = pipe(
-      { first: 1, nested: { second: 2, third: 3 } },
-      evolve({ nested: { second: add(-1), third: add(1) } }),
+      {
+        first: 1,
+        nested: { second: 2, third: 3 },
+      },
+      evolve({
+        nested: {
+          second: add(-1),
+          third: add(1),
+        },
+      }),
     );
 
     expectTypeOf(result).toEqualTypeOf<{
@@ -257,7 +299,9 @@ describe('data last', () => {
     const result = pipe(
       {
         array: ['1', '2', '3'],
-        nestedObj: { a: { b: 'c' } },
+        nestedObj: {
+          a: { b: 'c' },
+        },
         objAry: [
           { a: 0, b: 0 },
           { a: 1, b: 1 },
@@ -265,7 +309,9 @@ describe('data last', () => {
       },
       evolve({
         array: length(),
-        nestedObj: { a: (x) => set(x, 'b', 'Set') },
+        nestedObj: {
+          a: (x) => set(x, 'b', 'Set'),
+        },
         objAry: (x) => map(x, omit(['b'])),
       }),
     );
@@ -280,7 +326,10 @@ describe('data last', () => {
   describe('it can detect mismatch of parameters and arguments', () => {
     it('detect property "number" are incompatible', () => {
       pipe(
-        { number: '1', array: ['1', '2', '3'] },
+        {
+          number: '1',
+          array: ['1', '2', '3'],
+        },
         // @ts-expect-error [ts2345] - Evolver isn't the right type.
         evolve({
           // @ts-expect-error [ts2345] - Type 'string' is not assignable to type 'number | undefined'.
@@ -292,7 +341,10 @@ describe('data last', () => {
 
     it('detect property "array" are incompatible', () => {
       pipe(
-        { number: 1, array: ['1', '2', '3'] },
+        {
+          number: 1,
+          array: ['1', '2', '3'],
+        },
         // @ts-expect-error [ts2345] - Evolver isn't the right type.
         evolve({
           number: add(1),
@@ -332,11 +384,16 @@ describe('data last', () => {
 
   it('can not handle function arrays.', () => {
     pipe(
-      { quartile: [1, 2] },
+      {
+        quartile: [1, 2],
+      },
       // @ts-expect-error [ts2345] - Type '{ quartile: ((value: number) => number)[]; }' provides no match for the signature '(input: { quartile: number[]; }): unknown'.
       evolve({
         // @ts-expect-error [ts2322] - Type '((value: number) => number)[]' provides no match for the signature '(data: number[]): unknown'.
-        quartile: [add(1), add(-1)],
+        quartile: [
+          add(1),
+          add(-1),
+        ],
       }),
     );
   });

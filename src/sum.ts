@@ -72,7 +72,9 @@ export function sum(...args: ReadonlyArray<unknown>): unknown {
 function sumImplementation<
   T extends IterableContainer<bigint> | IterableContainer<number>,
 >(data: T): T[number] {
-  let out = typeof data[0] === 'bigint' ? 0n : 0;
+  let out = typeof data[0] === 'bigint'
+    ? 0n
+    : 0;
   for (const value of data) {
     // @ts-expect-error [ts2365] -- Typescript can't infer that all elements will be a number of the same type.
     out += value;

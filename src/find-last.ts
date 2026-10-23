@@ -44,8 +44,10 @@ type FoundLastInFixedTuple<T, Condition, Fallback> = T extends readonly [
     {
       full: Last;
 
-      // Because the match isn't full we need to also consider the rest of the
-      // items too because in runtime we might skip the current item.
+      /**
+       * Because the match isn't full we need to also consider the rest of the
+       * items too because in runtime we might skip the current item.
+       */
       partial:
         | Narrowed<Last, Condition>
         | FoundLastInFixedTuple<Rest, Condition, Fallback>;

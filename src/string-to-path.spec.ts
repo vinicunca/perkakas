@@ -243,7 +243,18 @@ describe('known type limitations', () => {
 
 it.each(
   // ¯\_(ツ)_/¯
-  ['.', '..', '[', ']', '[[', ']]', '[.', '].', '.[', '.]'],
+  [
+    '.',
+    '..',
+    '[',
+    ']',
+    '[[',
+    ']]',
+    '[.',
+    '].',
+    '.[',
+    '.]',
+  ],
 )('malformed input: %s', (input) => {
   expect(stringToPath(input)).toStrictEqual([]);
 });

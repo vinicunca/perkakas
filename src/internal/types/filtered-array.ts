@@ -55,12 +55,14 @@ type FilteredItem<Item, Condition, IsNegated extends boolean> = Assignability<
     full: IsNegated extends true ? [] : [Item];
     none: IsNegated extends true ? [Item] : [];
 
-    // The interesting case comes when the item might or might not match the
-    // condition. We fork our output to cover both cases; to handle the
-    // case the item matches the condition we narrow its type so that it
-    // always matches the condition and add it to the output; and to handle
-    // the case the item doesn't match we simply don't add anything to the
-    // output.
+    /**
+     * The interesting case comes when the item might or might not match the
+     * condition. We fork our output to cover both cases; to handle the
+     * case the item matches the condition we narrow its type so that it
+     * always matches the condition and add it to the output; and to handle
+     * the case the item doesn't match we simply don't add anything to the
+     * output.
+     */
     partial: [RefinedItem<Item, Condition, IsNegated>] | [];
   }
 >;

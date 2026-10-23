@@ -16,7 +16,12 @@ it('simple number records', () => {
 });
 
 it('mixed const objects', () => {
-  const result = invert({ a: 123, b: 'hello', 3: 456, 4: 'world' } as const);
+  const result = invert({
+    a: 123,
+    b: 'hello',
+    3: 456,
+    4: 'world',
+  } as const);
 
   expectTypeOf(result).toEqualTypeOf<{
     123: 'a';

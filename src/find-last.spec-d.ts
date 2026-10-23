@@ -28,7 +28,10 @@ it('array where every item matches', () => {
 
 it('narrows when the predicate is wider than the item', () => {
   expectTypeOf(
-    findLast([[1], 'a'] as Array<Array<number> | string>, isArray),
+    findLast([
+      [1],
+      'a',
+    ] as Array<Array<number> | string>, isArray),
   ).toEqualTypeOf<Array<number> | undefined>();
 });
 
@@ -141,7 +144,10 @@ describe('guaranteed match', () => {
 
   it('predicate wider than the item', () => {
     expectTypeOf(
-      findLast(['a', [1]] as [string, Array<number>], isArray),
+      findLast([
+        'a',
+        [1],
+      ] as [string, Array<number>], isArray),
     ).toEqualTypeOf<Array<number>>();
   });
 
@@ -286,7 +292,10 @@ describe('data-last', () => {
 
   it('predicate is wider than the item', () => {
     expectTypeOf(
-      pipe([[1], 'a'] as Array<Array<number> | string>, findLast(isArray)),
+      pipe([
+        [1],
+        'a',
+      ] as Array<Array<number> | string>, findLast(isArray)),
     ).toEqualTypeOf<Array<number> | undefined>();
   });
 

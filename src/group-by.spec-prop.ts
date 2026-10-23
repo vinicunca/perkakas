@@ -3,7 +3,10 @@ import { expect } from 'vitest';
 import { groupBy } from './group-by';
 import { pipe } from './pipe';
 
-test.prop([fc.array(fc.anything()), fc.func(fc.string()).map(pureGrouper)])(
+test.prop([
+  fc.array(fc.anything()),
+  fc.func(fc.string()).map(pureGrouper),
+])(
   'all elements are preserved across groups',
   (data, grouper) => {
     const result = groupBy(data, grouper);
@@ -12,7 +15,10 @@ test.prop([fc.array(fc.anything()), fc.func(fc.string()).map(pureGrouper)])(
   },
 );
 
-test.prop([fc.array(fc.anything()), fc.func(fc.string()).map(pureGrouper)])(
+test.prop([
+  fc.array(fc.anything()),
+  fc.func(fc.string()).map(pureGrouper),
+])(
   'each element is grouped by its computed key',
   (data, grouper) => {
     const result = groupBy(data, grouper);
@@ -24,7 +30,10 @@ test.prop([fc.array(fc.anything()), fc.func(fc.string()).map(pureGrouper)])(
   },
 );
 
-test.prop([fc.array(fc.anything()), fc.func(fc.string()).map(pureGrouper)])(
+test.prop([
+  fc.array(fc.anything()),
+  fc.func(fc.string()).map(pureGrouper),
+])(
   'groups are never empty',
   (data, grouper) => {
     const result = groupBy(data, grouper);
@@ -33,7 +42,10 @@ test.prop([fc.array(fc.anything()), fc.func(fc.string()).map(pureGrouper)])(
   },
 );
 
-test.prop([fc.array(fc.anything()), fc.func(fc.string()).map(pureGrouper)])(
+test.prop([
+  fc.array(fc.anything()),
+  fc.func(fc.string()).map(pureGrouper),
+])(
   'data-first and data-last produce the same result',
   (data, grouper) => {
     const result = groupBy(data, grouper);

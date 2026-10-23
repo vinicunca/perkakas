@@ -58,7 +58,9 @@ function nthByImplementation<T>(data: ReadonlyArray<T>, compareFn: CompareFuncti
   return quickSelect(
     data,
     // Allow negative indices gracefully
-    index >= 0 ? index : data.length + index,
+    index >= 0
+      ? index
+      : data.length + index,
     compareFn,
   );
 }

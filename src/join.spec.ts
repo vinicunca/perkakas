@@ -38,7 +38,13 @@ describe('joins same-typed items', () => {
   });
 
   it('undefined', () => {
-    const array = [undefined, undefined, undefined, undefined, undefined];
+    const array = [
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+    ];
     const result = join(array, ',');
 
     expect(result).toBe(',,,,');

@@ -24,8 +24,10 @@ type SplitPrefix<T extends IterableContainer>
       right: infer Right extends Array<unknown>;
     }
       ? {
-          // For required part we take whatever the left split is, and we
-          // reconstruct the rest of the array for the right side.
+          /**
+           * For required part we take whatever the left split is, and we
+           * reconstruct the rest of the array for the right side.
+           */
           left: Left;
           right: [
             ...Right,
@@ -50,9 +52,11 @@ type SplitOptional<T extends IterableContainer>
       right: infer Right extends Array<unknown>;
     }
       ? {
-          // For optional part we need to add the required prefix to each left
-          // side, we need to make the partial part partial, and we need to
-          // reconstruct the rest of the tuple for the right side.
+          /**
+           * For optional part we need to add the required prefix to each left
+           * side, we need to make the partial part partial, and we need to
+           * reconstruct the rest of the tuple for the right side.
+           */
           left: [...TupleParts<T>['required'], ...PartialArray<Left>];
           right: [
             ...PartialArray<Right>,
@@ -68,11 +72,13 @@ type SplitOptional<T extends IterableContainer>
     : never;
 
 interface SplitRest<T extends IterableContainer> {
-  // Splitting the rest element is easy, we only need to consider the split
-  // happening "in the middle", which would cause the rest element to be n both
-  // the right and left sides. For each side we simply put the parts of the
-  // tuple that live in that part, for the left side it's the required and
-  // optional prefixes, and for the right side it's the suffix.
+  /**
+   * Splitting the rest element is easy, we only need to consider the split
+   * happening "in the middle", which would cause the rest element to be n both
+   * the right and left sides. For each side we simply put the parts of the
+   * tuple that live in that part, for the left side it's the required and
+   * optional prefixes, and for the right side it's the suffix.
+   */
   left: [
     ...TupleParts<T>['required'],
     ...PartialArray<TupleParts<T>['optional']>,
@@ -90,9 +96,11 @@ type SplitSuffix<T extends IterableContainer>
       right: infer Right;
     }
       ? {
-          // Similar to the required prefix part, the suffix uses the right side
-          // as-is, and reconstructs the left side with all the other parts of
-          // the tuple.
+          /**
+           * Similar to the required prefix part, the suffix uses the right side
+           * as-is, and reconstructs the left side with all the other parts of
+           * the tuple.
+           */
           left: [
             ...TupleParts<T>['required'],
             ...PartialArray<TupleParts<T>['optional']>,

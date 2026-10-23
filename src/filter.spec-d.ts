@@ -75,7 +75,17 @@ describe('fixed tuple', () => {
   it('predicate', () => {
     expectTypeOf(
       filter(
-        ['hello', 'world', 1, 2, 3, true, 'world', 3, 'hello'] as const,
+        [
+          'hello',
+          'world',
+          1,
+          2,
+          3,
+          true,
+          'world',
+          3,
+          'hello',
+        ] as const,
         constant($typed<boolean>()),
       ),
     ).toEqualTypeOf<Array<true | 1 | 2 | 3 | 'hello' | 'world'>>();
@@ -84,7 +94,17 @@ describe('fixed tuple', () => {
   it('trivial acceptor', () => {
     expectTypeOf(
       filter(
-        ['hello', 'world', 1, 2, 3, true, 'world', 3, 'hello'] as const,
+        [
+          'hello',
+          'world',
+          1,
+          2,
+          3,
+          true,
+          'world',
+          3,
+          'hello',
+        ] as const,
         constant(true),
       ),
     ).toEqualTypeOf<['hello', 'world', 1, 2, 3, true, 'world', 3, 'hello']>();
@@ -93,7 +113,17 @@ describe('fixed tuple', () => {
   it('trivial rejector', () => {
     expectTypeOf(
       filter(
-        ['hello', 'world', 1, 2, 3, true, 'world', 3, 'hello'] as const,
+        [
+          'hello',
+          'world',
+          1,
+          2,
+          3,
+          true,
+          'world',
+          3,
+          'hello',
+        ] as const,
         constant(false),
       ),
     ).toEqualTypeOf<[]>();
@@ -102,7 +132,17 @@ describe('fixed tuple', () => {
   it('type predicate', () => {
     expectTypeOf(
       filter(
-        ['hello', 'world', 1, 2, 3, true, 'world', 3, 'hello'] as const,
+        [
+          'hello',
+          'world',
+          1,
+          2,
+          3,
+          true,
+          'world',
+          3,
+          'hello',
+        ] as const,
         isString,
       ),
     ).toEqualTypeOf<['hello', 'world', 'world', 'hello']>();
@@ -110,7 +150,17 @@ describe('fixed tuple', () => {
 
   it('type predicate with union type', () => {
     const result = filter(
-      ['hello', 'world', 1, 2, 3, true, 'world', 3, 'hello'] as const,
+      [
+        'hello',
+        'world',
+        1,
+        2,
+        3,
+        true,
+        'world',
+        3,
+        'hello',
+      ] as const,
       // TODO [>2]: We don't need the return type here once the minimum TypeScript version is 5.5 or higher.
       ($): $ is 1 | 'world' => $ === 1 || $ === 'world',
     );

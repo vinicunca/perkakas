@@ -15,7 +15,9 @@ export function humanReadableFileSize(bytes: number, base: 1000 | 1024 = 1000): 
     return `${bytes} B`;
   }
 
-  const prefix = base === 1024 ? ['Ki', 'Mi', 'Gi'] : ['k', 'M', 'G'];
+  const prefix = base === 1024
+    ? ['Ki', 'Mi', 'Gi']
+    : ['k', 'M', 'G'];
   let unit = -1;
 
   while (Math.abs(bytes) >= base && unit < prefix.length - 1) {

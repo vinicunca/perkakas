@@ -68,6 +68,8 @@ function lazyImplementation<T>(): LazyEvaluator<T> {
     // tells duplicates apart with a single hash lookup per item.
     const sizeBefore = seen.size;
     seen.add(value);
-    return seen.size === sizeBefore ? SKIP_ITEM : value;
+    return seen.size === sizeBefore
+      ? SKIP_ITEM
+      : value;
   };
 }

@@ -45,9 +45,11 @@ type DisjointSuffixError<Suffix extends string> = PerkakasTypeError<
   'endsWith',
   'This suffix doesn\'t match any of the inputs, the function will always return `false`',
   {
-    // A `string` base is already satisfied by any suffix argument, so the
-    // assignability failure is reported on the tag, which carries the
-    // message.
+    /**
+     * A `string` base is already satisfied by any suffix argument, so the
+     * assignability failure is reported on the tag, which carries the
+     * message.
+     */
     type: string;
     metadata: Suffix;
   }

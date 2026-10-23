@@ -88,7 +88,9 @@ function concatenateNumberArgs(
     ...arguments,
   ]
     .slice(2)
-    .map((x) => (typeof x === 'number' ? x.toString() : '<NaN>'))
+    .map((x) => (typeof x === 'number'
+      ? x.toString()
+      : '<NaN>'))
     .join('')}`;
 }
 

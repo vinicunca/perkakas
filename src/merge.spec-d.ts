@@ -68,7 +68,7 @@ it('optional keys are enforced', () => {
       },
     ),
   ).toEqualTypeOf<{
-    // Note that `c` and `g` is not marked as optional and this is deliberate, as this is the behaviour expected by the older version of Merge. This may change in a later version.
+    /** Note that `c` and `g` is not marked as optional and this is deliberate, as this is the behaviour expected by the older version of Merge. This may change in a later version. */
     [x: number]: number;
     [x: symbol]: boolean;
     [x: string]: unknown;

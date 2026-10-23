@@ -8,28 +8,79 @@ const DATA: ReadonlyArray<number> = UNEXPECTED_ACCESS_SENTINEL;
 
 describe('throws', () => {
   it.each([
-    ['index access', () => DATA[0]],
-    ['length', () => DATA.length],
-    ['`map`', () => DATA.map((value) => value)],
-    ['`at`', () => DATA.at(0)],
-    ['iteration', () => [...DATA]],
-    ['string coercion', () => String(DATA)],
-    ['serialization', () => JSON.stringify(DATA)],
+    [
+      'index access',
+      () => DATA[0],
+    ],
+    [
+      'length',
+      () => DATA.length,
+    ],
+    [
+      '`map`',
+      () => DATA.map((value) => value),
+    ],
+    [
+      '`at`',
+      () => DATA.at(0),
+    ],
+    [
+      'iteration',
+      () => [...DATA],
+    ],
+    [
+      'string coercion',
+      () => String(DATA),
+    ],
+    [
+      'serialization',
+      () => JSON.stringify(DATA),
+    ],
 
-    ['`concat` spreading it', () => [1].concat(DATA)],
-    ['`flat` spreading it', () => [DATA].flat()],
-    ['deep equality', () => isDeepEqual(DATA, [])],
-    ['`in` with an index', () => 0 in DATA],
-    ['`in` with an array method', () => 'map' in DATA],
-    ['key enumeration', () => Object.keys(DATA)],
-    ['own index lookup', () => Object.hasOwn(DATA, 0)],
-    ['assignment', () => Reflect.set(DATA, 0, 1)],
+    [
+      '`concat` spreading it',
+      () => [1].concat(DATA),
+    ],
+    [
+      '`flat` spreading it',
+      () => [DATA].flat(),
+    ],
+    [
+      'deep equality',
+      () => isDeepEqual(DATA, []),
+    ],
+    [
+      '`in` with an index',
+      () => 0 in DATA,
+    ],
+    [
+      '`in` with an array method',
+      () => 'map' in DATA,
+    ],
+    [
+      'key enumeration',
+      () => Object.keys(DATA),
+    ],
+    [
+      'own index lookup',
+      () => Object.hasOwn(DATA, 0),
+    ],
+    [
+      'assignment',
+      () => Reflect.set(DATA, 0, 1),
+    ],
     [
       'property definition',
       () => Reflect.defineProperty(DATA, 'key', { value: 1 }),
     ],
-    ['deletion', () => Reflect.deleteProperty(DATA, 'key')],
-    ['preventing extensions', () => Reflect.preventExtensions(DATA)],
+    [
+      'deletion',
+      () => Reflect.deleteProperty(DATA, 'key'),
+    ],
+    [
+      'preventing extensions',
+      () => Reflect.preventExtensions(DATA),
+    ],
     [
       'prototype replacement',
       () => Reflect.setPrototypeOf(DATA, Array.prototype),

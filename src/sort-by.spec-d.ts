@@ -6,7 +6,13 @@ import { prop } from './prop';
 import { sortBy } from './sort-by';
 
 const DATA = [
-  { id: 1, color: 'red', weight: 2, active: true, date: new Date(2021, 1, 1) },
+  {
+    id: 1,
+    color: 'red',
+    weight: 2,
+    active: true,
+    date: new Date(2021, 1, 1),
+  },
   {
     id: 2,
     color: 'blue',
@@ -32,14 +38,22 @@ const DATA = [
 
 describe('dataFirst', () => {
   it('sortProjection', () => {
-    const items = [{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }] as const;
+    const items = [
+      { a: 1 },
+      { a: 3 },
+      { a: 7 },
+      { a: 2 },
+    ] as const;
     const actual = sortBy(items, prop('a'));
 
     expectTypeOf(actual).toExtend<Array<(typeof items)[number]>>();
   });
 
   it('sortPair', () => {
-    const actual = sortBy(DATA, [(x) => x.active, 'desc']);
+    const actual = sortBy(DATA, [
+      (x) => x.active,
+      'desc',
+    ]);
 
     expectTypeOf(actual).toEqualTypeOf<Array<(typeof DATA)[number]>>();
   });
@@ -47,7 +61,12 @@ describe('dataFirst', () => {
 
 describe('dataLast', () => {
   it('sortProjection', () => {
-    const items = [{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }] as const;
+    const items = [
+      { a: 1 },
+      { a: 3 },
+      { a: 7 },
+      { a: 2 },
+    ] as const;
     const actual = pipe(items, sortBy(prop('a')));
 
     expectTypeOf(actual).toExtend<Array<(typeof items)[number]>>();
@@ -56,7 +75,13 @@ describe('dataLast', () => {
   it('sortPair', () => {
     const actual = pipe(
       DATA,
-      sortBy([prop('weight'), 'asc'], [prop('color'), 'desc']),
+      sortBy([
+        prop('weight'),
+        'asc',
+      ], [
+        prop('color'),
+        'desc',
+      ]),
     );
 
     expectTypeOf(actual).toEqualTypeOf<Array<(typeof DATA)[number]>>();

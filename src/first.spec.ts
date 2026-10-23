@@ -47,7 +47,11 @@ describe(pipe, () => {
   it('2 x first()', () => {
     const counter = createLazyInvocationCounter();
     const result = pipe(
-      [[1, 2, 3], [4, 5], [6]] as const,
+      [
+        [1, 2, 3],
+        [4, 5],
+        [6],
+      ] as const,
       counter.fn(),
       first(),
       assertIsDefined,
@@ -62,7 +66,12 @@ describe(pipe, () => {
     const counter1 = createLazyInvocationCounter();
     const counter2 = createLazyInvocationCounter();
     const result = pipe(
-      [[1, 2, 3], [1], [4, 5, 6, 7], [1, 2, 3, 4]] as const,
+      [
+        [1, 2, 3],
+        [1],
+        [4, 5, 6, 7],
+        [1, 2, 3, 4],
+      ] as const,
       counter1.fn(),
       filter((arr) => arr.length === 4),
       first(),

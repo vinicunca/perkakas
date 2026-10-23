@@ -23,7 +23,10 @@ describe('data first', () => {
         {
           id: add(1),
           quartile: sum,
-          time: { elapsed: add(1), remaining: add(-1) },
+          time: {
+            elapsed: add(1),
+            remaining: add(-1),
+          },
         },
       ),
     ).toStrictEqual({
@@ -34,13 +37,17 @@ describe('data first', () => {
   });
 
   it('does not invoke function if `data` does not contain the key', () => {
-    expect(evolve({} as { id?: number }, { id: add(1) })).toStrictEqual({});
+    expect(evolve({} as { id?: number }, {
+      id: add(1),
+    })).toStrictEqual({});
   });
 
   it('is not destructive and is immutable', () => {
     const data = { n: 100 };
     const expected = { n: 101 };
-    const result = evolve(data, { n: add(1) });
+    const result = evolve(data, {
+      n: add(1),
+    });
 
     expect(data).toStrictEqual({ n: 100 });
     expect(result).toStrictEqual(expected);
@@ -50,10 +57,21 @@ describe('data first', () => {
   it('is recursive', () => {
     expect(
       evolve(
-        { first: 1, nested: { second: 2, third: 3 } },
-        { nested: { second: add(-1), third: add(1) } },
+        {
+          first: 1,
+          nested: { second: 2, third: 3 },
+        },
+        {
+          nested: {
+            second: add(-1),
+            third: add(1),
+          },
+        },
       ),
-    ).toStrictEqual({ first: 1, nested: { second: 1, third: 4 } });
+    ).toStrictEqual({
+      first: 1,
+      nested: { second: 1, third: 4 },
+    });
   });
 
   it('ignores undefined transformations', () => {
@@ -65,7 +83,9 @@ describe('data first', () => {
       evolve(
         {
           array: ['1', '2', '3'],
-          nestedObj: { a: { b: 'c' } },
+          nestedObj: {
+            a: { b: 'c' },
+          },
           objAry: [
             { a: 0, b: 0 },
             { a: 1, b: 1 },
@@ -73,14 +93,21 @@ describe('data first', () => {
         },
         {
           array: length(),
-          nestedObj: { a: (x) => set(x, 'b', 'Set') },
+          nestedObj: {
+            a: (x) => set(x, 'b', 'Set'),
+          },
           objAry: (x) => map(x, omit(['b'])),
         },
       ),
     ).toStrictEqual({
       array: 3,
-      nestedObj: { a: { b: 'Set' } },
-      objAry: [{ a: 0 }, { a: 1 }],
+      nestedObj: {
+        a: { b: 'Set' },
+      },
+      objAry: [
+        { a: 0 },
+        { a: 1 },
+      ],
     });
   });
 
@@ -109,7 +136,9 @@ describe('data first', () => {
   it('ignore transformers for non-object values', () => {
     expect(
       evolve({ a: 'hello' } as { a: string | { b: string } }, {
-        a: { b: constant(3) },
+        a: {
+          b: constant(3),
+        },
       }),
     ).toStrictEqual({ a: 'hello' });
   });
@@ -127,7 +156,10 @@ describe('data last', () => {
         evolve({
           id: add(1),
           quartile: sum,
-          time: { elapsed: add(1), remaining: add(-1) },
+          time: {
+            elapsed: add(1),
+            remaining: add(-1),
+          },
         }),
       ),
     ).toStrictEqual({
@@ -138,7 +170,9 @@ describe('data last', () => {
   });
 
   it('does not invoke function if `data` does not contain the key', () => {
-    expect(pipe({} as { id?: number }, evolve({ id: add(1) }))).toStrictEqual(
+    expect(pipe({} as { id?: number }, evolve({
+      id: add(1),
+    }))).toStrictEqual(
       {},
     );
   });
@@ -146,7 +180,9 @@ describe('data last', () => {
   it('is not destructive and is immutable', () => {
     const data = { n: 100 };
     const expected = { n: 101 };
-    const result = pipe(data, evolve({ n: add(1) }));
+    const result = pipe(data, evolve({
+      n: add(1),
+    }));
 
     expect(data).toStrictEqual({ n: 100 });
     expect(result).toStrictEqual(expected);
@@ -156,10 +192,21 @@ describe('data last', () => {
   it('is recursive', () => {
     expect(
       pipe(
-        { first: 1, nested: { second: 2, third: 3 } },
-        evolve({ nested: { second: add(-1), third: add(1) } }),
+        {
+          first: 1,
+          nested: { second: 2, third: 3 },
+        },
+        evolve({
+          nested: {
+            second: add(-1),
+            third: add(1),
+          },
+        }),
       ),
-    ).toStrictEqual({ first: 1, nested: { second: 1, third: 4 } });
+    ).toStrictEqual({
+      first: 1,
+      nested: { second: 1, third: 4 },
+    });
   });
 
   it('ignores undefined transformations', () => {
@@ -171,7 +218,9 @@ describe('data last', () => {
       pipe(
         {
           array: ['1', '2', '3'],
-          nestedObj: { a: { b: 'c' } },
+          nestedObj: {
+            a: { b: 'c' },
+          },
           objAry: [
             { a: 0, b: 0 },
             { a: 1, b: 1 },
@@ -179,14 +228,21 @@ describe('data last', () => {
         },
         evolve({
           array: length(),
-          nestedObj: { a: (x) => set(x, 'b', 'Set') },
+          nestedObj: {
+            a: (x) => set(x, 'b', 'Set'),
+          },
           objAry: (x) => map(x, omit(['b'])),
         }),
       ),
     ).toStrictEqual({
       array: 3,
-      nestedObj: { a: { b: 'Set' } },
-      objAry: [{ a: 0 }, { a: 1 }],
+      nestedObj: {
+        a: { b: 'Set' },
+      },
+      objAry: [
+        { a: 0 },
+        { a: 1 },
+      ],
     });
   });
 

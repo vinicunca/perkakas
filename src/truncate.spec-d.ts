@@ -76,19 +76,25 @@ describe('custom omission, no separator', () => {
 
   it('primitive \'omission\'', () => {
     expectTypeOf(
-      truncate('Hello, world!', 9, { omission: $typed<string>() }),
+      truncate('Hello, world!', 9, {
+        omission: $typed<string>(),
+      }),
     ).toEqualTypeOf<string>();
   });
 
   it('primitive \'data\' and \'omission\'', () => {
     expectTypeOf(
-      truncate('Hello, world!' as string, 9, { omission: $typed<string>() }),
+      truncate('Hello, world!' as string, 9, {
+        omission: $typed<string>(),
+      }),
     ).toEqualTypeOf<string>();
   });
 
   it('primitive \'n\' and \'omission\'', () => {
     expectTypeOf(
-      truncate('Hello, world!', 9 as number, { omission: $typed<string>() }),
+      truncate('Hello, world!', 9 as number, {
+        omission: $typed<string>(),
+      }),
     ).toEqualTypeOf<string>();
   });
 

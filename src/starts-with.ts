@@ -45,9 +45,11 @@ type DisjointPrefixError<Prefix extends string> = PerkakasTypeError<
   'startsWith',
   'This prefix doesn\'t match any of the inputs, the function will always return `false`',
   {
-    // A `string` base is already satisfied by any prefix argument, so the
-    // assignability failure is reported on the tag, which carries the
-    // message.
+    /**
+     * A `string` base is already satisfied by any prefix argument, so the
+     * assignability failure is reported on the tag, which carries the
+     * message.
+     */
     type: string;
     metadata: Prefix;
   }

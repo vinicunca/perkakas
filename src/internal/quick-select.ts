@@ -56,8 +56,12 @@ function quickSelectImplementation<T>(
     : quickSelectImplementation(
         data,
         // We continue by recursing into the partition where index would be
-        index < pivotIndex ? left : pivotIndex + 1,
-        index < pivotIndex ? pivotIndex - 1 : right,
+        index < pivotIndex
+          ? left
+          : pivotIndex + 1,
+        index < pivotIndex
+          ? pivotIndex - 1
+          : right,
         index,
         compareFn,
       );

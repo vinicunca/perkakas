@@ -76,14 +76,18 @@ it('literal unions keys', () => {
   expectTypeOf(
     pullObject(
       data,
-      (item) => (item % 2 === 0 ? 'odd' : 'even'),
+      (item) => (item % 2 === 0
+        ? 'odd'
+        : 'even'),
       constant('c'),
     ),
   ).toEqualTypeOf<{ even?: 'c'; odd?: 'c' }>();
   expectTypeOf(
     pipe(
       data,
-      pullObject((item) => (item % 2 === 0 ? 'odd' : 'even'), constant('c')),
+      pullObject((item) => (item % 2 === 0
+        ? 'odd'
+        : 'even'), constant('c')),
     ),
   ).toEqualTypeOf<{ even?: 'c'; odd?: 'c' }>();
 });

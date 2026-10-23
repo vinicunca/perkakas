@@ -26,23 +26,35 @@ describe('data-first', () => {
     hasSubObject({ a: 'a' }, { a: 1 });
 
     // @ts-expect-error [ts2322] - object isn't assignable to `string`
-    hasSubObject({ a: 'a' }, { a: { b: 2 } });
+    hasSubObject({ a: 'a' }, {
+      a: { b: 2 },
+    });
 
     // @ts-expect-error [ts2322] - `string` isn't assignable to object
-    hasSubObject({ a: { b: 2 } }, { a: 'a' });
+    hasSubObject({
+      a: { b: 2 },
+    }, { a: 'a' });
   });
 
   it('allows keys to have different types when types are overlapping', () => {
     // ok - union type in super-object
-    hasSubObject({ a: $typed<number | string>() }, { a: 1 });
+    hasSubObject({
+      a: $typed<number | string>(),
+    }, { a: 1 });
 
     // ok - union type in sub-object
-    hasSubObject({ a: 'a' }, { a: $typed<number | string>() });
+    hasSubObject({ a: 'a' }, {
+      a: $typed<number | string>(),
+    });
 
     // ok - union type in both super-object and sub-object
     hasSubObject(
-      { a: $typed<number | string>() },
-      { a: $typed<boolean | number>() },
+      {
+        a: $typed<number | string>(),
+      },
+      {
+        a: $typed<boolean | number>(),
+      },
     );
   });
 
@@ -61,37 +73,67 @@ describe('data-first', () => {
 
   it('allows nested objects', () => {
     // ok - nested objects
-    hasSubObject({ a: { b: 1, c: 2 } }, { a: { b: 1, c: 2 } });
+    hasSubObject({
+      a: { b: 1, c: 2 },
+    }, {
+      a: { b: 1, c: 2 },
+    });
 
     // ok - deep-nested objects
-    hasSubObject({ a: { b: { c: 2 } } }, { a: { b: { c: 2 } } });
+    hasSubObject({
+      a: {
+        b: { c: 2 },
+      },
+    }, {
+      a: {
+        b: { c: 2 },
+      },
+    });
 
     // ok - optional keys in sub-object
-    hasSubObject({ a: { b: 1 } }, {
+    hasSubObject({
+      a: { b: 1 },
+    }, {
       a: { b: 1 },
     } as { a?: { b?: number } });
 
     // ok - optional keys in super-object
-    hasSubObject({ a: { b: 1 } } as { a?: { b?: number } }, {
+    hasSubObject({
+      a: { b: 1 },
+    } as { a?: { b?: number } }, {
       a: { b: 1 },
     });
   });
 
   it('doesn\'t allow nested objects to have missing keys', () => {
     // @ts-expect-error [ts2322] - nested sub-object doesn't have `c` key
-    hasSubObject({ a: { b: 1, c: 2 } }, { a: { b: 1 } });
+    hasSubObject({
+      a: { b: 1, c: 2 },
+    }, {
+      a: { b: 1 },
+    });
 
     // @ts-expect-error [ts2379] - nested sub-object doesn't have `c` key (works with optional key)
-    hasSubObject({ a: { b: 1, c: 2 } }, { a: { b: 1 } } as {
+    hasSubObject({
+      a: { b: 1, c: 2 },
+    }, {
+      a: { b: 1 },
+    } as {
       a?: { b: number };
     });
   });
 
   it('doesn\'t allow nested objects to have extra keys', () => {
     // @ts-expect-error [ts2322] - nested sub-object has extra key `c`
-    hasSubObject({ a: { b: 1 } }, { a: { b: 1, c: 2 } });
+    hasSubObject({
+      a: { b: 1 },
+    }, {
+      a: { b: 1, c: 2 },
+    });
 
-    hasSubObject({ a: { b: 1 } } as { a?: { b: number } }, {
+    hasSubObject({
+      a: { b: 1 },
+    } as { a?: { b: number } }, {
       // @ts-expect-error ts[2322] - nested sub-object has extra key `c` (works with optional key)
       a: { b: 1, c: 2 },
     });
@@ -99,29 +141,73 @@ describe('data-first', () => {
 
   it('doesn\'t allow nested objects keys to have different types', () => {
     // @ts-expect-error [ts2322] - nested sub-object has wrong value types
-    hasSubObject({ a: { b: 4, c: 'c' } }, { a: { b: 1, c: 2 } });
+    hasSubObject({
+      a: { b: 4, c: 'c' },
+    }, {
+      a: { b: 1, c: 2 },
+    });
 
     // @ts-expect-error [ts2322] - deep-nested sub-object has wrong value types
-    hasSubObject({ a: { b: { c: 2 } } }, { a: { b: { c: '2' } } });
+    hasSubObject({
+      a: {
+        b: { c: 2 },
+      },
+    }, {
+      a: {
+        b: { c: '2' },
+      },
+    });
 
     // @ts-expect-error [ts2322] - properly compares primitive and non-primitive types
-    hasSubObject({ a: { b: 'a' } }, { a: { b: { c: 2 } } });
+    hasSubObject({
+      a: { b: 'a' },
+    }, {
+      a: {
+        b: { c: 2 },
+      },
+    });
 
     // @ts-expect-error [ts2322] - properly compares primitive and non-primitive types
-    hasSubObject({ a: { b: { c: 2 } } }, { a: { b: 'a' } });
+    hasSubObject({
+      a: {
+        b: { c: 2 },
+      },
+    }, {
+      a: { b: 'a' },
+    });
   });
 
   it('allows nested objects keys to have different types when types are overlapping', () => {
     // ok - union type in nested super-object
-    hasSubObject({ a: { b: $typed<number | string>() } }, { a: { b: 1 } });
+    hasSubObject({
+      a: {
+        b: $typed<number | string>(),
+      },
+    }, {
+      a: { b: 1 },
+    });
 
     // ok - union type in nested sub-object
-    hasSubObject({ a: { b: 1 } }, { a: { b: $typed<number | string>() } });
+    hasSubObject({
+      a: { b: 1 },
+    }, {
+      a: {
+        b: $typed<number | string>(),
+      },
+    });
 
     // ok - union type in both nested super-object and sub-object
     hasSubObject(
-      { a: { b: $typed<boolean | number>() } },
-      { a: { b: $typed<number | string>() } },
+      {
+        a: {
+          b: $typed<boolean | number>(),
+        },
+      },
+      {
+        a: {
+          b: $typed<number | string>(),
+        },
+      },
     );
   });
 
@@ -183,7 +269,9 @@ describe('data-first', () => {
   it('narrows with sub-object union type field', () => {
     const obj: { a?: string; b?: number; c?: boolean } = {};
 
-    if (hasSubObject(obj, { c: $typed<boolean | number>() })) {
+    if (hasSubObject(obj, {
+      c: $typed<boolean | number>(),
+    })) {
       expectTypeOf(obj).toMatchObjectType<{
         a?: string;
         b?: number;
@@ -224,8 +312,14 @@ describe('data-first', () => {
 
     if (
       hasSubObject(obj, {
-        a: { foo: $typed<number | string>(), bar: true },
-        b: { foo: 'test', bar: $typed<boolean | number>() },
+        a: {
+          foo: $typed<number | string>(),
+          bar: true,
+        },
+        b: {
+          foo: 'test',
+          bar: $typed<boolean | number>(),
+        },
       })
     ) {
       expectTypeOf(obj).toMatchObjectType<{
@@ -298,32 +392,54 @@ describe('data-last', () => {
     pipe({ a: 'a' }, hasSubObject({ a: 1 }));
 
     // @ts-expect-error [ts2322] - `string` isn't assignable to object
-    hasSubObject({ a: { b: 2 } })({ a: 'a' });
+    hasSubObject({
+      a: { b: 2 },
+    })({ a: 'a' });
     // @ts-expect-error [ts2345] - `string` isn't assignable to object
-    pipe({ a: 'a' }, hasSubObject({ a: { b: 2 } }));
+    pipe({ a: 'a' }, hasSubObject({
+      a: { b: 2 },
+    }));
 
     // @ts-expect-error [ts2322] - object isn't assignable to `string`
-    hasSubObject({ a: 'a' })({ a: { b: 2 } });
+    hasSubObject({ a: 'a' })({
+      a: { b: 2 },
+    });
     // @ts-expect-error [ts2345] - object isn't assignable to `string`
-    pipe({ a: { b: 2 } }, hasSubObject({ a: 'a' }));
+    pipe({
+      a: { b: 2 },
+    }, hasSubObject({ a: 'a' }));
   });
 
   it('allows keys to have different types when types are overlapping', () => {
     // ok - union type in super-object
-    hasSubObject({ a: 1 })({ a: $typed<number | string>() });
-    pipe({ a: $typed<number | string>() }, hasSubObject({ a: 1 }));
+    hasSubObject({ a: 1 })({
+      a: $typed<number | string>(),
+    });
+    pipe({
+      a: $typed<number | string>(),
+    }, hasSubObject({ a: 1 }));
 
     // ok - union type in sub-object
-    hasSubObject({ a: $typed<number | string>() })({ a: 'a' });
-    pipe({ a: 'a' }, hasSubObject({ a: $typed<number | string>() }));
+    hasSubObject({
+      a: $typed<number | string>(),
+    })({ a: 'a' });
+    pipe({ a: 'a' }, hasSubObject({
+      a: $typed<number | string>(),
+    }));
 
     // ok - union type in both super-object and sub-object
-    hasSubObject({ a: $typed<boolean | number>() })({
+    hasSubObject({
+      a: $typed<boolean | number>(),
+    })({
       a: $typed<number | string>(),
     });
     pipe(
-      { a: $typed<number | string>() },
-      hasSubObject({ a: $typed<boolean | number>() }),
+      {
+        a: $typed<number | string>(),
+      },
+      hasSubObject({
+        a: $typed<boolean | number>(),
+      }),
     );
   });
 
@@ -341,108 +457,260 @@ describe('data-last', () => {
 
   it('allows nested objects', () => {
     // ok - nested objects
-    hasSubObject({ a: { b: 1, c: 2 } })({ a: { b: 1, c: 2 } });
-    pipe({ a: { b: 1, c: 2 } }, hasSubObject({ a: { b: 1, c: 2 } }));
+    hasSubObject({
+      a: { b: 1, c: 2 },
+    })({
+      a: { b: 1, c: 2 },
+    });
+    pipe({
+      a: { b: 1, c: 2 },
+    }, hasSubObject({
+      a: { b: 1, c: 2 },
+    }));
 
     // ok - deep-nested sub-object
-    hasSubObject({ a: { b: { c: 2 } } })({ a: { b: { c: 2 } } });
-    pipe({ a: { b: { c: 2 } } }, hasSubObject({ a: { b: { c: 2 } } }));
+    hasSubObject({
+      a: {
+        b: { c: 2 },
+      },
+    })({
+      a: {
+        b: { c: 2 },
+      },
+    });
+    pipe({
+      a: {
+        b: { c: 2 },
+      },
+    }, hasSubObject({
+      a: {
+        b: { c: 2 },
+      },
+    }));
 
     // ok - optional keys in sub-object
-    hasSubObject({ a: { b: 1 } } as { a?: { b?: number } })({ a: { b: 1 } });
+    hasSubObject({
+      a: { b: 1 },
+    } as { a?: { b?: number } })({
+      a: { b: 1 },
+    });
     pipe(
-      { a: { b: 1 } },
-      hasSubObject({ a: { b: 1 } } as { a?: { b?: number } }),
+      {
+        a: { b: 1 },
+      },
+      hasSubObject({
+        a: { b: 1 },
+      } as { a?: { b?: number } }),
     );
 
     // ok - optional keys in super-object
-    hasSubObject({ a: { b: 1 } })($typed<{ a?: { b?: number } }>());
+    hasSubObject({
+      a: { b: 1 },
+    })($typed<{ a?: { b?: number } }>());
     pipe(
-      { a: { b: 1 } } as { a?: { b?: number } },
-      hasSubObject({ a: { b: 1 } }),
+      {
+        a: { b: 1 },
+      } as { a?: { b?: number } },
+      hasSubObject({
+        a: { b: 1 },
+      }),
     );
   });
 
   it('doesn\'t allow nested objects to have missing keys', () => {
     // @ts-expect-error [ts2322] - nested sub-object doesn't have `c` key
-    hasSubObject({ a: { b: 1 } })({ a: { b: 1, c: 2 } });
+    hasSubObject({
+      a: { b: 1 },
+    })({
+      a: { b: 1, c: 2 },
+    });
     // @ts-expect-error [ts2345] - nested sub-object doesn't have `c` key
-    pipe({ a: { b: 1, c: 2 } }, hasSubObject({ a: { b: 1 } }));
+    pipe({
+      a: { b: 1, c: 2 },
+    }, hasSubObject({
+      a: { b: 1 },
+    }));
 
-    hasSubObject({ a: { b: 1 } } as { a?: { b: number } })({
+    hasSubObject({
+      a: { b: 1 },
+    } as { a?: { b: number } })({
       // @ts-expect-error [ts2322] - nested sub-object doesn't have `c` key (works with optional key)
       a: { b: 1, c: 2 },
     });
     pipe(
-      { a: { b: 1, c: 2 } },
+      {
+        a: { b: 1, c: 2 },
+      },
       // @ts-expect-error [ts2345] - nested sub-object doesn't have `c` key (works with optional key)
-      hasSubObject({ a: { b: 1 } } as { a?: { b: number } }),
+      hasSubObject({
+        a: { b: 1 },
+      } as { a?: { b: number } }),
     );
   });
 
   it('doesn\'t allow nested objects to have extra keys', () => {
     // @ts-expect-error [ts2322] - nested sub-object has extra key `c`
-    hasSubObject({ a: { b: 1, c: 2 } })({ a: { b: 1 } });
+    hasSubObject({
+      a: { b: 1, c: 2 },
+    })({
+      a: { b: 1 },
+    });
     // @ts-expect-error [ts2345] - nested sub-object has extra key `c`
-    pipe({ a: { b: 1 } }, hasSubObject({ a: { b: 1, c: 2 } }));
+    pipe({
+      a: { b: 1 },
+    }, hasSubObject({
+      a: { b: 1, c: 2 },
+    }));
 
     // @ts-expect-error [ts2379] - nested sub-object has extra key `c` (works with optional key)
-    hasSubObject({ a: { b: 1, c: 2 } })({ a: { b: 1 } } as {
+    hasSubObject({
+      a: { b: 1, c: 2 },
+    })({
+      a: { b: 1 },
+    } as {
       a?: { b: number };
     });
     pipe(
-      { a: { b: 1 } } as { a?: { b: number } },
+      {
+        a: { b: 1 },
+      } as { a?: { b: number } },
       // @ts-expect-error [ts2345] - nested sub-object has extra key `c` (works with optional key)
-      hasSubObject({ a: { b: 1, c: 2 } }),
+      hasSubObject({
+        a: { b: 1, c: 2 },
+      }),
     );
   });
 
   it('doesn\'t allow nested objects keys to have different types', () => {
     // @ts-expect-error [ts2322] - nested sub-object has wrong value types
-    hasSubObject({ a: { b: 1, c: 2 } })({ a: { b: 4, c: 'c' } });
+    hasSubObject({
+      a: { b: 1, c: 2 },
+    })({
+      a: { b: 4, c: 'c' },
+    });
     // @ts-expect-error [ts2345] - nested sub-object has wrong value types
-    pipe({ a: { b: 4, c: 'c' } }, hasSubObject({ a: { b: 1, c: 2 } }));
+    pipe({
+      a: { b: 4, c: 'c' },
+    }, hasSubObject({
+      a: { b: 1, c: 2 },
+    }));
 
     // @ts-expect-error [ts2322] - deep-nested sub-object has wrong value types
-    hasSubObject({ a: { b: { c: '2' } } })({ a: { b: { c: 2 } } });
+    hasSubObject({
+      a: {
+        b: { c: '2' },
+      },
+    })({
+      a: {
+        b: { c: 2 },
+      },
+    });
     // @ts-expect-error [ts2345] - deep-nested sub-object has wrong value types
-    pipe({ a: { b: { c: 2 } } }, hasSubObject({ a: { b: { c: '2' } } }));
+    pipe({
+      a: {
+        b: { c: 2 },
+      },
+    }, hasSubObject({
+      a: {
+        b: { c: '2' },
+      },
+    }));
 
     // @ts-expect-error [ts2322] - properly compares primitive and non-primitive types
-    hasSubObject({ a: { b: { c: 2 } } })({ a: { b: 'a' } });
+    hasSubObject({
+      a: {
+        b: { c: 2 },
+      },
+    })({
+      a: { b: 'a' },
+    });
     // @ts-expect-error [ts2345] - properly compares primitive and non-primitive types
-    pipe({ a: { b: 'a' } }, hasSubObject({ a: { b: { c: 2 } } }));
+    pipe({
+      a: { b: 'a' },
+    }, hasSubObject({
+      a: {
+        b: { c: 2 },
+      },
+    }));
 
     // @ts-expect-error [ts2322] - properly compares primitive and non-primitive types
-    hasSubObject({ a: { b: 'a' } })({ a: { b: { c: 2 } } });
+    hasSubObject({
+      a: { b: 'a' },
+    })({
+      a: {
+        b: { c: 2 },
+      },
+    });
     // @ts-expect-error [ts2345] - properly compares primitive and non-primitive types
-    pipe({ a: { b: { c: 2 } } }, hasSubObject({ a: { b: 'a' } }));
+    pipe({
+      a: {
+        b: { c: 2 },
+      },
+    }, hasSubObject({
+      a: { b: 'a' },
+    }));
   });
 
   it('allows nested objects keys to have different types when types are overlapping', () => {
     // ok - union type in nested super-object
-    hasSubObject({ a: { b: 1 } })({ a: { b: $typed<number | string>() } });
+    hasSubObject({
+      a: { b: 1 },
+    })({
+      a: {
+        b: $typed<number | string>(),
+      },
+    });
     pipe(
-      { a: { b: $typed<number | string>() } },
-      hasSubObject({ a: { b: 1 } }),
+      {
+        a: {
+          b: $typed<number | string>(),
+        },
+      },
+      hasSubObject({
+        a: { b: 1 },
+      }),
     );
 
     // ok - union type in nested sub-object
-    hasSubObject({ a: { b: $typed<number | string>() } })({ a: { b: 1 } });
+    hasSubObject({
+      a: {
+        b: $typed<number | string>(),
+      },
+    })({
+      a: { b: 1 },
+    });
     pipe(
-      { a: { b: 1 } },
-      hasSubObject({ a: { b: $typed<number | string>() } }),
+      {
+        a: { b: 1 },
+      },
+      hasSubObject({
+        a: {
+          b: $typed<number | string>(),
+        },
+      }),
     );
 
     // ok - union type in both nested super-object and sub-object
     hasSubObject({
-      a: { b: $typed<number | string>() },
+      a: {
+        b: $typed<number | string>(),
+      },
     })({
-      a: { b: $typed<boolean | number>() },
+      a: {
+        b: $typed<boolean | number>(),
+      },
     });
     pipe(
-      { a: { b: $typed<boolean | number>() } },
-      hasSubObject({ a: { b: $typed<number | string>() } }),
+      {
+        a: {
+          b: $typed<boolean | number>(),
+        },
+      },
+      hasSubObject({
+        a: {
+          b: $typed<number | string>(),
+        },
+      }),
     );
   });
 
@@ -503,7 +771,9 @@ describe('data-last', () => {
   it('narrows with sub-object union type field', () => {
     const obj: { a?: string; b?: number; c?: boolean } = {};
 
-    if (hasSubObject({ c: $typed<boolean | number>() })(obj)) {
+    if (hasSubObject({
+      c: $typed<boolean | number>(),
+    })(obj)) {
       expectTypeOf(obj).toMatchObjectType<{
         a?: string;
         b?: number;
@@ -544,8 +814,14 @@ describe('data-last', () => {
 
     if (
       hasSubObject({
-        a: { foo: $typed<number | string>(), bar: true },
-        b: { foo: 'test', bar: $typed<boolean | number>() },
+        a: {
+          foo: $typed<number | string>(),
+          bar: true,
+        },
+        b: {
+          foo: 'test',
+          bar: $typed<boolean | number>(),
+        },
       })(obj)
     ) {
       expectTypeOf(obj).toMatchObjectType<{

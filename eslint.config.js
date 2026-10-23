@@ -51,7 +51,10 @@ export default vinicuncaESLint(
       'perfectionist/sort-union-types': 'off',
       'sonar/no-duplicate-string': 'off',
       // `*.spec-d.ts` isn't in the shared test globs, so pass the options too
-      'test/consistent-test-it': ['error', { fn: 'it', withinDescribe: 'it' }],
+      'test/consistent-test-it': [
+        'error',
+        { fn: 'it', withinDescribe: 'it' },
+      ],
     },
   },
 
@@ -68,7 +71,9 @@ export default vinicuncaESLint(
       'style/operator-linebreak': [
         'error',
         'before',
-        { overrides: { '?': 'ignore', ':': 'ignore' } },
+        {
+          overrides: { '?': 'ignore', ':': 'ignore' },
+        },
       ],
     },
   },

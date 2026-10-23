@@ -21,7 +21,9 @@ describe('data first', () => {
         { a: 1, b: 2 },
         { a: 1, b: 3 },
       ],
-      2: [{ a: 2, b: 1 }],
+      2: [
+        { a: 2, b: 1 },
+      ],
     });
   });
 });
@@ -44,7 +46,9 @@ describe('data last', () => {
         { a: 1, b: 2 },
         { a: 1, b: 3 },
       ],
-      2: [{ a: 2, b: 1 }],
+      2: [
+        { a: 2, b: 1 },
+      ],
     });
   });
 });
@@ -57,7 +61,9 @@ describe('filtering on undefined grouper result', () => {
 
   it('regular', () => {
     const result = groupBy([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], (x) =>
-      x % 2 === 0 ? 'even' : undefined);
+      x % 2 === 0
+        ? 'even'
+        : undefined);
 
     expect(Object.values(result)).toHaveLength(1);
     expect(result.even).toStrictEqual([0, 2, 4, 6, 8]);
@@ -65,8 +71,21 @@ describe('filtering on undefined grouper result', () => {
 
   it('regular indexed', () => {
     const result = groupBy(
-      ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'],
-      (_, index) => (index % 2 === 0 ? 'even' : undefined),
+      [
+        'a',
+        'b',
+        'c',
+        'd',
+        'e',
+        'f',
+        'g',
+        'h',
+        'i',
+        'j',
+      ],
+      (_, index) => (index % 2 === 0
+        ? 'even'
+        : undefined),
     );
 
     expect(Object.values(result)).toHaveLength(1);
@@ -92,7 +111,9 @@ describe('key is an object instance method name', () => {
         { a: 'toString', b: 'valueOf' },
         { a: 'toString', b: '__proto__' },
       ],
-      valueOf: [{ a: 'valueOf', b: 'toString' }],
+      valueOf: [
+        { a: 'valueOf', b: 'toString' },
+      ],
     });
   });
 });

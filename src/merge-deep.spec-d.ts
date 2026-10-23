@@ -20,13 +20,19 @@ it('merges semi-overlapping types', () => {
 });
 
 it('deeply merges', () => {
-  const result = mergeDeep({ foo: { bar: 'bar' } }, { foo: { qux: 'qux' } });
+  const result = mergeDeep({
+    foo: { bar: 'bar' },
+  }, {
+    foo: { qux: 'qux' },
+  });
 
   expectTypeOf(result).toEqualTypeOf<{ foo: { bar: string; qux: string } }>();
 });
 
 it('overrides types', () => {
-  const a = { foo: { bar: 'baz' } };
+  const a = {
+    foo: { bar: 'baz' },
+  };
   const b = { foo: 'qux' };
 
   const resultAB = mergeDeep(a, b);
@@ -40,8 +46,12 @@ it('overrides types', () => {
 
 it('doesn\'t spread arrays', () => {
   const result = mergeDeep(
-    { foo: ['bar'] } as const,
-    { foo: ['baz'] } as const,
+    {
+      foo: ['bar'],
+    } as const,
+    {
+      foo: ['baz'],
+    } as const,
   );
 
   expectTypeOf(result).toEqualTypeOf<{ readonly foo: readonly ['baz'] }>();
@@ -49,8 +59,16 @@ it('doesn\'t spread arrays', () => {
 
 it('doesn\'t recurse into arrays', () => {
   const result = mergeDeep(
-    { foo: [{ bar: 'baz', x: 123 }] },
-    { foo: [{ bar: 'hello, world', y: 456 }] },
+    {
+      foo: [
+        { bar: 'baz', x: 123 },
+      ],
+    },
+    {
+      foo: [
+        { bar: 'hello, world', y: 456 },
+      ],
+    },
   );
 
   expectTypeOf(result).toEqualTypeOf<{

@@ -8,7 +8,13 @@ import { sortBy } from './sort-by';
 import { when } from './when';
 
 const DATA = [
-  { id: 1, color: 'red', weight: 2, active: true, date: new Date(2021, 1, 1) },
+  {
+    id: 1,
+    color: 'red',
+    weight: 2,
+    active: true,
+    date: new Date(2021, 1, 1),
+  },
   {
     id: 2,
     color: 'blue',
@@ -35,18 +41,34 @@ const DATA = [
 describe('data first', () => {
   it('sort correctly', () => {
     expect(
-      sortBy([{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }], prop('a')),
-    ).toStrictEqual([{ a: 1 }, { a: 2 }, { a: 3 }, { a: 7 }]);
+      sortBy([
+        { a: 1 },
+        { a: 3 },
+        { a: 7 },
+        { a: 2 },
+      ], prop('a')),
+    ).toStrictEqual([
+      { a: 1 },
+      { a: 2 },
+      { a: 3 },
+      { a: 7 },
+    ]);
   });
 
   it('sort booleans correctly', () => {
     expect(
-      sortBy(DATA, [prop('active'), 'desc']).map(prop('active')),
+      sortBy(DATA, [
+        prop('active'),
+        'desc',
+      ]).map(prop('active')),
     ).toStrictEqual([true, true, false, false]);
   });
 
   it('sort dates correctly', () => {
-    expect(sortBy(DATA, [prop('date'), 'desc']).map(prop('id'))).toStrictEqual([
+    expect(sortBy(DATA, [
+      prop('date'),
+      'desc',
+    ]).map(prop('id'))).toStrictEqual([
       4,
       3,
       2,
@@ -62,13 +84,19 @@ describe('data first', () => {
 
   it('sort objects correctly mixing sort pair and sort projection', () => {
     expect(
-      sortBy(DATA, prop('weight'), [prop('color'), 'asc']).map(prop('weight')),
+      sortBy(DATA, prop('weight'), [
+        prop('color'),
+        'asc',
+      ]).map(prop('weight')),
     ).toStrictEqual([1, 1, 2, 3]);
   });
 
   it('sort objects descending correctly', () => {
     expect(
-      sortBy(DATA, [prop('weight'), 'desc']).map(prop('weight')),
+      sortBy(DATA, [
+        prop('weight'),
+        'desc',
+      ]).map(prop('weight')),
     ).toStrictEqual([3, 2, 1, 1]);
   });
 });
@@ -76,17 +104,40 @@ describe('data first', () => {
 describe('data last', () => {
   it('sort correctly', () => {
     expect(
-      pipe([{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }], sortBy(prop('a'))),
-    ).toStrictEqual([{ a: 1 }, { a: 2 }, { a: 3 }, { a: 7 }]);
+      pipe([
+        { a: 1 },
+        { a: 3 },
+        { a: 7 },
+        { a: 2 },
+      ], sortBy(prop('a'))),
+    ).toStrictEqual([
+      { a: 1 },
+      { a: 2 },
+      { a: 3 },
+      { a: 7 },
+    ]);
   });
 
   it('sort correctly using pipe and "desc"', () => {
     expect(
       pipe(
-        [{ a: 1 }, { a: 3 }, { a: 7 }, { a: 2 }],
-        sortBy([prop('a'), 'desc']),
+        [
+          { a: 1 },
+          { a: 3 },
+          { a: 7 },
+          { a: 2 },
+        ],
+        sortBy([
+          prop('a'),
+          'desc',
+        ]),
       ),
-    ).toStrictEqual([{ a: 7 }, { a: 3 }, { a: 2 }, { a: 1 }]);
+    ).toStrictEqual([
+      { a: 7 },
+      { a: 3 },
+      { a: 2 },
+      { a: 1 },
+    ]);
   });
 
   it('sort objects correctly', () => {
@@ -99,7 +150,13 @@ describe('data last', () => {
     expect(
       pipe(
         DATA,
-        sortBy([prop('weight'), 'asc'], [prop('color'), 'desc']),
+        sortBy([
+          prop('weight'),
+          'asc',
+        ], [
+          prop('color'),
+          'desc',
+        ]),
         map(prop('color')),
       ),
     ).toStrictEqual(['purple', 'green', 'red', 'blue']);

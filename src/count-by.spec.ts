@@ -64,7 +64,9 @@ describe('dataFirst', () => {
   it('indexed', () => {
     expect(
       countBy([1, 2, 3, 2, 1], (_, index) =>
-        index % 2 === 0 ? 'even' : 'odd'),
+        index % 2 === 0
+          ? 'even'
+          : 'odd'),
     ).toStrictEqual({ even: 3, odd: 2 });
   });
 });
@@ -122,7 +124,9 @@ describe('dataLast', () => {
     expect(
       pipe(
         [1, 2, 3, 2, 1],
-        countBy((_, index) => (index % 2 === 0 ? 'even' : 'odd')),
+        countBy((_, index) => (index % 2 === 0
+          ? 'even'
+          : 'odd')),
       ),
     ).toStrictEqual({ even: 3, odd: 2 });
   });

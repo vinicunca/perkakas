@@ -26,7 +26,12 @@ describe('primitive types', () => {
 
 describe('objects', () => {
   it('clones shallow object', () => {
-    const obj = { a: 1, b: 'foo', c: true, d: new Date(2013, 11, 25) };
+    const obj = {
+      a: 1,
+      b: 'foo',
+      c: true,
+      d: new Date(2013, 11, 25),
+    };
     const cloned = clone(obj);
 
     expect(cloned).not.toBe(obj);
@@ -44,7 +49,11 @@ describe('objects', () => {
   });
 
   it('clones deep object', () => {
-    const obj = { a: { b: { c: 'foo' } } };
+    const obj = {
+      a: {
+        b: { c: 'foo' },
+      },
+    };
     const cloned = clone(obj);
 
     expect(cloned).not.toBe(obj);
@@ -52,7 +61,11 @@ describe('objects', () => {
 
     obj.a.b.c = 'bar';
 
-    expect(cloned).toStrictEqual({ a: { b: { c: 'foo' } } });
+    expect(cloned).toStrictEqual({
+      a: {
+        b: { c: 'foo' },
+      },
+    });
   });
 
   it('clones objects with circular references', () => {
@@ -98,7 +111,15 @@ describe('arrays', () => {
   });
 
   it('clones deep arrays', () => {
-    const list: any = [1, [1, 2, 3], [[[5]]]];
+    const list: any = [
+      1,
+      [1, 2, 3],
+      [
+        [
+          [5],
+        ],
+      ],
+    ];
     const cloned = clone(list);
 
     expect(cloned).not.toBe(list);
@@ -110,13 +131,25 @@ describe('arrays', () => {
     expect(cloned[2][0]).not.toBe(list[2][0]);
     expect(cloned[2][0]).toStrictEqual(list[2][0]);
 
-    expect(cloned).toStrictEqual([1, [1, 2, 3], [[[5]]]]);
+    expect(cloned).toStrictEqual([
+      1,
+      [1, 2, 3],
+      [
+        [
+          [5],
+        ],
+      ],
+    ]);
   });
 });
 
 describe('functions', () => {
   it('keep reference to function', () => {
-    const list = [{ a: (x: number): number => x + x }] as const;
+    const list = [
+      {
+        a: (x: number): number => x + x,
+      },
+    ] as const;
     const cloned = clone(list);
 
     expect(cloned).not.toBe(list);
@@ -196,25 +229,56 @@ it.skipIf(
 
 describe('nested mixed objects', () => {
   it('clones array with objects', () => {
-    const list: any = [{ a: { b: 1 } }, [{ c: { d: 1 } }]];
+    const list: any = [
+      {
+        a: { b: 1 },
+      },
+      [
+        {
+          c: { d: 1 },
+        },
+      ],
+    ];
     const cloned = clone(list);
     list[1][0] = null;
 
-    expect(cloned).toStrictEqual([{ a: { b: 1 } }, [{ c: { d: 1 } }]]);
+    expect(cloned).toStrictEqual([
+      {
+        a: { b: 1 },
+      },
+      [
+        {
+          c: { d: 1 },
+        },
+      ],
+    ]);
   });
 
   describe('clones array with arrays', () => {
     it('nulls', () => {
-      const list: Array<Array<any>> = [[1], [[3]]];
+      const list: Array<Array<any>> = [
+        [1],
+        [
+          [3],
+        ],
+      ];
       const cloned = clone(list);
       list[1]![0] = null;
 
-      expect(cloned).toStrictEqual([[1], [[3]]]);
+      expect(cloned).toStrictEqual([
+        [1],
+        [
+          [3],
+        ],
+      ]);
     });
 
     it('clones array with mutual ref object', () => {
       const obj = { a: 1 };
-      const list = [{ b: obj }, { b: obj }];
+      const list = [
+        { b: obj },
+        { b: obj },
+      ];
       const cloned = clone(list);
 
       expect(cloned[0]?.b).toBe(cloned[1]?.b);
@@ -237,7 +301,12 @@ describe('nested mixed objects', () => {
 
 describe('edge cases', () => {
   it('point-free in a callback', () => {
-    const data = [{ a: 1 }, { b: [2] }];
+    const data = [
+      { a: 1 },
+      {
+        b: [2],
+      },
+    ];
 
     const result = data.map(clone);
 

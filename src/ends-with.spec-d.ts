@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/no-all-duplicated-branches */
 /* eslint-disable ts/explicit-function-return-type */
 import { describe, expectTypeOf, it } from 'vitest';
 import { $typed } from '../test/$typed';
@@ -93,7 +94,9 @@ describe('data-first', () => {
 
     it('generic data, literal suffix', () => {
       const endsWithBar = <T extends string>(data: T) =>
-        endsWith(data, 'bar') ? data : undefined;
+        endsWith(data, 'bar')
+          ? data
+          : undefined;
 
       // The narrowing overload is the one picked through the wrapper; falling
       // through to the boolean overload would leave `data` a plain `string`.
@@ -136,7 +139,9 @@ describe('data-first', () => {
 
     it('data constrained by the suffix', () => {
       const endsWithBar = <T extends `${string}bar`>(data: T) =>
-        endsWith(data, 'bar') ? undefined : data;
+        endsWith(data, 'bar')
+          ? undefined
+          : data;
 
       // The narrowing overload empties the falsy branch; the boolean overload
       // would leave `data` as `T` there.
@@ -617,7 +622,9 @@ describe('known issues!', () => {
       // the check is dead: it narrows `data` to `never` in the truthy branch,
       // which is why the result collapses to `undefined`.
       const endsWithBird = <T extends 'cat' | 'dog'>(data: T) =>
-        endsWith(data, 'bird') ? data : undefined;
+        endsWith(data, 'bird')
+          ? data
+          : undefined;
 
       expectTypeOf(endsWithBird('cat')).toEqualTypeOf<undefined>();
     });

@@ -37,7 +37,10 @@ describe('known issues!', () => {
   it('remeda\'s own utilities passed by reference are typed by their data-last overload', () => {
     // Every utility declares its data-last overload last, so the limitation
     // above applies to all of them: at runtime this returns `[3, 3]`.
-    const result = [[1, 2], [3]].map(sum);
+    const result = [
+      [1, 2],
+      [3],
+    ].map(sum);
 
     expectTypeOf(result).not.toEqualTypeOf<Array<number>>();
 
@@ -49,7 +52,11 @@ describe('known issues!', () => {
     // TypeScript only carries type parameters through a function reference when
     // the function has a single signature. For an overloaded function it
     // replaces them with their constraints instead.
-    const result = [[1], [2], [3]].map(genericDataFirstDeclaredLast);
+    const result = [
+      [1],
+      [2],
+      [3],
+    ].map(genericDataFirstDeclaredLast);
 
     expectTypeOf(result).not.toEqualTypeOf<Array<number | undefined>>();
 
@@ -142,6 +149,7 @@ function genericDataFirstDeclaredLast(...args: ReadonlyArray<unknown>): unknown 
   return curry(firstImplementation, args);
 }
 
+// eslint-disable-next-line slop/no-trivial-functions
 function firstImplementation<T>(data: ReadonlyArray<T>): T | undefined {
   return data[0];
 }

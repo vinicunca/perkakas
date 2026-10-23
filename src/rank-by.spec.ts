@@ -33,7 +33,9 @@ describe('runtime (dataFirst)', () => {
 describe('known issues!', () => {
   it('a function `item` is read as an order rule', () => {
     const result = rankBy(
-      [() => 'foo'],
+      [
+        () => 'foo',
+      ],
       () => 'bar',
       () => 0,
     );

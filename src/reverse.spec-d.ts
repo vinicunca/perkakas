@@ -10,7 +10,12 @@ describe('data first', () => {
   });
 
   it('tuples', () => {
-    const actual = reverse([1, 2, [true], 'a'] as const);
+    const actual = reverse([
+      1,
+      2,
+      [true],
+      'a',
+    ] as const);
 
     expectTypeOf(actual).toEqualTypeOf<['a', readonly [true], 2, 1]>();
   });
@@ -31,7 +36,12 @@ describe('data last', () => {
   });
 
   it('tuples', () => {
-    const actual = pipe([1, 2, [true], 'a'] as const, reverse());
+    const actual = pipe([
+      1,
+      2,
+      [true],
+      'a',
+    ] as const, reverse());
 
     expectTypeOf(actual).toEqualTypeOf<['a', readonly [true], 2, 1]>();
   });

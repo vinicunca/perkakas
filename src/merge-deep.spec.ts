@@ -11,31 +11,55 @@ describe('runtime (dataFirst)', () => {
   });
 
   it('should merge nested objects', () => {
-    const a = { foo: { bar: 'baz' } };
-    const b = { foo: { qux: 'quux' } };
+    const a = {
+      foo: { bar: 'baz' },
+    };
+    const b = {
+      foo: { qux: 'quux' },
+    };
 
-    expect(mergeDeep(a, b)).toStrictEqual({ foo: { bar: 'baz', qux: 'quux' } });
+    expect(mergeDeep(a, b)).toStrictEqual({
+      foo: { bar: 'baz', qux: 'quux' },
+    });
   });
 
   it('should not merge object and array', () => {
-    const a = { foo: ['qux'] };
-    const b = { foo: { bar: 'baz' } };
+    const a = {
+      foo: ['qux'],
+    };
+    const b = {
+      foo: { bar: 'baz' },
+    };
 
-    expect(mergeDeep(a, b)).toStrictEqual({ foo: { bar: 'baz' } });
+    expect(mergeDeep(a, b)).toStrictEqual({
+      foo: { bar: 'baz' },
+    });
   });
 
   it('should not merge array and object', () => {
-    const a = { foo: { bar: 'baz' } };
-    const b = { foo: ['qux'] };
+    const a = {
+      foo: { bar: 'baz' },
+    };
+    const b = {
+      foo: ['qux'],
+    };
 
-    expect(mergeDeep(a, b)).toStrictEqual({ foo: ['qux'] });
+    expect(mergeDeep(a, b)).toStrictEqual({
+      foo: ['qux'],
+    });
   });
 
   it('should not merge arrays', () => {
-    const a = { foo: ['bar'] };
-    const b = { foo: ['baz'] };
+    const a = {
+      foo: ['bar'],
+    };
+    const b = {
+      foo: ['baz'],
+    };
 
-    expect(mergeDeep(a, b)).toStrictEqual({ foo: ['baz'] });
+    expect(mergeDeep(a, b)).toStrictEqual({
+      foo: ['baz'],
+    });
   });
 
   it('should merge different types', () => {
@@ -54,33 +78,59 @@ describe('runtime (dataFirst)', () => {
   });
 
   it('should work with weird object types, functions', () => {
-    const a = { foo: doNothing() };
+    const a = {
+      foo: doNothing(),
+    };
     const b = { foo: 123 };
 
     expect(mergeDeep(a, b)).toStrictEqual({ foo: 123 });
-    expect(mergeDeep(b, a)).toStrictEqual({ foo: doNothing() });
+    expect(mergeDeep(b, a)).toStrictEqual({
+      foo: doNothing(),
+    });
   });
 
   it('should work with weird object types, date', () => {
-    const a = { foo: new Date(1337) };
+    const a = {
+      foo: new Date(1337),
+    };
     const b = { foo: 123 };
 
     expect(mergeDeep(a, b)).toStrictEqual({ foo: 123 });
-    expect(mergeDeep(b, a)).toStrictEqual({ foo: new Date(1337) });
+    expect(mergeDeep(b, a)).toStrictEqual({
+      foo: new Date(1337),
+    });
   });
 
   it('doesn\'t spread arrays', () => {
-    const a = { foo: ['bar'] };
-    const b = { foo: ['baz'] };
+    const a = {
+      foo: ['bar'],
+    };
+    const b = {
+      foo: ['baz'],
+    };
 
-    expect(mergeDeep(a, b)).toStrictEqual({ foo: ['baz'] });
+    expect(mergeDeep(a, b)).toStrictEqual({
+      foo: ['baz'],
+    });
   });
 
   it('doesn\'t recurse into arrays', () => {
-    const a = { foo: [{ bar: 'baz' }] };
-    const b = { foo: [{ bar: 'hello, world' }] };
+    const a = {
+      foo: [
+        { bar: 'baz' },
+      ],
+    };
+    const b = {
+      foo: [
+        { bar: 'hello, world' },
+      ],
+    };
 
-    expect(mergeDeep(a, b)).toStrictEqual({ foo: [{ bar: 'hello, world' }] });
+    expect(mergeDeep(a, b)).toStrictEqual({
+      foo: [
+        { bar: 'hello, world' },
+      ],
+    });
   });
 });
 

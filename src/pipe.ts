@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/no-all-duplicated-branches */
 /* eslint-disable jsdoc/check-param-names --
  * We document pipe's function params as a single parameter entry in the docs.
  */
@@ -23,8 +24,10 @@ type LazyStep = {
 } & (
   | {
     readonly requiresData: true;
-    // Notice the array is mutable, we will be adding items as the pipe is
-    // evaluating them. It is shared with every invocation of the evaluator.
+    /**
+     * Notice the array is mutable, we will be adding items as the pipe is
+     * evaluating them. It is shared with every invocation of the evaluator.
+     */
     readonly items: Array<unknown>;
   }
   | {
@@ -415,6 +418,7 @@ function runLazySequence(
         break;
       }
     }
+  // eslint-disable-next-line sonarjs/no-duplicated-branches
   } else {
     // @ts-expect-error [ts18046] -- The overloads only pipe a value into a function that accepts it, and lazy functions only accept iterables.
     for (const item of input) {
@@ -428,6 +432,7 @@ function runLazySequence(
   return accumulator;
 }
 
+// eslint-disable-next-line sonarjs/cognitive-complexity
 function processItem(
 
   lazySequence: ReadonlyArray<LazyStep>,

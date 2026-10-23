@@ -87,6 +87,8 @@ function lazyImplementation<T>(
     // tells duplicates apart with a single hash lookup per item.
     const sizeBefore = seenKeys.size;
     seenKeys.add(key);
-    return seenKeys.size === sizeBefore ? SKIP_ITEM : value;
+    return seenKeys.size === sizeBefore
+      ? SKIP_ITEM
+      : value;
   });
 }

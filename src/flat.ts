@@ -114,13 +114,17 @@ export function flat(
     ? flatImplementation(dataOrDepth, depth)
     : lazyDataLastImplementation(
         flatImplementation,
-        dataOrDepth === undefined ? [] : [dataOrDepth],
+        dataOrDepth === undefined
+          ? []
+          : [dataOrDepth],
         lazyImplementation,
       );
 }
 
 function flatImplementation(data: IterableContainer, depth?: number): IterableContainer {
-  return depth === undefined ? data.flat() : data.flat(depth);
+  return depth === undefined
+    ? data.flat()
+    : data.flat(depth);
 }
 
 function lazyImplementation(depth?: number): LazyEvaluator {
@@ -140,5 +144,7 @@ function lazyImplementation(depth?: number): LazyEvaluator {
 // doesn't close over `depth`, so one function serves every `flat()` /
 // `flat(1)` call instead of allocating a closure per call.
 function lazyShallow<T>(value: T, _index: number, _data: ReadonlyArray<T>, slot: LazySlot): LazyResult<T> {
-  return Array.isArray(value) ? manyLazyValues(value, slot) : value;
+  return Array.isArray(value)
+    ? manyLazyValues(value, slot)
+    : value;
 }

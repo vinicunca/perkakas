@@ -26,7 +26,16 @@ describe('runtime (dataFirst)', () => {
   });
 
   it('works with complex order rules', () => {
-    const data = ['aaaa', 'b', 'bb', 'a', 'aaa', 'bbbb', 'aa', 'bbb'] as const;
+    const data = [
+      'aaaa',
+      'b',
+      'bb',
+      'a',
+      'aaa',
+      'bbbb',
+      'aa',
+      'bbb',
+    ] as const;
 
     expect(nthBy(data, 0, (a) => a.length, identity())).toBe('a');
     expect(nthBy(data, 1, (a) => a.length, identity())).toBe('b');
@@ -62,7 +71,16 @@ describe('runtime (dataLast)', () => {
   });
 
   it('works with complex order rules', () => {
-    const data = ['aaaa', 'b', 'bb', 'a', 'aaa', 'bbbb', 'aa', 'bbb'] as const;
+    const data = [
+      'aaaa',
+      'b',
+      'bb',
+      'a',
+      'aaa',
+      'bbbb',
+      'aa',
+      'bbb',
+    ] as const;
 
     expect(
       pipe(

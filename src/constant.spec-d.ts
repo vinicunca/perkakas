@@ -41,7 +41,10 @@ describe('returns narrow types on literals', () => {
 
   it('doesn\'t narrow explicitly defined types', () => {
     expectTypeOf(
-      constant({ a: $typed<number>(), b: 2 }),
+      constant({
+        a: $typed<number>(),
+        b: 2,
+      }),
     ).returns.toEqualTypeOf<{
       readonly a: number;
       readonly b: 2;

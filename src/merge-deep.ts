@@ -50,7 +50,10 @@ function mergeDeepImplementation<
   Source extends object,
 >(destination: Destination, source: Source): MergeDeep<Destination, Source> {
   // At this point the output is already merged, simply not deeply merged.
-  const output = { ...destination, ...source } as Record<
+  const output = {
+    ...destination,
+    ...source,
+  } as Record<
     keyof Destination | keyof Source,
     unknown
   >;

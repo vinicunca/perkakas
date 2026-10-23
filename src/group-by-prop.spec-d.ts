@@ -68,7 +68,9 @@ describe('grouping prop types', () => {
 it('values which might not exist in the input are optional in the output', () => {
   expectTypeOf(
     groupByProp(
-      [{ a: 'cat' }] as [{ a: 'cat' }, { a: 'mouse' }?, ...Array<{ a: 'dog' }>],
+      [
+        { a: 'cat' },
+      ] as [{ a: 'cat' }, { a: 'mouse' }?, ...Array<{ a: 'dog' }>],
       'a',
     ),
   ).branded.toEqualTypeOf<{
@@ -81,7 +83,9 @@ it('values which might not exist in the input are optional in the output', () =>
 describe('enforces strong typing on the grouping prop', () => {
   it('typo in prop name', () => {
     groupByProp(
-      [{ a: 'hello' }] as const,
+      [
+        { a: 'hello' },
+      ] as const,
       // @ts-expect-error [ts2345] -- "typo" isn't a valid prop name
       'typo',
     );
@@ -89,7 +93,11 @@ describe('enforces strong typing on the grouping prop', () => {
 
   it('prop is not groupable', () => {
     groupByProp(
-      [{ a: new Date() }] as const,
+      [
+        {
+          a: new Date(),
+        },
+      ] as const,
       // @ts-expect-error [ts2345] -- "a" can't be used to group the array
       'a',
     );
@@ -97,7 +105,12 @@ describe('enforces strong typing on the grouping prop', () => {
 
   it('prop is only groupable for some of the elements', () => {
     groupByProp(
-      [{ a: 'hello' }, { a: new Date() }] as const,
+      [
+        { a: 'hello' },
+        {
+          a: new Date(),
+        },
+      ] as const,
       // @ts-expect-error [ts2345] -- "a" cannot be used to group the array
       // because it can sometimes be a Date
       'a',
@@ -105,7 +118,10 @@ describe('enforces strong typing on the grouping prop', () => {
   });
 
   it('allows grouping on a prop that isn\'t in all elements', () => {
-    groupByProp([{ a: 'hello' }, { b: 123 }] as const, 'a');
+    groupByProp([
+      { a: 'hello' },
+      { b: 123 },
+    ] as const, 'a');
   });
 
   it('allows grouping on possibly undefined props', () => {
@@ -115,7 +131,10 @@ describe('enforces strong typing on the grouping prop', () => {
 
 it('group by prop that doesn\'t exist on all items', () => {
   expectTypeOf(
-    groupByProp([{ a: 'cat' }, { b: 'dog' }] as const, 'a'),
+    groupByProp([
+      { a: 'cat' },
+      { b: 'dog' },
+    ] as const, 'a'),
   ).toEqualTypeOf<{
     cat:
       | [{ readonly a: 'cat' }]

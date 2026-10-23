@@ -15,10 +15,18 @@ describe('data first', () => {
   });
 
   it('works with deep objects', () => {
-    expect(hasSubObject({ a: { b: 1, c: 2 } }, { a: { b: 1, c: 2 } })).toBe(
+    expect(hasSubObject({
+      a: { b: 1, c: 2 },
+    }, {
+      a: { b: 1, c: 2 },
+    })).toBe(
       true,
     );
-    expect(hasSubObject({ a: { b: 1, c: 2 } }, { a: { b: 1, c: 0 } })).toBe(
+    expect(hasSubObject({
+      a: { b: 1, c: 2 },
+    }, {
+      a: { b: 1, c: 0 },
+    })).toBe(
       false,
     );
   });
@@ -50,11 +58,19 @@ describe('data last', () => {
 
   it('works with deep objects', () => {
     expect(
-      pipe({ a: { b: 1, c: 2 } }, hasSubObject({ a: { b: 1, c: 2 } })),
+      pipe({
+        a: { b: 1, c: 2 },
+      }, hasSubObject({
+        a: { b: 1, c: 2 },
+      })),
     ).toBe(true);
 
     expect(
-      pipe({ a: { b: 1, c: 2 } }, hasSubObject({ a: { b: 1, c: 3 } })),
+      pipe({
+        a: { b: 1, c: 2 },
+      }, hasSubObject({
+        a: { b: 1, c: 3 },
+      })),
     ).toBe(false);
   });
 });

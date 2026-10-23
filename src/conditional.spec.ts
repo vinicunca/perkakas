@@ -9,7 +9,10 @@ describe('runtime (dataFirst)', () => {
     expect(
       conditional(
         'Jokic',
-        [constant(false), constant('hello')],
+        [
+          constant(false),
+          constant('hello'),
+        ],
         constant(undefined),
       ),
     ).toBeUndefined();
@@ -19,14 +22,20 @@ describe('runtime (dataFirst)', () => {
     expect(
       conditional(
         'Jokic',
-        [constant(false), constant('world')],
+        [
+          constant(false),
+          constant('world'),
+        ],
         constant('hello'),
       ),
     ).toBe('hello');
   });
 
   it('works with a single case', () => {
-    expect(conditional('Jokic', [isDeepEqual('Jokic'), () => 'center'])).toBe(
+    expect(conditional('Jokic', [
+      isDeepEqual('Jokic'),
+      () => 'center',
+    ])).toBe(
       'center',
     );
   });
@@ -35,8 +44,14 @@ describe('runtime (dataFirst)', () => {
     expect(
       conditional(
         'Jokic',
-        [isDeepEqual('Murray'), () => 'point guard'],
-        [isDeepEqual('Jokic'), () => 'center'],
+        [
+          isDeepEqual('Murray'),
+          () => 'point guard',
+        ],
+        [
+          isDeepEqual('Jokic'),
+          () => 'center',
+        ],
       ),
     ).toBe('center');
   });
@@ -45,15 +60,24 @@ describe('runtime (dataFirst)', () => {
     expect(
       conditional(
         'Jokic',
-        [isDeepEqual('Jokic'), () => 'center'],
-        [isDeepEqual('Jokic'), () => 'mvp'],
+        [
+          isDeepEqual('Jokic'),
+          () => 'center',
+        ],
+        [
+          isDeepEqual('Jokic'),
+          () => 'mvp',
+        ],
       ),
     ).toBe('center');
   });
 
   it('throws when no matching case', () => {
     expect(() =>
-      conditional('Jokic', [() => false, () => 'world'])).toThrowErrorMatchingInlineSnapshot(
+      conditional('Jokic', [
+        () => false,
+        () => 'world',
+      ])).toThrowErrorMatchingInlineSnapshot(
       '[Error: conditional: data failed for all cases]',
     );
   });
@@ -64,9 +88,18 @@ describe('runtime (dataLast)', () => {
     const value = pipe(
       'Jokic',
       conditional(
-        [isDeepEqual('Murray'), () => 'point guard'],
-        [isDeepEqual('Jokic'), () => 'center'],
-        [isDeepEqual('Jokic'), () => 'mvp'],
+        [
+          isDeepEqual('Murray'),
+          () => 'point guard',
+        ],
+        [
+          isDeepEqual('Jokic'),
+          () => 'center',
+        ],
+        [
+          isDeepEqual('Jokic'),
+          () => 'mvp',
+        ],
       ),
     );
 

@@ -17,7 +17,11 @@ const items = fc.oneof(fc.array(item), fc.sparseArray(item));
 
 // A generated comparator is neither symmetric nor transitive, so the result
 // depends on exactly which pairs are compared.
-test.prop([items, items, fc.func(fc.boolean())])(
+test.prop([
+  items,
+  items,
+  fc.func(fc.boolean()),
+])(
   'data-first and data-last produce the same result',
   (data, other, isEqual) => {
     const dataFirst = differenceWith(data, other, isEqual);

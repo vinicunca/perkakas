@@ -141,6 +141,14 @@ describe('runtime (dataLast)', () => {
           (x) => x,
         ),
       ),
-    ).toStrictEqual(['bbbbb', 'aaa', 'bbb', 'bbbb', 'aaaa', 'bb', 'aaaaa']);
+    ).toStrictEqual([
+      'bbbbb',
+      'aaa',
+      'bbb',
+      'bbbb',
+      'aaaa',
+      'bb',
+      'aaaaa',
+    ]);
   });
 });

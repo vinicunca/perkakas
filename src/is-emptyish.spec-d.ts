@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/no-all-duplicated-branches */
 import type { Tagged } from 'type-fest';
 import { describe, expectTypeOf, it } from 'vitest';
 import { isEmptyish } from './is-emptyish';

@@ -14,17 +14,32 @@ it('should ignore symbol keys', () => {
 });
 
 it('should turn numbers to strings', () => {
-  expect(entries({ 1: 'hello' })).toStrictEqual([['1', 'hello']]);
+  expect(entries({ 1: 'hello' })).toStrictEqual([
+    ['1', 'hello'],
+  ]);
 });
 
 it('returns symbol values', () => {
   const mySymbol = Symbol('hello');
 
-  expect(entries({ a: mySymbol })).toStrictEqual([['a', mySymbol]]);
+  expect(entries({ a: mySymbol })).toStrictEqual([
+    ['a', mySymbol],
+  ]);
 });
 
 it('works with complex objects as values', () => {
-  const complexObject = { a: { b: { c: [{ d: true }, { d: false }] } } };
+  const complexObject = {
+    a: {
+      b: {
+        c: [
+          { d: true },
+          { d: false },
+        ],
+      },
+    },
+  };
 
-  expect(entries({ a: complexObject })).toStrictEqual([['a', complexObject]]);
+  expect(entries({ a: complexObject })).toStrictEqual([
+    ['a', complexObject],
+  ]);
 });

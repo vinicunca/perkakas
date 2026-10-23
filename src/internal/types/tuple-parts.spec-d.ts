@@ -40,7 +40,12 @@ describe('all tuple/array shapes (mutable and readonly)', () => {
 
   it('fixed tuples', () => {
     expectTypeOf(
-      tupleParts([1, 'hello', true, new Date()] as [
+      tupleParts([
+        1,
+        'hello',
+        true,
+        new Date(),
+      ] as [
         number,
         string,
         boolean,
@@ -54,7 +59,12 @@ describe('all tuple/array shapes (mutable and readonly)', () => {
     }>();
 
     expectTypeOf(
-      tupleParts([1, 'hello', true, new Date()] as readonly [
+      tupleParts([
+        1,
+        'hello',
+        true,
+        new Date(),
+      ] as readonly [
         number,
         string,
         boolean,
@@ -95,7 +105,11 @@ describe('all tuple/array shapes (mutable and readonly)', () => {
 
   it('fixed-suffix arrays', () => {
     expectTypeOf(
-      tupleParts(['a', true, new Date()] as [
+      tupleParts([
+        'a',
+        true,
+        new Date(),
+      ] as [
         ...Array<number>,
         string,
         boolean,
@@ -109,7 +123,11 @@ describe('all tuple/array shapes (mutable and readonly)', () => {
     }>();
 
     expectTypeOf(
-      tupleParts(['a', true, new Date()] as readonly [
+      tupleParts([
+        'a',
+        true,
+        new Date(),
+      ] as readonly [
         ...Array<number>,
         string,
         boolean,
@@ -125,7 +143,11 @@ describe('all tuple/array shapes (mutable and readonly)', () => {
 
   it('fixed-elements arrays', () => {
     expectTypeOf(
-      tupleParts([1, 'a', new Date()] as [number, string, ...Array<boolean>, Date]),
+      tupleParts([
+        1,
+        'a',
+        new Date(),
+      ] as [number, string, ...Array<boolean>, Date]),
     ).toEqualTypeOf<{
       required: [number, string];
       optional: [];
@@ -134,7 +156,11 @@ describe('all tuple/array shapes (mutable and readonly)', () => {
     }>();
 
     expectTypeOf(
-      tupleParts([1, 'a', new Date()] as readonly [
+      tupleParts([
+        1,
+        'a',
+        new Date(),
+      ] as readonly [
         number,
         string,
         ...Array<boolean>,

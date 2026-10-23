@@ -61,12 +61,18 @@ describe('objects', () => {
   });
 
   it('maps', () => {
-    const data = new Map([['a', 1]]);
+    const data = new Map([
+      ['a', 1],
+    ]);
 
-    expect(isShallowEqual(data, new Map([['a', 1]]))).toBe(true);
+    expect(isShallowEqual(data, new Map([
+      ['a', 1],
+    ]))).toBe(true);
     expect(isShallowEqual(data, data)).toBe(true);
 
-    expect(isShallowEqual(data, new Map([['a', 2]]))).toBe(false);
+    expect(isShallowEqual(data, new Map([
+      ['a', 2],
+    ]))).toBe(false);
     expect(
       isShallowEqual(
         data,
@@ -123,27 +129,35 @@ describe('shallow inequality', () => {
     const a = { a: 1 };
 
     expect(isShallowEqual([a], [a])).toBe(true);
-    expect(isShallowEqual([a], [{ a: 1 }])).toBe(false);
+    expect(isShallowEqual([a], [
+      { a: 1 },
+    ])).toBe(false);
   });
 
   it('arrays of arrays', () => {
     const a = [1];
 
     expect(isShallowEqual([a], [a])).toBe(true);
-    expect(isShallowEqual([a], [[1]])).toBe(false);
+    expect(isShallowEqual([a], [
+      [1],
+    ])).toBe(false);
   });
 
   it('objects of arrays', () => {
     const a = [1];
 
     expect(isShallowEqual({ a }, { a })).toBe(true);
-    expect(isShallowEqual({ a }, { a: [1] })).toBe(false);
+    expect(isShallowEqual({ a }, {
+      a: [1],
+    })).toBe(false);
   });
 
   it('objects of objects', () => {
     const a = { b: 1 };
 
     expect(isShallowEqual({ a }, { a })).toBe(true);
-    expect(isShallowEqual({ a }, { a: { b: 1 } })).toBe(false);
+    expect(isShallowEqual({ a }, {
+      a: { b: 1 },
+    })).toBe(false);
   });
 });

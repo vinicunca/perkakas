@@ -40,12 +40,14 @@ const INTERNAL_SYMBOLS = [
   'tag',
 ];
 
-// We split the build into two steps because types and runtime have very
-// different concerns. To optimize bundle size we need the runtime artifacts
-// (JS) to be as small as possible so that it plays nicely with tree-shaking.
-// Types, on the other hand, benefit from being a monolithic file with all
-// definitions needed to work with the library. This is also crucial in
-// enabling projects using to re-export Perkakas types.
+/**
+ * We split the build into two steps because types and runtime have very
+ * different concerns. To optimize bundle size we need the runtime artifacts
+ * (JS) to be as small as possible so that it plays nicely with tree-shaking.
+ * Types, on the other hand, benefit from being a monolithic file with all
+ * definitions needed to work with the library. This is also important in
+ * enabling projects using to re-export Perkakas types.
+ */
 export default defineConfig({
   ...SHARED,
 
@@ -53,9 +55,6 @@ export default defineConfig({
   entry: `${SOURCE_DIR}/index.ts`,
 
   dts: {
-    // This enables "Go to Definition"-style features within IDEs.
-    sourcemap: true,
-
     // Only emit DTS files, skip JS output
     emitDtsOnly: true,
   },
@@ -93,7 +92,7 @@ export default defineConfig({
       entry: [
         // We use a glob on purpose so that our build creates individual files
         // for each utility function. This also includes the barrel file which
-        // is crucial to allow importing directly from the package root, without
+        // is important to allow importing directly from the package root, without
         // needing paths within the import statement: e.g.,
         // `import { map } from "@vinicunca/perkakas";`
         `${SOURCE_DIR}/*.ts`,
@@ -108,11 +107,6 @@ export default defineConfig({
 
       // ! Types are built in the previous step!
       dts: false,
-
-      minify: true,
-
-      // This makes debugging easier, and also makes stack traces more legible.
-      sourcemap: true,
 
       // Validate the final package artifacts.
       attw: true,

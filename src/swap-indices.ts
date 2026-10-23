@@ -165,8 +165,12 @@ function swapArray(
     return result;
   }
 
-  const positiveIndexA = index1 < 0 ? data.length + index1 : index1;
-  const positiveIndexB = index2 < 0 ? data.length + index2 : index2;
+  const positiveIndexA = index1 < 0
+    ? data.length + index1
+    : index1;
+  const positiveIndexB = index2 < 0
+    ? data.length + index2
+    : index2;
 
   if (positiveIndexA < 0 || positiveIndexA > data.length) {
     return result;

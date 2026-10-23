@@ -4,7 +4,10 @@ import { pipe } from './pipe';
 
 describe('data_first', () => {
   it('mapToObj', () => {
-    const result = mapToObj([1, 2, 3], (x) => [String(x), x * 2]);
+    const result = mapToObj([1, 2, 3], (x) => [
+      String(x),
+      x * 2,
+    ]);
 
     expect(result).toStrictEqual({ 1: 2, 2: 4, 3: 6 });
   });
@@ -20,7 +23,10 @@ describe('data_last', () => {
   it('mapToObj', () => {
     const result = pipe(
       [1, 2, 3],
-      mapToObj((x) => [String(x), x * 2]),
+      mapToObj((x) => [
+        String(x),
+        x * 2,
+      ]),
     );
 
     expect(result).toStrictEqual({ 1: 2, 2: 4, 3: 6 });

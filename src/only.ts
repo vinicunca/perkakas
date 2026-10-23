@@ -45,5 +45,7 @@ export function only(...args: ReadonlyArray<unknown>): unknown {
 }
 
 function onlyImplementation<T>(data: ReadonlyArray<T>): T | undefined {
-  return data.length === 1 ? data[0] : undefined;
+  return data.length === 1
+    ? data[0]
+    : undefined;
 }

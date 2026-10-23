@@ -110,15 +110,30 @@ it('string | number', () => {
 describe('filtering on undefined grouper result', () => {
   it('regular', () => {
     const { even, ...rest } = groupBy([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], (x) =>
-      x % 2 === 0 ? 'even' : undefined);
+      x % 2 === 0
+        ? 'even'
+        : undefined);
 
     expectTypeOf(rest).toEqualTypeOf({} as const);
   });
 
   it('indexed', () => {
     const { even, ...rest } = groupBy(
-      ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'],
-      (_, index) => (index % 2 === 0 ? 'even' : undefined),
+      [
+        'a',
+        'b',
+        'c',
+        'd',
+        'e',
+        'f',
+        'g',
+        'h',
+        'i',
+        'j',
+      ],
+      (_, index) => (index % 2 === 0
+        ? 'even'
+        : undefined),
     );
 
     expectTypeOf(rest).toEqualTypeOf({} as const);

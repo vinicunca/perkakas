@@ -52,7 +52,12 @@ it('should correctly type an empty path', () => {
   setPath(TEST_OBJECT, [] as const, 123);
 
   // Like this:
-  setPath(TEST_OBJECT, [] as const, { a: { b: { c: 123 }, e: [] } });
+  setPath(TEST_OBJECT, [] as const, {
+    a: {
+      b: { c: 123 },
+      e: [],
+    },
+  });
 });
 
 describe('data last', () => {
@@ -86,5 +91,7 @@ it('support interfaces', () => {
     name: { first: string };
   }
 
-  setPath({ name: { first: 'John' } } as User, ['name', 'first'], 'Jane');
+  setPath({
+    name: { first: 'John' },
+  } as User, ['name', 'first'], 'Jane');
 });

@@ -116,7 +116,9 @@ describe('nonempty arrays', () => {
     const input: [
       { a: number; b: string } | { a: string; b: string },
       ...(ReadonlyArray<{ a: number; b: string } | { a: string; b: string }>),
-    ] = [{ a: 1, b: 'b' }];
+    ] = [
+      { a: 1, b: 'b' },
+    ];
 
     const result = mergeAll(input);
 
@@ -135,7 +137,9 @@ describe('tuples', () => {
     });
 
     it('1 types', () => {
-      const input: [{ a: 1; b: 1 }] = [{ a: 1, b: 1 }];
+      const input: [{ a: 1; b: 1 }] = [
+        { a: 1, b: 1 },
+      ];
 
       const result = mergeAll(input);
 
@@ -143,7 +147,10 @@ describe('tuples', () => {
     });
 
     it('2 types', () => {
-      const input: [{ a: 1; b: 1 }, { a: 2 }] = [{ a: 1, b: 1 }, { a: 2 }];
+      const input: [{ a: 1; b: 1 }, { a: 2 }] = [
+        { a: 1, b: 1 },
+        { a: 2 },
+      ];
 
       const result = mergeAll(input);
 

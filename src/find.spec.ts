@@ -87,7 +87,11 @@ describe('data last', () => {
       }),
     );
 
-    expect(dataSnapshots).toStrictEqual([[1], [1, 2], [1, 2, 3]]);
+    expect(dataSnapshots).toStrictEqual([
+      [1],
+      [1, 2],
+      [1, 2, 3],
+    ]);
   });
 
   it('doesn\'t collect the items processed so far for a predicate without `data`', () => {

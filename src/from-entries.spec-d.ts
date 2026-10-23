@@ -9,7 +9,9 @@ describe('readonly inputs', () => {
   });
 
   it('trivial single entry const case', () => {
-    const result = fromEntries([['a', 1]] as const);
+    const result = fromEntries([
+      ['a', 1],
+    ] as const);
 
     expectTypeOf(result).toEqualTypeOf<{ a: 1 }>();
   });
@@ -33,7 +35,9 @@ describe('readonly inputs', () => {
   });
 
   it('mixed tuple with rest (first)', () => {
-    const result = fromEntries([['a', 1]] as readonly [
+    const result = fromEntries([
+      ['a', 1],
+    ] as readonly [
       ['a', 1],
       ...(ReadonlyArray<['b', 2] | ['c', 3]>),
     ]);
@@ -42,7 +46,9 @@ describe('readonly inputs', () => {
   });
 
   it('mixed tuple with rest (last)', () => {
-    const result = fromEntries([['a', 1]] as readonly [
+    const result = fromEntries([
+      ['a', 1],
+    ] as readonly [
       ...(ReadonlyArray<['b', 2] | ['c', 3]>),
       ['a', 1],
     ]);
@@ -57,7 +63,9 @@ describe('readonly inputs', () => {
   });
 
   it('mixed literals and generics', () => {
-    const result = fromEntries([['a', 1]] as ReadonlyArray<readonly ['a', 1] | readonly [`testing_${string}`, boolean]>);
+    const result = fromEntries([
+      ['a', 1],
+    ] as ReadonlyArray<readonly ['a', 1] | readonly [`testing_${string}`, boolean]>);
 
     expectTypeOf(result).toEqualTypeOf<{
       [x: `testing_${string}`]: boolean | undefined;
@@ -66,7 +74,9 @@ describe('readonly inputs', () => {
   });
 
   it('array with literal keys', () => {
-    const result = fromEntries([['a', 'd']] as ReadonlyArray<readonly [
+    const result = fromEntries([
+      ['a', 'd'],
+    ] as ReadonlyArray<readonly [
       'a' | 'b' | 'c',
       'd',
     ]>);
@@ -75,7 +85,9 @@ describe('readonly inputs', () => {
   });
 
   it('backwards compatibility (number)', () => {
-    const result = fromEntries([[1, 123]] as ReadonlyArray<readonly [
+    const result = fromEntries([
+      [1, 123],
+    ] as ReadonlyArray<readonly [
       number,
       123,
     ]>);
@@ -84,7 +96,9 @@ describe('readonly inputs', () => {
   });
 
   it('backwards compatibility (string)', () => {
-    const result = fromEntries([['a', 123]] as ReadonlyArray<readonly [
+    const result = fromEntries([
+      ['a', 123],
+    ] as ReadonlyArray<readonly [
       string,
       123,
     ]>);
@@ -101,7 +115,9 @@ describe('non-readonly inputs', () => {
   });
 
   it('trivial single entry const case', () => {
-    const result = fromEntries([['a', 1]]);
+    const result = fromEntries([
+      ['a', 1],
+    ]);
 
     expectTypeOf(result).toEqualTypeOf<Record<string, number>>();
   });
@@ -123,7 +139,9 @@ describe('non-readonly inputs', () => {
   });
 
   it('mixed tuple with rest (first)', () => {
-    const result = fromEntries([['a', 1]] as [
+    const result = fromEntries([
+      ['a', 1],
+    ] as [
       ['a', 1],
       ...Array<['b', 2] | ['c', 3]>,
     ]);
@@ -132,7 +150,9 @@ describe('non-readonly inputs', () => {
   });
 
   it('mixed tuple with rest (last)', () => {
-    const result = fromEntries([['a', 1]] as [
+    const result = fromEntries([
+      ['a', 1],
+    ] as [
       ...Array<['b', 2] | ['c', 3]>,
       ['a', 1],
     ]);
@@ -147,7 +167,9 @@ describe('non-readonly inputs', () => {
   });
 
   it('mixed literals and generics', () => {
-    const result = fromEntries([['a', 1]] as Array<['a', 1] | [`testing_${string}`, boolean]>);
+    const result = fromEntries([
+      ['a', 1],
+    ] as Array<['a', 1] | [`testing_${string}`, boolean]>);
 
     expectTypeOf(result).toEqualTypeOf<{
       [x: `testing_${string}`]: boolean | undefined;
@@ -156,7 +178,9 @@ describe('non-readonly inputs', () => {
   });
 
   it('array with literal keys', () => {
-    const result = fromEntries([['a', 'd']] as Array<readonly [
+    const result = fromEntries([
+      ['a', 'd'],
+    ] as Array<readonly [
       'a' | 'b' | 'c',
       'd',
     ]>);
@@ -165,13 +189,17 @@ describe('non-readonly inputs', () => {
   });
 
   it('backwards compatibility (number)', () => {
-    const result = fromEntries([[1, 123]] as Array<[number, 123]>);
+    const result = fromEntries([
+      [1, 123],
+    ] as Array<[number, 123]>);
 
     expectTypeOf(result).toEqualTypeOf<Record<number, 123>>();
   });
 
   it('backwards compatibility (string)', () => {
-    const result = fromEntries([['a', 123]] as Array<[string, 123]>);
+    const result = fromEntries([
+      ['a', 123],
+    ] as Array<[string, 123]>);
 
     expectTypeOf(result).toEqualTypeOf<Record<string, 123>>();
   });

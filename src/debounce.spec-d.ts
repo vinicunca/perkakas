@@ -56,7 +56,9 @@ it('argument typing to be good (all required)', () => {
 it('argument typing to be good (with optional)', () => {
   const debouncer = debounce(
     (a: string, b?: number, c?: boolean) =>
-      `${a}${b ?? 'undefined'}${c === undefined ? 'undefined' : c ? 'y' : 'n'}`,
+      `${a}${b ?? 'undefined'}${c === undefined
+        ? 'undefined'
+        : c ? 'y' : 'n'}`,
     {},
   );
   // @ts-expect-error [ts2554]: Expected 3 arguments, but got 1.

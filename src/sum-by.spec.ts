@@ -6,14 +6,26 @@ import { sumBy } from './sum-by';
 describe('data first', () => {
   it('sumBy', () => {
     expect(
-      sumBy([{ a: 1 }, { a: 2 }, { a: 4 }, { a: 5 }, { a: 3 }], prop('a')),
+      sumBy([
+        { a: 1 },
+        { a: 2 },
+        { a: 4 },
+        { a: 5 },
+        { a: 3 },
+      ], prop('a')),
     ).toBe(15);
   });
 
   it('indexed', () => {
     expect(
       sumBy(
-        [{ a: 1 }, { a: 2 }, { a: 4 }, { a: 5 }, { a: 3 }],
+        [
+          { a: 1 },
+          { a: 2 },
+          { a: 4 },
+          { a: 5 },
+          { a: 3 },
+        ],
         ({ a }, idx) => a + idx,
       ),
     ).toBe(25);
@@ -21,7 +33,13 @@ describe('data first', () => {
 
   it('works with bigint', () => {
     expect(
-      sumBy([{ a: 1n }, { a: 2n }, { a: 4n }, { a: 5n }, { a: 3n }], prop('a')),
+      sumBy([
+        { a: 1n },
+        { a: 2n },
+        { a: 4n },
+        { a: 5n },
+        { a: 3n },
+      ], prop('a')),
     ).toBe(15n);
   });
 
@@ -34,7 +52,13 @@ describe('data last', () => {
   it('sumBy', () => {
     expect(
       pipe(
-        [{ a: 1 }, { a: 2 }, { a: 4 }, { a: 5 }, { a: 3 }],
+        [
+          { a: 1 },
+          { a: 2 },
+          { a: 4 },
+          { a: 5 },
+          { a: 3 },
+        ],
         sumBy(prop('a')),
       ),
     ).toBe(15);
@@ -43,7 +67,13 @@ describe('data last', () => {
   it('works with bigint', () => {
     expect(
       pipe(
-        [{ a: 1n }, { a: 2n }, { a: 4n }, { a: 5n }, { a: 3n }],
+        [
+          { a: 1n },
+          { a: 2n },
+          { a: 4n },
+          { a: 5n },
+          { a: 3n },
+        ],
         sumBy(prop('a')),
       ),
     ).toBe(15n);
@@ -55,7 +85,13 @@ describe('data last', () => {
 
   it('indexed', () => {
     const actual = pipe(
-      [{ a: 1 }, { a: 2 }, { a: 4 }, { a: 5 }, { a: 3 }],
+      [
+        { a: 1 },
+        { a: 2 },
+        { a: 4 },
+        { a: 5 },
+        { a: 3 },
+      ],
       sumBy(({ a }, idx) => a + idx),
     );
 

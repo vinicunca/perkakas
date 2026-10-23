@@ -16,7 +16,12 @@ describe('dataFirst', () => {
   });
 
   it('flattens shallow nested arrays', () => {
-    expect(flat([[1, 2], [3, 4], [5], [6]], 1)).toStrictEqual([
+    expect(flat([
+      [1, 2],
+      [3, 4],
+      [5],
+      [6],
+    ], 1)).toStrictEqual([
       1,
       2,
       3,
@@ -27,7 +32,33 @@ describe('dataFirst', () => {
   });
 
   it('stops at the given depth', () => {
-    expect(flat([[[[[[[[[1]]]]]]]]], 3)).toStrictEqual([[[[[[1]]]]]]);
+    expect(flat([
+      [
+        [
+          [
+            [
+              [
+                [
+                  [
+                    [1],
+                  ],
+                ],
+              ],
+            ],
+          ],
+        ],
+      ],
+    ], 3)).toStrictEqual([
+      [
+        [
+          [
+            [
+              [1],
+            ],
+          ],
+        ],
+      ],
+    ]);
   });
 
   it('works with deeper depth', () => {
@@ -35,11 +66,30 @@ describe('dataFirst', () => {
   });
 
   it('handles optional depth as if it was 1', () => {
-    expect(flat([1, [2, 3], [[4]]])).toStrictEqual([1, 2, 3, [4]]);
+    expect(flat([
+      1,
+      [2, 3],
+      [
+        [4],
+      ],
+    ])).toStrictEqual([
+      1,
+      2,
+      3,
+      [4],
+    ]);
   });
 
   it('handles objects', () => {
-    expect(flat([{ a: 1 }, [{ b: 3 }]], 1)).toStrictEqual([{ a: 1 }, { b: 3 }]);
+    expect(flat([
+      { a: 1 },
+      [
+        { b: 3 },
+      ],
+    ], 1)).toStrictEqual([
+      { a: 1 },
+      { b: 3 },
+    ]);
   });
 
   it('clones the array on depth 0', () => {
@@ -69,7 +119,12 @@ describe('dataLast', () => {
   });
 
   it('flattens shallow nested arrays', () => {
-    expect(pipe([[1, 2], [3, 4], [5], [6]], flat(1))).toStrictEqual([
+    expect(pipe([
+      [1, 2],
+      [3, 4],
+      [5],
+      [6],
+    ], flat(1))).toStrictEqual([
       1,
       2,
       3,
@@ -80,7 +135,33 @@ describe('dataLast', () => {
   });
 
   it('stops at the given depth', () => {
-    expect(pipe([[[[[[[[[1]]]]]]]]], flat(3))).toStrictEqual([[[[[[1]]]]]]);
+    expect(pipe([
+      [
+        [
+          [
+            [
+              [
+                [
+                  [
+                    [1],
+                  ],
+                ],
+              ],
+            ],
+          ],
+        ],
+      ],
+    ], flat(3))).toStrictEqual([
+      [
+        [
+          [
+            [
+              [1],
+            ],
+          ],
+        ],
+      ],
+    ]);
   });
 
   it('works with deeper depth', () => {
@@ -88,18 +169,38 @@ describe('dataLast', () => {
   });
 
   it('handles optional depth as if it was 1', () => {
-    expect(pipe([1, [2, 3], [[4]]], flat())).toStrictEqual([1, 2, 3, [4]]);
+    expect(pipe([
+      1,
+      [2, 3],
+      [
+        [4],
+      ],
+    ], flat())).toStrictEqual([
+      1,
+      2,
+      3,
+      [4],
+    ]);
   });
 
   it('handles objects', () => {
-    expect(pipe([{ a: 1 }, [{ b: 3 }]], flat(1))).toStrictEqual([
+    expect(pipe([
+      { a: 1 },
+      [
+        { b: 3 },
+      ],
+    ], flat(1))).toStrictEqual([
       { a: 1 },
       { b: 3 },
     ]);
   });
 
   it('works lazily (shallow)', () => {
-    const data = [[1, 2], 3, [4, 5]] as const;
+    const data = [
+      [1, 2],
+      3,
+      [4, 5],
+    ] as const;
 
     const beforeMock
       = vi.fn<<T extends (typeof data)[number]>(x: T) => T>(identity());
@@ -119,7 +220,23 @@ describe('dataLast', () => {
   });
 
   it('works lazily (deep)', () => {
-    const data = [[[0]], [[[1, 2], [[3]], [[4, 5]]]], 6] as const;
+    const data = [
+      [
+        [0],
+      ],
+      [
+        [
+          [1, 2],
+          [
+            [3],
+          ],
+          [
+            [4, 5],
+          ],
+        ],
+      ],
+      6,
+    ] as const;
 
     const beforeMock
       = vi.fn<<T extends (typeof data)[number]>(x: T) => T>(identity());
@@ -139,7 +256,21 @@ describe('dataLast', () => {
   });
 
   it('works lazily with trivial depth === 0', () => {
-    const data = [1, [2, 3], [4, [5, 6], [7, [8, 9], [[10]]]]];
+    const data = [
+      1,
+      [2, 3],
+      [
+        4,
+        [5, 6],
+        [
+          7,
+          [8, 9],
+          [
+            [10],
+          ],
+        ],
+      ],
+    ];
     const result = pipe(data, flat(0));
 
     expect(result).toStrictEqual(data);
@@ -149,7 +280,67 @@ describe('dataLast', () => {
 
 it('can go very very deep', () => {
   expect(
-    flat([[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[1]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]], 99),
+    flat([
+      [
+        [
+          [
+            [
+              [
+                [
+                  [
+                    [
+                      [
+                        [
+                          [
+                            [
+                              [
+                                [
+                                  [
+                                    [
+                                      [
+                                        [
+                                          [
+                                            [
+                                              [
+                                                [
+                                                  [
+                                                    [
+                                                      [
+                                                        [
+                                                          [
+                                                            [
+                                                              [
+                                                                [1],
+                                                              ],
+                                                            ],
+                                                          ],
+                                                        ],
+                                                      ],
+                                                    ],
+                                                  ],
+                                                ],
+                                              ],
+                                            ],
+                                          ],
+                                        ],
+                                      ],
+                                    ],
+                                  ],
+                                ],
+                              ],
+                            ],
+                          ],
+                        ],
+                      ],
+                    ],
+                  ],
+                ],
+              ],
+            ],
+          ],
+        ],
+      ],
+    ], 99),
   ).toStrictEqual([1]);
 });
 
@@ -157,21 +348,37 @@ it('can go very very deep', () => {
 describe('legacy', () => {
   describe('`flatten` equivalent (depth = 1)', () => {
     it('flatten', () => {
-      expect(flat([[1, 2], 3, [4, 5]])).toStrictEqual([1, 2, 3, 4, 5]);
+      expect(flat([
+        [1, 2],
+        3,
+        [4, 5],
+      ])).toStrictEqual([1, 2, 3, 4, 5]);
     });
 
     it('nested', () => {
       expect(
         flat([
           [1, 2],
-          [[3], [4, 5]],
+          [
+            [3],
+            [4, 5],
+          ],
         ]),
-      ).toStrictEqual([1, 2, [3], [4, 5]]);
+      ).toStrictEqual([
+        1,
+        2,
+        [3],
+        [4, 5],
+      ]);
     });
 
     describe('dataLast', () => {
       it('flatten multiple values', () => {
-        expect(pipe([[1, 2], 3, [4, 5]], flat())).toStrictEqual([
+        expect(pipe([
+          [1, 2],
+          3,
+          [4, 5],
+        ], flat())).toStrictEqual([
           1,
           2,
           3,
@@ -181,14 +388,20 @@ describe('legacy', () => {
       });
 
       it('flatten single value', () => {
-        expect(pipe([[1]], flat())).toStrictEqual([1]);
+        expect(pipe([
+          [1],
+        ], flat())).toStrictEqual([1]);
       });
 
       it('lazy', () => {
         const counter1 = createLazyInvocationCounter();
         const counter2 = createLazyInvocationCounter();
         const result = pipe(
-          [[1, 2], 3, [4, 5]],
+          [
+            [1, 2],
+            3,
+            [4, 5],
+          ],
           counter1.fn(),
           flat(4),
           counter2.fn(),
@@ -204,7 +417,11 @@ describe('legacy', () => {
 
   describe('`flattenDeep` equivalent (depth = 4)', () => {
     it('flatten', () => {
-      expect(flat([[1, 2], 3, [4, 5]], 4)).toStrictEqual([1, 2, 3, 4, 5]);
+      expect(flat([
+        [1, 2],
+        3,
+        [4, 5],
+      ], 4)).toStrictEqual([1, 2, 3, 4, 5]);
     });
 
     it('nested', () => {
@@ -212,7 +429,10 @@ describe('legacy', () => {
         flat(
           [
             [1, 2],
-            [[3], [4, 5]],
+            [
+              [3],
+              [4, 5],
+            ],
           ],
           4,
         ),
@@ -223,7 +443,15 @@ describe('legacy', () => {
       const counter1 = createLazyInvocationCounter();
       const counter2 = createLazyInvocationCounter();
       const result = pipe(
-        [[1, 2], [[3]], [[4, 5]]],
+        [
+          [1, 2],
+          [
+            [3],
+          ],
+          [
+            [4, 5],
+          ],
+        ],
         counter1.fn(),
         flat(4),
         counter2.fn(),

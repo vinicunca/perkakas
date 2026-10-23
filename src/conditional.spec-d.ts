@@ -49,7 +49,10 @@ describe('data-first', () => {
   });
 
   it('narrows types when using `isNullish`/`isNonNullish` with complex data', () => {
-    const data = firstBy([{ x: 10 }, { x: 20 }] as Array<{ x: number }>, prop('x'));
+    const data = firstBy([
+      { x: 10 },
+      { x: 20 },
+    ] as Array<{ x: number }>, prop('x'));
 
     conditional(
       data,
@@ -74,7 +77,10 @@ describe('data-first', () => {
     expectTypeOf(
       conditional(
         'Jokic',
-        [isString, () => 'hello' as const],
+        [
+          isString,
+          () => 'hello' as const,
+        ],
         constant(undefined),
       ),
     ).toEqualTypeOf<'hello' | undefined>();
@@ -82,7 +88,10 @@ describe('data-first', () => {
 
   it('passes the defaultCase\'s type to the output', () => {
     expectTypeOf(
-      conditional('Jokic', [isString, () => 'hello' as const], constant(123)),
+      conditional('Jokic', [
+        isString,
+        () => 'hello' as const,
+      ], constant(123)),
     ).toEqualTypeOf<'hello' | 123>();
   });
 });
@@ -130,7 +139,10 @@ describe('data-last', () => {
 
   it('narrows types when using `isNullish`/`isNonNullish` with complex data', () => {
     pipe(
-      [{ x: 10 }, { x: 20 }],
+      [
+        { x: 10 },
+        { x: 20 },
+      ],
       firstBy(prop('x')),
       conditional(
         [
@@ -155,7 +167,10 @@ describe('data-last', () => {
     expectTypeOf(
       pipe(
         'Jokic',
-        conditional([isString, () => 'hello' as const], constant(undefined)),
+        conditional([
+          isString,
+          () => 'hello' as const,
+        ], constant(undefined)),
       ),
     ).toEqualTypeOf<'hello' | undefined>();
   });
@@ -164,7 +179,10 @@ describe('data-last', () => {
     expectTypeOf(
       pipe(
         'Jokic',
-        conditional([isString, () => 'hello' as const], constant(123)),
+        conditional([
+          isString,
+          () => 'hello' as const,
+        ], constant(123)),
       ),
     ).toEqualTypeOf<'hello' | 123>();
   });

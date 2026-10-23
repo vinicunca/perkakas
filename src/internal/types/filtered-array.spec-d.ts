@@ -347,7 +347,11 @@ describe('condition is a complex object', () => {
   it('tuple with mixed complex objects', () => {
     expectTypeOf(
       filteredArray(
-        [{ a: 'hello' }, { a: 'world' }, { a: 'hello', b: 42 }] as [
+        [
+          { a: 'hello' },
+          { a: 'world' },
+          { a: 'hello', b: 42 },
+        ] as [
           { a: 'hello' },
           { a: 'world' },
           { a: 'hello'; b: number },
@@ -438,7 +442,11 @@ describe('condition is an array or primitives', () => {
   it('tuple containing arrays', () => {
     expectTypeOf(
       filteredArray(
-        [['a', 'b'], [1, 2], ['c']] as [Array<string>, Array<number>, Array<string>],
+        [
+          ['a', 'b'],
+          [1, 2],
+          ['c'],
+        ] as [Array<string>, Array<number>, Array<string>],
         [] as Array<string>,
       ),
     ).toEqualTypeOf<[Array<string>, Array<string>]>();
@@ -447,7 +455,11 @@ describe('condition is an array or primitives', () => {
   it('complex tuple with arrays in rest position', () => {
     expectTypeOf(
       filteredArray(
-        [['a'], ['b'], ['c']] as [Array<string>, ...Array<Array<string> | Array<number>>],
+        [
+          ['a'],
+          ['b'],
+          ['c'],
+        ] as [Array<string>, ...Array<Array<string> | Array<number>>],
         [] as Array<string>,
       ),
     ).toEqualTypeOf<[Array<string>, ...Array<Array<string>>]>();
@@ -479,7 +491,11 @@ describe('condition is a readonly array of primitives', () => {
   it('tuple containing readonly arrays', () => {
     expectTypeOf(
       filteredArray(
-        [['a'] as const, [1, 2], ['c'] as const] as [
+        [
+          ['a'] as const,
+          [1, 2],
+          ['c'] as const,
+        ] as [
           ReadonlyArray<string>,
           Array<number>,
           ReadonlyArray<string>,
@@ -512,7 +528,11 @@ describe('condition is an array of literals', () => {
   it('tuple containing literal arrays', () => {
     expectTypeOf(
       filteredArray(
-        [['hello', 'hello'], ['world'], ['hello']] as [
+        [
+          ['hello', 'hello'],
+          ['world'],
+          ['hello'],
+        ] as [
           Array<'hello'>,
           Array<'world'>,
           Array<'hello'>,
@@ -583,7 +603,14 @@ describe('condition is a tuple', () => {
   it('complex nested tuples', () => {
     expectTypeOf(
       filteredArray(
-        [[['a', 1]], [['b', 2]]] as const,
+        [
+          [
+            ['a', 1],
+          ],
+          [
+            ['b', 2],
+          ],
+        ] as const,
         ['', 0] as [string, number],
       ),
     ).toEqualTypeOf<[]>();
@@ -764,7 +791,11 @@ describe('disjoint object types ({ a: string } | { b: number })', () => {
   it('tuple with mixed disjoint types', () => {
     expectTypeOf(
       filteredArray(
-        [{ a: 'hello' }, { b: 42 }, { a: 'world', b: 123 }] as const,
+        [
+          { a: 'hello' },
+          { b: 42 },
+          { a: 'world', b: 123 },
+        ] as const,
         $typed<{ a: string } | { b: number }>(),
       ),
     ).toEqualTypeOf<
@@ -781,7 +812,11 @@ describe('complex nested union conditions', () => {
   it('union of arrays', () => {
     expectTypeOf(
       filteredArray(
-        [['a'], [1], ['b']] as [Array<string>, Array<number>, Array<string>],
+        [
+          ['a'],
+          [1],
+          ['b'],
+        ] as [Array<string>, Array<number>, Array<string>],
         [] as Array<string> | Array<number>,
       ),
     ).toEqualTypeOf<[Array<string>, Array<number>, Array<string>]>();
@@ -813,7 +848,9 @@ describe('complex nested union conditions', () => {
     it('fixed tuple', () => {
       expectTypeOf(
         filteredArray(
-          [{ a: 'cat', b: 1 }] as [{ a: 'cat' | 'dog'; b: number }],
+          [
+            { a: 'cat', b: 1 },
+          ] as [{ a: 'cat' | 'dog'; b: number }],
           $typed<string | { a: 'cat' }>(),
         ),
       ).toEqualTypeOf<[] | [{ a: 'cat' | 'dog'; b: number } & { a: 'cat' }]>();
@@ -961,7 +998,9 @@ describe('item and condition aren\'t type literals', () => {
   it('interface in a fixed tuple', () => {
     expectTypeOf(
       filteredArray(
-        [{ type: 'cat', legs: 4 }] as [ItemInterface],
+        [
+          { type: 'cat', legs: 4 },
+        ] as [ItemInterface],
         $typed<ConditionInterface>(),
       ),
     ).toEqualTypeOf<[] | [ItemInterface & ConditionInterface]>();

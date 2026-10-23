@@ -9,19 +9,25 @@ describe('runtime correctness', () => {
   describe('array with single item', () => {
     it('item smaller than item in array', () => {
       expect(
-        sortedLastIndexBy([{ age: 22 }], { age: 21 }, ({ age }) => age),
+        sortedLastIndexBy([
+          { age: 22 },
+        ], { age: 21 }, ({ age }) => age),
       ).toBe(0);
     });
 
     it('item larger than item in array', () => {
       expect(
-        sortedLastIndexBy([{ age: 20 }], { age: 21 }, ({ age }) => age),
+        sortedLastIndexBy([
+          { age: 20 },
+        ], { age: 21 }, ({ age }) => age),
       ).toBe(1);
     });
 
     it('item in array', () => {
       expect(
-        sortedLastIndexBy([{ age: 21 }], { age: 21 }, ({ age }) => age),
+        sortedLastIndexBy([
+          { age: 21 },
+        ], { age: 21 }, ({ age }) => age),
       ).toBe(1);
     });
   });
@@ -30,7 +36,13 @@ describe('runtime correctness', () => {
     it('item smaller than all items in array', () => {
       expect(
         sortedLastIndexBy(
-          [{ age: 21 }, { age: 22 }, { age: 23 }, { age: 24 }, { age: 25 }],
+          [
+            { age: 21 },
+            { age: 22 },
+            { age: 23 },
+            { age: 24 },
+            { age: 25 },
+          ],
           { age: 20 },
           ({ age }) => age,
         ),
@@ -40,7 +52,13 @@ describe('runtime correctness', () => {
     it('item larger than all items in array', () => {
       expect(
         sortedLastIndexBy(
-          [{ age: 21 }, { age: 22 }, { age: 23 }, { age: 24 }, { age: 25 }],
+          [
+            { age: 21 },
+            { age: 22 },
+            { age: 23 },
+            { age: 24 },
+            { age: 25 },
+          ],
           { age: 26 },
           ({ age }) => age,
         ),
@@ -50,7 +68,13 @@ describe('runtime correctness', () => {
     it('item in array', () => {
       expect(
         sortedLastIndexBy(
-          [{ age: 21 }, { age: 22 }, { age: 23 }, { age: 24 }, { age: 25 }],
+          [
+            { age: 21 },
+            { age: 22 },
+            { age: 23 },
+            { age: 24 },
+            { age: 25 },
+          ],
           { age: 23 },
           ({ age }) => age,
         ),
@@ -62,7 +86,13 @@ describe('runtime correctness', () => {
     it('item smaller than all items in array', () => {
       expect(
         sortedLastIndexBy(
-          [{ age: 21 }, { age: 21 }, { age: 21 }, { age: 21 }, { age: 21 }],
+          [
+            { age: 21 },
+            { age: 21 },
+            { age: 21 },
+            { age: 21 },
+            { age: 21 },
+          ],
           { age: 20 },
           ({ age }) => age,
         ),
@@ -72,7 +102,13 @@ describe('runtime correctness', () => {
     it('item larger than all items in array', () => {
       expect(
         sortedLastIndexBy(
-          [{ age: 21 }, { age: 21 }, { age: 21 }, { age: 21 }, { age: 21 }],
+          [
+            { age: 21 },
+            { age: 21 },
+            { age: 21 },
+            { age: 21 },
+            { age: 21 },
+          ],
           { age: 22 },
           ({ age }) => age,
         ),
@@ -82,7 +118,13 @@ describe('runtime correctness', () => {
     it('item in array', () => {
       expect(
         sortedLastIndexBy(
-          [{ age: 21 }, { age: 21 }, { age: 21 }, { age: 21 }, { age: 21 }],
+          [
+            { age: 21 },
+            { age: 21 },
+            { age: 21 },
+            { age: 21 },
+            { age: 21 },
+          ],
           { age: 21 },
           ({ age }) => age,
         ),

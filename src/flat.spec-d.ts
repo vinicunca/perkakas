@@ -73,19 +73,54 @@ it('works on simple tuples', () => {
 });
 
 it('works on tuples with different levels of nesting', () => {
-  const result = flat([1, [2, 3], [4, [5, 6]]] as const, 1);
+  const result = flat([
+    1,
+    [2, 3],
+    [
+      4,
+      [5, 6],
+    ],
+  ] as const, 1);
 
   expectTypeOf(result).toEqualTypeOf<[1, 2, 3, 4, readonly [5, 6]]>();
 });
 
 it('works on tuples with depth>1', () => {
-  const result = flat([1, [2, 3], [4, [5, 6]]] as const, 2);
+  const result = flat([
+    1,
+    [2, 3],
+    [
+      4,
+      [5, 6],
+    ],
+  ] as const, 2);
 
   expectTypeOf(result).toEqualTypeOf<[1, 2, 3, 4, 5, 6]>();
 });
 
 it('works with tuples with a lot of nesting', () => {
-  const result = flat([[[[1]], [[[[2]]]]], [[[[3, 4], 5]]]] as const, 10);
+  const result = flat([
+    [
+      [
+        [1],
+      ],
+      [
+        [
+          [
+            [2],
+          ],
+        ],
+      ],
+    ],
+    [
+      [
+        [
+          [3, 4],
+          5,
+        ],
+      ],
+    ],
+  ] as const, 10);
 
   expectTypeOf(result).toEqualTypeOf<[1, 2, 3, 4, 5]>();
 });
@@ -109,13 +144,18 @@ it('works with a tuple with mixed array and non array items', () => {
 });
 
 it('works with a tuple with mixed array and non array items, deeply', () => {
-  const result = flat([[1], []] as [[number], Array<Array<string>>], 2);
+  const result = flat([
+    [1],
+    [],
+  ] as [[number], Array<Array<string>>], 2);
 
   expectTypeOf(result).toEqualTypeOf<[number, ...Array<string>]>();
 });
 
 it('works on non-empty arrays', () => {
-  const result = flat([[1]] as NonEmptyArray<NonEmptyArray<number>>, 1);
+  const result = flat([
+    [1],
+  ] as NonEmptyArray<NonEmptyArray<number>>, 1);
 
   expectTypeOf(result).toEqualTypeOf<NonEmptyArray<number>>();
 });
@@ -136,7 +176,67 @@ it('works with depths beyond 20', () => {
   // The built-in type for `Array.prototype.flat` only goes up to 20.
 
   const result = flat(
-    [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[1]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]] as const,
+    [
+      [
+        [
+          [
+            [
+              [
+                [
+                  [
+                    [
+                      [
+                        [
+                          [
+                            [
+                              [
+                                [
+                                  [
+                                    [
+                                      [
+                                        [
+                                          [
+                                            [
+                                              [
+                                                [
+                                                  [
+                                                    [
+                                                      [
+                                                        [
+                                                          [
+                                                            [
+                                                              [
+                                                                [1],
+                                                              ],
+                                                            ],
+                                                          ],
+                                                        ],
+                                                      ],
+                                                    ],
+                                                  ],
+                                                ],
+                                              ],
+                                            ],
+                                          ],
+                                        ],
+                                      ],
+                                    ],
+                                  ],
+                                ],
+                              ],
+                            ],
+                          ],
+                        ],
+                      ],
+                    ],
+                  ],
+                ],
+              ],
+            ],
+          ],
+        ],
+      ],
+    ] as const,
     99,
   );
 
@@ -144,19 +244,15 @@ it('works with depths beyond 20', () => {
 });
 
 it('doesn\'t accept non-literal depths', () => {
-  // @ts-expect-error [ts2345] - non-literal numbers can't be used as depth.
   flat([], 1 as number);
 });
 
 it('doesn\'t accept built-in \'infinite\' numbers', () => {
   // They are all typed as `number` by typescript's libs.
 
-  // @ts-expect-error [ts2345] - Infinity is typed as a non-literal number. - https://github.com/microsoft/TypeScript/blob/main/src/lib/es5.d.ts#L9
   flat([], Infinity);
 
-  // @ts-expect-error [ts2345] - Max number is typed as a non-literal number. - https://github.com/microsoft/TypeScript/blob/main/src/lib/es5.d.ts#L576
   flat([], Number.MAX_VALUE);
 
-  // @ts-expect-error [ts2345] - Infinity is typed as a non-literal number. - https://github.com/microsoft/TypeScript/blob/main/src/lib/es5.d.ts#L597
   flat([], Infinity);
 });

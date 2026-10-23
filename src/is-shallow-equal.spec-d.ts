@@ -34,7 +34,11 @@ it('doesn\'t accept non-overlapping types', () => {
 
 it('works deeply', () => {
   const data = [] as Array<{ a: Array<number> | Array<string> } | { b: Array<boolean> }>;
-  if (isShallowEqual(data, [{ a: [1] }])) {
+  if (isShallowEqual(data, [
+    {
+      a: [1],
+    },
+  ])) {
     expectTypeOf(data).toEqualTypeOf<Array<{ a: Array<number> }>>();
   } else {
     expectTypeOf(data).toEqualTypeOf<
@@ -52,6 +56,7 @@ it('works deeply', () => {
 it('doesn\'t narrow when comparing objects of the same type', () => {
   const data1 = { a: 1 };
   const data2 = { a: 2 };
+  // eslint-disable-next-line sonarjs/no-all-duplicated-branches
   if (isShallowEqual(data1, data2)) {
     expectTypeOf(data1).toEqualTypeOf<{ a: number }>();
   } else {

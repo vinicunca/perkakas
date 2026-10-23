@@ -52,8 +52,10 @@ type FoundInFixedTuple<T, Condition, Fallback> = T extends readonly [
     {
       full: Head;
 
-      // Because the match isn't full we need to also consider the rest of the
-      // items too because in runtime we might skip the current item.
+      /**
+       * Because the match isn't full we need to also consider the rest of the
+       * items too because in runtime we might skip the current item.
+       */
       partial:
         | Narrowed<Head, Condition>
         | FoundInFixedTuple<Rest, Condition, Fallback>;
@@ -168,5 +170,7 @@ const lazyImplementation = toSingle(
     predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S,
   ): LazyEvaluator<T, S> =>
     requireDataByArity(predicate, (value, index, data, slot) =>
-      predicate(value, index, data) ? lastLazyValue(value, slot) : SKIP_ITEM),
+      predicate(value, index, data)
+        ? lastLazyValue(value, slot)
+        : SKIP_ITEM),
 );

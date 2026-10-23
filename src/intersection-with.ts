@@ -86,5 +86,7 @@ function intersectionWithImplementation<T, S>(
 
 function lazyImplementation<T, S>(other: ReadonlyArray<S>, isEqual: IsEqual<T, S>): LazyEvaluator<T> {
   return (value) =>
-    other.some((otherValue) => isEqual(value, otherValue)) ? value : SKIP_ITEM;
+    other.some((otherValue) => isEqual(value, otherValue))
+      ? value
+      : SKIP_ITEM;
 }

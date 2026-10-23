@@ -9,10 +9,24 @@ describe('data_first', () => {
   it('should return uniq', () => {
     expect(
       uniqueWith(
-        [{ a: 1 }, { a: 2 }, { a: 2 }, { a: 5 }, { a: 1 }, { a: 6 }, { a: 7 }],
+        [
+          { a: 1 },
+          { a: 2 },
+          { a: 2 },
+          { a: 5 },
+          { a: 1 },
+          { a: 6 },
+          { a: 7 },
+        ],
         isDeepEqual,
       ),
-    ).toStrictEqual([{ a: 1 }, { a: 2 }, { a: 5 }, { a: 6 }, { a: 7 }]);
+    ).toStrictEqual([
+      { a: 1 },
+      { a: 2 },
+      { a: 5 },
+      { a: 6 },
+      { a: 7 },
+    ]);
   });
 
   it('consecutive duplicates', () => {
@@ -72,7 +86,13 @@ describe('data_last', () => {
         { a: 6 },
         { a: 7 },
       ]),
-    ).toStrictEqual([{ a: 1 }, { a: 2 }, { a: 5 }, { a: 6 }, { a: 7 }]);
+    ).toStrictEqual([
+      { a: 1 },
+      { a: 2 },
+      { a: 5 },
+      { a: 6 },
+      { a: 7 },
+    ]);
   });
 
   it('compares with every earlier item, not just the kept ones', () => {
@@ -113,27 +133,50 @@ describe('data_last', () => {
   it('lazy', () => {
     const counter = createLazyInvocationCounter();
     const result = pipe(
-      [{ a: 1 }, { a: 2 }, { a: 2 }, { a: 5 }, { a: 1 }, { a: 6 }, { a: 7 }],
+      [
+        { a: 1 },
+        { a: 2 },
+        { a: 2 },
+        { a: 5 },
+        { a: 1 },
+        { a: 6 },
+        { a: 7 },
+      ],
       counter.fn(),
       uniqueWith(isDeepEqual),
       take(3),
     );
 
     expect(counter.count).toHaveBeenCalledTimes(4);
-    expect(result).toStrictEqual([{ a: 1 }, { a: 2 }, { a: 5 }]);
+    expect(result).toStrictEqual([
+      { a: 1 },
+      { a: 2 },
+      { a: 5 },
+    ]);
   });
 
   // @see https://github.com/remeda/remeda/issues/14
   it('take before uniq (#14)', () => {
     const counter = createLazyInvocationCounter();
     const result = pipe(
-      [{ a: 1 }, { a: 2 }, { a: 2 }, { a: 5 }, { a: 1 }, { a: 6 }, { a: 7 }],
+      [
+        { a: 1 },
+        { a: 2 },
+        { a: 2 },
+        { a: 5 },
+        { a: 1 },
+        { a: 6 },
+        { a: 7 },
+      ],
       counter.fn(),
       take(3),
       uniqueWith(isDeepEqual),
     );
 
     expect(counter.count).toHaveBeenCalledTimes(3);
-    expect(result).toStrictEqual([{ a: 1 }, { a: 2 }]);
+    expect(result).toStrictEqual([
+      { a: 1 },
+      { a: 2 },
+    ]);
   });
 });

@@ -26,7 +26,9 @@ describe('data first', () => {
         { a: 1, b: 2 },
         { a: 1, b: 3 },
       ],
-      2: [{ a: 2, b: 1 }],
+      2: [
+        { a: 2, b: 1 },
+      ],
     });
   });
 
@@ -95,7 +97,9 @@ describe('data last', () => {
         { a: 1, b: 2 },
         { a: 1, b: 3 },
       ],
-      2: [{ a: 2, b: 1 }],
+      2: [
+        { a: 2, b: 1 },
+      ],
     });
   });
 
@@ -150,10 +154,17 @@ it('handles undefined as optional elements', () => {
   expect(
     groupByProp(
       // @ts-expect-error [ts2352] -- When `exactOptionalPropertyTypes` isn't enabled in tsconfig.json this isn't an error and would be acceptable as input, so we want to also test this case and make sure we don't cause issues. In our project the settings is enabled so we have to suppress the error.
-      [{ a: 'cat' }, undefined] as [{ a: string }, { a: string }?],
+      [
+        { a: 'cat' },
+        undefined,
+      ] as [{ a: string }, { a: string }?],
       'a',
     ),
-  ).toStrictEqual({ cat: [{ a: 'cat' }] });
+  ).toStrictEqual({
+    cat: [
+      { a: 'cat' },
+    ],
+  });
 });
 
 it('grouping value is a key of object.prototype', () => {
@@ -173,6 +184,8 @@ it('grouping value is a key of object.prototype', () => {
       { a: 'toString', b: 'valueOf' },
       { a: 'toString', b: '__proto__' },
     ],
-    valueOf: [{ a: 'valueOf', b: 'toString' }],
+    valueOf: [
+      { a: 'valueOf', b: 'toString' },
+    ],
   });
 });

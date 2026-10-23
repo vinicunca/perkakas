@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/no-all-duplicated-branches */
 import { expectTypeOf, it } from 'vitest';
 import { differenceWith } from './difference-with';
 import { isDeepEqual } from './is-deep-equal';
@@ -34,7 +35,11 @@ it('doesn\'t accept non-overlapping types', () => {
 
 it('works deeply', () => {
   const data = [] as Array<{ a: Array<number> | Array<string> } | { b: Array<boolean> }>;
-  if (isDeepEqual(data, [{ a: [1] }])) {
+  if (isDeepEqual(data, [
+    {
+      a: [1],
+    },
+  ])) {
     expectTypeOf(data).toEqualTypeOf<Array<{ a: Array<number> }>>();
   } else {
     expectTypeOf(data).toEqualTypeOf<

@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/no-all-duplicated-branches */
 import { describe, expectTypeOf, it } from 'vitest';
 import { hasAtLeast } from './has-at-least';
 
@@ -128,7 +129,14 @@ it('fails on N > array length', () => {
 });
 
 it('works with interesting tuples', () => {
-  const array = ['hello', 'world', true, 456, 123, 'cat'] as [
+  const array = [
+    'hello',
+    'world',
+    true,
+    456,
+    123,
+    'cat',
+  ] as [
     'hello',
     string,
     boolean,

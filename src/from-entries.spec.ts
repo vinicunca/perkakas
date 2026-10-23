@@ -30,7 +30,9 @@ it('empty array', () => {
 });
 
 it('single entry', () => {
-  expect(fromEntries([['a', 1]])).toStrictEqual({ a: 1 });
+  expect(fromEntries([
+    ['a', 1],
+  ])).toStrictEqual({ a: 1 });
 });
 
 it('boolean values', () => {
@@ -43,9 +45,13 @@ it('boolean values', () => {
 });
 
 it('string values', () => {
-  expect(fromEntries([['a', 'd']])).toStrictEqual({ a: 'd' });
+  expect(fromEntries([
+    ['a', 'd'],
+  ])).toStrictEqual({ a: 'd' });
 });
 
 it('number keys and values', () => {
-  expect(fromEntries([[1, 123]])).toStrictEqual({ 1: 123 });
+  expect(fromEntries([
+    [1, 123],
+  ])).toStrictEqual({ 1: 123 });
 });

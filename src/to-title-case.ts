@@ -15,7 +15,7 @@ type TitleCaseOptionsWithDefaults<Options extends TitleCaseOptions>
     TitleCaseOptions,
     Options,
     {
-      // We use the runtime const for the default type so they stay coupled.
+      /** We use the runtime const for the default type so they stay coupled. */
       preserveConsecutiveUppercase: typeof DEFAULT_PRESERVE_CONSECUTIVE_UPPERCASE;
     }
   >;

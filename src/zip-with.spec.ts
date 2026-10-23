@@ -99,9 +99,18 @@ describe('data second with initial arg', () => {
     >((_first, _second, _index, data) => structuredClone(data));
     pipe([1, 2, 3], zipWith(other, zipper));
 
-    expect(zipper).toHaveNthReturnedWith(1, [[1], other]);
-    expect(zipper).toHaveNthReturnedWith(2, [[1, 2], other]);
-    expect(zipper).toHaveNthReturnedWith(3, [[1, 2, 3], other]);
+    expect(zipper).toHaveNthReturnedWith(1, [
+      [1],
+      other,
+    ]);
+    expect(zipper).toHaveNthReturnedWith(2, [
+      [1, 2],
+      other,
+    ]);
+    expect(zipper).toHaveNthReturnedWith(3, [
+      [1, 2, 3],
+      other,
+    ]);
   });
 
   it('doesn\'t collect the first items processed so far for a zipper without `data`', () => {

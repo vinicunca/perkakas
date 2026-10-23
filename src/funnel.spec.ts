@@ -13,7 +13,9 @@ const UT = 16;
 // We use this reducer to collect arguments from each invocation so we can test
 // what the function was invoked with.
 function ARGS_COLLECTOR(accumulator: ReadonlyArray<string> | undefined, item: string): ReadonlyArray<string> {
-  return accumulator === undefined ? [item] : [...accumulator, item];
+  return accumulator === undefined
+    ? [item]
+    : [...accumulator, item];
 }
 
 describe('without a reducer', () => {

@@ -1,3 +1,5 @@
+/* eslint-disable sonarjs/no-all-duplicated-branches */
+/* eslint-disable sonarjs/no-duplicated-branches */
 import type { LazySlot } from './lazy-control';
 import type { LazyDefinition } from './lazy-data-last-implementation';
 import {
@@ -28,7 +30,9 @@ export function processSingleLazyStep<P extends ReadonlyArray<unknown>>(
 
   // `dataBuffer` exists only when the evaluator requires `data`, so it doubles
   // as the flag for filling it.
-  const dataBuffer = lazyEvaluator.requiresData ? ([] as Array<unknown>) : undefined;
+  const dataBuffer = lazyEvaluator.requiresData
+    ? ([] as Array<unknown>)
+    : undefined;
   const items = dataBuffer ?? UNEXPECTED_ACCESS_SENTINEL;
 
   const slot = createLazySlot();

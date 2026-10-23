@@ -29,7 +29,11 @@ it('can infer last type from const arrays', () => {
 });
 
 it('a bit more complex example', () => {
-  const result = last([['a', 1] as const, true, { foo: 'bar' }] as const);
+  const result = last([
+    ['a', 1] as const,
+    true,
+    { foo: 'bar' },
+  ] as const);
 
   expectTypeOf(result).toEqualTypeOf<{ readonly foo: 'bar' }>();
 });

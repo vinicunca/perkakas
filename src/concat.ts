@@ -50,5 +50,8 @@ function concatImplementation<
   T1 extends IterableContainer,
   T2 extends IterableContainer,
 >(arr1: T1, arr2: T2): [...T1, ...T2] {
-  return [...arr1, ...arr2];
+  return [
+    ...arr1,
+    ...arr2,
+  ];
 }

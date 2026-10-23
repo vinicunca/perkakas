@@ -16,7 +16,10 @@ const items = fc.oneof(fc.array(item), fc.sparseArray(item));
 
 // A generated comparator is neither symmetric nor transitive, so the result
 // depends on exactly which pairs are compared.
-test.prop([items, fc.func(fc.boolean())])(
+test.prop([
+  items,
+  fc.func(fc.boolean()),
+])(
   'data-first and data-last produce the same result',
   (data, isEquals) => {
     const dataFirst = uniqueWith(data, isEquals);

@@ -52,7 +52,9 @@ describe('lazy', () => {
     const mapper = vi.fn<<T>(x: T) => T>(identity());
 
     expect(
-      pipe({ inner: [1, 2, 3] }, prop('inner'), map(mapper), take(2)),
+      pipe({
+        inner: [1, 2, 3],
+      }, prop('inner'), map(mapper), take(2)),
     ).toStrictEqual([1, 2]);
     expect(mapper).toHaveBeenCalledTimes(2);
   });
@@ -105,14 +107,20 @@ describe('lazy', () => {
   describe('a single-result step followed by a lazy step', () => {
     it('at the start of a run', () => {
       expect(
-        pipe([[1, 2], [3]] as const, first(), map(multiply(10))),
+        pipe([
+          [1, 2],
+          [3],
+        ] as const, first(), map(multiply(10))),
       ).toStrictEqual([10, 20]);
     });
 
     it('ending a fused run', () => {
       expect(
         pipe(
-          [[1, 2], [3]] as const,
+          [
+            [1, 2],
+            [3],
+          ] as const,
           map(identity()),
           first(),
           map(multiply(10)),
@@ -146,7 +154,10 @@ describe('lazy', () => {
     it('advances across fan-out', () => {
       expect(
         pipe(
-          [[1, 2], [3]],
+          [
+            [1, 2],
+            [3],
+          ],
           flat(),
           map((_value, index) => index),
         ),
@@ -156,7 +167,10 @@ describe('lazy', () => {
     it('advances across consecutive fan-outs', () => {
       expect(
         pipe(
-          [[1, 2], [3]],
+          [
+            [1, 2],
+            [3],
+          ],
           flat(),
           flatMap((x) => [x, x + 100]),
           map((_, index) => index),
@@ -192,11 +206,18 @@ describe('lazy', () => {
     it('includes the items a fan-out emitted', () => {
       expect(
         pipe(
-          [[1, 2], [3]],
+          [
+            [1, 2],
+            [3],
+          ],
           flat(),
           map((_value, _index, data) => [...data]),
         ),
-      ).toStrictEqual([[1], [1, 2], [1, 2, 3]]);
+      ).toStrictEqual([
+        [1],
+        [1, 2],
+        [1, 2, 3],
+      ]);
     });
   });
 
@@ -205,7 +226,9 @@ describe('lazy', () => {
       expect(
         pipe(
           [1, 2, 3],
-          flatMap((x) => (x === 2 ? [] : [x])),
+          flatMap((x) => (x === 2
+            ? []
+            : [x])),
           map(multiply(10)),
         ),
       ).toStrictEqual([10, 30]);
@@ -442,7 +465,9 @@ describe('lazy', () => {
       expect(
         pipe(
           [1, 2, 3],
-          flatMap((x) => (x === 2 ? [] : [x])),
+          flatMap((x) => (x === 2
+            ? []
+            : [x])),
         ),
       ).toStrictEqual([1, 3]);
     });
@@ -451,7 +476,9 @@ describe('lazy', () => {
       expect(
         pipe(
           // Too many sub-items to pass as the arguments of a single call.
-          [Array.from({ length: 500_000 }, (_item, index) => index)],
+          [
+            Array.from({ length: 500_000 }, (_item, index) => index),
+          ],
           flat(),
         ),
       ).toHaveLength(500_000);
@@ -470,7 +497,9 @@ describe('lazy', () => {
 
   it('a run of one lazy function between two non-lazy ones', () => {
     expect(
-      pipe({ inner: [1, 2, 3] }, prop('inner'), map(multiply(10)), join(',')),
+      pipe({
+        inner: [1, 2, 3],
+      }, prop('inner'), map(multiply(10)), join(',')),
     ).toBe('10,20,30');
   });
 
@@ -488,22 +517,48 @@ describe('lazy', () => {
   // Arrays and every other iterable run through separate loops, each of which
   // fills the data buffer and counts the index for a lone step.
   it.each([
-    ['an array', (): ReadonlyArray<number> => [1, 2, 3, 4]],
+    [
+      'an array',
+      (): ReadonlyArray<number> => [1, 2, 3, 4],
+    ],
     // @ts-expect-error [ts2740] -- The utilities only type arrays, but `pipe` iterates any iterable at runtime, which is what this test exercises.
-    ['a generator', (): ReadonlyArray<number> => upTo(4)],
+    [
+      'a generator',
+      (): ReadonlyArray<number> => upTo(4),
+    ],
   ])(
     'a lone step gets each item\'s index and the items so far, with %s as input',
     (_name, input) => {
       expect(
         pipe(
           input(),
-          map((x, index, data) => [x, index, [...data]]),
+          map((x, index, data) => [
+            x,
+            index,
+            [...data],
+          ]),
         ),
       ).toStrictEqual([
-        [1, 0, [1]],
-        [2, 1, [1, 2]],
-        [3, 2, [1, 2, 3]],
-        [4, 3, [1, 2, 3, 4]],
+        [
+          1,
+          0,
+          [1],
+        ],
+        [
+          2,
+          1,
+          [1, 2],
+        ],
+        [
+          3,
+          2,
+          [1, 2, 3],
+        ],
+        [
+          4,
+          3,
+          [1, 2, 3, 4],
+        ],
       ]);
     },
   );
@@ -511,9 +566,15 @@ describe('lazy', () => {
   // A lone step next to non-lazy steps runs from the main loop of `pipe`, not
   // from the path for a pipe of a single function.
   describe.each([
-    ['an array', (): ReadonlyArray<number> => [1, 2, 3, 4]],
+    [
+      'an array',
+      (): ReadonlyArray<number> => [1, 2, 3, 4],
+    ],
     // @ts-expect-error [ts2740] -- The utilities only type arrays, but `pipe` iterates any iterable at runtime, which is what this test exercises.
-    ['a generator', (): ReadonlyArray<number> => upTo(4)],
+    [
+      'a generator',
+      (): ReadonlyArray<number> => upTo(4),
+    ],
   ])(
     'a lone step after a non-lazy step gets each item\'s index and the items so far, with %s as input',
     (_name, input) => {
@@ -522,13 +583,33 @@ describe('lazy', () => {
           pipe(
             input(),
             identity(),
-            map((x, index, data) => [x, index, [...data]]),
+            map((x, index, data) => [
+              x,
+              index,
+              [...data],
+            ]),
           ),
         ).toStrictEqual([
-          [1, 0, [1]],
-          [2, 1, [1, 2]],
-          [3, 2, [1, 2, 3]],
-          [4, 3, [1, 2, 3, 4]],
+          [
+            1,
+            0,
+            [1],
+          ],
+          [
+            2,
+            1,
+            [1, 2],
+          ],
+          [
+            3,
+            2,
+            [1, 2, 3],
+          ],
+          [
+            4,
+            3,
+            [1, 2, 3, 4],
+          ],
         ]);
       });
 
@@ -537,14 +618,34 @@ describe('lazy', () => {
           pipe(
             input(),
             identity(),
-            map((x, index, data) => [x, index, [...data]]),
+            map((x, index, data) => [
+              x,
+              index,
+              [...data],
+            ]),
             identity(),
           ),
         ).toStrictEqual([
-          [1, 0, [1]],
-          [2, 1, [1, 2]],
-          [3, 2, [1, 2, 3]],
-          [4, 3, [1, 2, 3, 4]],
+          [
+            1,
+            0,
+            [1],
+          ],
+          [
+            2,
+            1,
+            [1, 2],
+          ],
+          [
+            3,
+            2,
+            [1, 2, 3],
+          ],
+          [
+            4,
+            3,
+            [1, 2, 3, 4],
+          ],
         ]);
       });
     },

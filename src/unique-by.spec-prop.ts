@@ -14,7 +14,10 @@ const item = fc.oneof(
 // Both calling styles read a hole as `undefined`.
 const items = fc.oneof(fc.array(item), fc.sparseArray(item));
 
-test.prop([items, fc.func(fc.integer({ min: 0, max: 3 }))])(
+test.prop([
+  items,
+  fc.func(fc.integer({ min: 0, max: 3 })),
+])(
   'data-first and data-last produce the same result',
   (data, keyOf) => {
     // The key ignores `data`, which differs between the calling styles on

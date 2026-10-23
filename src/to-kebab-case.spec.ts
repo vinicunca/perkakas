@@ -71,7 +71,12 @@ describe('data-last', () => {
 });
 
 describe('type-fest cases', () => {
-  it.each(['fooBar', 'foo-bar', 'foo bar', 'foo_bar'])(
+  it.each([
+    'fooBar',
+    'foo-bar',
+    'foo bar',
+    'foo_bar',
+  ])(
     '%s to be foo-bar',
     (str) => {
       expect(toKebabCase(str)).toBe('foo-bar');

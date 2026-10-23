@@ -1,3 +1,4 @@
+/* eslint-disable slop/no-chained-type-assertions */
 import { curry } from './curry';
 
 /**
@@ -80,6 +81,7 @@ export function isDeepEqual(...args: ReadonlyArray<unknown>): unknown {
   return curry(isDeepEqualImplementation, args);
 }
 
+// eslint-disable-next-line sonarjs/cognitive-complexity
 function isDeepEqualImplementation<T>(data: unknown, other: T): data is T {
   if (data === other) {
     return true;

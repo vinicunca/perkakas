@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/no-all-duplicated-branches */
 /* eslint-disable ts/explicit-function-return-type --
  * Our "generics" tests can only be constructed via generic function wrappers,
  * but because we only care about how the parameters are passed through to our
@@ -99,7 +100,9 @@ describe('data-first', () => {
 
     it('generic data, literal prefix', () => {
       const startsWithFoo = <T extends string>(data: T) =>
-        startsWith(data, 'foo') ? data : undefined;
+        startsWith(data, 'foo')
+          ? data
+          : undefined;
 
       // The narrowing overload is the one picked through the wrapper; falling
       // through to the boolean overload would leave `data` a plain `string`.
@@ -142,7 +145,9 @@ describe('data-first', () => {
 
     it('data constrained by the prefix', () => {
       const startsWithFoo = <T extends `foo${string}`>(data: T) =>
-        startsWith(data, 'foo') ? undefined : data;
+        startsWith(data, 'foo')
+          ? undefined
+          : data;
 
       // The narrowing overload empties the falsy branch; the boolean overload
       // would leave `data` as `T` there.
@@ -627,7 +632,9 @@ describe('known issues!', () => {
       // the check is dead: it narrows `data` to `never` in the truthy branch,
       // which is why the result collapses to `undefined`.
       const startsWithBird = <T extends 'cat' | 'dog'>(data: T) =>
-        startsWith(data, 'bird') ? data : undefined;
+        startsWith(data, 'bird')
+          ? data
+          : undefined;
 
       expectTypeOf(startsWithBird('cat')).toEqualTypeOf<undefined>();
     });

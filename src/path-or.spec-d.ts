@@ -5,7 +5,11 @@ import { stringToPath } from './string-to-path';
 describe('examples from lodash migration', () => {
   it('using stringToPath', () => {
     expectTypeOf(
-      pathOr({ a: [{ b: 123 }] }, stringToPath('a[0].b'), 456),
+      pathOr({
+        a: [
+          { b: 123 },
+        ],
+      }, stringToPath('a[0].b'), 456),
     ).toEqualTypeOf<number>();
   });
 });

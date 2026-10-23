@@ -23,22 +23,49 @@ describe('runtime (dataFirst)', () => {
   });
 
   it('finds the max with \'desc\' order rules', () => {
-    expect(firstBy([2, 1, 4, 3, 5], [identity(), 'desc'])).toBe(5);
+    expect(firstBy([2, 1, 4, 3, 5], [
+      identity(),
+      'desc',
+    ])).toBe(5);
   });
 
   it('finds the max with non-trivial \'desc\' order rules', () => {
     expect(
-      firstBy(['aa', 'a', 'aaaa', 'aaa', 'aaaaa'], [identity(), 'desc']),
+      firstBy(['aa', 'a', 'aaaa', 'aaa', 'aaaaa'], [
+        identity(),
+        'desc',
+      ]),
     ).toBe('aaaaa');
   });
 
   it('breaks ties with multiple order rules', () => {
-    const data = ['a', 'bb', 'b', 'aaaa', 'bbb', 'aa', 'aaa', 'bbbb'];
+    const data = [
+      'a',
+      'bb',
+      'b',
+      'aaaa',
+      'bbb',
+      'aa',
+      'aaa',
+      'bbbb',
+    ];
 
     expect(firstBy(data, (x) => x.length, identity())).toBe('a');
-    expect(firstBy(data, [(x) => x.length, 'desc'], identity())).toBe('aaaa');
-    expect(firstBy(data, (x) => x.length, [identity(), 'desc'])).toBe('b');
-    expect(firstBy(data, [(x) => x.length, 'desc'], [identity(), 'desc'])).toBe(
+    expect(firstBy(data, [
+      (x) => x.length,
+      'desc',
+    ], identity())).toBe('aaaa');
+    expect(firstBy(data, (x) => x.length, [
+      identity(),
+      'desc',
+    ])).toBe('b');
+    expect(firstBy(data, [
+      (x) => x.length,
+      'desc',
+    ], [
+      identity(),
+      'desc',
+    ])).toBe(
       'bbbb',
     );
   });
@@ -57,7 +84,11 @@ describe('runtime (dataFirst)', () => {
 
   it('can compare valueOfs', () => {
     expect(
-      firstBy([new Date(), new Date(1), new Date(2)], identity()),
+      firstBy([
+        new Date(),
+        new Date(1),
+        new Date(2),
+      ], identity()),
     ).toStrictEqual(new Date(1));
   });
 });
@@ -85,17 +116,32 @@ describe('runtime (dataLast)', () => {
   });
 
   it('finds the max with \'desc\' order rules', () => {
-    expect(pipe([2, 1, 4, 3, 5], firstBy([identity(), 'desc']))).toBe(5);
+    expect(pipe([2, 1, 4, 3, 5], firstBy([
+      identity(),
+      'desc',
+    ]))).toBe(5);
   });
 
   it('finds the max with non-trivial \'desc\' order rules', () => {
     expect(
-      pipe(['aa', 'a', 'aaaa', 'aaa', 'aaaaa'], firstBy([identity(), 'desc'])),
+      pipe(['aa', 'a', 'aaaa', 'aaa', 'aaaaa'], firstBy([
+        identity(),
+        'desc',
+      ])),
     ).toBe('aaaaa');
   });
 
   it('breaks ties with multiple order rules', () => {
-    const data = ['a', 'bb', 'b', 'aaaa', 'bbb', 'aa', 'aaa', 'bbbb'];
+    const data = [
+      'a',
+      'bb',
+      'b',
+      'aaaa',
+      'bbb',
+      'aa',
+      'aaa',
+      'bbbb',
+    ];
 
     expect(
       pipe(
@@ -103,19 +149,31 @@ describe('runtime (dataLast)', () => {
         firstBy((x) => x.length, identity()),
       ),
     ).toBe('a');
-    expect(pipe(data, firstBy([(x) => x.length, 'desc'], identity()))).toBe(
+    expect(pipe(data, firstBy([
+      (x) => x.length,
+      'desc',
+    ], identity()))).toBe(
       'aaaa',
     );
     expect(
       pipe(
         data,
-        firstBy((x) => x.length, [identity(), 'desc']),
+        firstBy((x) => x.length, [
+          identity(),
+          'desc',
+        ]),
       ),
     ).toBe('b');
     expect(
       pipe(
         data,
-        firstBy([(x: string) => x.length, 'desc'], [identity(), 'desc']),
+        firstBy([
+          (x: string) => x.length,
+          'desc',
+        ], [
+          identity(),
+          'desc',
+        ]),
       ),
     ).toBe('bbbb');
   });
@@ -136,7 +194,11 @@ describe('runtime (dataLast)', () => {
 
   it('can compare valueOfs', () => {
     expect(
-      pipe([new Date(), new Date(1), new Date(2)], firstBy(identity())),
+      pipe([
+        new Date(),
+        new Date(1),
+        new Date(2),
+      ], firstBy(identity())),
     ).toStrictEqual(new Date(1));
   });
 });

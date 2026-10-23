@@ -1,10 +1,12 @@
 catalogMode: prefer
-
+minimumReleaseAge: 0
 minimumReleaseAgeExcludePrune: true
-minimumReleaseAgeExclude:
-  - '@vinicunca/eslint-config@5.7.1'
-
 trustPolicy: no-downgrade
+
+update:
+  ignoreDeps:
+    - typescript@7
+
 shellEmulator: true
 
 allowBuilds:

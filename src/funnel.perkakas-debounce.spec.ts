@@ -214,14 +214,20 @@ describe('main functionality', () => {
   it('subsequent leading debounced calls return the last `func` result', async () => {
     const debouncer = debounce(identity(), { waitMs: 32, timing: 'leading' });
 
-    expect([debouncer.call('a'), debouncer.call('b')]).toStrictEqual([
+    expect([
+      debouncer.call('a'),
+      debouncer.call('b'),
+    ]).toStrictEqual([
       'a',
       'a',
     ]);
 
     await sleep(64);
 
-    expect([debouncer.call('c'), debouncer.call('d')]).toStrictEqual([
+    expect([
+      debouncer.call('c'),
+      debouncer.call('d'),
+    ]).toStrictEqual([
       'c',
       'c',
     ]);

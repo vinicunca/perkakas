@@ -17,7 +17,9 @@ describe('data first', () => {
   });
 
   it('1 element', () => {
-    expect(chunk(['x'], 3)).toStrictEqual([['x']]);
+    expect(chunk(['x'], 3)).toStrictEqual([
+      ['x'],
+    ]);
   });
 
   it('empty array', () => {
@@ -60,6 +62,12 @@ describe('edge-cases', () => {
     const data = [1, 2, 3, 4, 5] as const;
     const result = chunk(data, 1);
 
-    expect(result).toStrictEqual([[1], [2], [3], [4], [5]]);
+    expect(result).toStrictEqual([
+      [1],
+      [2],
+      [3],
+      [4],
+      [5],
+    ]);
   });
 });

@@ -45,7 +45,9 @@ it('omit everything', () => {
 
 it('omit unbounded', () => {
   expectTypeOf(
-    omit({} as Record<string, string>, [$typed<string>()]),
+    omit({} as Record<string, string>, [
+      $typed<string>(),
+    ]),
   ).toEqualTypeOf<Record<string, string>>();
 });
 
@@ -74,7 +76,9 @@ it('readonly data becomes writable', () => {
 
 it('keys with union type', () => {
   expectTypeOf(
-    omit({ a: 1, b: 2, c: 3 }, [$typed<'a' | 'b'>()]),
+    omit({ a: 1, b: 2, c: 3 }, [
+      $typed<'a' | 'b'>(),
+    ]),
   ).toEqualTypeOf<{
     a?: number;
     b?: number;

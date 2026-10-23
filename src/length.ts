@@ -32,5 +32,7 @@ export function length(...args: ReadonlyArray<unknown>): unknown {
 }
 
 function lengthImplementation<T>(items: Enumerable<T>): number {
-  return 'length' in items ? items.length : [...items].length;
+  return 'length' in items
+    ? items.length
+    : [...items].length;
 }

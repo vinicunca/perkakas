@@ -106,16 +106,40 @@ describe('objects', () => {
   });
 
   it('equal objects (same sub-properties)', () => {
-    expect(isDeepEqual({ a: [{ b: 'c' }] }, { a: [{ b: 'c' }] })).toBe(true);
+    expect(isDeepEqual({
+      a: [
+        { b: 'c' },
+      ],
+    }, {
+      a: [
+        { b: 'c' },
+      ],
+    })).toBe(true);
   });
 
   it('not equal objects (different sub-property value)', () => {
-    expect(isDeepEqual({ a: [{ b: 'c' }] }, { a: [{ b: 'd' }] })).toBe(false);
+    expect(isDeepEqual({
+      a: [
+        { b: 'c' },
+      ],
+    }, {
+      a: [
+        { b: 'd' },
+      ],
+    })).toBe(false);
   });
 
   it('not equal objects (different sub-property)', () => {
     expect(
-      isDeepEqual({ a: [{ b: 'c' }] } as unknown, { a: [{ c: 'c' }] }),
+      isDeepEqual({
+        a: [
+          { b: 'c' },
+        ],
+      } as unknown, {
+        a: [
+          { c: 'c' },
+        ],
+      }),
     ).toBe(false);
   });
 
@@ -169,15 +193,29 @@ describe('sets', () => {
 
   it('two sets of with the same primitive content should equal', () => {
     expect(
-      isDeepEqual(new Set([{ a: 1 }, { b: 3 }]), new Set([{ b: 3 }, { a: 1 }])),
+      isDeepEqual(new Set([
+        { a: 1 },
+        { b: 3 },
+      ]), new Set([
+        { b: 3 },
+        { a: 1 },
+      ])),
     ).toBe(true);
   });
 
   it('two sets with duplicated non primitive content should not be equal', () => {
     expect(
       isDeepEqual(
-        new Set([{ a: 1 }, { b: 3 }, { a: 1 }]),
-        new Set([{ b: 3 }, { a: 1 }, { b: 3 }]),
+        new Set([
+          { a: 1 },
+          { b: 3 },
+          { a: 1 },
+        ]),
+        new Set([
+          { b: 3 },
+          { a: 1 },
+          { b: 3 },
+        ]),
       ),
     ).toBe(false);
   });
@@ -185,8 +223,22 @@ describe('sets', () => {
   it('two sets of Maps with the same values should be equal', () => {
     expect(
       isDeepEqual(
-        new Set([new Map([['a', 123]]), new Map([['b', 456]])]),
-        new Set([new Map([['b', 456]]), new Map([['a', 123]])]),
+        new Set([
+          new Map([
+            ['a', 123],
+          ]),
+          new Map([
+            ['b', 456],
+          ]),
+        ]),
+        new Set([
+          new Map([
+            ['b', 456],
+          ]),
+          new Map([
+            ['a', 123],
+          ]),
+        ]),
       ),
     ).toBe(true);
   });
@@ -194,8 +246,18 @@ describe('sets', () => {
   it('two sets with more than two items that are all equal should be equal', () => {
     expect(
       isDeepEqual(
-        new Set([{ a: 1 }, { b: 3 }, { c: 4 }, { a: 1 }]),
-        new Set([{ b: 3 }, { c: 4 }, { a: 1 }, { a: 1 }]),
+        new Set([
+          { a: 1 },
+          { b: 3 },
+          { c: 4 },
+          { a: 1 },
+        ]),
+        new Set([
+          { b: 3 },
+          { c: 4 },
+          { a: 1 },
+          { a: 1 },
+        ]),
       ),
     ).toBe(true);
   });
@@ -220,13 +282,25 @@ describe('arrays', () => {
 
   it('equal arrays of objects', () => {
     expect(
-      isDeepEqual([{ a: 'a' }, { b: 'b' }], [{ a: 'a' }, { b: 'b' }]),
+      isDeepEqual([
+        { a: 'a' },
+        { b: 'b' },
+      ], [
+        { a: 'a' },
+        { b: 'b' },
+      ]),
     ).toBe(true);
   });
 
   it('not equal arrays of objects', () => {
     expect(
-      isDeepEqual([{ a: 'a' }, { b: 'b' }], [{ a: 'a' }, { b: 'c' }]),
+      isDeepEqual([
+        { a: 'a' },
+        { b: 'b' },
+      ], [
+        { a: 'a' },
+        { b: 'c' },
+      ]),
     ).toBe(false);
   });
 
@@ -237,7 +311,11 @@ describe('arrays', () => {
 
 describe('maps', () => {
   it('works on shallow equal maps', () => {
-    expect(isDeepEqual(new Map([['a', 1]]), new Map([['a', 1]]))).toBe(true);
+    expect(isDeepEqual(new Map([
+      ['a', 1],
+    ]), new Map([
+      ['a', 1],
+    ]))).toBe(true);
   });
 
   it('two empty Maps should be equal', () => {
@@ -245,7 +323,9 @@ describe('maps', () => {
   });
 
   it('two Maps with different size should not be equal', () => {
-    expect(isDeepEqual(new Map(), new Map([['a', 1]]))).toBe(false);
+    expect(isDeepEqual(new Map(), new Map([
+      ['a', 1],
+    ]))).toBe(false);
   });
 
   it('two Maps with different keys shoud not be equal', () => {
@@ -284,14 +364,44 @@ describe('maps', () => {
     expect(
       isDeepEqual(
         new Map([
-          ['a', { a: [1, 2, 3] }],
-          ['b', { a: [3] }],
-          ['c', { b: [4] }],
+          [
+            'a',
+            {
+              a: [1, 2, 3],
+            },
+          ],
+          [
+            'b',
+            {
+              a: [3],
+            },
+          ],
+          [
+            'c',
+            {
+              b: [4],
+            },
+          ],
         ]),
         new Map([
-          ['a', { a: [1, 2, 3] }],
-          ['b', { a: [3] }],
-          ['c', { b: [4] }],
+          [
+            'a',
+            {
+              a: [1, 2, 3],
+            },
+          ],
+          [
+            'b',
+            {
+              a: [3],
+            },
+          ],
+          [
+            'c',
+            {
+              b: [4],
+            },
+          ],
         ]),
       ),
     ).toBe(true);
@@ -377,7 +487,13 @@ describe('sample objects', () => {
             subProp1: 'sub value1',
             subProp2: {
               subSubProp1: 'sub sub value1',
-              subSubProp2: [1, 2, { prop2: 1, prop: 2 }, 4, 5],
+              subSubProp2: [
+                1,
+                2,
+                { prop2: 1, prop: 2 },
+                4,
+                5,
+              ],
             },
           },
           prop5: 1000,
@@ -392,7 +508,13 @@ describe('sample objects', () => {
           prop4: {
             subProp2: {
               subSubProp1: 'sub sub value1',
-              subSubProp2: [1, 2, { prop2: 1, prop: 2 }, 4, 5],
+              subSubProp2: [
+                1,
+                2,
+                { prop2: 1, prop: 2 },
+                4,
+                5,
+              ],
             },
             subProp1: 'sub value1',
           },
@@ -434,7 +556,9 @@ describe('null-prototype objects', () => {
       nested: withNullPrototype({ a: 1 }),
     });
 
-    expect(isDeepEqual(nullProtoObject, { nested: { a: 1 } })).toBe(true);
+    expect(isDeepEqual(nullProtoObject, {
+      nested: { a: 1 },
+    })).toBe(true);
   });
 
   it('compare property values against plain objects', () => {

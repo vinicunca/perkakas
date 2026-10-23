@@ -48,5 +48,7 @@ export function dropLast(...args: ReadonlyArray<unknown>): unknown {
 }
 
 function dropLastImplementation<T extends IterableContainer>(array: T, n: number): Array<T[number]> {
-  return n > 0 ? array.slice(0, Math.max(0, array.length - n)) : [...array];
+  return n > 0
+    ? array.slice(0, Math.max(0, array.length - n))
+    : [...array];
 }

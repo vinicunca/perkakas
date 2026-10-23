@@ -14,13 +14,17 @@ interface InterfaceWithIndexSignature {
 
 describe('data-last', () => {
   it('inferred directly', () => {
-    expectTypeOf(sortBy([{ a: 1 }] as const, prop('a'))).toEqualTypeOf<
+    expectTypeOf(sortBy([
+      { a: 1 },
+    ] as const, prop('a'))).toEqualTypeOf<
       [{ readonly a: 1 }]
     >();
   });
 
   it('inferred indirectly', () => {
-    expectTypeOf(pipe([{ a: 1 }] as const, sortBy(prop('a')))).toEqualTypeOf<
+    expectTypeOf(pipe([
+      { a: 1 },
+    ] as const, sortBy(prop('a')))).toEqualTypeOf<
       [{ readonly a: 1 }]
     >();
   });
@@ -117,7 +121,10 @@ describe('as a factory function', () => {
   it('indirect usage as a callback', () => {
     const propA = prop('a');
 
-    expectTypeOf(map([{ a: 1 }, { a: 2 }] as const, propA)).toEqualTypeOf<
+    expectTypeOf(map([
+      { a: 1 },
+      { a: 2 },
+    ] as const, propA)).toEqualTypeOf<
       [1 | 2, 1 | 2]
     >();
   });
@@ -213,7 +220,11 @@ describe('deep prop', () => {
   });
 
   it('multi-dimensional arrays', () => {
-    const data = [[[[]]]] as Array<Array<Array<Array<'cat'>>>>;
+    const data = [
+      [
+        [[]],
+      ],
+    ] as Array<Array<Array<Array<'cat'>>>>;
 
     expectTypeOf(prop(data, 10)).toExtend<Array<Array<Array<'cat'>>> | undefined>();
     expectTypeOf(prop(data, 10, 20)).toExtend<Array<Array<'cat'>> | undefined>();
@@ -222,7 +233,11 @@ describe('deep prop', () => {
   });
 
   it('element aware deep props', () => {
-    const data = [{ a: 1 }, { b: 2 }, { c: 3 }] as const;
+    const data = [
+      { a: 1 },
+      { b: 2 },
+      { c: 3 },
+    ] as const;
 
     expectTypeOf(prop(data, 0)).toEqualTypeOf<{ readonly a: 1 }>();
     expectTypeOf(prop(data, 1)).toEqualTypeOf<{ readonly b: 2 }>();

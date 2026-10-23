@@ -1,5 +1,3 @@
-/* eslint-disable ts/no-unused-vars -- We just want to build types, we don't care about using the params... */
-
 import { describe, expectTypeOf, it } from 'vitest';
 import { doNothing } from './do-nothing';
 import { funnel } from './funnel';
@@ -16,8 +14,7 @@ describe('\'call\' method args', () => {
 
   it('non-optional args', () => {
     const foo = funnel(doNothing(), {
-      // @ts-expect-error [ts(6133)] -- We want to use explicit names, not prefixed with _
-      reducer: (_: 'test' | undefined, a: string, b: number, c: boolean) =>
+      reducer: (_: 'test' | undefined, _a: string, _b: number, _c: boolean) =>
         'test' as const,
 
       triggerAt: 'start',
@@ -30,8 +27,7 @@ describe('\'call\' method args', () => {
 
   it('optional args', () => {
     const foo = funnel(doNothing(), {
-      // @ts-expect-error [ts(6133)] -- We want to use explicit names, not prefixed with _
-      reducer: (_: 'test' | undefined, a?: string) => 'test' as const,
+      reducer: (_: 'test' | undefined, _a?: string) => 'test' as const,
       triggerAt: 'start',
     });
 
@@ -41,8 +37,7 @@ describe('\'call\' method args', () => {
   it('rest args', () => {
     const foo = funnel(doNothing(), {
       reducer:
-      // @ts-expect-error [ts(6133)] -- We want to use explicit names, not prefixed with _
-        (_: 'test' | undefined, ...as: Array<string>) => 'test' as const,
+        (_: 'test' | undefined, ..._as: Array<string>) => 'test' as const,
 
       triggerAt: 'start',
     });
@@ -107,13 +102,11 @@ describe('prevent bad options', () => {
   it('minGapMs cannot be the only option with timing: end', () => {
     funnel(
       doNothing(),
-      // @ts-expect-error [ts(2345)] -- minGapMs cannot be set alone]
       { minGapMs: 100 },
     );
 
     funnel(
       doNothing(),
-      // @ts-expect-error [ts(2345)] -- minGapMs cannot be set alone]
       { triggerAt: 'end', minGapMs: 100 },
     );
 
