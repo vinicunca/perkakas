@@ -1,4 +1,4 @@
-import type { IsNumericLiteral } from 'type-fest';
+import type { IsInteger } from 'type-fest';
 import type { LazyResult, LazySlot } from './internal/lazy-control';
 import type { IterableContainer } from './internal/types/iterable-container';
 import type { LazyEvaluator } from './internal/types/lazy-evaluator';
@@ -65,11 +65,12 @@ type FlatSimpleArrayItems<
  *
  * @param data - The items to flatten.
  * @param depth - The depth level specifying how deep a nested array structure
- * should be flattened. Defaults to 1. Non literal values (those typed as
- * `number`cannot be used. `Infinity`, `Number.POSITIVE_INFINITY` and
- * `Number.MAX_VALUE` are all typed as `number` and can't be used either. For
- * "unlimited" depth use a literal value that would exceed your expected
- * practical maximum nesting level.
+ * should be flattened. Defaults to 1. Only integer literals can be used:
+ * fractions (`0.5`) and values typed as `number` can't. `Infinity`,
+ * `Number.POSITIVE_INFINITY` and `Number.MAX_VALUE` are all typed as `number`
+ * and can't be used either. For "unlimited" depth use a literal value that
+ * would exceed your expected practical maximum nesting level (for TypeScript
+ * type checking efficiency the number should still be _small_, e.g., 10).
  * @signature
  *   flat(data)
  *   flat(data, depth)
@@ -82,7 +83,7 @@ type FlatSimpleArrayItems<
  */
 export function flat<T extends IterableContainer, Depth extends number = 1>(
   data: T,
-  depth?: IsNumericLiteral<Depth> extends true ? Depth : never,
+  depth?: IsInteger<Depth> extends true ? Depth : never,
 ): FlatArray<T, Depth>;
 
 /**
@@ -91,7 +92,12 @@ export function flat<T extends IterableContainer, Depth extends number = 1>(
  * `Array.prototype.flat` method.
  *
  * @param depth - The depth level specifying how deep a nested array structure
- * should be flattened. Defaults to 1.
+ * should be flattened. Defaults to 1. Only integer literals can be used:
+ * fractions (`0.5`) and values typed as `number` can't. `Infinity`,
+ * `Number.POSITIVE_INFINITY` and `Number.MAX_VALUE` are all typed as `number`
+ * and can't be used either. For "unlimited" depth use a literal value that
+ * would exceed your expected practical maximum nesting level (for TypeScript
+ * type checking efficiency the number should still be _small_, e.g., 10).
  * @signature
  *   flat()(data)
  *   flat(depth)(data)
@@ -103,7 +109,7 @@ export function flat<T extends IterableContainer, Depth extends number = 1>(
  * @category Array
  */
 export function flat<Depth extends number = 1>(
-  depth?: IsNumericLiteral<Depth> extends true ? Depth : never,
+  depth?: IsInteger<Depth> extends true ? Depth : never,
 ): <T extends IterableContainer>(data: T) => FlatArray<T, Depth>;
 
 export function flat(
@@ -131,13 +137,15 @@ function lazyImplementation(depth?: number): LazyEvaluator {
   if (depth === undefined || depth === 1) {
     return lazyShallow;
   }
-  if (depth <= 0) {
-    return (value) => value;
+
+  if (depth >= 1) {
+    return (value, _index, _data, slot) =>
+      Array.isArray(value)
+        ? manyLazyValues(value.flat(depth - 1), slot)
+        : value;
   }
-  return (value, _index, _data, slot) =>
-    Array.isArray(value)
-      ? manyLazyValues(value.flat(depth - 1), slot)
-      : value;
+
+  return (value) => value;
 }
 
 // Pulled out to module scope because, unlike the deeper-than-one branch, it

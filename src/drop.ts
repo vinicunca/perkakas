@@ -148,13 +148,13 @@ function dropImplementation<T extends IterableContainer>(array: T, n: number): A
 }
 
 function lazyImplementation<T>(n: number): LazyEvaluator<T> {
-  if (n <= 0) {
+  if (Number.isNaN(n) || n < 1) {
     return (value) => value;
   }
 
   let left = n;
   return (value) => {
-    if (left > 0) {
+    if (left >= 1) {
       left -= 1;
       return SKIP_ITEM;
     }
