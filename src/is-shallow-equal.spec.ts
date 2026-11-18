@@ -91,13 +91,21 @@ describe('objects', () => {
 
   it('maps with different keys holding undefined', () => {
     expect(
-      isShallowEqual(new Map([['a', undefined]]), new Map([['b', undefined]])),
+      isShallowEqual(new Map([
+        ['a', undefined],
+      ]), new Map([
+        ['b', undefined],
+      ])),
     ).toBe(false);
   });
 
   it('maps with the same key holding undefined', () => {
     expect(
-      isShallowEqual(new Map([['a', undefined]]), new Map([['a', undefined]])),
+      isShallowEqual(new Map([
+        ['a', undefined],
+      ]), new Map([
+        ['a', undefined],
+      ])),
     ).toBe(true);
   });
 

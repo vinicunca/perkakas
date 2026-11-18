@@ -78,17 +78,65 @@ describe('data first', () => {
 
   it('sort objects correctly', () => {
     expect(
-      sortBy(DATA, prop('weight'), prop('color')).map(prop('weight')),
-    ).toStrictEqual([1, 1, 2, 3]);
+      sortBy(DATA, prop('active'), prop('weight')).map(prop('color')),
+    ).toStrictEqual(['green', 'blue', 'purple', 'red']);
   });
 
   it('sort objects correctly mixing sort pair and sort projection', () => {
     expect(
       sortBy(DATA, prop('weight'), [
         prop('color'),
-        'asc',
-      ]).map(prop('weight')),
-    ).toStrictEqual([1, 1, 2, 3]);
+        'desc',
+      ]).map(prop('color')),
+    ).toStrictEqual(['purple', 'green', 'red', 'blue']);
+  });
+
+  it('breaks ties with a third rule', () => {
+    expect(
+      sortBy(
+        [
+          { a: 1, b: 1, c: 1 },
+          { a: 1, b: 1, c: 2 },
+          { a: 0, b: 5, c: 0 },
+        ],
+        prop('a'),
+        prop('b'),
+        [
+          prop('c'),
+          'desc',
+        ],
+      ).map(prop('c')),
+    ).toStrictEqual([0, 2, 1]);
+  });
+
+  it('equal dates fall through to the next rule', () => {
+    expect(
+      sortBy(
+        [
+          {
+            date: new Date(1),
+            id: 2,
+          },
+          {
+            date: new Date(1),
+            id: 1,
+          },
+          {
+            date: new Date(1),
+            id: 3,
+          },
+        ],
+        prop('date'),
+        prop('id'),
+      ).map(prop('id')),
+    ).toStrictEqual([1, 2, 3]);
+  });
+
+  it('an array of functions is data', () => {
+    const foo = (x: number): number => x;
+    const bar = (x: number): number => x;
+
+    expect(sortBy([foo, bar], (fn) => fn.name)).toStrictEqual([bar, foo]);
   });
 
   it('sort objects descending correctly', () => {
@@ -142,8 +190,25 @@ describe('data last', () => {
 
   it('sort objects correctly', () => {
     expect(
-      pipe(DATA, sortBy(prop('weight'), prop('color')), map(prop('color'))),
-    ).toStrictEqual(['green', 'purple', 'red', 'blue']);
+      pipe(DATA, sortBy(prop('active'), prop('weight')), map(prop('color'))),
+    ).toStrictEqual(['green', 'blue', 'purple', 'red']);
+  });
+
+  it('breaks ties with a third rule', () => {
+    expect(
+      pipe(
+        [
+          { a: 1, b: 1, c: 1 },
+          { a: 1, b: 1, c: 2 },
+          { a: 0, b: 5, c: 0 },
+        ],
+        sortBy(prop('a'), prop('b'), [
+          prop('c'),
+          'desc',
+        ]),
+        map(prop('c')),
+      ),
+    ).toStrictEqual([0, 2, 1]);
   });
 
   it('sort objects correctly by weight asc then color desc', () => {

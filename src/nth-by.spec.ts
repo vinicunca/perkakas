@@ -131,4 +131,11 @@ describe('runtime (dataLast)', () => {
       ),
     ).toBe('bbbb');
   });
+
+  it('a desc order rule', () => {
+    expect(pipe([2, 1, 3], nthBy(0, [
+      identity(),
+      'desc',
+    ]))).toBe(3);
+  });
 });

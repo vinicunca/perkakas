@@ -85,6 +85,22 @@ describe('runtime (dataLast)', () => {
       ], rankBy({ a: 2 }, prop('a'))),
     ).toBe(1);
   });
+
+  it('a desc order rule', () => {
+    expect(
+      pipe(
+        [
+          { a: 5 },
+          { a: 1 },
+          { a: 3 },
+        ],
+        rankBy({ a: 2 }, [
+          prop('a'),
+          'desc',
+        ]),
+      ),
+    ).toBe(2);
+  });
 });
 
 describe('known issues!', () => {
