@@ -1,5 +1,9 @@
 import type { IterableContainer } from './internal/types/iterable-container';
-import { curry } from './curry';
+import type { LazyCallback } from './internal/types/lazy-callback';
+import type { LazyEvaluator } from './internal/types/lazy-evaluator';
+import { curryWithLazy } from './internal/curry-with-lazy';
+import { SKIP_ITEM } from './internal/lazy-control';
+import { requireDataByArity } from './internal/require-data';
 
 /**
  * Removes elements from the beginning of the array until the predicate returns false.
@@ -13,6 +17,7 @@ import { curry } from './curry';
  * @example
  *    dropWhile([1, 2, 10, 3, 4], x => x < 10) // => [10, 3, 4]
  * @dataFirst
+ * @lazy
  * @category Array
  */
 export function dropWhile<T extends IterableContainer>(
@@ -31,24 +36,39 @@ export function dropWhile<T extends IterableContainer>(
  * @example
  *    pipe([1, 2, 10, 3, 4], dropWhile(x => x < 10))  // => [10, 3, 4]
  * @dataLast
+ * @lazy
  * @category Array
  */
 export function dropWhile<T extends IterableContainer>(
-  predicate: (item: T[number], index: number, data: T) => boolean,
+  predicate: LazyCallback<T, boolean>,
 ): (data: T) => Array<T[number]>;
 
 export function dropWhile(...args: ReadonlyArray<unknown>): unknown {
-  return curry(dropWhileImplementation, args);
+  return curryWithLazy(dropWhileImplementation, args, lazyImplementation);
 }
 
-function dropWhileImplementation<T extends IterableContainer>(
-  data: T,
-  predicate: (item: T[number], index: number, data: T) => boolean,
-): Array<T[number]> {
+function dropWhileImplementation<T>(
+  data: ReadonlyArray<T>,
+  predicate: (item: T, index: number, data: ReadonlyArray<T>) => boolean,
+): Array<T> {
   for (const [index, item] of data.entries()) {
     if (!predicate(item, index, data)) {
       return data.slice(index);
     }
   }
   return [];
+}
+
+function lazyImplementation<T>(
+  predicate: (item: T, index: number, data: ReadonlyArray<T>) => boolean,
+): LazyEvaluator<T> {
+  let isDropping = true;
+  return requireDataByArity(predicate, (item, index, data) => {
+    if (isDropping && predicate(item, index, data)) {
+      return SKIP_ITEM;
+    }
+
+    isDropping = false;
+    return item;
+  });
 }
