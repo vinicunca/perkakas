@@ -1,5 +1,6 @@
 import { fc, test } from '@fast-check/vitest';
 import { expect } from 'vitest';
+import { forceFusion } from '../test/force-fusion';
 import { pipe } from './pipe';
 import { uniqueBy } from './unique-by';
 
@@ -26,7 +27,7 @@ test.prop([
       keyOf(value, index);
 
     const dataFirst = uniqueBy(data, keyFunction);
-    const dataLast = pipe(data, uniqueBy(keyFunction));
+    const dataLast = pipe(data, forceFusion(), uniqueBy(keyFunction));
 
     // By identity: deep equality can't tell the two objects apart.
     expect(dataFirst).toHaveLength(dataLast.length);

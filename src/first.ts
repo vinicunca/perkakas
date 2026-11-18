@@ -1,12 +1,12 @@
-import type { LazyResult, LazySlot } from './internal/lazy-control';
+import type { StoppableLazyEvaluator } from './internal/make-stoppable';
 import type { First } from './internal/types/first';
 import type { IterableContainer } from './internal/types/iterable-container';
 import { curryWithLazy } from './internal/curry-with-lazy';
+import { makeReducing } from './internal/make-reducing';
 import {
   lastLazyValue,
-
-} from './internal/lazy-control';
-import { toSingle } from './internal/to-single';
+  makeStoppable,
+} from './internal/make-stoppable';
 
 /**
  * Gets the first element of `array`.
@@ -52,8 +52,8 @@ function firstImplementation<T>([item]: ReadonlyArray<T>): T | undefined {
   return item;
 }
 
-const lazyImplementation = toSingle(() => emitAndStop);
+// eslint-disable-next-line ts/no-use-before-define -- `emitAndStop` is only read when the evaluator is built, after the module has loaded.
+const lazyImplementation = makeReducing(makeStoppable(() => emitAndStop));
 
-function emitAndStop<T>(value: T, _index: number, _data: ReadonlyArray<T>, slot: LazySlot): LazyResult<T> {
-  return lastLazyValue(value, slot);
-}
+const emitAndStop: StoppableLazyEvaluator = (value, _index, _data, slot) =>
+  lastLazyValue(value, slot);

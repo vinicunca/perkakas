@@ -1,12 +1,11 @@
-import type { LazyResult } from './internal/lazy-control';
+import type { StoppableLazyEvaluator } from './internal/make-stoppable';
 import type { IterableContainer } from './internal/types/iterable-container';
-import type { LazyEvaluator } from './internal/types/lazy-evaluator';
 import { curryWithLazy } from './internal/curry-with-lazy';
 import {
   lastLazyValue,
-  lazyEmptyEvaluator,
-
-} from './internal/lazy-control';
+  LAZY_EMPTY_EVALUATOR,
+  makeStoppable,
+} from './internal/make-stoppable';
 
 type Zipped<Left extends IterableContainer, Right extends IterableContainer>
   // If the array is empty the output is empty, no surprises
@@ -67,6 +66,7 @@ export function zip<S extends IterableContainer>(
 ): <F extends IterableContainer>(first: F) => Zipped<F, S>;
 
 export function zip(...args: ReadonlyArray<unknown>): unknown {
+  // eslint-disable-next-line ts/no-use-before-define -- implementations follow the overloaded signatures
   return curryWithLazy(zipImplementation, args, lazyImplementation);
 }
 
@@ -79,18 +79,16 @@ function zipImplementation<
     : second.map((item, index) => [first[index], item])) as Zipped<F, S>;
 }
 
-function lazyImplementation<
-  F extends IterableContainer,
-  S extends IterableContainer,
->(second: S): LazyEvaluator<F[number], [F[number], S[number]]> {
-  return second.length === 0
-    ? lazyEmptyEvaluator
-    : (value, index, _data, slot): LazyResult<[F[number], S[number]]> => {
-        const pair = [value, second[index]];
-        return index >= second.length - 1
-          ? // @ts-expect-error [ts2322] -- TypeScript widens fixed tuple literals as arrays of a union of all their items. For us this means it considers pair to be `unknown[]`, but we know better...
-            lastLazyValue(pair, slot)
-          : // @ts-expect-error [ts2322] -- TypeScript widens fixed tuple literals as arrays of a union of all their items. For us this means it considers pair to be `unknown[]`, but we know better...
-          pair;
-      };
-}
+const lazyImplementation = makeStoppable(
+  <F extends IterableContainer, S extends IterableContainer>(
+    second: S,
+  ): StoppableLazyEvaluator<F[number], [F[number], S[number]]> =>
+    second.length === 0
+      ? LAZY_EMPTY_EVALUATOR
+      : (value, index, _data, slot) => {
+          const pair: [F[number], S[number]] = [value, second[index]];
+          return index >= second.length - 1
+            ? lastLazyValue(pair, slot)
+            : pair;
+        },
+);

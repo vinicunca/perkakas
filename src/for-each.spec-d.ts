@@ -26,11 +26,11 @@ it('maintains the array shape', () => {
   });
 });
 
-it('makes the result mutable', () => {
+it('keeps the input readonly, as the result can be the input itself', () => {
   const data = [] as ReadonlyArray<number>;
 
   pipe(data, forEach(doNothing()), (x) => {
-    expectTypeOf(x).toEqualTypeOf<Array<number>>();
+    expectTypeOf(x).toEqualTypeOf<ReadonlyArray<number>>();
   });
 });
 

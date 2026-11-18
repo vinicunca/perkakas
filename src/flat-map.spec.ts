@@ -1,5 +1,6 @@
 import type { LazyCallback } from './internal/types/lazy-callback';
 import { describe, expect, it, vi } from 'vitest';
+import { forceFusion } from '../test/force-fusion';
 import { createLazyInvocationCounter } from '../test/lazy-invocation-counter';
 import { add } from './add';
 import { find } from './find';
@@ -57,11 +58,19 @@ describe('dataLast', () => {
       expect(result).toBe(22);
     });
 
+    it('works with non array outputs', () => {
+      expect(pipe([1, 2, 3], forceFusion(), flatMap(add(1)))).toStrictEqual([
+        2,
+        3,
+        4,
+      ]);
+    });
+
     it('provides the items processed so far to the callback', () => {
       const mapper = vi.fn<LazyCallback<Array<unknown>, unknown>>(
         (_value, _index, data) => [...data],
       );
-      pipe([1, 2, 3], flatMap(mapper));
+      pipe([1, 2, 3], forceFusion(), flatMap(mapper));
 
       expect(mapper).toHaveNthReturnedWith(1, [1]);
       expect(mapper).toHaveNthReturnedWith(2, [1, 2]);
@@ -72,7 +81,7 @@ describe('dataLast', () => {
       const callback = vi.fn<
         (value: number, index: number, data: ReadonlyArray<number>) => Array<number>
       >((value, index) => [value + index]);
-      pipe([1, 2, 3], flatMap(callback));
+      pipe([1, 2, 3], forceFusion(), flatMap(callback));
 
       expect(() => callback.mock.calls[0]?.[2]?.at(0)).toThrow(/^Perkakas: /u);
     });

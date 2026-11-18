@@ -1,4 +1,9 @@
 import type { DataFirst, UnaryFunction } from './data-last-implementation';
+import type { ReducingMetadata } from './make-reducing';
+import type {
+  StoppableLazyEvaluator,
+  StoppableMetadata,
+} from './make-stoppable';
 import type { IterableContainer } from './types/iterable-container';
 import type { LazyEvaluator } from './types/lazy-evaluator';
 import type { SimplifiedWritable } from './types/simplified-writable';
@@ -14,16 +19,26 @@ export type LazyUnaryFunction<
   R = unknown,
 > = UnaryFunction<T, R> & LazyDefinition<T, P>;
 
-export interface LazyDefinition<
+export type LazyEvaluatorFactory<
+  T extends IterableContainer,
+  P extends ReadonlyArray<unknown>,
+>
+  // `pipe` reads both marks off any lazy implementation, so neither is
+  // required in general; a factory whose evaluators can stop must carry the
+  // `makeStoppable` mark.
+  = Partial<ReducingMetadata & StoppableMetadata>
+    & (
+      | ((...args: P) => LazyEvaluator<T[number], unknown>)
+      | (((...args: P) => StoppableLazyEvaluator<T[number], unknown>)
+        & StoppableMetadata)
+    );
+
+interface LazyDefinition<
   T extends IterableContainer,
   P extends ReadonlyArray<unknown>,
 > {
-  readonly lazy: ((...args: P) => LazyEvaluator<T[number], unknown>) & LazyMeta;
+  readonly lazy: LazyEvaluatorFactory<T, P>;
   readonly lazyArgs: P;
-}
-
-interface LazyMeta {
-  readonly single?: true;
 }
 
 // Allows us to build the lazy definition dynamically at runtime.
@@ -46,7 +61,7 @@ export function lazyDataLastImplementation<
 >(
   dataFirst: DataFirst<T, P, R>,
   args: P,
-  lazy: LazyDefinition<T, P>['lazy'],
+  lazy: LazyEvaluatorFactory<T, P>,
 ): LazyUnaryFunction<T, P, R> {
   const dataLast = dataLastImplementation(dataFirst, args);
 

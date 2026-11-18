@@ -1,3 +1,4 @@
+import type { StoppableLazyEvaluator } from './internal/make-stoppable';
 import type { Assignability } from './internal/types/assignability';
 import type { First } from './internal/types/first';
 import type { IterableContainer } from './internal/types/iterable-container';
@@ -5,13 +6,16 @@ import type {
   LazyCallback,
   LazyTypePredicate,
 } from './internal/types/lazy-callback';
-import type { LazyEvaluator } from './internal/types/lazy-evaluator';
 import type { Narrowed } from './internal/types/narrowed';
 import type { TupleParts } from './internal/types/tuple-parts';
 import { curryWithLazy } from './internal/curry-with-lazy';
-import { lastLazyValue, SKIP_ITEM } from './internal/lazy-control';
+import { SKIP_ITEM } from './internal/lazy-control';
+import { makeReducing } from './internal/make-reducing';
+import {
+  lastLazyValue,
+  makeStoppable,
+} from './internal/make-stoppable';
 import { requireDataByArity } from './internal/require-data';
-import { toSingle } from './internal/to-single';
 
 type Found<T extends IterableContainer, Condition>
   // We distribute the array type to support unions of arrays/tuples.
@@ -165,12 +169,14 @@ function findImplementation<T, S extends T>(data: ReadonlyArray<T>, predicate: (
   return data.find(predicate);
 }
 
-const lazyImplementation = toSingle(
-  <T, S extends T>(
-    predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S,
-  ): LazyEvaluator<T, S> =>
-    requireDataByArity(predicate, (value, index, data, slot) =>
-      predicate(value, index, data)
-        ? lastLazyValue(value, slot)
-        : SKIP_ITEM),
+const lazyImplementation = makeReducing(
+  makeStoppable(
+    <T, S extends T>(
+      predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S,
+    ): StoppableLazyEvaluator<T, S> =>
+      requireDataByArity(predicate, (value, index, data, slot) =>
+        predicate(value, index, data)
+          ? lastLazyValue(value, slot)
+          : SKIP_ITEM),
+  ),
 );

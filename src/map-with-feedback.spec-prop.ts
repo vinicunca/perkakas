@@ -1,5 +1,6 @@
 import { fc, test } from '@fast-check/vitest';
 import { expect } from 'vitest';
+import { forceFusion } from '../test/force-fusion';
 import { mapWithFeedback } from './map-with-feedback';
 import { pipe } from './pipe';
 
@@ -22,7 +23,7 @@ test.prop([
     ): number => reducerOf(previousValue, currentValue, index);
 
     expect(mapWithFeedback(data, reducer, initialValue)).toStrictEqual(
-      pipe(data, mapWithFeedback(reducer, initialValue)),
+      pipe(data, forceFusion(), mapWithFeedback(reducer, initialValue)),
     );
   },
 );

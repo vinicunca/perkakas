@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
+import { filter } from './filter';
 import { pipe } from './pipe';
 import { splice } from './splice';
+import { take } from './take';
 
 describe('typical cases', (): void => {
   it('removing a element', (): void => {
@@ -210,6 +212,75 @@ describe('overflow indices', () => {
       });
     });
   });
+
+  describe('start > data.length', () => {
+    it('without replacement', () => {
+      expect(splice([1, 2], 5, 1, [])).toStrictEqual([1, 2]);
+    });
+
+    it('with replacement', () => {
+      expect(splice([1, 2], 5, 1, [3])).toStrictEqual([1, 2, 3]);
+    });
+  });
+});
+
+describe('coerced indices', () => {
+  it('fractional start and deleteCount truncate', () => {
+    expect(splice([1, 2, 3, 4], 1.7, 1.9)).toStrictEqual([1, 3, 4]);
+  });
+
+  it('a fractional negative start truncates toward zero', () => {
+    expect(splice([1, 2, 3], -1.5, 1)).toStrictEqual([1, 2]);
+  });
+
+  it('a start between -1 and 0 counts as 0', () => {
+    expect(splice([1, 2, 3], -0.5, 1)).toStrictEqual([2, 3]);
+  });
+
+  it('a -0 start counts as 0', () => {
+    expect(splice([1, 2, 3], -0, 1)).toStrictEqual([2, 3]);
+  });
+
+  it('a NaN start counts as 0', () => {
+    expect(splice([1, 2, 3], NaN, 1)).toStrictEqual([2, 3]);
+  });
+
+  it('a NaN deleteCount counts as 0', () => {
+    expect(splice([1, 2, 3], 1, NaN, [9])).toStrictEqual([1, 9, 2, 3]);
+  });
+
+  it('an infinite start appends the replacement', () => {
+    expect(splice([1, 2], Infinity, 0, [3])).toStrictEqual([1, 2, 3]);
+  });
+
+  it('a -Infinity start counts as 0', () => {
+    expect(splice([1, 2], -Infinity, 1, [3])).toStrictEqual([3, 2]);
+  });
+
+  it('a negative start past the beginning counts as 0', () => {
+    expect(splice([1, 2], -5, 1, [3])).toStrictEqual([3, 2]);
+  });
+
+  it('an infinite deleteCount deletes the rest', () => {
+    expect(splice([1, 2, 3], 1, Infinity, [9])).toStrictEqual([1, 9]);
+  });
+});
+
+describe('items', () => {
+  it('reads holes as undefined', () => {
+    expect(
+      splice(
+        // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
+        [1, , 3],
+        0,
+        1,
+      ),
+    ).toStrictEqual([undefined, 3]);
+  });
+
+  it('keeps NaN and -0', () => {
+    expect(splice([NaN, -0, 1], 2, 1)).toStrictEqual([NaN, -0]);
+  });
 });
 
 it('a purried data-last implementation', () => {
@@ -235,5 +306,105 @@ describe('replacement defaults to an empty array', () => {
     expect(pipe([1, 2, 3, 4, 5], splice(1, 2))).toStrictEqual(
       pipe([1, 2, 3, 4, 5], splice(1, 2, [])),
     );
+  });
+});
+
+describe('in a pipe', () => {
+  it('returns a new array', () => {
+    const data = [1, 2, 3];
+
+    expect(pipe(data, splice(0, 0, []))).not.toBe(data);
+  });
+
+  it('an empty array gives the replacement', () => {
+    const data: Array<number> = [];
+
+    expect(pipe(data, splice(0, 0, [1]))).toStrictEqual([1]);
+  });
+
+  it('an empty array gives the replacement for any start', () => {
+    const data: Array<number> = [];
+
+    expect(pipe(data, splice(3, 2, [1]))).toStrictEqual([1]);
+  });
+
+  it('inserts before the item at start when nothing is deleted', () => {
+    expect(pipe([1, 2, 3], splice(1, 0, [9]))).toStrictEqual([1, 9, 2, 3]);
+  });
+
+  it('a start at the end appends the replacement', () => {
+    expect(pipe([1, 2], splice(2, 0, [3]))).toStrictEqual([1, 2, 3]);
+  });
+
+  it('a start past the end appends the replacement', () => {
+    expect(pipe([1, 2], splice(5, 1, [3]))).toStrictEqual([1, 2, 3]);
+  });
+
+  it('deletes up to the end', () => {
+    expect(pipe([1, 2, 3], splice(1, 5, [9]))).toStrictEqual([1, 9]);
+  });
+
+  it('fractional start and deleteCount truncate', () => {
+    expect(pipe([1, 2, 3, 4], splice(1.7, 1.9))).toStrictEqual([1, 3, 4]);
+  });
+
+  it('a -0 start counts as 0', () => {
+    expect(pipe([1, 2, 3], splice(-0, 1))).toStrictEqual([2, 3]);
+  });
+
+  it('a start between -1 and 0 counts as 0', () => {
+    expect(pipe([1, 2, 3], splice(-0.5, 1))).toStrictEqual([2, 3]);
+  });
+
+  it('a NaN start counts as 0', () => {
+    expect(pipe([1, 2, 3], splice(NaN, 1))).toStrictEqual([2, 3]);
+  });
+
+  it('a NaN deleteCount counts as 0', () => {
+    expect(pipe([1, 2, 3], splice(1, NaN, [9]))).toStrictEqual([1, 9, 2, 3]);
+  });
+
+  it('a negative deleteCount counts as 0', () => {
+    expect(pipe([1, 2, 3], splice(1, -1, [9]))).toStrictEqual([1, 9, 2, 3]);
+  });
+
+  it('an infinite start appends the replacement', () => {
+    expect(pipe([1, 2], splice(Infinity, 0, [3]))).toStrictEqual([1, 2, 3]);
+  });
+
+  it('an infinite deleteCount deletes the rest', () => {
+    expect(pipe([1, 2, 3], splice(1, Infinity, [9]))).toStrictEqual([1, 9]);
+  });
+
+  it('reads holes as undefined', () => {
+    expect(
+      pipe(
+        // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
+        [1, , 3],
+        splice(0, 1),
+      ),
+    ).toStrictEqual([undefined, 3]);
+  });
+
+  it('counts positions among the items that reach it', () => {
+    expect(
+      pipe(
+        [1, 2, 3, 4, 5],
+        filter((x) => x % 2 === 1),
+        splice(1, 1),
+      ),
+    ).toStrictEqual([1, 5]);
+  });
+
+  it('before a stopper that ends inside the replacement', () => {
+    expect(pipe([1, 2, 3], splice(1, 1, [7, 8]), take(2))).toStrictEqual([
+      1, 7,
+    ]);
+  });
+
+  it('before a stopper that ends inside an appended replacement', () => {
+    expect(pipe([1, 2, 3], splice(5, 0, [7, 8]), take(4))).toStrictEqual([
+      1, 2, 3, 7,
+    ]);
   });
 });

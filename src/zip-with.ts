@@ -1,8 +1,12 @@
 import type { IterableContainer } from './internal/types/iterable-container';
-import type { LazyEvaluator } from './internal/types/lazy-evaluator';
+import type { StoppableLazyEvaluator } from './internal/make-stoppable';
 import type { NonEmptyPrefix } from './internal/types/non-empty-prefix';
-import { lastLazyValue, lazyEmptyEvaluator } from './internal/lazy-control';
 import { lazyDataLastImplementation } from './internal/lazy-data-last-implementation';
+import {
+  lastLazyValue,
+  LAZY_EMPTY_EVALUATOR,
+  makeStoppable,
+} from './internal/make-stoppable';
 import { requireDataByArity } from './internal/require-data';
 
 type ZippingFunction<
@@ -106,6 +110,7 @@ export function zipWith(
         // @ts-expect-error [ts2322] -- Outside a pipe the data-last function hands the implementation the full first list, which is a valid non-empty prefix whenever `fn` is invoked (it never is for an empty list); TypeScript can't relate `T1` to `NonEmptyPrefix<T1>`.
         arg1,
       ],
+      // eslint-disable-next-line ts/no-use-before-define -- implementations follow the overloaded signatures
       lazyImplementation,
     );
   }
@@ -128,17 +133,21 @@ function zipWithImplementation<
     : second.map((item, index) => fn(first[index], item, index, datum));
 }
 
-function lazyImplementation<T1, T2 extends IterableContainer, Value>(second: T2, fn: ZippingFunction<ReadonlyArray<T1>, T2, Value>): LazyEvaluator<T1, Value> {
-  return second.length === 0
-    ? lazyEmptyEvaluator
-    : requireDataByArity(
-        fn,
-        (value, index, data, slot) => {
-          const zipped = fn(value, second[index], index, [data, second]);
-          return index >= second.length - 1
-            ? lastLazyValue(zipped, slot)
-            : zipped;
-        },
-        { dataParameterIndex: 3 },
-      );
-}
+const lazyImplementation = makeStoppable(
+  <T1, T2 extends IterableContainer, Value>(
+    second: T2,
+    fn: ZippingFunction<ReadonlyArray<T1>, T2, Value>,
+  ): StoppableLazyEvaluator<T1, Value> =>
+    second.length === 0
+      ? LAZY_EMPTY_EVALUATOR
+      : requireDataByArity(
+          fn,
+          (value, index, data, slot) => {
+            const zipped = fn(value, second[index], index, [data, second]);
+            return index >= second.length - 1
+              ? lastLazyValue(zipped, slot)
+              : zipped;
+          },
+          { dataParameterIndex: 3 },
+        ),
+);

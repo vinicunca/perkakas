@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { forceFusion } from '../test/force-fusion';
 import { constant } from './constant';
 import { isDefined } from './is-defined';
 import { isNot } from './is-not';
@@ -132,6 +133,7 @@ describe('dataLast', () => {
     expect(
       pipe(
         [3, 1, 4, 1, 5],
+        forceFusion(),
         map(
           when(
             // In a lazy step `data` is the items processed so far, so this

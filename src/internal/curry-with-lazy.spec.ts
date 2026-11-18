@@ -1,9 +1,8 @@
-import type { LazyDefinition } from './lazy-data-last-implementation';
+import type { LazyUnaryFunction } from './lazy-data-last-implementation';
 import { describe, expect, it } from 'vitest';
 import { curryWithLazy } from './curry-with-lazy';
 
-type Curried = ((...args: ReadonlyArray<unknown>) => unknown)
-  & LazyDefinition<ReadonlyArray<unknown>, never>;
+type Curried = ((...args: ReadonlyArray<unknown>) => unknown) & LazyUnaryFunction;
 
 describe('data-first (delegated)', () => {
   it('exact number of arguments', () => {

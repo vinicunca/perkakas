@@ -61,10 +61,14 @@ describe('piping', () => {
   });
 
   it('returns empty array on empty other array', () => {
-    expect(pipe([1, 2, 3], intersection([]))).toStrictEqual([]);
+    expect(pipe([1, 2, 3], map(identity()), intersection([]))).toStrictEqual(
+      [],
+    );
   });
 
   it('maintains multi-set semantics (returns as many copies as available)', () => {
-    expect(pipe([1, 1, 1, 1, 1], intersection([1, 1]))).toStrictEqual([1, 1]);
+    expect(
+      pipe([1, 1, 1, 1, 1], map(identity()), intersection([1, 1])),
+    ).toStrictEqual([1, 1]);
   });
 });

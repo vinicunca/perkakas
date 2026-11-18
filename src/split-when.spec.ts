@@ -1,4 +1,6 @@
-import { expect, it } from 'vitest';
+import { expect, it, vi } from 'vitest';
+import { constant } from './constant';
+import { pipe } from './pipe';
 import { splitWhen } from './split-when';
 
 it('should split array', () => {
@@ -14,5 +16,101 @@ it('should with no matches', () => {
   expect(splitWhen([1, 2, 3, 1, 2, 3], (x) => x === n)).toStrictEqual([
     [1, 2, 3, 1, 2, 3],
     [],
+  ]);
+});
+
+it('empty array', () => {
+  expect(splitWhen([], constant(true))).toStrictEqual([[], []]);
+});
+
+it('single item that matches', () => {
+  expect(splitWhen([1], constant(true))).toStrictEqual([[], [1]]);
+});
+
+it('single item that doesn\'t match', () => {
+  expect(splitWhen([1], constant(false))).toStrictEqual([[1], []]);
+});
+
+it('calls the predicate in order with the whole input, up to the first match', () => {
+  const data = ['a', 'b', 'c', 'd'];
+  const predicate = vi.fn<
+    (item: string, index: number, data: ReadonlyArray<string>) => boolean
+  >((item) => item === 'b');
+
+  splitWhen(data, predicate);
+
+  expect(predicate.mock.calls).toStrictEqual([
+    ['a', 0, data],
+    ['b', 1, data],
+  ]);
+});
+
+it('calls the predicate once per item when nothing matches', () => {
+  const data = ['a', 'b', 'c'];
+  const predicate = vi.fn<
+    (item: string, index: number, data: ReadonlyArray<string>) => boolean
+  >(constant(false));
+
+  splitWhen(data, predicate);
+
+  expect(predicate.mock.calls).toStrictEqual([
+    ['a', 0, data],
+    ['b', 1, data],
+    ['c', 2, data],
+  ]);
+});
+
+it('holes are tested as undefined', () => {
+  expect(
+    splitWhen(
+      // eslint-disable-next-line no-sparse-arrays -- The hole is the input under test.
+      [1, , 3],
+      (item) => item === undefined,
+    ),
+  ).toStrictEqual([
+    [1],
+    // eslint-disable-next-line no-sparse-arrays -- The hole is the expected output.
+    [, 3],
+  ]);
+});
+
+it('holes are kept when an item matches', () => {
+  expect(
+    splitWhen(
+      // eslint-disable-next-line no-sparse-arrays -- The holes are the input under test.
+      [1, , 3, , 5],
+      (item) => item === 3,
+    ),
+  ).toStrictEqual([
+    // eslint-disable-next-line no-sparse-arrays -- The hole is the expected output.
+    [1, ,],
+    // eslint-disable-next-line no-sparse-arrays -- The hole is the expected output.
+    [3, , 5],
+  ]);
+});
+
+it('holes become undefined when nothing matches', () => {
+  expect(
+    // eslint-disable-next-line no-sparse-arrays -- The hole is the input under test.
+    splitWhen([1, , 3], constant(false)),
+  ).toStrictEqual([[1, undefined, 3], []]);
+});
+
+it('empty array in a pipe', () => {
+  expect(pipe([], splitWhen(constant(true)))).toStrictEqual([[], []]);
+});
+
+it('holes are kept when an item matches in a pipe', () => {
+  expect(
+    pipe(
+      // eslint-disable-next-line no-sparse-arrays -- The holes are the input under test.
+      [1, , 3, , 5],
+      splitWhen((item) => item === 3),
+    ),
+  ).toStrictEqual([
+    // eslint-disable-next-line no-sparse-arrays -- The hole is the expected output.
+    [1, ,],
+    // eslint-disable-next-line no-sparse-arrays -- The hole is the expected output.
+    [3, , 5],
   ]);
 });

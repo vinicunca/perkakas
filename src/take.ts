@@ -1,7 +1,11 @@
 import type { IterableContainer } from './internal/types/iterable-container';
-import type { LazyEvaluator } from './internal/types/lazy-evaluator';
+import type { StoppableLazyEvaluator } from './internal/make-stoppable';
 import { curryWithLazy } from './internal/curry-with-lazy';
-import { lastLazyValue, lazyEmptyEvaluator } from './internal/lazy-control';
+import {
+  lastLazyValue,
+  LAZY_EMPTY_EVALUATOR,
+  makeStoppable,
+} from './internal/make-stoppable';
 
 /**
  * Returns the first `n` elements of `array`.
@@ -48,6 +52,7 @@ export function take(
 ): <T extends IterableContainer>(array: T) => Array<T[number]>;
 
 export function take(...args: ReadonlyArray<unknown>): unknown {
+  // eslint-disable-next-line ts/no-use-before-define -- implementations follow the overloaded signatures
   return curryWithLazy(takeImplementation, args, lazyImplementation);
 }
 
@@ -57,16 +62,18 @@ function takeImplementation<T extends IterableContainer>(array: T, n: number): A
     : array.slice(0, n);
 }
 
-function lazyImplementation<T>(n: number): LazyEvaluator<T> {
-  if (Number.isNaN(n) || n < 1) {
-    return lazyEmptyEvaluator;
-  }
+const lazyImplementation = makeStoppable(
+  <T>(n: number): StoppableLazyEvaluator<T> => {
+    if (Number.isNaN(n) || n < 1) {
+      return LAZY_EMPTY_EVALUATOR;
+    }
 
-  let remaining = n;
-  return (value, _index, _data, slot) => {
-    remaining -= 1;
-    return remaining < 1
-      ? lastLazyValue(value, slot)
-      : value;
-  };
-}
+    let remaining = n;
+    return (value, _index, _data, slot) => {
+      remaining -= 1;
+      return remaining < 1
+        ? lastLazyValue(value, slot)
+        : value;
+    };
+  },
+);

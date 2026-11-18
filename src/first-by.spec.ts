@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { firstBy } from './first-by';
 import { identity } from './identity';
 import { pipe } from './pipe';
@@ -90,6 +90,57 @@ describe('runtime (dataFirst)', () => {
         new Date(2),
       ], identity()),
     ).toStrictEqual(new Date(1));
+  });
+
+  it('doesn\'t project an empty array', () => {
+    const projection = vi.fn<(value: number) => number>(identity());
+
+    firstBy([], projection);
+
+    expect(projection).not.toHaveBeenCalled();
+  });
+
+  it('doesn\'t project a single item', () => {
+    const projection = vi.fn<(value: number) => number>(identity());
+
+    firstBy([1], projection);
+
+    expect(projection).not.toHaveBeenCalled();
+  });
+
+  it('projects each later item, then the current first', () => {
+    const projection = vi.fn<(value: number) => number>(identity());
+
+    firstBy([3, 1, 2], projection);
+
+    expect(projection.mock.calls).toStrictEqual([
+      [1],
+      [3],
+      [2],
+      [1],
+    ]);
+  });
+
+  it('keeps the earlier of tied items', () => {
+    const earlier = { id: 0 };
+
+    expect(firstBy([
+      earlier,
+      { id: 0 },
+    ], ({ id }) => id)).toBe(earlier);
+  });
+
+  it('keeps -0 ahead of a tied 0', () => {
+    expect(firstBy([-0, 0], identity())).toBe(-0);
+  });
+
+  it('a NaN projection ties with every item', () => {
+    expect(firstBy([NaN, 1], identity())).toBeNaN();
+  });
+
+  it('reads holes as undefined', () => {
+    // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
+    expect(firstBy([1, , 0], (value) => value ?? -1)).toBeUndefined();
   });
 });
 

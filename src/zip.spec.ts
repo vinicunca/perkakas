@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { filter } from './filter';
 import { first } from './first';
+import { identity } from './identity';
 import { map } from './map';
 import { pipe } from './pipe';
 import { zip } from './zip';
@@ -56,6 +57,10 @@ describe('dataLast', () => {
     expect(pipe([1, 2], zip([]))).toStrictEqual([]);
   });
 
+  it('lazily returns empty when second is empty', () => {
+    expect(pipe([1, 2], map(identity()), zip([]))).toStrictEqual([]);
+  });
+
   it('should return empty when first is empty', () => {
     expect(pipe([], zip(['a', 'b']))).toStrictEqual([]);
   });
@@ -65,6 +70,13 @@ describe('dataLast', () => {
     pipe([1, 2, 3], map(mockFn), zip([4, 5, 6]), first());
 
     expect(mockFn).toHaveBeenCalledTimes(1);
+  });
+
+  it('stops the upstream steps once second is exhausted', () => {
+    const mapper = vi.fn<(x: number) => number>(identity());
+    pipe([1, 2, 3, 4, 5], map(mapper), zip(['a', 'b']));
+
+    expect(mapper).toHaveBeenCalledTimes(2);
   });
 
   it('pairs by the step\'s own count after an upstream filter', () => {

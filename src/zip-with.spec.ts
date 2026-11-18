@@ -1,5 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
+import { forceFusion } from '../test/force-fusion';
 import { filter } from './filter';
+import { identity } from './identity';
+import { map } from './map';
 import { pipe } from './pipe';
 import { zipWith } from './zip-with';
 
@@ -87,6 +90,15 @@ describe('data second with initial arg', () => {
     expect(mockFn).toHaveBeenCalledTimes(0);
   });
 
+  it('lazily returns empty when second is empty', () => {
+    const mockFn = vi.fn<(a: string, b: string) => string>();
+
+    expect(
+      pipe(['1', '2'], map(identity()), zipWith([], mockFn)),
+    ).toStrictEqual([]);
+    expect(mockFn).toHaveBeenCalledTimes(0);
+  });
+
   it('provides the first items processed so far', () => {
     const other = ['a', 'b', 'c'];
     const zipper = vi.fn<
@@ -97,7 +109,7 @@ describe('data second with initial arg', () => {
         data: readonly [ReadonlyArray<unknown>, ReadonlyArray<unknown>],
       ) => unknown
     >((_first, _second, _index, data) => structuredClone(data));
-    pipe([1, 2, 3], zipWith(other, zipper));
+    pipe([1, 2, 3], forceFusion(), zipWith(other, zipper));
 
     expect(zipper).toHaveNthReturnedWith(1, [
       [1],
@@ -122,7 +134,7 @@ describe('data second with initial arg', () => {
         data: readonly [ReadonlyArray<number>, ReadonlyArray<string>],
       ) => string
     >((first, second, index) => `${first}${second}${index}`);
-    pipe([1, 2, 3], zipWith(['a', 'b', 'c'], zipper));
+    pipe([1, 2, 3], forceFusion(), zipWith(['a', 'b', 'c'], zipper));
 
     expect(() => zipper.mock.calls[0]?.[3]?.[0]?.at(0)).toThrow(/^Perkakas: /u);
   });

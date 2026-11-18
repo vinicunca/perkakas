@@ -1,5 +1,6 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { add } from './add';
+import { constant } from './constant';
 import { fromKeys } from './from-keys';
 import { pipe } from './pipe';
 
@@ -44,6 +45,71 @@ it('works with a mix of key types', () => {
     123: 'number',
     [symbol]: 'symbol',
   });
+});
+
+it('prototype is Object.prototype', () => {
+  expect(Object.getPrototypeOf(fromKeys(['a'], constant(1)))).toBe(
+    Object.prototype,
+  );
+});
+
+it('`__proto__` key replaces the prototype with an object value', () => {
+  const value = { a: 1 };
+
+  expect(Object.getPrototypeOf(fromKeys(['__proto__'], constant(value)))).toBe(
+    value,
+  );
+});
+
+it('`__proto__` key isn\'t an own property', () => {
+  expect(
+    Reflect.ownKeys(fromKeys(['__proto__'], constant({ a: 1 }))),
+  ).toStrictEqual([]);
+});
+
+it('`__proto__` key with a primitive value is ignored', () => {
+  expect(fromKeys(['__proto__'], constant(1))).toStrictEqual({});
+});
+
+it('number keys share the property of their string form', () => {
+  expect(fromKeys([1, '1'], (item) => typeof item)).toStrictEqual({
+    1: 'string',
+  });
+});
+
+it('key order', () => {
+  const symbol = Symbol('a');
+
+  expect(
+    Reflect.ownKeys(fromKeys(['b', '10', symbol, 'a', '2', 'b'], constant(1))),
+  ).toStrictEqual(['2', '10', 'b', 'a', symbol]);
+});
+
+it('holes are keyed as undefined', () => {
+  // A sparse literal would type its hole as `undefined`, which isn't a key.
+  const keys = ['a'];
+  keys[2] = 'c';
+
+  expect(fromKeys(keys, (_, index) => index)).toStrictEqual({
+    a: 0,
+    undefined: 1,
+    c: 2,
+  });
+});
+
+it('calls the mapper once per key, in order, with the whole input', () => {
+  const data = ['a', 'b', 'c'];
+  const mapper = vi.fn<
+    (item: string, index: number, data: ReadonlyArray<string>) => number
+  >(constant(1));
+
+  fromKeys(data, mapper);
+
+  expect(mapper.mock.calls).toStrictEqual([
+    ['a', 0, data],
+    ['b', 1, data],
+    ['c', 2, data],
+  ]);
 });
 
 describe('dataLast', () => {
@@ -116,5 +182,11 @@ describe('dataLast', () => {
       123: 'number',
       [symbol]: 'symbol',
     });
+  });
+
+  it('prototype is Object.prototype', () => {
+    expect(Object.getPrototypeOf(pipe(['a'], fromKeys(constant(1))))).toBe(
+      Object.prototype,
+    );
   });
 });

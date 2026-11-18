@@ -1,30 +1,24 @@
-/* eslint-disable sonarjs/no-all-duplicated-branches */
-/* eslint-disable sonarjs/no-duplicated-branches */
 import type { LazySlot } from './lazy-control';
-import type { LazyDefinition } from './lazy-data-last-implementation';
-import {
-  createLazySlot,
-  LAST,
-
-  MANY,
-  SKIP_ITEM,
-  STOP,
-} from './lazy-control';
+import type { LazyEvaluatorFactory } from './lazy-data-last-implementation';
+import { createLazySlot, MANY, SKIP_ITEM } from './lazy-control';
+import { LAST, STOP } from './make-stoppable';
 import { UNEXPECTED_ACCESS_SENTINEL } from './unexpected-access-sentinel';
 
 /**
- * Runs an iterable through a single lazy step, skipping the step objects and
- * the fan-out recursion that the general path in `pipe` needs.
+ * Runs a lazy function on an iterable that isn't an array, standing in for its
+ * data-first implementation, which only accepts arrays. With a single step
+ * there is nothing to fuse, so it skips the step objects and the fan-out
+ * recursion of a fused run in `pipe`.
  *
  * @param input - The data to run through the step.
  * @param lazy - The lazy implementation the step's evaluator is built from.
  * @param lazyArgs - The arguments the evaluator is built with.
  * @see pipe
  */
-export function processSingleLazyStep<P extends ReadonlyArray<unknown>>(
+export function iterableDataFirst<P extends ReadonlyArray<unknown>>(
   input: Iterable<unknown>,
-  lazy: LazyDefinition<ReadonlyArray<unknown>, P>['lazy'],
-  lazyArgs: LazyDefinition<ReadonlyArray<unknown>, P>['lazyArgs'],
+  lazy: LazyEvaluatorFactory<ReadonlyArray<unknown>, P>,
+  lazyArgs: P,
 ): unknown {
   const lazyEvaluator = lazy(...lazyArgs);
 
@@ -39,39 +33,21 @@ export function processSingleLazyStep<P extends ReadonlyArray<unknown>>(
   const accumulator: Array<unknown> = [];
   let index = 0;
 
-  if (Array.isArray(input)) {
-    // Iterated rather than indexed, so a reactive array that instruments
-    // iteration tracks one dependency instead of one per index.
-    for (const value of input) {
-      dataBuffer?.push(value);
+  for (const value of input) {
+    dataBuffer?.push(value);
 
-      const isDone = collect(
-        lazyEvaluator(value, index, items, slot),
-        accumulator,
-        slot,
-      );
-      index += 1;
-      if (isDone) {
-        break;
-      }
-    }
-  } else {
-    for (const value of input) {
-      dataBuffer?.push(value);
-
-      const isDone = collect(
-        lazyEvaluator(value, index, items, slot),
-        accumulator,
-        slot,
-      );
-      index += 1;
-      if (isDone) {
-        break;
-      }
+    const isDone = collect(
+      lazyEvaluator(value, index, items, slot),
+      accumulator,
+      slot,
+    );
+    index += 1;
+    if (isDone) {
+      break;
     }
   }
 
-  return lazy.single ? accumulator[0] : accumulator;
+  return lazy.isReducing ? accumulator[0] : accumulator;
 }
 
 /**

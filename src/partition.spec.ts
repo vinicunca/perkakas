@@ -1,4 +1,6 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
+import { constant } from './constant';
+import { isDefined } from './is-defined';
 import { isNumber } from './is-number';
 import { partition } from './partition';
 import { pipe } from './pipe';
@@ -68,6 +70,34 @@ describe('data first', () => {
       ],
     ]);
   });
+
+  it('empty array', () => {
+    expect(partition([], constant(true))).toStrictEqual([[], []]);
+  });
+
+  it('single item', () => {
+    expect(partition(['a'], constant(true))).toStrictEqual([['a'], []]);
+  });
+
+  it('holes are partitioned as undefined', () => {
+    // eslint-disable-next-line no-sparse-arrays -- The hole is the input under test.
+    expect(partition([1, , 3], isDefined)).toStrictEqual([[1, 3], [undefined]]);
+  });
+
+  it('calls the predicate once per item, in order, with the whole input', () => {
+    const data = ['a', 'b', 'c'];
+    const predicate = vi.fn<
+      (value: string, index: number, data: ReadonlyArray<string>) => boolean
+    >(constant(true));
+
+    partition(data, predicate);
+
+    expect(predicate.mock.calls).toStrictEqual([
+      ['a', 0, data],
+      ['b', 1, data],
+      ['c', 2, data],
+    ]);
+  });
 });
 
 describe('data last', () => {
@@ -115,5 +145,9 @@ describe('data last', () => {
         { a: 2, b: 1 },
       ],
     ]);
+  });
+
+  it('empty array', () => {
+    expect(pipe([], partition(constant(true)))).toStrictEqual([[], []]);
   });
 });

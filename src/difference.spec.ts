@@ -1,4 +1,5 @@
 import { expect, it, vi } from 'vitest';
+import { forceFusion } from '../test/force-fusion';
 import { difference } from './difference';
 import { identity } from './identity';
 import { map } from './map';
@@ -93,9 +94,15 @@ it('lazy', () => {
 });
 
 it('lazily removes nothing on empty other array', () => {
-  expect(pipe([1, 2, 3], difference([] as Array<number>))).toStrictEqual([1, 2, 3]);
+  expect(
+    pipe([1, 2, 3], forceFusion(), difference([] as Array<number>)),
+  ).toStrictEqual([1, 2, 3]);
 });
 
 it('lazily maintains multi-set semantics (removes only one copy)', () => {
-  expect(pipe([1, 1, 2, 2], difference([1]))).toStrictEqual([1, 2, 2]);
+  expect(pipe([1, 1, 2, 2], forceFusion(), difference([1]))).toStrictEqual([
+    1,
+    2,
+    2,
+  ]);
 });

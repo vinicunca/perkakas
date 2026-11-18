@@ -1,5 +1,5 @@
 import type { DataFirst } from './data-last-implementation';
-import type { LazyDefinition, LazyUnaryFunction } from './lazy-data-last-implementation';
+import type { LazyEvaluatorFactory, LazyUnaryFunction } from './lazy-data-last-implementation';
 import type { IterableContainer } from './types/iterable-container';
 import {
   lazyDataLastImplementation,
@@ -18,7 +18,7 @@ export function curryWithLazy<
   T extends IterableContainer,
   P extends ReadonlyArray<unknown>,
   R,
->(dataFirst: DataFirst<T, P, R>, args: ReadonlyArray<unknown>, lazy: LazyDefinition<T, P>['lazy']): R | LazyUnaryFunction<T, P, R> {
+>(dataFirst: DataFirst<T, P, R>, args: ReadonlyArray<unknown>, lazy: LazyEvaluatorFactory<T, P>): R | LazyUnaryFunction<T, P, R> {
   return args.length >= dataFirst.length
     ? dataFirst(
         // @ts-expect-error [ts2556] -- the whole point of currying is that `args` are polymorphic and can either fit the data-first pattern, like here, or the data-last pattern as below. The length check that is used to pick between them can't narrow it!

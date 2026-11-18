@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
+import { forceFusion } from '../test/force-fusion';
 import { createLazyInvocationCounter } from '../test/lazy-invocation-counter.js';
 import { find } from './find';
 import { flat } from './flat';
@@ -272,7 +273,7 @@ describe('dataLast', () => {
         ],
       ],
     ];
-    const result = pipe(data, flat(0));
+    const result = pipe(data, forceFusion(), flat(0));
 
     expect(result).toStrictEqual(data);
     expect(result).not.toBe(data);
