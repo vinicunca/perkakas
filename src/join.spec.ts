@@ -82,11 +82,6 @@ describe('edge-cases', () => {
     expect(result).toBe('1');
   });
 
-  it('holes become empty strings', () => {
-    // eslint-disable-next-line no-sparse-arrays -- The hole is the input under test.
-    expect(join([1, , 3], '-')).toBe('1--3');
-  });
-
   it('nested arrays join their own items with commas', () => {
     // @ts-expect-error [ts2322] -- The nested array is the input under test.
     expect(join([

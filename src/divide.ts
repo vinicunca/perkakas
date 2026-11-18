@@ -32,7 +32,7 @@ export function divide(divisor: bigint): (value: bigint) => bigint;
 export function divide(divisor: number): (value: number) => number;
 
 export function divide(...args: ReadonlyArray<unknown>): unknown {
-  return curry(divideImplementation, args);
+  return curry(divideImplementation, 2, args);
 }
 
 // The implementation only uses `number` types, but that's just because it's

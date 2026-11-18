@@ -32,7 +32,7 @@ export function multiply(multiplicand: bigint): (value: bigint) => bigint;
 export function multiply(multiplicand: number): (value: number) => number;
 
 export function multiply(...args: ReadonlyArray<unknown>): unknown {
-  return curry(multiplyImplementation, args);
+  return curry(multiplyImplementation, 2, args);
 }
 
 // The implementation only uses `number` types, but that's just because it's

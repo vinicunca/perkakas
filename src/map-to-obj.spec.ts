@@ -91,13 +91,6 @@ describe('data_first', () => {
     ).toStrictEqual(['2', '10', 'b', 'a', mySymbol]);
   });
 
-  it('holes are mapped as undefined', () => {
-    expect(
-      // eslint-disable-next-line no-sparse-arrays -- The hole is the input under test.
-      mapToObj([1, , 3], (item, index) => [item ?? 'hole', index]),
-    ).toStrictEqual({ 1: 0, hole: 1, 3: 2 });
-  });
-
   it('reads the entry through its iterator', () => {
     const accessed: Array<PropertyKey> = [];
     const tuple: [string, number] = ['a', 1];

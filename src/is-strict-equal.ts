@@ -71,7 +71,7 @@ export function isStrictEqual<T, S extends T>(
 export function isStrictEqual<T>(other: T): (data: T) => boolean;
 
 export function isStrictEqual(...args: ReadonlyArray<unknown>): unknown {
-  return curry(isStrictlyEqualImplementation, args);
+  return curry(isStrictlyEqualImplementation, 2, args);
 }
 
 function isStrictlyEqualImplementation<T>(data: unknown, other: T): data is T {

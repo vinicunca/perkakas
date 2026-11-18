@@ -1,22 +1,6 @@
 import type { StoppableLazyEvaluator } from './make-stoppable';
 import type { StrictFunction } from './types/strict-function';
 
-// Most callbacks have the input `data` as their 3rd parameter, as in the
-// standard library's array iteration methods (`map`, `filter`, `find`, ...).
-const DEFAULT_DATA_PARAMETER_INDEX = 2;
-
-interface RequireDataByArityOptions {
-  /**
-   * Callbacks with an extra parameter before the index have `data` one
-   * position later: an accumulator (`mapWithFeedback`) or the second input's
-   * item (`zipWith`).
-   *
-   * @see zipWith
-   * @default 2
-   */
-  readonly dataParameterIndex?: number;
-}
-
 /**
  * Marks an evaluator that always needs `data`, because it reads it itself or
  * forwards it to a callback known to read it, so `pipe` must always buffer.
@@ -47,18 +31,24 @@ export function requireData<
 
 /**
  * Marks an evaluator as needing `data` only when the user's `callback` is
- * likely to read it, based on its signature. It marks `evaluator` the way
- * `requireData` does, by mutating it, so callers must pass a freshly created
- * closure, never a module-level evaluator such as `LAZY_EMPTY_EVALUATOR`.
+ * likely to read it, based on its signature.
  *
+ * @param callback - The user's callback, whose signature decides whether
+ * `data` is needed.
+ * @param dataParameterIndex - Which positional argument in the callback takes
+ * the accumulated `data` array. For most functions that would be *2* (after
+ * the `item` argument in position 0, and the `index` argument in position 1).
+ * @param evaluator - The evaluator to mark. It is marked the way `requireData`
+ * does, by mutating it, so callers must pass a freshly created closure, never a
+ * module-level evaluator such as `LAZY_EMPTY_EVALUATOR`.
+ * @returns `evaluator` itself, marked as needing `data` when `callback` is
+ * likely to read it.
  * @see canReadData
  * @see requireData
  */
 export function requireDataByArity<
   Evaluator extends StoppableLazyEvaluator<never, unknown>,
->(callback: StrictFunction, evaluator: NoInfer<Evaluator>, {
-  dataParameterIndex = DEFAULT_DATA_PARAMETER_INDEX,
-}: RequireDataByArityOptions = {}): Evaluator {
+>(callback: StrictFunction, dataParameterIndex: number, evaluator: NoInfer<Evaluator>): Evaluator {
   return canReadData(callback, dataParameterIndex)
     ? requireData(evaluator)
     : evaluator;
@@ -72,7 +62,15 @@ export function requireDataByArity<
  * pseudo-array `UNEXPECTED_ACCESS_SENTINEL` which throws on almost any kind of
  * usage to signal as soon as possible that something went wrong.
  */
-export function canReadData({ length }: StrictFunction, dataParameterIndex = DEFAULT_DATA_PARAMETER_INDEX): boolean {
+export function canReadData({ length }: StrictFunction, dataParameterIndex: number): boolean {
+  // `Function.length` counts only the plain parameters before the first rest
+  // (e.g., 2 for `foo(a, b, ...c)`), or defaulted one (e.g., 1 for
+  // `foo(a, b = 0)`); which means it is 0 both for callbacks that take no
+  // parameters (e.g., `foo()`) which obviously won't read `data`, but *also*
+  // in many cases which handle functions generically via a rest parameter
+  // (e.g., `foo(...args)`) or that use `arguments` (e.g., `memoize`,
+  // `debounce`) which *might* need data. To err on the safe side we consider
+  // these cases as requiring data.
   return length === 0
   // For all other functions we assume that if the function *itself* declares a
   // parameter at the data parameter index, then it most likely wants to handle

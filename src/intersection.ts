@@ -49,7 +49,7 @@ export function intersection<S>(
 
 export function intersection(...args: ReadonlyArray<unknown>): unknown {
   // eslint-disable-next-line ts/no-use-before-define -- implementations follow the overloaded signatures
-  return curryWithLazy(intersectionImplementation, args, lazyImplementation);
+  return curryWithLazy(intersectionImplementation, 2, lazyImplementation, args);
 }
 
 function intersectionImplementation<T, S>(

@@ -33,8 +33,12 @@ describe('arrays', () => {
   });
 
   it('sparse', () => {
-    // eslint-disable-next-line no-sparse-arrays
-    expect(isEmptyish([, ,])).toBe(false);
+    expect(
+      isEmptyish(
+        // eslint-disable-next-line no-sparse-arrays -- Intentional!
+        [, ,],
+      ),
+    ).toBe(false);
   });
 
   it('via Array.from', () => {

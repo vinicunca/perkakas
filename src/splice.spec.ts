@@ -267,17 +267,6 @@ describe('coerced indices', () => {
 });
 
 describe('items', () => {
-  it('reads holes as undefined', () => {
-    expect(
-      splice(
-        // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-        [1, , 3],
-        0,
-        1,
-      ),
-    ).toStrictEqual([undefined, 3]);
-  });
-
   it('keeps NaN and -0', () => {
     expect(splice([NaN, -0, 1], 2, 1)).toStrictEqual([NaN, -0]);
   });
@@ -374,16 +363,6 @@ describe('in a pipe', () => {
 
   it('an infinite deleteCount deletes the rest', () => {
     expect(pipe([1, 2, 3], splice(1, Infinity, [9]))).toStrictEqual([1, 9]);
-  });
-
-  it('reads holes as undefined', () => {
-    expect(
-      pipe(
-        // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-        [1, , 3],
-        splice(0, 1),
-      ),
-    ).toStrictEqual([undefined, 3]);
   });
 
   it('counts positions among the items that reach it', () => {

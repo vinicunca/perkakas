@@ -41,7 +41,7 @@ export function meanBy<T>(
 ): number;
 
 export function meanBy(...args: ReadonlyArray<unknown>): unknown {
-  return curry(meanByImplementation, args);
+  return curry(meanByImplementation, 2, args);
 }
 
 function meanByImplementation<T>(array: ReadonlyArray<T>, fn: (value: T, index: number, data: ReadonlyArray<T>) => number): number {
@@ -51,8 +51,10 @@ function meanByImplementation<T>(array: ReadonlyArray<T>, fn: (value: T, index: 
 
   let sum = 0;
 
-  for (const [index, item] of array.entries()) {
+  let index = 0;
+  for (const item of array) {
     sum += fn(item, index, array);
+    index += 1;
   }
 
   return sum / array.length;

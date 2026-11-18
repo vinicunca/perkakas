@@ -49,7 +49,7 @@ export function dropLast(
 
 export function dropLast(...args: ReadonlyArray<unknown>): unknown {
   // eslint-disable-next-line ts/no-use-before-define -- implementations follow the overloaded signatures
-  return curryWithLazy(dropLastImplementation, args, lazyImplementation);
+  return curryWithLazy(dropLastImplementation, 2, lazyImplementation, args);
 }
 
 function dropLastImplementation<T extends IterableContainer>(array: T, n: number): Array<T[number]> {
@@ -59,7 +59,7 @@ function dropLastImplementation<T extends IterableContainer>(array: T, n: number
         // Rounded up because we can't drop an item partially!
         -Math.ceil(n),
       )
-    : [...array];
+    : array.concat();
 }
 
 function lazyImplementation<T>(n: number): LazyEvaluator<T> {

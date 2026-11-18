@@ -77,5 +77,5 @@ export function sortedIndexWith<T>(
 ): (data: ReadonlyArray<T>) => number;
 
 export function sortedIndexWith(...args: ReadonlyArray<unknown>): unknown {
-  return curry(binarySearchCutoffIndex, args);
+  return curry(binarySearchCutoffIndex, 2, args);
 }

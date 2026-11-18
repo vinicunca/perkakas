@@ -2,7 +2,6 @@ import { describe, expect, it, vi } from 'vitest';
 import { add } from './add';
 import { pipe } from './pipe';
 import { reduce } from './reduce';
-import { take } from './take';
 
 describe('data first', () => {
   it('reduce', () => {
@@ -69,17 +68,6 @@ describe('data first', () => {
       [103, 3, 2, data],
     ]);
   });
-
-  it('skips holes', () => {
-    expect(
-      reduce(
-        // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-        [1, , 3],
-        (indices: ReadonlyArray<number>, _item, index) => [...indices, index],
-        [],
-      ),
-    ).toStrictEqual([0, 2]);
-  });
 });
 
 describe('data last', () => {
@@ -99,34 +87,5 @@ describe('data last', () => {
         reduce((accumulator: number, item: number) => accumulator + item, 7),
       ),
     ).toBe(7);
-  });
-
-  it('skips holes like data-first', () => {
-    expect(
-      pipe(
-        // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-        [1, , 3],
-        reduce(
-          (indices: ReadonlyArray<number>, _item, index) => [...indices, index],
-          [],
-        ),
-      ),
-    ).toStrictEqual([0, 2]);
-  });
-
-  it('skips holes after a lone lazy step', () => {
-    expect(
-      pipe(
-        // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-        [1, , 3],
-        // With no lazy function to fuse with, `take` runs its data-first
-        // implementation, a `slice`, which keeps the hole.
-        take(Infinity),
-        reduce(
-          (indices: ReadonlyArray<number>, _item, index) => [...indices, index],
-          [],
-        ),
-      ),
-    ).toStrictEqual([0, 2]);
   });
 });

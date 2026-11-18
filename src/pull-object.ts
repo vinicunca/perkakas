@@ -80,21 +80,17 @@ export function pullObject<
 ): (data: T) => BoundedPartial<Record<K, V>>;
 
 export function pullObject(...args: ReadonlyArray<unknown>): unknown {
-  return curry(pullObjectImplementation, args);
+  return curry(pullObjectImplementation, 3, args);
 }
 
-function pullObjectImplementation<
-  T extends IterableContainer,
-  K extends PropertyKey,
-  V,
->(
-  data: T,
-  keyExtractor: (item: T[number], index: number, data: T) => K,
-  valueExtractor: (item: T[number], index: number, data: T) => V,
+function pullObjectImplementation<T, K extends PropertyKey, V>(
+  data: ReadonlyArray<T>,
+  keyExtractor: (item: T, index: number, data: ReadonlyArray<T>) => K,
+  valueExtractor: (item: T, index: number, data: ReadonlyArray<T>) => V,
 ): Partial<Record<K, V>> {
   const result: Partial<Record<K, V>> = {};
 
-  for (const [index, item] of data.entries()) {
+  data.forEach((item, index) => {
     const key = keyExtractor(item, index, data);
     const value = valueExtractor(item, index, data);
     if (key === '__proto__') {
@@ -111,7 +107,7 @@ function pullObjectImplementation<
     } else {
       result[key] = value;
     }
-  }
+  });
 
   return result;
 }

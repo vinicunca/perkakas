@@ -89,7 +89,7 @@ describe('data last', () => {
     expect(result).not.toBe(data);
   });
 
-  it('in a fused run', () => {
+  it('in a fused sequence', () => {
     expect(
       pipe(
         [1, 2, 3, 4],
@@ -99,7 +99,7 @@ describe('data last', () => {
     ).toStrictEqual([3, 4]);
   });
 
-  it('every item passes in a fused run', () => {
+  it('every item passes in a fused sequence', () => {
     expect(
       pipe(
         [1, 2, 3, 4],
@@ -109,7 +109,7 @@ describe('data last', () => {
     ).toStrictEqual([]);
   });
 
-  it('empty array in a fused run', () => {
+  it('empty array in a fused sequence', () => {
     expect(
       pipe(
         [],
@@ -119,7 +119,7 @@ describe('data last', () => {
     ).toStrictEqual([]);
   });
 
-  it('first item fails in a fused run', () => {
+  it('first item fails in a fused sequence', () => {
     expect(
       pipe(
         [1, 2, 3, 4],

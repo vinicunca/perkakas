@@ -62,7 +62,7 @@ export function forEach<T extends IterableContainer>(
 ): (data: T) => T;
 
 export function forEach(...args: ReadonlyArray<unknown>): unknown {
-  return curryWithLazy(forEachImplementation, args, lazyImplementation);
+  return curryWithLazy(forEachImplementation, 2, lazyImplementation, args);
 }
 
 function forEachImplementation<T>(
@@ -74,7 +74,7 @@ function forEachImplementation<T>(
 }
 
 function lazyImplementation<T>(callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => void): LazyEvaluator<T> {
-  return requireDataByArity(callbackfn, (value, index, data) => {
+  return requireDataByArity(callbackfn, 2, (value, index, data) => {
     callbackfn(value, index, data);
     return value;
   });

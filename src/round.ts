@@ -39,5 +39,5 @@ export function round(value: number, precision: number): number;
 export function round(precision: number): (value: number) => number;
 
 export function round(...args: ReadonlyArray<unknown>): unknown {
-  return curry(withPrecision(Math.round), args);
+  return curry(withPrecision(Math.round), 2, args);
 }

@@ -38,7 +38,7 @@ export function unique<T extends IterableContainer>(data: T): Deduped<T>;
 export function unique(): <T extends IterableContainer>(data: T) => Deduped<T>;
 
 export function unique(...args: ReadonlyArray<unknown>): unknown {
-  return curryWithLazy(uniqueImplementation, args, lazyImplementation);
+  return curryWithLazy(uniqueImplementation, 1, lazyImplementation, args);
 }
 
 function uniqueImplementation<T>(data: ReadonlyArray<T>): Array<T> {

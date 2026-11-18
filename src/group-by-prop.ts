@@ -180,7 +180,7 @@ export function groupByProp<
 >(prop: Prop): (data: T) => GroupByProp<T, Prop>;
 
 export function groupByProp(...args: ReadonlyArray<unknown>): unknown {
-  return curry(groupByPropImplementation, args);
+  return curry(groupByPropImplementation, 2, args);
 }
 
 function groupByPropImplementation<
@@ -214,9 +214,11 @@ function groupByPropImplementation<
     }
   }
 
-  // Set the prototype as if we initialized our object as a normal object (e.g.
-  // `{}`). Without this none of the built-in object methods like `toString`
-  // would work on this object and it would act differently than expected.
+  // Set the prototype as if we initialized our object as a normal object
+  // (e.g., `{}`). Without this none of the built-in object methods like
+  // `toString` would work on this object and it would act differently than
+  // expected.
+  // TODO [>2]: Consider removing this line and returning the object with its null prototype, as `Object.groupBy` does. In V8 this call gives every result a hidden class of its own, which costs about 85ns per call and 55ns per read of a fresh result. It needs a major version because a null prototype breaks inherited methods (e.g., `hasOwnProperty`), string coercion, `toStrictEqual` assertions, and passing the result from a React Server Component to a Client Component, none of which are type errors.
   Object.setPrototypeOf(output, Object.prototype);
 
   // @ts-expect-error [ts2322] -- This is fine! We use a broader type for output while we build it because it more accurately represents the shape of the object *while it is being built*. TypeScript can't tell that we finished building the object so can't ensure that output matches the expected output at this point.

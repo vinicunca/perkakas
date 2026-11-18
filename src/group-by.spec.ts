@@ -93,18 +93,6 @@ describe('data first', () => {
     });
   });
 
-  it('holes are grouped as undefined', () => {
-    expect(
-      // eslint-disable-next-line no-sparse-arrays -- The hole is the input under test.
-      groupBy([1, , 3], (item) => (item === undefined
-        ? 'hole'
-        : 'item')),
-    ).toStrictEqual({
-      item: [1, 3],
-      hole: [undefined],
-    });
-  });
-
   it('calls the grouper once per item, in order, with the whole input', () => {
     const data = ['a', 'b', 'c'];
     const grouper

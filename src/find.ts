@@ -162,7 +162,7 @@ export function find<
 
 export function find(...args: ReadonlyArray<unknown>): unknown {
   // eslint-disable-next-line ts/no-use-before-define -- implementations follow the overloaded signatures
-  return curryWithLazy(findImplementation, args, lazyImplementation);
+  return curryWithLazy(findImplementation, 2, lazyImplementation, args);
 }
 
 function findImplementation<T, S extends T>(data: ReadonlyArray<T>, predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S): S | undefined {
@@ -174,7 +174,7 @@ const lazyImplementation = makeReducing(
     <T, S extends T>(
       predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S,
     ): StoppableLazyEvaluator<T, S> =>
-      requireDataByArity(predicate, (value, index, data, slot) =>
+      requireDataByArity(predicate, 2, (value, index, data, slot) =>
         predicate(value, index, data)
           ? lastLazyValue(value, slot)
           : SKIP_ITEM),

@@ -209,25 +209,25 @@ describe('runtime (dataLast)', () => {
     [5, []],
     [10, []],
     [Infinity, []],
-  ])('count %s in a fused run', (n, expected) => {
+  ])('count %s in a fused sequence', (n, expected) => {
     expect(
       pipe([1, 2, 3, 4, 5], forceFusion(), dropFirstBy(n, identity())),
     ).toStrictEqual(expected);
   });
 
-  it('works in a fused run', () => {
+  it('works in a fused sequence', () => {
     expect(
       pipe([4, 5, 1, 6, 2, 3, 7], forceFusion(), dropFirstBy(2, identity())),
     ).toStrictEqual([5, 6, 4, 3, 7]);
   });
 
-  it('handles empty arrays in a fused run', () => {
+  it('handles empty arrays in a fused sequence', () => {
     expect(pipe([], forceFusion(), dropFirstBy(1, identity()))).toStrictEqual(
       [],
     );
   });
 
-  it('works with complex compare rules in a fused run', () => {
+  it('works with complex compare rules in a fused sequence', () => {
     expect(
       pipe(
         ['a', 'aaa', 'bbbbb', 'aa', 'bb', 'bbb', 'bbbb', 'aaaa', 'b', 'aaaaa'],
@@ -245,7 +245,7 @@ describe('runtime (dataLast)', () => {
     ]);
   });
 
-  it('keeps every nullish item from the first n in a fused run', () => {
+  it('keeps every nullish item from the first n in a fused sequence', () => {
     expect(
       pipe(
         [null, null, 1, 2],
@@ -255,7 +255,7 @@ describe('runtime (dataLast)', () => {
     ).toStrictEqual([null, null]);
   });
 
-  it('breaks ties like data-first in a fused run', () => {
+  it('breaks ties like data-first in a fused sequence', () => {
     const data = [
       { id: 'a', key: 0 },
       { id: 'b', key: 0 },
@@ -295,7 +295,7 @@ describe('runtime (dataLast)', () => {
     expect(mapper).toHaveBeenCalledTimes(3);
   });
 
-  it('calls the projection like data-first in a fused run', () => {
+  it('calls the projection like data-first in a fused sequence', () => {
     const data = [4, 5, 1, 6, 2, 3, 7];
     const dataFirstProjection = vi.fn<(x: number) => number>(identity());
     dropFirstBy(data, 2, dataFirstProjection);

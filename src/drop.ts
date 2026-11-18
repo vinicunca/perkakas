@@ -138,12 +138,12 @@ export function drop<N extends number>(
 ): <T extends IterableContainer>(array: T) => Drop<T, N>;
 
 export function drop(...args: ReadonlyArray<unknown>): unknown {
-  return curryWithLazy(dropImplementation, args, lazyImplementation);
+  return curryWithLazy(dropImplementation, 2, lazyImplementation, args);
 }
 
 function dropImplementation<T extends IterableContainer>(array: T, n: number): Array<T[number]> {
   return n < 0
-    ? [...array]
+    ? array.concat()
     : array.slice(n);
 }
 

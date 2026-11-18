@@ -32,11 +32,11 @@ export function shuffle(): <T extends IterableContainer>(
 ) => ReorderedArray<T>;
 
 export function shuffle(...args: ReadonlyArray<unknown>): unknown {
-  return curry(shuffleImplementation, args);
+  return curry(shuffleImplementation, 1, args);
 }
 
 function shuffleImplementation<T>(items: ReadonlyArray<T>): Array<T> {
-  const result = [...items];
+  const result = items.concat();
   for (let index = 0; index < items.length; index++) {
     const rand = index + Math.floor(Math.random() * (items.length - index));
     const value = result[rand]!;

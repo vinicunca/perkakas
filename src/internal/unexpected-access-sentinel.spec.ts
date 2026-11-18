@@ -36,7 +36,6 @@ describe('throws', () => {
       'serialization',
       () => JSON.stringify(DATA),
     ],
-
     [
       '`concat` spreading it',
       () => [1].concat(DATA),

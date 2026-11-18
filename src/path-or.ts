@@ -173,7 +173,7 @@ export function pathOr<
 
 /** TODO [>2]: Remove this function! */
 export function pathOr(...args: ReadonlyArray<unknown>): unknown {
-  return curry(pathOrImplementation, args);
+  return curry(pathOrImplementation, 3, args);
 }
 
 function pathOrImplementation(

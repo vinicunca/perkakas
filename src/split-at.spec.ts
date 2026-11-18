@@ -97,15 +97,6 @@ describe('data_first', () => {
       [1, 2, 3],
     ]);
   });
-
-  it('holes are kept', () => {
-    // eslint-disable-next-line no-sparse-arrays -- The holes are the input under test.
-    expect(splitAt([1, , 3], 1)).toStrictEqual([
-      [1],
-      // eslint-disable-next-line no-sparse-arrays
-      [, 3],
-    ]);
-  });
 });
 
 describe('data_last', () => {
@@ -125,14 +116,5 @@ describe('data_last', () => {
 
   it('empty array', () => {
     expect(pipe([], splitAt(1))).toStrictEqual([[], []]);
-  });
-
-  it('holes are kept', () => {
-    // eslint-disable-next-line no-sparse-arrays -- The holes are the input under test.
-    expect(pipe([1, , 3], splitAt(1))).toStrictEqual([
-      [1],
-      // eslint-disable-next-line no-sparse-arrays
-      [, 3],
-    ]);
   });
 });

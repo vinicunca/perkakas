@@ -28,7 +28,7 @@ export function length<T>(items: Enumerable<T>): number;
 export function length<T>(): (items: Enumerable<T>) => number;
 
 export function length(...args: ReadonlyArray<unknown>): unknown {
-  return curry(lengthImplementation, args);
+  return curry(lengthImplementation, 1, args);
 }
 
 function lengthImplementation<T>(items: Enumerable<T>): number {

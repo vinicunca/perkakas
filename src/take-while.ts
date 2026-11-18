@@ -65,7 +65,7 @@ export function takeWhile<
 
 export function takeWhile(...args: ReadonlyArray<unknown>): unknown {
   // eslint-disable-next-line ts/no-use-before-define -- implementations follow the overloaded signatures
-  return curryWithLazy(takeWhileImplementation, args, lazyImplementation);
+  return curryWithLazy(takeWhileImplementation, 2, lazyImplementation, args);
 }
 
 function takeWhileImplementation<T>(
@@ -73,11 +73,13 @@ function takeWhileImplementation<T>(
   predicate: (item: T, index: number, data: ReadonlyArray<T>) => boolean,
 ): Array<T> {
   const ret: Array<T> = [];
-  for (const [index, item] of data.entries()) {
+  let index = 0;
+  for (const item of data) {
     if (!predicate(item, index, data)) {
       break;
     }
     ret.push(item);
+    index += 1;
   }
   return ret;
 }
@@ -86,7 +88,7 @@ const lazyImplementation = makeStoppable(
   <T>(
     predicate: (item: T, index: number, data: ReadonlyArray<T>) => boolean,
   ): StoppableLazyEvaluator<T> =>
-    requireDataByArity(predicate, (item, index, data) =>
+    requireDataByArity(predicate, 2, (item, index, data) =>
       predicate(item, index, data)
         ? item
         : STOP),

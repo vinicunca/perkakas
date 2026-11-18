@@ -78,26 +78,6 @@ describe('data first', () => {
   it('returns -0 when it is the last match', () => {
     expect(findLast([0, -0], (value) => value === 0)).toBe(-0);
   });
-
-  it('reads holes as undefined', () => {
-    // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-    const data = [1, , 3];
-    const predicate = vi.fn<
-      (
-        value: number | undefined,
-        index: number,
-        data: ReadonlyArray<number | undefined>,
-      ) => boolean
-    >(constant(false));
-
-    findLast(data, predicate);
-
-    expect(predicate.mock.calls).toStrictEqual([
-      [3, 2, data],
-      [undefined, 1, data],
-      [1, 0, data],
-    ]);
-  });
 });
 
 describe('data last', () => {

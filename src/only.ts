@@ -41,7 +41,7 @@ export function only<T extends IterableContainer>(data: T): Only<T>;
 export function only<T extends IterableContainer>(): (data: T) => Only<T>;
 
 export function only(...args: ReadonlyArray<unknown>): unknown {
-  return curry(onlyImplementation, args);
+  return curry(onlyImplementation, 1, args);
 }
 
 function onlyImplementation<T>(data: ReadonlyArray<T>): T | undefined {

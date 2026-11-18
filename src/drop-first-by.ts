@@ -93,7 +93,7 @@ function dropFirstByImplementation<T>(
   }
 
   if (n <= 0) {
-    return [...data];
+    return data.concat();
   }
 
   const heap = data.slice(0, n);
@@ -101,9 +101,8 @@ function dropFirstByImplementation<T>(
 
   const out = [];
 
-  const rest = data.slice(n);
-  for (const item of rest) {
-    out.push(heapMaybeInsert(heap, compareFn, item));
+  for (let index = heap.length; index < data.length; index += 1) {
+    out.push(heapMaybeInsert(heap, compareFn, data[index]!));
   }
 
   return out;

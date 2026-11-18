@@ -50,7 +50,7 @@ export function uncapitalize<T extends string>(data: T): Uncapitalize<T>;
 export function uncapitalize(): <T extends string>(data: T) => Uncapitalize<T>;
 
 export function uncapitalize(...args: ReadonlyArray<unknown>): unknown {
-  return curry(uncapitalizeImplementation, args);
+  return curry(uncapitalizeImplementation, 1, args);
 }
 
 function uncapitalizeImplementation<T extends string>(data: T): Uncapitalize<T> {

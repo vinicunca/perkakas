@@ -67,7 +67,7 @@ export function zip<S extends IterableContainer>(
 
 export function zip(...args: ReadonlyArray<unknown>): unknown {
   // eslint-disable-next-line ts/no-use-before-define -- implementations follow the overloaded signatures
-  return curryWithLazy(zipImplementation, args, lazyImplementation);
+  return curryWithLazy(zipImplementation, 2, lazyImplementation, args);
 }
 
 function zipImplementation<

@@ -38,7 +38,7 @@ export function dropLastWhile<T extends IterableContainer>(
 ): (data: T) => Array<T[number]>;
 
 export function dropLastWhile(...args: ReadonlyArray<unknown>): unknown {
-  return curry(dropLastWhileImplementation, args);
+  return curry(dropLastWhileImplementation, 2, args);
 }
 
 function dropLastWhileImplementation<T extends IterableContainer>(

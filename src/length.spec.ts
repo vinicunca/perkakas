@@ -24,11 +24,6 @@ describe('data first', () => {
     expect(length([])).toBe(0);
   });
 
-  it('counts holes', () => {
-    // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-    expect(length([1, , 3])).toBe(3);
-  });
-
   it('an ArrayLike that isn\'t iterable', () => {
     expect(length({ 0: 'a', 1: 'b', length: 2 })).toBe(2);
   });

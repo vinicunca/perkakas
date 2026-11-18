@@ -296,7 +296,7 @@ describe('dataLast', () => {
     ]);
   });
 
-  it('truncates a fractional depth in a fused run', () => {
+  it('truncates a fractional depth in a fused sequence', () => {
     expect(
       pipe(
         [
@@ -332,7 +332,7 @@ describe('dataLast', () => {
     ]);
   });
 
-  it('reads a NaN depth as 0 in a fused run', () => {
+  it('reads a NaN depth as 0 in a fused sequence', () => {
     expect(
       pipe(
         [

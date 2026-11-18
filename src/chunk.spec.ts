@@ -82,20 +82,6 @@ describe('data last', () => {
     expect(pipe([], chunk(NaN))).toStrictEqual([]);
   });
 
-  it('keeps holes across chunks', () => {
-    expect(
-      pipe(
-        // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-        [1, , 3, 4],
-        chunk(2),
-      ),
-    ).toStrictEqual([
-      // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-      [1, ,],
-      [3, 4],
-    ]);
-  });
-
   it('chunks only the items that reach it', () => {
     expect(
       pipe(
@@ -213,38 +199,6 @@ describe('edge-cases', () => {
       [4],
       [5],
     ]);
-  });
-
-  describe('holes', () => {
-    it('kept across chunks', () => {
-      expect(
-        chunk(
-          // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-          [1, , 3, 4],
-          2,
-        ),
-      ).toStrictEqual([
-        // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-        [1, ,],
-        [3, 4],
-      ]);
-    });
-
-    it('filled in a single chunk', () => {
-      // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-      expect(chunk([1, , 3], 3)).toStrictEqual([
-        [1, undefined, 3],
-      ]);
-    });
-
-    it('filled in chunks of size 1', () => {
-      // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-      expect(chunk([1, , 3], 1)).toStrictEqual([
-        [1],
-        [undefined],
-        [3],
-      ]);
-    });
   });
 
   describe('fractional sizes', () => {

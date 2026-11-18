@@ -95,5 +95,5 @@ export function sortBy(...args: ReadonlyArray<unknown>): unknown {
 }
 
 function sortByImplementation<T>(data: ReadonlyArray<T>, compareFn: CompareFunction<T>): Array<T> {
-  return [...data].sort(compareFn);
+  return data.concat().sort(compareFn);
 }

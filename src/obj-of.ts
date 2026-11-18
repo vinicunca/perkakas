@@ -26,7 +26,7 @@ export function objOf<T, K extends string>(value: T, key: K): Record<K, T>;
 export function objOf<T, K extends string>(key: K): (value: T) => Record<K, T>;
 
 export function objOf(...args: ReadonlyArray<unknown>): unknown {
-  return curry(objOfImplementation, args);
+  return curry(objOfImplementation, 2, args);
 }
 
 function objOfImplementation<T, K extends string>(value: T, key: K): Record<K, T> {

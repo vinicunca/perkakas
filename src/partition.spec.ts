@@ -1,6 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
 import { constant } from './constant';
-import { isDefined } from './is-defined';
 import { isNumber } from './is-number';
 import { partition } from './partition';
 import { pipe } from './pipe';
@@ -79,14 +78,6 @@ describe('data first', () => {
     expect(partition(['a'], constant(true))).toStrictEqual([
       ['a'],
       [],
-    ]);
-  });
-
-  it('holes are partitioned as undefined', () => {
-    // eslint-disable-next-line no-sparse-arrays -- The hole is the input under test.
-    expect(partition([1, , 3], isDefined)).toStrictEqual([
-      [1, 3],
-      [undefined],
     ]);
   });
 

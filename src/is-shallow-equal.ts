@@ -83,7 +83,7 @@ export function isShallowEqual<T, S extends T>(
 export function isShallowEqual<T>(other: T): (data: T) => boolean;
 
 export function isShallowEqual(...args: ReadonlyArray<unknown>): unknown {
-  return curry(isShallowEqualImplementation, args);
+  return curry(isShallowEqualImplementation, 2, args);
 }
 
 function isShallowEqualImplementation<T>(a: T, b: T): boolean {
@@ -121,7 +121,7 @@ function isShallowEqualImplementation<T>(a: T, b: T): boolean {
     const { [key as keyof T]: valueA } = a;
     const { [key as keyof T]: valueB } = b;
 
-    if (valueA !== valueB || !Object.is(valueA, valueB)) {
+    if (valueA !== valueB && !Object.is(valueA, valueB)) {
       return false;
     }
   }
@@ -137,9 +137,10 @@ function isMapShallowEqual(
     return false;
   }
 
-  for (const [key, value] of a) {
-    const valueB = b.get(key);
-    if (value !== valueB || !Object.is(value, valueB)) {
+  for (const entry of a) {
+    const valueA = entry[1];
+    const valueB = b.get(entry[0]);
+    if (valueA !== valueB && !Object.is(valueA, valueB)) {
       return false;
     }
   }

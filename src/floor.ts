@@ -39,5 +39,5 @@ export function floor(value: number, precision: number): number;
 export function floor(precision: number): (value: number) => number;
 
 export function floor(...args: ReadonlyArray<unknown>): unknown {
-  return curry(withPrecision(Math.floor), args);
+  return curry(withPrecision(Math.floor), 2, args);
 }

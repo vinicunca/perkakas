@@ -78,7 +78,7 @@ export function isDeepEqual<T, S extends T>(
 export function isDeepEqual<T>(other: T): (data: T) => boolean;
 
 export function isDeepEqual(...args: ReadonlyArray<unknown>): unknown {
-  return curry(isDeepEqualImplementation, args);
+  return curry(isDeepEqualImplementation, 2, args);
 }
 
 // eslint-disable-next-line sonarjs/cognitive-complexity
@@ -142,14 +142,12 @@ function isDeepEqualImplementation<T>(data: unknown, other: T): data is T {
     return false;
   }
 
-  for (const [key, value] of Object.entries(data)) {
-    if (!(key in other)) {
-      return false;
-    }
-
+  for (const entry of Object.entries(data)) {
+    const key = entry[0];
     if (
-      !isDeepEqualImplementation(
-        value,
+      !Object.hasOwn(other, key)
+      || !isDeepEqualImplementation(
+        entry[1],
         // @ts-expect-error [ts7053] - We already checked that `other` has `key`
         other[key],
       )
@@ -184,10 +182,12 @@ function isDeepEqualArrays(
     return false;
   }
 
-  for (const [index, item] of data.entries()) {
+  let index = 0;
+  for (const item of data) {
     if (!isDeepEqualImplementation(item, other[index])) {
       return false;
     }
+    index += 1;
   }
 
   return true;
@@ -201,12 +201,12 @@ function isDeepEqualMaps(
     return false;
   }
 
-  for (const [key, value] of data.entries()) {
-    if (!other.has(key)) {
-      return false;
-    }
-
-    if (!isDeepEqualImplementation(value, other.get(key))) {
+  for (const entry of data) {
+    const key = entry[0];
+    if (
+      !other.has(key) ||
+      !isDeepEqualImplementation(entry[1], other.get(key))
+    ) {
       return false;
     }
   }

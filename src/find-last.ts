@@ -147,12 +147,10 @@ export function findLast<
 ): (data: T) => FoundLastNonRefined<T, IsItemIncluded>;
 
 export function findLast(...args: ReadonlyArray<unknown>): unknown {
-  return curry(findLastImplementation, args);
+  return curry(findLastImplementation, 2, args);
 }
 
 function findLastImplementation<T, S extends T>(data: ReadonlyArray<T>, predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S): S | undefined {
-  // TODO [>2]: When node 18 reaches end-of-life bump target lib to ES2023+ and use `Array.prototype.findLast` here.
-
   for (let i = data.length - 1; i >= 0; i--) {
     const item = data[i]!;
     if (predicate(item, i, data)) {

@@ -52,7 +52,12 @@ export function differenceWith<T, Other>(
 ): (data: ReadonlyArray<T>) => Array<T>;
 
 export function differenceWith(...args: ReadonlyArray<unknown>): unknown {
-  return curryWithLazy(differenceWithImplementation, args, lazyImplementation);
+  return curryWithLazy(
+    differenceWithImplementation,
+    3,
+    lazyImplementation,
+    args,
+  );
 }
 
 function differenceWithImplementation<T, Other>(

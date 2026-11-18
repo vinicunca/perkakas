@@ -103,19 +103,16 @@ export function hasSubObject<S extends object>(
 ) => data is HasSubObjectGuard<T, S>;
 
 export function hasSubObject(...args: ReadonlyArray<unknown>): unknown {
-  return curry(hasSubObjectImplementation, args);
+  return curry(hasSubObjectImplementation, 2, args);
 }
 
 function hasSubObjectImplementation<
   T extends Record<PropertyKey, unknown>,
   S extends Record<PropertyKey, unknown>,
 >(data: T, subObject: S): data is HasSubObjectGuard<T, S> {
-  for (const [key, value] of Object.entries(subObject)) {
-    if (!Object.hasOwn(data, key)) {
-      return false;
-    }
-
-    if (!isDeepEqual(value, data[key])) {
+  for (const entry of Object.entries(subObject)) {
+    const key = entry[0];
+    if (!Object.hasOwn(data, key) || !isDeepEqual(entry[1], data[key])) {
       return false;
     }
   }

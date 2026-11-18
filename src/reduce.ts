@@ -69,7 +69,7 @@ export function reduce<T, U>(
 ): (data: ReadonlyArray<T>) => U;
 
 export function reduce(...args: ReadonlyArray<unknown>): unknown {
-  return curry(reduceImplementation, args);
+  return curry(reduceImplementation, 3, args);
 }
 
 function reduceImplementation<T, U>(data: ReadonlyArray<T>, callbackfn: (

@@ -112,7 +112,7 @@ export function pick<
 >(data: T, keys: Keys): PickFromArray<T, Keys>;
 
 export function pick(...args: ReadonlyArray<unknown>): unknown {
-  return curry(pickImplementation, args);
+  return curry(pickImplementation, 2, args);
 }
 
 function pickImplementation<

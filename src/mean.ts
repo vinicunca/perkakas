@@ -52,7 +52,7 @@ export function mean(): <T extends IterableContainer<number>>(
 ) => Mean<T>;
 
 export function mean(...args: ReadonlyArray<unknown>): unknown {
-  return curry(meanImplementation, args);
+  return curry(meanImplementation, 1, args);
 }
 
 function meanImplementation<T extends IterableContainer<number>>(

@@ -57,7 +57,7 @@ export function takeLastWhile<
 ): (data: T) => NonRefinedFilteredArray<T, IsItemIncluded>;
 
 export function takeLastWhile(...args: ReadonlyArray<unknown>): unknown {
-  return curry(takeLastWhileImplementation, args);
+  return curry(takeLastWhileImplementation, 2, args);
 }
 
 function takeLastWhileImplementation<T extends IterableContainer>(
@@ -69,5 +69,5 @@ function takeLastWhileImplementation<T extends IterableContainer>(
       return data.slice(i + 1);
     }
   }
-  return [...data];
+  return data.concat();
 }

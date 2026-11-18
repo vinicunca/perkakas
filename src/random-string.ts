@@ -37,7 +37,7 @@ export function randomString(length: number): string;
 export function randomString(): (length: number) => string;
 
 export function randomString(...args: ReadonlyArray<unknown>): unknown {
-  return curry(randomStringImplementation, args);
+  return curry(randomStringImplementation, 1, args);
 }
 
 function randomStringImplementation(length: number): string {

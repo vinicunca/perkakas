@@ -104,7 +104,7 @@ export function sortedLastIndexBy<T>(
 ): (data: ReadonlyArray<NoInfer<T>>) => number;
 
 export function sortedLastIndexBy(...args: ReadonlyArray<unknown>): unknown {
-  return curry(sortedLastIndexByImplementation, args);
+  return curry(sortedLastIndexByImplementation, 3, args);
 }
 
 function sortedLastIndexByImplementation<T>(

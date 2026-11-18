@@ -59,7 +59,7 @@ export function defaultTo<T, const Fallback extends FallbackOf<T>>(
 ): (data: T) => NonNullable<T> | Fallback;
 
 export function defaultTo(...args: ReadonlyArray<unknown>): unknown {
-  return curry(defaultToImplementation, args);
+  return curry(defaultToImplementation, 2, args);
 }
 
 function defaultToImplementation<T, Fallback extends FallbackOf<T>>(data: T, fallback: Fallback): NonNullable<T> | Fallback {

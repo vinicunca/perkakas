@@ -50,7 +50,7 @@ export function toUpperCase<T extends string>(data: T): Uppercase<T>;
 export function toUpperCase(): <T extends string>(data: T) => Uppercase<T>;
 
 export function toUpperCase(...args: ReadonlyArray<unknown>): unknown {
-  return curry(toUpperCaseImplementation, args);
+  return curry(toUpperCaseImplementation, 1, args);
 }
 
 function toUpperCaseImplementation<T extends string>(data: T): Uppercase<T> {

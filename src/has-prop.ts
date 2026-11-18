@@ -83,7 +83,7 @@ export function hasProp<T extends object>(
 ): (data: T) => boolean;
 
 export function hasProp(...args: ReadonlyArray<unknown>): unknown {
-  return curry(hasPropImplementation, args);
+  return curry(hasPropImplementation, 2, args);
 }
 
 // eslint-disable-next-line slop/no-trivial-functions

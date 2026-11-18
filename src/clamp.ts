@@ -37,7 +37,7 @@ export function clamp(value: number, limits: Limits): number;
 export function clamp(limits: Limits): (value: number) => number;
 
 export function clamp(...args: ReadonlyArray<unknown>): unknown {
-  return curry(clampImplementation, args);
+  return curry(clampImplementation, 2, args);
 }
 
 function clampImplementation(value: number, { max, min }: Limits): number {

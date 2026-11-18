@@ -103,7 +103,7 @@ export function sortedIndexBy<T>(
 ): (data: ReadonlyArray<NoInfer<T>>) => number;
 
 export function sortedIndexBy(...args: ReadonlyArray<unknown>): unknown {
-  return curry(sortedIndexByImplementation, args);
+  return curry(sortedIndexByImplementation, 3, args);
 }
 
 function sortedIndexByImplementation<T>(

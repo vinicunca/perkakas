@@ -3,6 +3,12 @@ export type DataFirst<T, P extends ReadonlyArray<unknown>, R> = (
   ...args: P
 ) => R;
 
+// The number of parameters the function takes, counting all optional params.
+export type DataFirstArity<T, P extends ReadonlyArray<unknown>> = Extract<
+  [T, ...Required<P>]['length'],
+  number
+>;
+
 export type UnaryFunction<T = unknown, R = unknown> = (data: T) => R;
 
 /**

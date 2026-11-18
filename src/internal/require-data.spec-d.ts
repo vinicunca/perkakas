@@ -31,7 +31,7 @@ describe('accepted', () => {
 
   it('an evaluator that can stop, by arity', () => {
     stoppableNumberEvaluator(
-      requireDataByArity(callback, (value, _index, _data, slot) =>
+      requireDataByArity(callback, 2, (value, _index, _data, slot) =>
         lastLazyValue(value, slot)),
     );
   });
@@ -64,6 +64,7 @@ describe('rejected', () => {
     numberEvaluator(
       requireDataByArity(
         callback,
+        2,
         () =>
           // @ts-expect-error [ts2322] -- `requireDataByArity` returns the
           // declared evaluator type unchanged, and that type can't stop.

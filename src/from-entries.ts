@@ -139,7 +139,7 @@ export function fromEntries(): <Entries extends IterableContainer<Entry>>(
 ) => Simplify<FromEntries<Entries>>;
 
 export function fromEntries(...args: ReadonlyArray<unknown>): unknown {
-  return curry(fromEntriesImplementation, args);
+  return curry(fromEntriesImplementation, 1, args);
 }
 
 function fromEntriesImplementation(
@@ -148,7 +148,6 @@ function fromEntriesImplementation(
   const result: Record<PropertyKey, unknown> = {};
 
   for (const entry of entries) {
-    // Benchmarking surfaced that destructuring the entry array is slower.
     const key = entry[0];
     const value = entry[1];
 

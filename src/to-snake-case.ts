@@ -62,7 +62,7 @@ export function toSnakeCase<S extends string>(data: S): SnakeCase<S>;
 export function toSnakeCase(): <S extends string>(data: S) => SnakeCase<S>;
 
 export function toSnakeCase(...args: ReadonlyArray<unknown>): unknown {
-  return curry(toSnakeCaseImplementation, args);
+  return curry(toSnakeCaseImplementation, 1, args);
 }
 
 function toSnakeCaseImplementation<S extends string>(data: S): SnakeCase<S> {

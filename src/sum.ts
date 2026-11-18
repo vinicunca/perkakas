@@ -66,7 +66,7 @@ export function sum(): <
 ) => Sum<T>;
 
 export function sum(...args: ReadonlyArray<unknown>): unknown {
-  return curry(sumImplementation, args);
+  return curry(sumImplementation, 1, args);
 }
 
 function sumImplementation<

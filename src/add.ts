@@ -33,7 +33,7 @@ export function add(addend: bigint): (value: bigint) => bigint;
 export function add(addend: number): (value: number) => number;
 
 export function add(...args: ReadonlyArray<unknown>): unknown {
-  return curry(addImplementation, args);
+  return curry(addImplementation, 2, args);
 }
 
 // The implementation only uses `number` types, but that's just because it's

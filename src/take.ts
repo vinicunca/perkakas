@@ -53,7 +53,7 @@ export function take(
 
 export function take(...args: ReadonlyArray<unknown>): unknown {
   // eslint-disable-next-line ts/no-use-before-define -- implementations follow the overloaded signatures
-  return curryWithLazy(takeImplementation, args, lazyImplementation);
+  return curryWithLazy(takeImplementation, 2, lazyImplementation, args);
 }
 
 function takeImplementation<T extends IterableContainer>(array: T, n: number): Array<T[number]> {

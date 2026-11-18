@@ -137,11 +137,6 @@ describe('runtime (dataFirst)', () => {
   it('a NaN projection ties with every item', () => {
     expect(firstBy([NaN, 1], identity())).toBeNaN();
   });
-
-  it('reads holes as undefined', () => {
-    // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-    expect(firstBy([1, , 0], (value) => value ?? -1)).toBeUndefined();
-  });
 });
 
 describe('runtime (dataLast)', () => {

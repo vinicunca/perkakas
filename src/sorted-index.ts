@@ -54,7 +54,7 @@ export function sortedIndex<T>(
 ): (data: ReadonlyArray<NoInfer<T>>) => number;
 
 export function sortedIndex(...args: ReadonlyArray<unknown>): unknown {
-  return curry(sortedIndexImplementation, args);
+  return curry(sortedIndexImplementation, 2, args);
 }
 
 function sortedIndexImplementation<T>(array: ReadonlyArray<T>, item: T): number {

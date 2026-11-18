@@ -7,13 +7,14 @@ import {
 } from '../src/internal/make-stoppable';
 
 /**
- * A `pipe` step that makes the run of lazy functions it's part of evaluate
- * lazily, item by item, even on an array. `pipe` fuses a run only when one of
- * its functions can end the iteration early; this step is marked as one that
- * can, but passes every item through, so the rest of the run sees them all.
+ * A `pipe` step that makes the sequence of lazy functions it's part of evaluate
+ * lazily, item by item, even on an array. `pipe` fuses a sequence only when one
+ * of its functions can end the iteration early; this step is marked as one that
+ * can, but passes every item through, so the rest of the sequence sees them
+ * all.
  *
- * When the run doesn't fuse (the step is alone, or `pipe` no longer fuses it),
- * the step throws, so a test that relies on it can't quietly pass on the
+ * When the sequence doesn't fuse (the step is alone, or `pipe` no longer fuses
+ * it), the step throws, so a test that relies on it can't quietly pass on the
  * data-first implementations instead.
  */
 export function forceFusion<T extends IterableContainer>(): ((
@@ -24,7 +25,7 @@ export function forceFusion<T extends IterableContainer>(): ((
 }
 
 function throwNotFused(): never {
-  throw new Error('forceFusion: the run wasn\'t evaluated lazily');
+  throw new Error('forceFusion: the sequence wasn\'t evaluated lazily');
 }
 
 const passThrough: StoppableLazyEvaluator = (value) => value;

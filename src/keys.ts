@@ -81,5 +81,5 @@ export function keys<T extends object>(data: T): Keys<T>;
 export function keys(): <T extends object>(data: T) => Keys<T>;
 
 export function keys(...args: ReadonlyArray<unknown>): unknown {
-  return curry(Object.keys, args);
+  return curry(Object.keys, 1, args);
 }

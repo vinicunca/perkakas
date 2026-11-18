@@ -44,7 +44,7 @@ export function set<T, K extends keyof T, V extends Required<T>[K]>(
 ): (obj: T) => UpsertProp<T, K, V>;
 
 export function set(...args: ReadonlyArray<unknown>): unknown {
-  return curry(setImplementation, args);
+  return curry(setImplementation, 3, args);
 }
 
 function setImplementation<T, K extends keyof T, V extends Required<T>[K]>(obj: T, prop: K, value: V): UpsertProp<T, K, V> {

@@ -131,7 +131,7 @@ export function evolve<T extends object, E extends Evolver<T>>(
 ): (object: T) => Evolved<T, E>;
 
 export function evolve(...args: ReadonlyArray<unknown>): unknown {
-  return curry(evolveImplementation, args);
+  return curry(evolveImplementation, 2, args);
 }
 
 function evolveImplementation(data: unknown, evolver: GenericEvolver): unknown {
@@ -141,13 +141,17 @@ function evolveImplementation(data: unknown, evolver: GenericEvolver): unknown {
 
   const out: Record<string, unknown> = { ...data };
 
-  for (const [key, value] of Object.entries(evolver)) {
-    if (key in out) {
-      out[key]
-        = typeof value === 'function'
-          ? value(out[key])
-          : evolveImplementation(out[key], value);
+  for (const entry of Object.entries(evolver)) {
+    const key = entry[0];
+    if (!Object.hasOwn(out, key)) {
+      continue;
     }
+
+    const value = entry[1];
+    out[key] =
+      typeof value === 'function'
+        ? value(out[key])
+        : evolveImplementation(out[key], value);
   }
 
   return out;

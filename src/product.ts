@@ -68,7 +68,7 @@ export function product(): <
 ) => Product<T>;
 
 export function product(...args: ReadonlyArray<unknown>): unknown {
-  return curry(productImplementation, args);
+  return curry(productImplementation, 1, args);
 }
 
 function productImplementation<

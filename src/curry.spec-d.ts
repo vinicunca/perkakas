@@ -1,3 +1,4 @@
+import type { DataFirstArity } from './internal/data-last-implementation';
 import { describe, expectTypeOf, it } from 'vitest';
 import { curry } from './curry';
 import { sum } from './sum';
@@ -10,9 +11,36 @@ const _DUMMY = {
 };
 
 it('return type', () => {
-  expectTypeOf(curry(subtractImplementation, [])).toEqualTypeOf<
+  expectTypeOf(curry(subtractImplementation, 2, [])).toEqualTypeOf<
     number | ((data: number) => number)
   >();
+});
+
+describe('arity', () => {
+  it('matches the data-first parameters', () => {
+    curry(
+      subtractImplementation,
+      // @ts-expect-error [ts2345] -- `subtractImplementation` takes 2 parameters, so 1 isn't its arity.
+      1,
+      [],
+    );
+    curry(
+      subtractImplementation,
+      // @ts-expect-error [ts2345] -- `subtractImplementation` takes 2 parameters, so 3 isn't its arity.
+      3,
+      [],
+    );
+  });
+
+  it('counts optional parameters', () => {
+    curry(subtractOptionalImplementation, 2, []);
+    curry(
+      subtractOptionalImplementation,
+      // @ts-expect-error [ts2345] -- The optional `subtrahend` still counts, so 1 isn't the arity.
+      1,
+      [],
+    );
+  });
 });
 
 describe('known issues!', () => {
@@ -69,10 +97,10 @@ describe('known issues!', () => {
     // `curry` returns can't carry them the way a returned function type could,
     // so TypeScript replaces them with their constraints. The resulting
     // `unknown` absorbs the whole union. An instantiation expression binds them.
-    const result = curry(firstImplementation, []);
+    const result = curry(firstImplementation, 1, []);
 
     expectTypeOf(result).not.toEqualTypeOf(
-      curry(firstImplementation<number>, []),
+      curry(firstImplementation<number>, 1, []),
     );
 
     // Actual
@@ -84,14 +112,29 @@ describe('known issues!', () => {
     // reference, which for `Object.fromEntries` is the one returning `any`. An
     // instantiation expression selects the typed overload.
 
-    const result = curry(Object.fromEntries, []);
+    const result = curry(Object.fromEntries, 1, []);
 
     expectTypeOf(result).not.toEqualTypeOf(
-      curry(Object.fromEntries<unknown>, []),
+      curry(Object.fromEntries<unknown>, 1, []),
     );
 
     // Actual
     expectTypeOf(result).toBeAny();
+  });
+
+  it('a rest parameter accepts any arity', () => {
+    // Counting arguments can't tell a data-first call from a data-last one when
+    // the implementation takes any number of them, so no literal is right for
+    // it. The length of a parameter tuple with a rest element is `number`,
+    // though, which every literal satisfies.
+    expectTypeOf<
+      DataFirstArity<number, ReadonlyArray<number>>
+    >().not.toEqualTypeOf<never>();
+
+    // Actual
+    expectTypeOf<
+      DataFirstArity<number, ReadonlyArray<number>>
+    >().toEqualTypeOf<number>();
   });
 });
 
@@ -99,14 +142,14 @@ function dataLastDeclaredLast(minuend: number, subtrahend: number): number;
 function dataLastDeclaredLast(subtrahend: number): (minuend: number) => number;
 
 function dataLastDeclaredLast(...args: ReadonlyArray<unknown>): unknown {
-  return curry(subtractImplementation, args);
+  return curry(subtractImplementation, 2, args);
 }
 
 function dataFirstDeclaredLast(subtrahend: number): (minuend: number) => number;
 function dataFirstDeclaredLast(minuend: number, subtrahend: number): number;
 
 function dataFirstDeclaredLast(...args: ReadonlyArray<unknown>): unknown {
-  return curry(subtractImplementation, args);
+  return curry(subtractImplementation, 2, args);
 }
 
 function subtractWithMatchingOverloads(
@@ -119,7 +162,7 @@ function subtractWithMatchingOverloads(
 
 // eslint-disable-next-line ts/explicit-function-return-type -- Intentional! we want to test `curry`s inferred return type.
 function subtractWithMatchingOverloads(...args: ReadonlyArray<unknown>) {
-  return curry(subtractImplementation, args);
+  return curry(subtractImplementation, 2, args);
 }
 
 // @ts-expect-error [ts2394] -- Mismatched on purpose: the overload claims a `string`, but `subtractImplementation` returns a `number`.
@@ -133,12 +176,17 @@ function subtractWithMismatchedOverload(
 
 // eslint-disable-next-line ts/explicit-function-return-type -- Intentional! we want to test `curry`s inferred return type.
 function subtractWithMismatchedOverload(...args: ReadonlyArray<unknown>) {
-  return curry(subtractImplementation, args);
+  return curry(subtractImplementation, 2, args);
 }
 
 function subtractImplementation(minuend: number, subtrahend: number): number {
   return minuend - subtrahend;
 }
+
+const subtractOptionalImplementation = (
+  minuend: number,
+  subtrahend?: number,
+): number => (subtrahend === undefined ? minuend : minuend - subtrahend);
 
 function genericDataFirstDeclaredLast(): <T>(
   data: ReadonlyArray<T>,
@@ -146,7 +194,7 @@ function genericDataFirstDeclaredLast(): <T>(
 function genericDataFirstDeclaredLast<T>(data: ReadonlyArray<T>): T | undefined;
 
 function genericDataFirstDeclaredLast(...args: ReadonlyArray<unknown>): unknown {
-  return curry(firstImplementation, args);
+  return curry(firstImplementation, 1, args);
 }
 
 // eslint-disable-next-line slop/no-trivial-functions

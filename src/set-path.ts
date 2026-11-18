@@ -80,7 +80,7 @@ export function setPath<
 >(path: Path, value: Value): (data: T) => T;
 
 export function setPath(...args: ReadonlyArray<unknown>): unknown {
-  return curry(setPathImplementation, args);
+  return curry(setPathImplementation, 3, args);
 }
 
 function setPathImplementation(
@@ -94,7 +94,7 @@ function setPathImplementation(
   }
 
   if (Array.isArray(data)) {
-    const copy = [...data];
+    const copy = data.concat();
     copy[pivot as number] = setPathImplementation(
       data[pivot as number],
       rest,

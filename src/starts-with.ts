@@ -221,7 +221,7 @@ export function startsWith<Prefix extends string>(
 export function startsWith(prefix: string): (data: string) => boolean;
 
 export function startsWith(...args: ReadonlyArray<unknown>): unknown {
-  return curry(startsWithImplementation, args);
+  return curry(startsWithImplementation, 2, args);
 }
 
 function startsWithImplementation(data: string, prefix: string): boolean {

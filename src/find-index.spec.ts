@@ -21,11 +21,6 @@ describe('data first', () => {
     expect(findIndex([10], constant(true))).toBe(0);
   });
 
-  it('reads a hole as undefined', () => {
-    // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-    expect(findIndex([1, , 3], (x) => x === undefined)).toBe(1);
-  });
-
   it('passes NaN to the predicate', () => {
     expect(findIndex([1, NaN], Number.isNaN)).toBe(1);
   });

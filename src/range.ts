@@ -58,7 +58,7 @@ export function range(
 ): (start: number) => Array<number>;
 
 export function range(...args: ReadonlyArray<unknown>): unknown {
-  return curry(rangeImplementation, args);
+  return curry(rangeImplementation, 2, args);
 }
 
 function rangeImplementation(
@@ -78,13 +78,13 @@ function rangeImplementation(
       ? endOrOptions.end
       : endOrOptions;
   const length = ceilingWithSnap((end - start) / step);
-  if (length <= 0) {
-    return [];
+
+  const result: Array<number> = [];
+  for (let index = 0; index < length; index++) {
+    result.push(index === 0 ? start : start + index * step);
   }
 
-  return Array.from({ length }, (_, i) => (i === 0
-    ? start
-    : start + i * step));
+  return result;
 }
 
 // JS's floating-point math can create numbers that are slightly larger than

@@ -44,7 +44,7 @@ export function swapProps<
 >(key1: K1, key2: K2): (data: T) => SwappedProps<T, K1, K2>;
 
 export function swapProps(...args: ReadonlyArray<unknown>): unknown {
-  return curry(swapPropsImplementation, args);
+  return curry(swapPropsImplementation, 3, args);
 }
 
 function swapPropsImplementation<T extends object>(

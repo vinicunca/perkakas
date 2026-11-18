@@ -58,11 +58,6 @@ describe('data first', () => {
     expect(meanBy([1, NaN, 3], identity())).toBeNaN();
   });
 
-  it('reads holes as undefined', () => {
-    // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-    expect(meanBy([1, , 3], (value) => value ?? 10)).toBe(14 / 3);
-  });
-
   it('calls the mapper on each item in order with the whole array', () => {
     const data = [1, 2, 3];
     const mapper

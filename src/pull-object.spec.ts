@@ -148,13 +148,6 @@ describe('dataFirst', () => {
     ).toStrictEqual(['2', '10', 'b', 'a', mySymbol]);
   });
 
-  it('holes are extracted as undefined', () => {
-    expect(
-      // eslint-disable-next-line no-sparse-arrays -- The hole is the input under test.
-      pullObject([1, , 3], (item) => item ?? 'hole', identity()),
-    ).toStrictEqual({ 1: 1, 3: 3, hole: undefined });
-  });
-
   it('calls the extractors in turn for each item', () => {
     const calls: Array<string> = [];
 

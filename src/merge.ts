@@ -54,7 +54,7 @@ export function merge<T, Source>(data: T, source: Source): Merge<T, Source>;
 export function merge<Source>(source: Source): <T>(data: T) => Merge<T, Source>;
 
 export function merge(...args: ReadonlyArray<unknown>): unknown {
-  return curry(mergeImplementation, args);
+  return curry(mergeImplementation, 2, args);
 }
 
 function mergeImplementation<T, Source>(data: T, source: Source): Merge<T, Source> {

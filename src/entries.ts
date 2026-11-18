@@ -46,5 +46,5 @@ export function entries<T extends {}>(data: T): Array<Entry<T>>;
 export function entries(): <T extends {}>(data: T) => Array<Entry<T>>;
 
 export function entries(...args: ReadonlyArray<unknown>): unknown {
-  return curry(Object.entries, args);
+  return curry(Object.entries, 1, args);
 }

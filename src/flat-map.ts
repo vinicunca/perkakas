@@ -56,7 +56,7 @@ export function flatMap<T, U>(
 ): (data: ReadonlyArray<T>) => Array<U>;
 
 export function flatMap(...args: ReadonlyArray<unknown>): unknown {
-  return curryWithLazy(flatMapImplementation, args, lazyImplementation);
+  return curryWithLazy(flatMapImplementation, 2, lazyImplementation, args);
 }
 
 function flatMapImplementation<T, U>(data: ReadonlyArray<T>, callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => ReadonlyArray<U> | U): Array<U> {
@@ -64,7 +64,7 @@ function flatMapImplementation<T, U>(data: ReadonlyArray<T>, callbackfn: (value:
 }
 
 function lazyImplementation<T, K>(callbackfn: (input: T, index: number, data: ReadonlyArray<T>) => K | ReadonlyArray<K>): LazyEvaluator<T, K> {
-  return requireDataByArity(callbackfn, (value, index, data, slot): LazyResult<K> => {
+  return requireDataByArity(callbackfn, 2, (value, index, data, slot): LazyResult<K> => {
     const mapped = callbackfn(value, index, data);
     return Array.isArray(mapped)
       ? manyLazyValues(mapped, slot)

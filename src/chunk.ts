@@ -226,7 +226,7 @@ export function chunk<N extends number>(
 ): <T extends IterableContainer>(array: T) => Chunk<T, N>;
 
 export function chunk(...args: ReadonlyArray<unknown>): unknown {
-  return curry(chunkImplementation, args);
+  return curry(chunkImplementation, 2, args);
 }
 
 function chunkImplementation<T>(data: ReadonlyArray<T>, size: number): Array<Array<T>> {
@@ -242,9 +242,7 @@ function chunkImplementation<T>(data: ReadonlyArray<T>, size: number): Array<Arr
 
   if (size >= data.length) {
     // Optimized for when there is only one chunk.
-    return [
-      [...data],
-    ];
+    return [data.concat()];
   }
 
   const chunks = Math.ceil(data.length / size);
@@ -252,16 +250,9 @@ function chunkImplementation<T>(data: ReadonlyArray<T>, size: number): Array<Arr
   // eslint-disable-next-line unicorn/no-new-array -- This is OK, a sparse array allows us to handle very large arrays more efficiently.
   const result = new Array<Array<T>>(chunks);
 
-  if (size === 1) {
-    // Optimized for when we don't need slice.
-    for (const [index, item] of data.entries()) {
-      result[index] = [item];
-    }
-  } else {
-    for (let index = 0; index < chunks; index += 1) {
-      const start = index * size;
-      result[index] = data.slice(start, start + size);
-    }
+  for (let index = 0; index < chunks; index += 1) {
+    const start = index * size;
+    result[index] = data.slice(start, start + size);
   }
 
   return result;

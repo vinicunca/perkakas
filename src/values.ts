@@ -39,5 +39,5 @@ export function values<T extends object>(data: T): Values<T>;
 export function values(): <T extends object>(data: T) => Values<T>;
 
 export function values(...args: ReadonlyArray<unknown>): unknown {
-  return curry(Object.values, args);
+  return curry(Object.values, 1, args);
 }

@@ -44,7 +44,7 @@ export function tap<
 >(fn: F): (value: T) => T;
 
 export function tap(...args: ReadonlyArray<unknown>): unknown {
-  return curry(tapImplementation, args);
+  return curry(tapImplementation, 2, args);
 }
 
 function tapImplementation<T>(value: T, fn: (value: T) => void): T {

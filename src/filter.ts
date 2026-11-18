@@ -78,7 +78,7 @@ export function filter<
 ): (data: T) => NonRefinedFilteredArray<T, IsItemIncluded>;
 
 export function filter(...args: ReadonlyArray<unknown>): unknown {
-  return curryWithLazy(filterImplementation, args, lazyImplementation);
+  return curryWithLazy(filterImplementation, 2, lazyImplementation, args);
 }
 
 function filterImplementation<T>(data: ReadonlyArray<T>, predicate: (value: T, index: number, array: ReadonlyArray<T>) => boolean): Array<T> {
@@ -86,7 +86,7 @@ function filterImplementation<T>(data: ReadonlyArray<T>, predicate: (value: T, i
 }
 
 function lazyImplementation<T>(predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean): LazyEvaluator<T> {
-  return requireDataByArity(predicate, (value, index, data) =>
+  return requireDataByArity(predicate, 2, (value, index, data) =>
     predicate(value, index, data)
       ? value
       : SKIP_ITEM);

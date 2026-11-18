@@ -39,5 +39,5 @@ export function ceil(value: number, precision: number): number;
 export function ceil(precision: number): (value: number) => number;
 
 export function ceil(...args: ReadonlyArray<unknown>): unknown {
-  return curry(withPrecision(Math.ceil), args);
+  return curry(withPrecision(Math.ceil), 2, args);
 }

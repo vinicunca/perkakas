@@ -53,27 +53,20 @@ export function uniqueWith<T extends IterableContainer>(
 ): (data: T) => Deduped<T>;
 
 export function uniqueWith(...args: ReadonlyArray<unknown>): unknown {
-  return curryWithLazy(uniqueWithImplementation, args, lazyImplementation);
+  return curryWithLazy(uniqueWithImplementation, 2, lazyImplementation, args);
 }
 
-function uniqueWithImplementation<T>(
+const uniqueWithImplementation = <T>(
   data: ReadonlyArray<T>,
   isEquals: IsEquals<T>,
-): Array<T> {
-  const result: Array<T> = [];
-  for (const [index, value] of data.entries()) {
-    if (
+): T[] =>
+  data.filter(
+    (value, index) =>
       data.findIndex(
         (otherValue, otherIndex) =>
           index === otherIndex || isEquals(value, otherValue),
-      ) === index
-    ) {
-      result.push(value);
-    }
-  }
-
-  return result;
-}
+      ) === index,
+  );
 
 function lazyImplementation<T>(isEquals: IsEquals<T>): LazyEvaluator<T> {
   return requireData((value, index, data) =>

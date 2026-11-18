@@ -30,7 +30,7 @@ export function splitAt<T>(array: ReadonlyArray<T>, index: number): [Array<T>, A
 export function splitAt<T>(index: number): (array: ReadonlyArray<T>) => [Array<T>, Array<T>];
 
 export function splitAt(...args: ReadonlyArray<unknown>): unknown {
-  return curry(splitAtImplementation, args);
+  return curry(splitAtImplementation, 2, args);
 }
 
 function splitAtImplementation<T>(

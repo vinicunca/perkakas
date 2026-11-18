@@ -54,7 +54,7 @@ export function findIndex<T>(
 ): (data: ReadonlyArray<T>) => number;
 
 export function findIndex(...args: ReadonlyArray<unknown>): unknown {
-  return curry(findIndexImplementation, args);
+  return curry(findIndexImplementation, 2, args);
 }
 
 function findIndexImplementation<T>(data: ReadonlyArray<T>, predicate: (value: T, index: number, obj: ReadonlyArray<T>) => boolean): number {

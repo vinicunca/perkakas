@@ -45,7 +45,7 @@ export function first(): <T extends IterableContainer>(data: T) => First<T>;
 
 export function first(...args: ReadonlyArray<unknown>): unknown {
   // eslint-disable-next-line ts/no-use-before-define -- implementations follow the overloaded signatures
-  return curryWithLazy(firstImplementation, args, lazyImplementation);
+  return curryWithLazy(firstImplementation, 1, lazyImplementation, args);
 }
 
 function firstImplementation<T>([item]: ReadonlyArray<T>): T | undefined {

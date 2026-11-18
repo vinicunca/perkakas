@@ -81,26 +81,20 @@ export function sumBy<T extends IterableContainer>(
 ): SumBy<T, bigint>;
 
 export function sumBy(...args: ReadonlyArray<unknown>): unknown {
-  return curry(sumByImplementation, args);
+  return curry(sumByImplementation, 2, args);
 }
 
 function sumByImplementation<T>(array: ReadonlyArray<T>, callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => bigint | number): bigint | number {
-  const iter = array.entries();
+  let sum: bigint | number = 0;
 
-  const firstEntry = iter.next();
-  if ('done' in firstEntry && firstEntry.done) {
-    return 0;
-  }
-
-  const {
-    value: [, firstValue],
-  } = firstEntry;
-  let sum = callbackfn(firstValue, 0, array);
-  for (const [index, item] of iter) {
+  let index = 0;
+  for (const item of array) {
     const summand = callbackfn(item, index, array);
 
     // @ts-expect-error [ts2365] -- Typescript can't infer that all elements will be a number of the same type.
-    sum += summand;
+    sum = index === 0 ? summand : sum + summand;
+    index += 1;
   }
+
   return sum;
 }

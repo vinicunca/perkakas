@@ -75,7 +75,7 @@ export function times<T>(
 ): <N extends number>(count: N) => TimesArray<T, N>;
 
 export function times(...args: ReadonlyArray<unknown>): unknown {
-  return curry(timesImplementation, args);
+  return curry(timesImplementation, 2, args);
 }
 
 function timesImplementation<T>(count: number, fn: (index: number) => T): Array<T> {

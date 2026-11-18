@@ -221,7 +221,7 @@ export function endsWith<Suffix extends string>(
 export function endsWith(suffix: string): (data: string) => boolean;
 
 export function endsWith(...args: ReadonlyArray<unknown>): unknown {
-  return curry(endsWithImplementation, args);
+  return curry(endsWithImplementation, 2, args);
 }
 
 function endsWithImplementation(data: string, suffix: string): boolean {

@@ -53,7 +53,7 @@ export function difference<T>(
 ) => Array<D>;
 
 export function difference(...args: ReadonlyArray<unknown>): unknown {
-  return curryWithLazy(differenceImplementation, args, lazyImplementation);
+  return curryWithLazy(differenceImplementation, 2, lazyImplementation, args);
 }
 
 function differenceImplementation<T>(

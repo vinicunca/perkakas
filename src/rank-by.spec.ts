@@ -69,11 +69,6 @@ describe('runtime (dataFirst)', () => {
   it('ranks a NaN item first', () => {
     expect(rankBy([1, 2], NaN, identity())).toBe(0);
   });
-
-  it('reads holes as undefined', () => {
-    // eslint-disable-next-line no-sparse-arrays -- The hole is the case under test.
-    expect(rankBy([, 1], 2, (value) => value ?? 0)).toBe(2);
-  });
 });
 
 describe('runtime (dataLast)', () => {

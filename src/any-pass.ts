@@ -41,7 +41,7 @@ export function anyPass<T>(
 ): (data: T) => boolean;
 
 export function anyPass(...args: ReadonlyArray<unknown>): unknown {
-  return curry(anyPassImplementation, args);
+  return curry(anyPassImplementation, 2, args);
 }
 
 function anyPassImplementation<T>(data: T, fns: ReadonlyArray<(data: T) => boolean>): boolean {

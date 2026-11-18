@@ -25,7 +25,7 @@ export function quickSelect<T>(data: ReadonlyArray<T>, index: number, compareFn:
     undefined
     : quickSelectImplementation(
         // We need to clone the array because quickSelect mutates it in-place.
-        [...data],
+        data.concat(),
         0 /* left */,
         data.length - 1 /* right */,
         index,

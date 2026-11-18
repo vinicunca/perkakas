@@ -88,17 +88,17 @@ export function partition<
 ];
 
 export function partition(...args: ReadonlyArray<unknown>): unknown {
-  return curry(partitionImplementation, args);
+  return curry(partitionImplementation, 2, args);
 }
 
 function partitionImplementation<T, S extends T>(data: ReadonlyArray<T>, predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S): [Array<S>, Array<T>] {
   const ret: [Array<S>, Array<T>] = [[], []];
-  for (const [index, item] of data.entries()) {
+  data.forEach((item, index) => {
     if (predicate(item, index, data)) {
       ret[0].push(item);
     } else {
       ret[1].push(item);
     }
-  }
+  });
   return ret;
 }

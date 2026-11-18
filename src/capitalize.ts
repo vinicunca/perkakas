@@ -52,7 +52,7 @@ export function capitalize<T extends string>(data: T): Capitalize<T>;
 export function capitalize(): <T extends string>(data: T) => Capitalize<T>;
 
 export function capitalize(...args: ReadonlyArray<unknown>): unknown {
-  return curry(capitalizeImplementation, args);
+  return curry(capitalizeImplementation, 1, args);
 }
 
 function capitalizeImplementation<T extends string>(data: T): Capitalize<T> {

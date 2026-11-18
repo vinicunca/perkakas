@@ -165,7 +165,7 @@ export function sample<const T extends IterableContainer, N extends number>(
 ): (data: T) => Sampled<T, N>;
 
 export function sample(...args: ReadonlyArray<unknown>): unknown {
-  return curry(sampleImplementation, args);
+  return curry(sampleImplementation, 2, args);
 }
 
 function sampleImplementation<T>(data: ReadonlyArray<T>, sampleSize: number): Array<T> {
@@ -176,7 +176,7 @@ function sampleImplementation<T>(data: ReadonlyArray<T>, sampleSize: number): Ar
 
   if (sampleSize >= data.length) {
     // Trivial
-    return [...data];
+    return data.concat();
   }
 
   // We have 2 modes of sampling, depending on the size of the sample requested.
