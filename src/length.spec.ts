@@ -41,7 +41,7 @@ describe('data first', () => {
     expect(
       length({
         length: 5,
-        *[Symbol.iterator]() {
+        * [Symbol.iterator]() {
           yield 1;
         },
       }),
@@ -89,7 +89,7 @@ describe('curried', () => {
       pipe(
         {
           length: 5,
-          *[Symbol.iterator]() {
+          * [Symbol.iterator]() {
             yield 1;
           },
         },

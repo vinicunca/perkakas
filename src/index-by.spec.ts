@@ -58,7 +58,9 @@ it('the last item with a key wins', () => {
       ],
       prop('id'),
     ),
-  ).toStrictEqual({ a: { id: 'a', value: 2 } });
+  ).toStrictEqual({
+    a: { id: 'a', value: 2 },
+  });
 });
 
 it('key order', () => {
@@ -81,7 +83,9 @@ it('`__proto__` key replaces the prototype with an object item', () => {
 
 it('`__proto__` key isn\'t an own property', () => {
   expect(
-    Reflect.ownKeys(indexBy([{ id: '__proto__' }], prop('id'))),
+    Reflect.ownKeys(indexBy([
+      { id: '__proto__' },
+    ], prop('id'))),
   ).toStrictEqual([]);
 });
 
@@ -104,8 +108,8 @@ it('holes are indexed as undefined', () => {
 
 it('calls the mapper once per item, in order, with the whole input', () => {
   const data = ['a', 'b', 'c'];
-  const mapper =
-    vi.fn<(item: string, index: number, data: ReadonlyArray<string>) => string>(
+  const mapper
+    = vi.fn<(item: string, index: number, data: ReadonlyArray<string>) => string>(
       identity(),
     );
 

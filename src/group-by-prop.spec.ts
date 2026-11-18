@@ -80,29 +80,55 @@ describe('data first', () => {
   });
 
   it('single item', () => {
-    expect(groupByProp([{ a: 'cat' }], 'a')).toStrictEqual({
-      cat: [{ a: 'cat' }],
+    expect(groupByProp([
+      { a: 'cat' },
+    ], 'a')).toStrictEqual({
+      cat: [
+        { a: 'cat' },
+      ],
     });
   });
 
   it('prototype is Object.prototype', () => {
-    expect(Object.getPrototypeOf(groupByProp([{ a: 'cat' }], 'a'))).toBe(
+    expect(Object.getPrototypeOf(groupByProp([
+      { a: 'cat' },
+    ], 'a'))).toBe(
       Object.prototype,
     );
   });
 
   it('`__proto__` value is an own property', () => {
     expect(
-      Object.entries(groupByProp([{ a: '__proto__' }], 'a')),
-    ).toStrictEqual([['__proto__', [{ a: '__proto__' }]]]);
+      Object.entries(groupByProp([
+        { a: '__proto__' },
+      ], 'a')),
+    ).toStrictEqual([
+      [
+        '__proto__',
+        [
+          { a: '__proto__' },
+        ],
+      ],
+    ]);
   });
 
   it('number values share the group of their string form', () => {
     expect(
-      groupByProp([{ a: 1 }, { a: '1' }, { a: 0 }, { a: -0 }], 'a'),
+      groupByProp([
+        { a: 1 },
+        { a: '1' },
+        { a: 0 },
+        { a: -0 },
+      ], 'a'),
     ).toStrictEqual({
-      1: [{ a: 1 }, { a: '1' }],
-      0: [{ a: 0 }, { a: -0 }],
+      1: [
+        { a: 1 },
+        { a: '1' },
+      ],
+      0: [
+        { a: 0 },
+        { a: -0 },
+      ],
     });
   });
 
@@ -125,21 +151,40 @@ describe('data first', () => {
   });
 
   it('falsy values other than undefined', () => {
-    expect(groupByProp([{ a: '' }, { a: 0 }, { a: '' }], 'a')).toStrictEqual({
-      '': [{ a: '' }, { a: '' }],
-      0: [{ a: 0 }],
+    expect(groupByProp([
+      { a: '' },
+      { a: 0 },
+      { a: '' },
+    ], 'a')).toStrictEqual({
+      '': [
+        { a: '' },
+        { a: '' },
+      ],
+      '0': [
+        { a: 0 },
+      ],
     });
   });
 
   it('items without the prop are skipped', () => {
-    expect(groupByProp([{ a: 'cat' }, { b: 'dog' }], 'a')).toStrictEqual({
-      cat: [{ a: 'cat' }],
+    expect(groupByProp([
+      { a: 'cat' },
+      { b: 'dog' },
+    ], 'a')).toStrictEqual({
+      cat: [
+        { a: 'cat' },
+      ],
     });
   });
 
   it('undefined values are skipped', () => {
-    expect(groupByProp([{ a: 'cat' }, { a: undefined }], 'a')).toStrictEqual({
-      cat: [{ a: 'cat' }],
+    expect(groupByProp([
+      { a: 'cat' },
+      { a: undefined },
+    ], 'a')).toStrictEqual({
+      cat: [
+        { a: 'cat' },
+      ],
     });
   });
 
@@ -147,7 +192,12 @@ describe('data first', () => {
     expect(
       // eslint-disable-next-line no-sparse-arrays -- The hole is the input under test.
       groupByProp([{ a: 'cat' }, , { a: 'cat' }], 'a'),
-    ).toStrictEqual({ cat: [{ a: 'cat' }, { a: 'cat' }] });
+    ).toStrictEqual({
+      cat: [
+        { a: 'cat' },
+        { a: 'cat' },
+      ],
+    });
   });
 
   it('reads the prop once per item', () => {
@@ -244,11 +294,13 @@ describe('data last', () => {
   });
 
   it('empty array', () => {
-    expect(pipe([] as { a: string }[], groupByProp('a'))).toStrictEqual({});
+    expect(pipe([] as Array<{ a: string }>, groupByProp('a'))).toStrictEqual({});
   });
 
   it('prototype is Object.prototype', () => {
-    expect(Object.getPrototypeOf(pipe([{ a: 'cat' }], groupByProp('a')))).toBe(
+    expect(Object.getPrototypeOf(pipe([
+      { a: 'cat' },
+    ], groupByProp('a')))).toBe(
       Object.prototype,
     );
   });

@@ -19,15 +19,16 @@ export type LazyUnaryFunction<
   R = unknown,
 > = UnaryFunction<T, R> & LazyDefinition<T, P>;
 
+/**
+ * `pipe` reads both marks off any lazy implementation, so neither is
+ * required in general; a factory whose evaluators can stop must carry the
+ * `makeStoppable` mark.
+ */
 export type LazyEvaluatorFactory<
   T extends IterableContainer,
   P extends ReadonlyArray<unknown>,
->
-  // `pipe` reads both marks off any lazy implementation, so neither is
-  // required in general; a factory whose evaluators can stop must carry the
-  // `makeStoppable` mark.
-  = Partial<ReducingMetadata & StoppableMetadata>
-    & (
+> = Partial<ReducingMetadata & StoppableMetadata>
+  & (
       | ((...args: P) => LazyEvaluator<T[number], unknown>)
       | (((...args: P) => StoppableLazyEvaluator<T[number], unknown>)
         & StoppableMetadata)

@@ -29,14 +29,19 @@ test.prop([items, counts])(
 
 // Different for every distinct item, so equal ranks mean equal items and what
 // is left is the same no matter which of the tied items the heap drops.
-const rank = (value: number | null | undefined): number =>
-  value === null ? 0.5 : (value ?? -0.5);
+function rank(value: number | null | undefined): number {
+  return value === null
+    ? 0.5
+    : (value ?? -0.5);
+}
 
 // The native sort moves `undefined` to the end without calling the comparator,
 // so the items are wrapped to be ordered by their rank.
-const sortedByRank = (
-  data: readonly (number | null | undefined)[],
-): (number | null | undefined)[] =>
-  Array.from(data, (value) => ({ value, rank: rank(value) }))
+function sortedByRank(data: ReadonlyArray<number | null | undefined>): Array<number | null | undefined> {
+  return Array.from(data, (value) => ({
+    value,
+    rank: rank(value),
+  }))
     .sort((a, b) => a.rank - b.rank)
     .map(({ value }) => value);
+}

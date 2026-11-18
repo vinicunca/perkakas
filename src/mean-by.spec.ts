@@ -45,7 +45,9 @@ describe('data first', () => {
   });
 
   it('a single item', () => {
-    expect(meanBy([{ a: 5 }], prop('a'))).toBe(5);
+    expect(meanBy([
+      { a: 5 },
+    ], prop('a'))).toBe(5);
   });
 
   it('the 0 seed turns -0 into 0', () => {
@@ -63,8 +65,8 @@ describe('data first', () => {
 
   it('calls the mapper on each item in order with the whole array', () => {
     const data = [1, 2, 3];
-    const mapper =
-      vi.fn<(value: number, index: number, data: ReadonlyArray<number>) => number>(
+    const mapper
+      = vi.fn<(value: number, index: number, data: ReadonlyArray<number>) => number>(
         identity(),
       );
 

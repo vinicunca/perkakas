@@ -34,7 +34,9 @@ describe('data first', () => {
   });
 
   it('single item', () => {
-    expect(groupBy(['a'], identity())).toStrictEqual({ a: ['a'] });
+    expect(groupBy(['a'], identity())).toStrictEqual({
+      a: ['a'],
+    });
   });
 
   it('prototype is Object.prototype', () => {
@@ -46,7 +48,12 @@ describe('data first', () => {
   it('`__proto__` key is an own property', () => {
     expect(
       Object.entries(groupBy(['a', 'b'], constant('__proto__'))),
-    ).toStrictEqual([['__proto__', ['a', 'b']]]);
+    ).toStrictEqual([
+      [
+        '__proto__',
+        ['a', 'b'],
+      ],
+    ]);
   });
 
   it('number keys share the group of their string form', () => {
@@ -60,8 +67,13 @@ describe('data first', () => {
     const mySymbol = Symbol('mySymbol');
 
     expect(
-      groupBy(['a', 'b'], (item) => (item === 'a' ? mySymbol : item)),
-    ).toStrictEqual({ [mySymbol]: ['a'], b: ['b'] });
+      groupBy(['a', 'b'], (item) => (item === 'a'
+        ? mySymbol
+        : item)),
+    ).toStrictEqual({
+      [mySymbol]: ['a'],
+      b: ['b'],
+    });
   });
 
   it('key order', () => {
@@ -77,21 +89,26 @@ describe('data first', () => {
   it('falsy keys other than undefined', () => {
     expect(groupBy(['', 0, ''], identity())).toStrictEqual({
       '': ['', ''],
-      0: [0],
+      '0': [0],
     });
   });
 
   it('holes are grouped as undefined', () => {
     expect(
       // eslint-disable-next-line no-sparse-arrays -- The hole is the input under test.
-      groupBy([1, , 3], (item) => (item === undefined ? 'hole' : 'item')),
-    ).toStrictEqual({ item: [1, 3], hole: [undefined] });
+      groupBy([1, , 3], (item) => (item === undefined
+        ? 'hole'
+        : 'item')),
+    ).toStrictEqual({
+      item: [1, 3],
+      hole: [undefined],
+    });
   });
 
   it('calls the grouper once per item, in order, with the whole input', () => {
     const data = ['a', 'b', 'c'];
-    const grouper =
-      vi.fn<(value: string, index: number, data: ReadonlyArray<string>) => string>(
+    const grouper
+      = vi.fn<(value: string, index: number, data: ReadonlyArray<string>) => string>(
         identity(),
       );
 

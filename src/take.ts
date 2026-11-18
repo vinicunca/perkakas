@@ -1,5 +1,5 @@
-import type { IterableContainer } from './internal/types/iterable-container';
 import type { StoppableLazyEvaluator } from './internal/make-stoppable';
+import type { IterableContainer } from './internal/types/iterable-container';
 import { curryWithLazy } from './internal/curry-with-lazy';
 import {
   lastLazyValue,

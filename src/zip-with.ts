@@ -1,5 +1,5 @@
-import type { IterableContainer } from './internal/types/iterable-container';
 import type { StoppableLazyEvaluator } from './internal/make-stoppable';
+import type { IterableContainer } from './internal/types/iterable-container';
 import type { NonEmptyPrefix } from './internal/types/non-empty-prefix';
 import { lazyDataLastImplementation } from './internal/lazy-data-last-implementation';
 import {

@@ -1,3 +1,6 @@
+import type { StoppableLazyEvaluator } from './internal/make-stoppable';
+import type { LazyCallback } from './internal/types/lazy-callback';
+import type { LazyEvaluator } from './internal/types/lazy-evaluator';
 import { describe, expect, it, vi } from 'vitest';
 import { constant } from './constant';
 import { filter } from './filter';
@@ -11,10 +14,8 @@ import { makeReducing } from './internal/make-reducing';
 import {
   LAZY_EMPTY_EVALUATOR,
   makeStoppable,
-  type StoppableLazyEvaluator,
+
 } from './internal/make-stoppable';
-import type { LazyCallback } from './internal/types/lazy-callback';
-import type { LazyEvaluator } from './internal/types/lazy-evaluator';
 import { isStrictEqual } from './is-strict-equal';
 import { join } from './join';
 import { map } from './map';
@@ -57,7 +58,9 @@ describe('lazy', () => {
     const mapper = vi.fn<<T>(x: T) => T>(identity());
 
     expect(
-      pipe({ inner: [1, 2, 3] }, prop('inner'), map(mapper), take(2)),
+      pipe({
+        inner: [1, 2, 3],
+      }, prop('inner'), map(mapper), take(2)),
     ).toStrictEqual([1, 2]);
     expect(mapper).toHaveBeenCalledTimes(2);
   });
@@ -113,7 +116,10 @@ describe('lazy', () => {
 
       expect(
         pipe(
-          [[1, 2], [3]],
+          [
+            [1, 2],
+            [3],
+          ],
           // @ts-expect-error [ts2345] -- `find` can return `undefined`, which `map` doesn't accept, but this predicate always finds an item.
           find((value, _index, data) => {
             dataLengths.push(data.length);
@@ -130,7 +136,10 @@ describe('lazy', () => {
     it('ending a fused run', () => {
       expect(
         pipe(
-          [[1, 2], [3]] as const,
+          [
+            [1, 2],
+            [3],
+          ] as const,
           map(identity()),
           first(),
           map(multiply(10)),
@@ -174,7 +183,10 @@ describe('lazy', () => {
     it('advances across fan-out', () => {
       expect(
         pipe(
-          [[1, 2], [3]],
+          [
+            [1, 2],
+            [3],
+          ],
           take(Infinity),
           flat(),
           map((_value, index) => index),
@@ -185,7 +197,10 @@ describe('lazy', () => {
     it('advances across consecutive fan-outs', () => {
       expect(
         pipe(
-          [[1, 2], [3]],
+          [
+            [1, 2],
+            [3],
+          ],
           take(Infinity),
           flat(),
           flatMap((x) => [x, x + 100]),
@@ -222,12 +237,19 @@ describe('lazy', () => {
     it('includes the items a fan-out emitted', () => {
       expect(
         pipe(
-          [[1, 2], [3]],
+          [
+            [1, 2],
+            [3],
+          ],
           take(Infinity),
           flat(),
           map((_value, _index, data) => [...data]),
         ),
-      ).toStrictEqual([[1], [1, 2], [1, 2, 3]]);
+      ).toStrictEqual([
+        [1],
+        [1, 2],
+        [1, 2, 3],
+      ]);
     });
   });
 
@@ -237,7 +259,9 @@ describe('lazy', () => {
         pipe(
           [1, 2, 3],
           take(Infinity),
-          flatMap((x) => (x === 2 ? [] : [x])),
+          flatMap((x) => (x === 2
+            ? []
+            : [x])),
           map(multiply(10)),
         ),
       ).toStrictEqual([10, 30]);
@@ -321,7 +345,7 @@ describe('lazy', () => {
   });
 
   it('an array input is read by a lone step the way its data-first call reads it', () => {
-    const pipeKeys: (string | symbol)[] = [];
+    const pipeKeys: Array<string | symbol> = [];
     pipe(
       new Proxy([1, 2, 3], {
         get: (target, key, receiver): unknown => {
@@ -332,7 +356,7 @@ describe('lazy', () => {
       map(identity()),
     );
 
-    const dataFirstKeys: (string | symbol)[] = [];
+    const dataFirstKeys: Array<string | symbol> = [];
     map(
       new Proxy([1, 2, 3], {
         get: (target, key, receiver): unknown => {
@@ -347,7 +371,7 @@ describe('lazy', () => {
   });
 
   it('an array input is iterated, not indexed, by fused steps', () => {
-    const keys: (string | symbol)[] = [];
+    const keys: Array<string | symbol> = [];
     pipe(
       new Proxy([1, 2, 3], {
         get: (target, key, receiver): unknown => {
@@ -522,7 +546,9 @@ describe('lazy', () => {
         pipe(
           // @ts-expect-error [ts2345] -- The utilities only type arrays, but `pipe` iterates any iterable at runtime, which is what this test exercises.
           [1, 2, 3].values(),
-          flatMap((x: number) => (x === 2 ? [] : [x])),
+          flatMap((x: number) => (x === 2
+            ? []
+            : [x])),
         ),
       ).toStrictEqual([1, 3]);
     });
@@ -531,7 +557,9 @@ describe('lazy', () => {
       expect(
         pipe(
           // Too many sub-items to pass as the arguments of a single call.
-          [Array.from({ length: 500_000 }, (_item, index) => index)].values(),
+          [
+            Array.from({ length: 500_000 }, (_item, index) => index),
+          ].values(),
           // @ts-expect-error [ts2345] -- The utilities only type arrays, but `pipe` iterates any iterable at runtime, which is what this test exercises.
           flat(),
         ),
@@ -562,8 +590,8 @@ describe('lazy', () => {
     });
 
     it('skips holes the way its data-first call does', () => {
-      const mapper =
-        vi.fn<(x: number | undefined) => number | undefined>(identity());
+      const mapper
+        = vi.fn<(x: number | undefined) => number | undefined>(identity());
       // eslint-disable-next-line no-sparse-arrays -- The hole is what this test exercises.
       pipe([1, , 3], map(mapper));
 
@@ -572,8 +600,8 @@ describe('lazy', () => {
   });
 
   it('fused steps visit holes', () => {
-    const mapper =
-      vi.fn<(x: number | undefined) => number | undefined>(identity());
+    const mapper
+      = vi.fn<(x: number | undefined) => number | undefined>(identity());
     // eslint-disable-next-line no-sparse-arrays -- The hole is what this test exercises.
     pipe([1, , 3], take(Infinity), map(mapper));
 
@@ -667,8 +695,8 @@ describe('lazy', () => {
     });
 
     it('skips holes the way its data-first calls do', () => {
-      const mapper =
-        vi.fn<(x: number | undefined) => number | undefined>(identity());
+      const mapper
+        = vi.fn<(x: number | undefined) => number | undefined>(identity());
       // eslint-disable-next-line no-sparse-arrays -- The hole is what this test exercises.
       pipe([1, , 3], map(identity()), map(mapper));
 
@@ -676,7 +704,7 @@ describe('lazy', () => {
     });
 
     it('the input is read the way the first step\'s data-first call reads it', () => {
-      const pipeKeys: (string | symbol)[] = [];
+      const pipeKeys: Array<string | symbol> = [];
       pipe(
         new Proxy([1, 2, 3], {
           get: (target, key, receiver): unknown => {
@@ -688,7 +716,7 @@ describe('lazy', () => {
         filter(constant(true)),
       );
 
-      const dataFirstKeys: (string | symbol)[] = [];
+      const dataFirstKeys: Array<string | symbol> = [];
       map(
         new Proxy([1, 2, 3], {
           get: (target, key, receiver): unknown => {
@@ -726,13 +754,16 @@ describe('lazy', () => {
       // the run to go on past it, it would reach `take`, which can stop early,
       // and fuse.
       const firstItem = lazyDataLastImplementation(
-        (data: readonly (ReadonlyArray<number>)[]) => data[0] ?? [],
+        (data: ReadonlyArray<ReadonlyArray<number>>) => data[0] ?? [],
         [],
         makeReducing(() => identity()),
       );
       const dataLengths: Array<number> = [];
       const result = pipe(
-        [[1, 2], [3]],
+        [
+          [1, 2],
+          [3],
+        ],
         map((value, _index, data) => {
           dataLengths.push(data.length);
           return value;
@@ -748,7 +779,9 @@ describe('lazy', () => {
     it('starts on the array a non-lazy function returned', () => {
       const calls: Array<string> = [];
       pipe(
-        { inner: [1, 2] },
+        {
+          inner: [1, 2],
+        },
         prop('inner'),
         map((x) => {
           calls.push('map');
@@ -766,14 +799,18 @@ describe('lazy', () => {
 
   it('a run of one lazy function between two non-lazy ones', () => {
     expect(
-      pipe({ inner: [1, 2, 3] }, prop('inner'), map(multiply(10)), join(',')),
+      pipe({
+        inner: [1, 2, 3],
+      }, prop('inner'), map(multiply(10)), join(',')),
     ).toBe('10,20,30');
   });
 
   it('a lone step on the array a non-lazy function returned gets the complete array', () => {
     expect(
       pipe(
-        { inner: [1, 2, 3] },
+        {
+          inner: [1, 2, 3],
+        },
         prop('inner'),
         map((_value, _index, data) => data.length),
       ),
@@ -797,10 +834,26 @@ describe('lazy', () => {
       'the complete array',
       (): ReadonlyArray<number> => [1, 2, 3, 4],
       [
-        [1, 0, [1, 2, 3, 4]],
-        [2, 1, [1, 2, 3, 4]],
-        [3, 2, [1, 2, 3, 4]],
-        [4, 3, [1, 2, 3, 4]],
+        [
+          1,
+          0,
+          [1, 2, 3, 4],
+        ],
+        [
+          2,
+          1,
+          [1, 2, 3, 4],
+        ],
+        [
+          3,
+          2,
+          [1, 2, 3, 4],
+        ],
+        [
+          4,
+          3,
+          [1, 2, 3, 4],
+        ],
       ],
     ],
     [
@@ -809,10 +862,26 @@ describe('lazy', () => {
       // @ts-expect-error [ts2740] -- The utilities only type arrays, but `pipe` iterates any iterable at runtime, which is what this test exercises.
       (): ReadonlyArray<number> => upTo(4),
       [
-        [1, 0, [1]],
-        [2, 1, [1, 2]],
-        [3, 2, [1, 2, 3]],
-        [4, 3, [1, 2, 3, 4]],
+        [
+          1,
+          0,
+          [1],
+        ],
+        [
+          2,
+          1,
+          [1, 2],
+        ],
+        [
+          3,
+          2,
+          [1, 2, 3],
+        ],
+        [
+          4,
+          3,
+          [1, 2, 3, 4],
+        ],
       ],
     ],
   ])(
@@ -821,7 +890,11 @@ describe('lazy', () => {
       expect(
         pipe(
           input(),
-          map((x, index, data) => [x, index, [...data]]),
+          map((x, index, data) => [
+            x,
+            index,
+            [...data],
+          ]),
         ),
       ).toStrictEqual(expected);
     },
@@ -835,10 +908,26 @@ describe('lazy', () => {
       'the complete array',
       (): ReadonlyArray<number> => [1, 2, 3, 4],
       [
-        [1, 0, [1, 2, 3, 4]],
-        [2, 1, [1, 2, 3, 4]],
-        [3, 2, [1, 2, 3, 4]],
-        [4, 3, [1, 2, 3, 4]],
+        [
+          1,
+          0,
+          [1, 2, 3, 4],
+        ],
+        [
+          2,
+          1,
+          [1, 2, 3, 4],
+        ],
+        [
+          3,
+          2,
+          [1, 2, 3, 4],
+        ],
+        [
+          4,
+          3,
+          [1, 2, 3, 4],
+        ],
       ],
     ],
     [
@@ -847,10 +936,26 @@ describe('lazy', () => {
       // @ts-expect-error [ts2740] -- The utilities only type arrays, but `pipe` iterates any iterable at runtime, which is what this test exercises.
       (): ReadonlyArray<number> => upTo(4),
       [
-        [1, 0, [1]],
-        [2, 1, [1, 2]],
-        [3, 2, [1, 2, 3]],
-        [4, 3, [1, 2, 3, 4]],
+        [
+          1,
+          0,
+          [1],
+        ],
+        [
+          2,
+          1,
+          [1, 2],
+        ],
+        [
+          3,
+          2,
+          [1, 2, 3],
+        ],
+        [
+          4,
+          3,
+          [1, 2, 3, 4],
+        ],
       ],
     ],
   ])(
@@ -861,7 +966,11 @@ describe('lazy', () => {
           pipe(
             input(),
             identity(),
-            map((x, index, data) => [x, index, [...data]]),
+            map((x, index, data) => [
+              x,
+              index,
+              [...data],
+            ]),
           ),
         ).toStrictEqual(expected);
       });
@@ -871,7 +980,11 @@ describe('lazy', () => {
           pipe(
             input(),
             identity(),
-            map((x, index, data) => [x, index, [...data]]),
+            map((x, index, data) => [
+              x,
+              index,
+              [...data],
+            ]),
             identity(),
           ),
         ).toStrictEqual(expected);

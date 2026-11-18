@@ -64,7 +64,10 @@ describe('runtime (dataFirst)', () => {
 
   it('returns the heap layout when taking fewer than all items', () => {
     expect(takeFirstBy([4, 5, 1, 6, 2, 3, 7], 4, identity())).toStrictEqual([
-      4, 3, 1, 2,
+      4,
+      3,
+      1,
+      2,
     ]);
   });
 
@@ -90,7 +93,9 @@ describe('runtime (dataFirst)', () => {
 
   it('n is Infinity', () => {
     expect(takeFirstBy([3, 1, 2], Infinity, identity())).toStrictEqual([
-      3, 1, 2,
+      3,
+      1,
+      2,
     ]);
   });
 

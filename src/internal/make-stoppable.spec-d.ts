@@ -1,22 +1,17 @@
-/* eslint-disable unicorn/consistent-function-scoping --
- * A lazy implementation is a factory that returns its evaluator, so these
- * tests nest functions that capture nothing; type tests never run them.
- */
-
-import { describe, it } from 'vitest';
-import { $typed } from '../../test/$typed';
 import type { LazyResult, LazySlot } from './lazy-control';
 import type { LazyEvaluatorFactory } from './lazy-data-last-implementation';
+import type { StoppableLazyEvaluator, StoppableResult } from './make-stoppable';
+import type { LazyEvaluator } from './types/lazy-evaluator';
+import { describe, it } from 'vitest';
+import { $typed } from '../../test/$typed';
 import {
   LAST,
   lastLazyValue,
   LAZY_EMPTY_EVALUATOR,
   makeStoppable,
   STOP,
-  type StoppableLazyEvaluator,
-  type StoppableResult,
+
 } from './make-stoppable';
-import type { LazyEvaluator } from './types/lazy-evaluator';
 
 declare function acceptLazy(
   lazy: LazyEvaluatorFactory<ReadonlyArray<unknown>, readonly []>,
@@ -49,14 +44,12 @@ declare function unknownEvaluator(evaluator: LazyEvaluator): void;
 describe('accepted', () => {
   it('last with a value of the result type', () => {
     stoppableNumberEvaluator((value, _index, _data, slot) =>
-      lastLazyValue(value, slot),
-    );
+      lastLazyValue(value, slot));
   });
 
   it('last with a value of a generic result type', () => {
     stoppableGenericEvaluator((value, _index, _data, slot) =>
-      lastLazyValue(value, slot),
-    );
+      lastLazyValue(value, slot));
   });
 
   it('stop', () => {
@@ -104,24 +97,21 @@ describe('rejected', () => {
     stoppableNumberEvaluator((_value, _index, _data, slot) =>
       // @ts-expect-error [ts2322] -- The control's tag carries the payload's
       // type, so the pipe never reads a value the evaluator didn't declare.
-      lastLazyValue('x', slot),
-    );
+      lastLazyValue('x', slot));
   });
 
   it('last from an evaluator that can\'t stop', () => {
     numberEvaluator((value, _index, _data, slot) =>
       // @ts-expect-error [ts2322] -- Stopping takes a `StoppableLazyEvaluator`,
       // which only a lazy implementation marked by `makeStoppable` may return.
-      lastLazyValue(value, slot),
-    );
+      lastLazyValue(value, slot));
   });
 
   it('last from a generic evaluator that can\'t stop', () => {
     genericEvaluator((value, _index, _data, slot) =>
       // @ts-expect-error [ts2322] -- Stopping takes a `StoppableLazyEvaluator`,
       // which only a lazy implementation marked by `makeStoppable` may return.
-      lastLazyValue(value, slot),
-    );
+      lastLazyValue(value, slot));
   });
 
   it('stop from an evaluator that can\'t stop', () => {
@@ -190,14 +180,13 @@ describe('known issues!', () => {
   it('the empty evaluator next to an evaluator of neither type, without the mark', () => {
     // TypeScript reduces the union of the two to the evaluator of neither type,
     // which `LAZY_EMPTY_EVALUATOR` is a subtype of, so its kind is lost too.
-    acceptLazy(() => ($typed<boolean>() ? emitAndStop : LAZY_EMPTY_EVALUATOR));
+    acceptLazy(() => ($typed<boolean>()
+      ? emitAndStop
+      : LAZY_EMPTY_EVALUATOR));
   });
 });
 
 // Typed by its result rather than as one of the two evaluator types.
-const emitAndStop = <T>(
-  value: T,
-  _index: number,
-  _data: ReadonlyArray<T>,
-  slot: LazySlot,
-): LazyResult<T> | StoppableResult<T> => lastLazyValue(value, slot);
+function emitAndStop<T>(value: T, _index: number, _data: ReadonlyArray<T>, slot: LazySlot): LazyResult<T> | StoppableResult<T> {
+  return lastLazyValue(value, slot);
+}

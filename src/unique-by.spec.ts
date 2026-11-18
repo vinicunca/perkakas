@@ -1,7 +1,7 @@
 import type { LazyCallback } from './internal/types/lazy-callback';
 import { describe, expect, it, vi } from 'vitest';
-import { createLazyInvocationCounter } from '../test/lazy-invocation-counter';
 import { forceFusion } from '../test/force-fusion';
+import { createLazyInvocationCounter } from '../test/lazy-invocation-counter';
 import { identity } from './identity';
 import { pipe } from './pipe';
 import { take } from './take';

@@ -1,6 +1,6 @@
+import type { LazyEvaluator } from './types/lazy-evaluator';
 import { describe, it } from 'vitest';
 import { MANY, manyLazyValues } from './lazy-control';
-import type { LazyEvaluator } from './types/lazy-evaluator';
 
 // Stands in for the evaluator type a lazy implementation declares as its return
 // type, which is what checks the evaluator it returns.
@@ -13,8 +13,7 @@ declare function unknownEvaluator(evaluator: LazyEvaluator): void;
 describe('accepted', () => {
   it('many with values of the result type', () => {
     numberEvaluator((value, _index, _data, slot) =>
-      manyLazyValues([value], slot),
-    );
+      manyLazyValues([value], slot));
   });
 });
 
@@ -41,8 +40,7 @@ describe('rejected', () => {
     numberEvaluator((_value, _index, _data, slot) =>
       // @ts-expect-error [ts2322] -- The control's tag carries the payload's
       // type, so the pipe never reads values the evaluator didn't declare.
-      manyLazyValues(['x'], slot),
-    );
+      manyLazyValues(['x'], slot));
   });
 });
 

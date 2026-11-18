@@ -175,8 +175,8 @@ describe('dataFirst', () => {
 
   it('calls the key extractor once per item, in order, with the whole input', () => {
     const data = ['a', 'b', 'c'];
-    const keyExtractor =
-      vi.fn<(item: string, index: number, data: ReadonlyArray<string>) => string>(
+    const keyExtractor
+      = vi.fn<(item: string, index: number, data: ReadonlyArray<string>) => string>(
         identity(),
       );
 

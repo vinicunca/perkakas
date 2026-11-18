@@ -1,11 +1,12 @@
+import type { StoppableLazyEvaluator } from './make-stoppable';
+import type { LazyEvaluator } from './types/lazy-evaluator';
 import { describe, it } from 'vitest';
 import {
   lastLazyValue,
   STOP,
-  type StoppableLazyEvaluator,
+
 } from './make-stoppable';
 import { requireData, requireDataByArity } from './require-data';
-import type { LazyEvaluator } from './types/lazy-evaluator';
 
 // Both stand in for the evaluator type a lazy implementation declares as its
 // return type, which is what checks the evaluator it returns.
@@ -31,8 +32,7 @@ describe('accepted', () => {
   it('an evaluator that can stop, by arity', () => {
     stoppableNumberEvaluator(
       requireDataByArity(callback, (value, _index, _data, slot) =>
-        lastLazyValue(value, slot),
-      ),
+        lastLazyValue(value, slot)),
     );
   });
 });

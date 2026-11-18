@@ -6,19 +6,19 @@ import { pipe } from './pipe';
 
 type Status = 'active' | 'inactive' | 'pending';
 
-type Task = {
+interface Task {
   readonly priority: 'high' | 'low' | 'medium';
   readonly score: number;
-};
+}
 
-type Animal = { readonly name: string };
+interface Animal { readonly name: string }
 type Dog = Animal & { readonly breed: string };
 
 describe('dataFirst', () => {
   it('an undefined value among possibly undefined items', () => {
     expectTypeOf(
-      difference([] as (number | undefined)[], [undefined]),
-    ).toEqualTypeOf<(number | undefined)[]>();
+      difference([] as Array<number | undefined>, [undefined]),
+    ).toEqualTypeOf<Array<number | undefined>>();
   });
 
   it('rejects values unrelated to the items', () => {
@@ -33,69 +33,73 @@ describe('dataLast', () => {
   });
 
   it('values wider than the items', () => {
-    expectTypeOf(pipe([] as ('a' | 'b')[], difference(['c']))).toEqualTypeOf<
-      ('a' | 'b')[]
+    expectTypeOf(pipe([] as Array<'a' | 'b'>, difference(['c']))).toEqualTypeOf<
+      Array<'a' | 'b'>
     >();
   });
 
   it('as a callback', () => {
     expectTypeOf(
-      map([] as (ReadonlyArray<number>)[], difference([2])),
-    ).toEqualTypeOf<Array<number>[]>();
+      map([] as Array<ReadonlyArray<number>>, difference([2])),
+    ).toEqualTypeOf<Array<Array<number>>>();
   });
 
   it('as a callback with values wider than the items', () => {
     expectTypeOf(
-      map([] as (readonly ('a' | 'b')[])[], difference(['c'])),
-    ).toEqualTypeOf<('a' | 'b')[][]>();
+      map([] as Array<ReadonlyArray<'a' | 'b'>>, difference(['c'])),
+    ).toEqualTypeOf<Array<Array<'a' | 'b'>>>();
   });
 
   it('a literal value outside a tuple\'s literal items', () => {
     expectTypeOf(pipe([1, 3, 5] as const, difference([2]))).toEqualTypeOf<
-      (1 | 3 | 5)[]
+      Array<1 | 3 | 5>
     >();
   });
 
   it('a literal value inside a tuple\'s literal items', () => {
     expectTypeOf(pipe([1, 3, 5] as const, difference([3]))).toEqualTypeOf<
-      (1 | 3 | 5)[]
+      Array<1 | 3 | 5>
     >();
   });
 
   it('a literal value among literal union items', () => {
-    expectTypeOf(pipe([] as Status[], difference(['active']))).toEqualTypeOf<
-      Status[]
+    expectTypeOf(pipe([] as Array<Status>, difference(['active']))).toEqualTypeOf<
+      Array<Status>
     >();
   });
 
   it('literal union values narrower than the items', () => {
     expectTypeOf(
-      pipe([] as Status[], difference([] as ('active' | 'pending')[])),
-    ).toEqualTypeOf<Status[]>();
+      pipe([] as Array<Status>, difference([] as Array<'active' | 'pending'>)),
+    ).toEqualTypeOf<Array<Status>>();
   });
 
   it('no values', () => {
-    expectTypeOf(pipe([] as Status[], difference([]))).toEqualTypeOf<
-      Status[]
+    expectTypeOf(pipe([] as Array<Status>, difference([]))).toEqualTypeOf<
+      Array<Status>
     >();
   });
 
   it('an object value with a literal union prop', () => {
     expectTypeOf(
-      pipe([] as Task[], difference([{ priority: 'high', score: 2 }])),
-    ).toEqualTypeOf<Task[]>();
+      pipe([] as Array<Task>, difference([
+        { priority: 'high', score: 2 },
+      ])),
+    ).toEqualTypeOf<Array<Task>>();
   });
 
   it('an undefined value among possibly undefined items', () => {
     expectTypeOf(
-      pipe([] as (number | undefined)[], difference([undefined])),
-    ).toEqualTypeOf<(number | undefined)[]>();
+      pipe([] as Array<number | undefined>, difference([undefined])),
+    ).toEqualTypeOf<Array<number | undefined>>();
   });
 
   it('a subtype value among supertype items', () => {
     expectTypeOf(
-      pipe([] as Animal[], difference([$typed<Dog>()])),
-    ).toEqualTypeOf<Animal[]>();
+      pipe([] as Array<Animal>, difference([
+        $typed<Dog>(),
+      ])),
+    ).toEqualTypeOf<Array<Animal>>();
   });
 
   it('rejects values unrelated to the items', () => {

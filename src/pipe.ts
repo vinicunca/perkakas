@@ -17,7 +17,7 @@ import { LAST, STOP } from './internal/make-stoppable';
 import { UNEXPECTED_ACCESS_SENTINEL } from './internal/unexpected-access-sentinel';
 
 type LazyStep = {
-  // `LazyEvaluator`s are also `StoppableLazyEvaluator`s so this accepts both.
+  /** `LazyEvaluator`s are also `StoppableLazyEvaluator`s so this accepts both. */
   readonly lazyEvaluator: StoppableLazyEvaluator;
   index: number;
 } & (

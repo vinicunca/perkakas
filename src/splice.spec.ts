@@ -398,13 +398,17 @@ describe('in a pipe', () => {
 
   it('before a stopper that ends inside the replacement', () => {
     expect(pipe([1, 2, 3], splice(1, 1, [7, 8]), take(2))).toStrictEqual([
-      1, 7,
+      1,
+      7,
     ]);
   });
 
   it('before a stopper that ends inside an appended replacement', () => {
     expect(pipe([1, 2, 3], splice(5, 0, [7, 8]), take(4))).toStrictEqual([
-      1, 2, 3, 7,
+      1,
+      2,
+      3,
+      7,
     ]);
   });
 });

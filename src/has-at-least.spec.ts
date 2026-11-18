@@ -133,7 +133,11 @@ describe('dataLast', () => {
     });
 
     it('as a filter predicate', () => {
-      expect(pipe([[1, 2], [3], [4, 5]], filter(hasAtLeast(2)))).toStrictEqual([
+      expect(pipe([
+        [1, 2],
+        [3],
+        [4, 5],
+      ], filter(hasAtLeast(2)))).toStrictEqual([
         [1, 2],
         [4, 5],
       ]);

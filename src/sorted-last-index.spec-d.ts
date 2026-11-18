@@ -8,19 +8,19 @@ type Status = 'active' | 'inactive' | 'pending';
 describe('dataFirst', () => {
   it('a literal item among literal union items', () => {
     expectTypeOf(
-      sortedLastIndex([] as Status[], 'active'),
+      sortedLastIndex([] as Array<Status>, 'active'),
     ).toEqualTypeOf<number>();
   });
 
   it('an item wider than the items', () => {
     expectTypeOf(
-      sortedLastIndex([] as ('a' | 'b')[], 'c'),
+      sortedLastIndex([] as Array<'a' | 'b'>, 'c'),
     ).toEqualTypeOf<number>();
   });
 
   it('an item narrower than the items', () => {
     expectTypeOf(
-      sortedLastIndex([] as (bigint | number)[], 2),
+      sortedLastIndex([] as Array<bigint | number>, 2),
     ).toEqualTypeOf<number>();
   });
 
@@ -37,13 +37,13 @@ describe('dataLast', () => {
 
   it('an item wider than the items', () => {
     expectTypeOf(
-      pipe([] as ('a' | 'b')[], sortedLastIndex('c')),
+      pipe([] as Array<'a' | 'b'>, sortedLastIndex('c')),
     ).toEqualTypeOf<number>();
   });
 
   it('as a callback', () => {
     expectTypeOf(
-      map([] as (ReadonlyArray<number>)[], sortedLastIndex(2)),
+      map([] as Array<ReadonlyArray<number>>, sortedLastIndex(2)),
     ).toEqualTypeOf<Array<number>>();
   });
 
@@ -61,19 +61,19 @@ describe('dataLast', () => {
 
   it('a literal item among literal union items', () => {
     expectTypeOf(
-      pipe([] as Status[], sortedLastIndex('active')),
+      pipe([] as Array<Status>, sortedLastIndex('active')),
     ).toEqualTypeOf<number>();
   });
 
   it('an item narrower than the items', () => {
     expectTypeOf(
-      pipe([] as (bigint | number)[], sortedLastIndex(2)),
+      pipe([] as Array<bigint | number>, sortedLastIndex(2)),
     ).toEqualTypeOf<number>();
   });
 
   it('an undefined item among possibly undefined items', () => {
     expectTypeOf(
-      pipe([] as (number | undefined)[], sortedLastIndex(undefined)),
+      pipe([] as Array<number | undefined>, sortedLastIndex(undefined)),
     ).toEqualTypeOf<number>();
   });
 

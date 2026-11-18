@@ -49,11 +49,15 @@ describe('data first', () => {
   });
 
   it('a single item', () => {
-    expect(sumBy([{ a: 5 }], prop('a'))).toBe(5);
+    expect(sumBy([
+      { a: 5 },
+    ], prop('a'))).toBe(5);
   });
 
   it('a single bigint', () => {
-    expect(sumBy([{ a: 5n }], prop('a'))).toBe(5n);
+    expect(sumBy([
+      { a: 5n },
+    ], prop('a'))).toBe(5n);
   });
 
   it('keeps -0 from the first mapped value', () => {
@@ -71,8 +75,8 @@ describe('data first', () => {
 
   it('calls the mapper on each item in order with the whole array', () => {
     const data = [1, 2, 3];
-    const mapper =
-      vi.fn<(value: number, index: number, data: ReadonlyArray<number>) => number>(
+    const mapper
+      = vi.fn<(value: number, index: number, data: ReadonlyArray<number>) => number>(
         identity(),
       );
 
@@ -112,8 +116,8 @@ describe('data first', () => {
   });
 
   it('stops mapping at the first value of the other type', () => {
-    const mapper =
-      vi.fn<(value: bigint | number) => bigint | number>(identity());
+    const mapper
+      = vi.fn<(value: bigint | number) => bigint | number>(identity());
 
     // @ts-expect-error [ts2769] -- The types reject a mapper that mixes bigint and number.
     expect(() => sumBy([1n, 2, 3n], mapper)).toThrow(

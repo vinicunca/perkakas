@@ -8,24 +8,24 @@ import { sortedIndexBy } from './sorted-index-by';
 
 type Status = 'active' | 'inactive' | 'pending';
 
-type Task = {
+interface Task {
   readonly priority: 'high' | 'low' | 'medium';
   readonly score: number;
-};
+}
 
-type Animal = { readonly name: string };
+interface Animal { readonly name: string }
 type Dog = Animal & { readonly breed: string };
 
 describe('dataFirst', () => {
   it('a literal item among literal union items', () => {
     expectTypeOf(
-      sortedIndexBy([] as Status[], 'active', identity()),
+      sortedIndexBy([] as Array<Status>, 'active', identity()),
     ).toEqualTypeOf<number>();
   });
 
   it('an item wider than the items', () => {
     expectTypeOf(
-      sortedIndexBy([] as ('a' | 'b')[], 'c', identity()),
+      sortedIndexBy([] as Array<'a' | 'b'>, 'c', identity()),
     ).toEqualTypeOf<number>();
   });
 
@@ -44,22 +44,25 @@ describe('dataLast', () => {
 
   it('an item wider than the items', () => {
     expectTypeOf(
-      pipe([] as ('a' | 'b')[], sortedIndexBy('c', identity())),
+      pipe([] as Array<'a' | 'b'>, sortedIndexBy('c', identity())),
     ).toEqualTypeOf<number>();
   });
 
   it('as a callback', () => {
     expectTypeOf(
-      map([] as (ReadonlyArray<number>)[], sortedIndexBy(2, identity())),
+      map([] as Array<ReadonlyArray<number>>, sortedIndexBy(2, identity())),
     ).toEqualTypeOf<Array<number>>();
   });
 
   it('value functions receive the item\'s type', () => {
     pipe(
-      [{ a: 5 }, { a: 1 }],
+      [
+        { a: 5 },
+        { a: 1 },
+      ],
       sortedIndexBy({ a: 2 }, (item, _index, data) => {
         expectTypeOf(item).toEqualTypeOf<{ a: number }>();
-        expectTypeOf(data).toEqualTypeOf<readonly { a: number }[]>();
+        expectTypeOf(data).toEqualTypeOf<ReadonlyArray<{ a: number }>>();
 
         return item.a;
       }),
@@ -80,14 +83,14 @@ describe('dataLast', () => {
 
   it('a literal item among literal union items', () => {
     expectTypeOf(
-      pipe([] as Status[], sortedIndexBy('active', identity())),
+      pipe([] as Array<Status>, sortedIndexBy('active', identity())),
     ).toEqualTypeOf<number>();
   });
 
   it('a literal item with an inline value function', () => {
     expectTypeOf(
       pipe(
-        [] as Status[],
+        [] as Array<Status>,
         sortedIndexBy('active', (status) => status.length),
       ),
     ).toEqualTypeOf<number>();
@@ -96,7 +99,7 @@ describe('dataLast', () => {
   it('a literal item with a value function typed on literal union items', () => {
     expectTypeOf(
       pipe(
-        [] as Status[],
+        [] as Array<Status>,
         sortedIndexBy('active', (status: Status) => status.length),
       ),
     ).toEqualTypeOf<number>();
@@ -105,7 +108,7 @@ describe('dataLast', () => {
   it('an object item with a literal union prop', () => {
     expectTypeOf(
       pipe(
-        [] as Task[],
+        [] as Array<Task>,
         sortedIndexBy({ priority: 'high', score: 2 }, (task) => task.score),
       ),
     ).toEqualTypeOf<number>();
@@ -114,7 +117,7 @@ describe('dataLast', () => {
   it('an undefined item among possibly undefined items', () => {
     expectTypeOf(
       pipe(
-        [] as (number | undefined)[],
+        [] as Array<number | undefined>,
         sortedIndexBy(undefined, (item) => item ?? 0),
       ),
     ).toEqualTypeOf<number>();
@@ -122,7 +125,7 @@ describe('dataLast', () => {
 
   it('a subtype item among supertype items', () => {
     expectTypeOf(
-      pipe([] as Animal[], sortedIndexBy($typed<Dog>(), prop('name'))),
+      pipe([] as Array<Animal>, sortedIndexBy($typed<Dog>(), prop('name'))),
     ).toEqualTypeOf<number>();
   });
 
@@ -132,8 +135,10 @@ describe('dataLast', () => {
   });
 
   it('rejects a value function reading a prop the item lacks', () => {
-    // @ts-expect-error [ts2769] -- The item has no `a` for the value function to read.
-    pipe([{ a: 5, b: 1 }], sortedIndexBy({ b: 2 }, prop('a')));
+    pipe([
+      { a: 5, b: 1 },
+      // @ts-expect-error [ts2769] -- The item has no `a` for the value function to read.
+    ], sortedIndexBy({ b: 2 }, prop('a')));
   });
 });
 
@@ -145,7 +150,7 @@ describe('known issues!', () => {
     // (`"c" as "a" | "b" | "c"`) avoids the widening, and an unannotated value
     // function takes the widened type.
     pipe(
-      [] as ('a' | 'b')[],
+      [] as Array<'a' | 'b'>,
       // @ts-expect-error [ts2769] -- The call is valid, the value function accepts the item and every one of the items.
       sortedIndexBy('c', (letter: 'a' | 'b' | 'c') => letter.length),
     );

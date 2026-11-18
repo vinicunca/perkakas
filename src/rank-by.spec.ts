@@ -44,7 +44,14 @@ describe('runtime (dataFirst)', () => {
 
     rankBy([3, 1, 2], 2, projection);
 
-    expect(projection.mock.calls).toStrictEqual([[2], [3], [2], [1], [2], [2]]);
+    expect(projection.mock.calls).toStrictEqual([
+      [2],
+      [3],
+      [2],
+      [1],
+      [2],
+      [2],
+    ]);
   });
 
   it('doesn\'t count ties', () => {
@@ -76,7 +83,11 @@ describe('runtime (dataLast)', () => {
 
   it('can rank items not in the array', () => {
     expect(
-      pipe([{ a: 5 }, { a: 1 }, { a: 3 }], rankBy({ a: 2 }, prop('a'))),
+      pipe([
+        { a: 5 },
+        { a: 1 },
+        { a: 3 },
+      ], rankBy({ a: 2 }, prop('a'))),
     ).toBe(1);
   });
 });

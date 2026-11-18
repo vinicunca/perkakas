@@ -76,12 +76,18 @@ describe('data first', () => {
   });
 
   it('single item', () => {
-    expect(partition(['a'], constant(true))).toStrictEqual([['a'], []]);
+    expect(partition(['a'], constant(true))).toStrictEqual([
+      ['a'],
+      [],
+    ]);
   });
 
   it('holes are partitioned as undefined', () => {
     // eslint-disable-next-line no-sparse-arrays -- The hole is the input under test.
-    expect(partition([1, , 3], isDefined)).toStrictEqual([[1, 3], [undefined]]);
+    expect(partition([1, , 3], isDefined)).toStrictEqual([
+      [1, 3],
+      [undefined],
+    ]);
   });
 
   it('calls the predicate once per item, in order, with the whole input', () => {

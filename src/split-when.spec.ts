@@ -24,11 +24,17 @@ it('empty array', () => {
 });
 
 it('single item that matches', () => {
-  expect(splitWhen([1], constant(true))).toStrictEqual([[], [1]]);
+  expect(splitWhen([1], constant(true))).toStrictEqual([
+    [],
+    [1],
+  ]);
 });
 
 it('single item that doesn\'t match', () => {
-  expect(splitWhen([1], constant(false))).toStrictEqual([[1], []]);
+  expect(splitWhen([1], constant(false))).toStrictEqual([
+    [1],
+    [],
+  ]);
 });
 
 it('calls the predicate in order with the whole input, up to the first match', () => {
@@ -93,7 +99,10 @@ it('holes become undefined when nothing matches', () => {
   expect(
     // eslint-disable-next-line no-sparse-arrays -- The hole is the input under test.
     splitWhen([1, , 3], constant(false)),
-  ).toStrictEqual([[1, undefined, 3], []]);
+  ).toStrictEqual([
+    [1, undefined, 3],
+    [],
+  ]);
 });
 
 it('empty array in a pipe', () => {

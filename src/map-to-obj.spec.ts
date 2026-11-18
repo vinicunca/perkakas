@@ -42,7 +42,10 @@ describe('data_first', () => {
 
   it('`__proto__` key isn\'t an own property', () => {
     expect(
-      Reflect.ownKeys(mapToObj(['__proto__'], (item) => [item, { a: 1 }])),
+      Reflect.ownKeys(mapToObj(['__proto__'], (item) => [
+        item,
+        { a: 1 },
+      ])),
     ).toStrictEqual([]);
   });
 
@@ -53,7 +56,12 @@ describe('data_first', () => {
   it('a repeated key keeps its first position and the last value', () => {
     expect(
       Object.entries(
-        mapToObj([1, 2, 3], (item) => [item === 2 ? 'b' : 'a', item]),
+        mapToObj([1, 2, 3], (item) => [
+          item === 2
+            ? 'b'
+            : 'a',
+          item,
+        ]),
       ),
     ).toStrictEqual([
       ['a', 3],
@@ -63,7 +71,12 @@ describe('data_first', () => {
 
   it('number keys share the property of their string form', () => {
     expect(
-      mapToObj([1, 2], (item) => [item === 1 ? 1 : '1', item]),
+      mapToObj([1, 2], (item) => [
+        item === 1
+          ? 1
+          : '1',
+        item,
+      ]),
     ).toStrictEqual({ 1: 2 });
   });
 
@@ -85,7 +98,7 @@ describe('data_first', () => {
   });
 
   it('reads the entry through its iterator', () => {
-    const accessed: PropertyKey[] = [];
+    const accessed: Array<PropertyKey> = [];
     const tuple: [string, number] = ['a', 1];
     const entry = new Proxy(tuple, {
       get: (target, property, receiver): unknown => {
@@ -182,8 +195,7 @@ describe('data_last', () => {
         [1],
         // @ts-expect-error [ts2322] -- The invalid result is the input under test.
         mapToObj(() => 1),
-      ),
-    ).toThrow(
+      )).toThrow(
       new TypeError('fn is not a function or its return value is not iterable'),
     );
   });
