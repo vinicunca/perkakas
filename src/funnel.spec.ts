@@ -1,14 +1,29 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { constant } from './constant';
 import { doNothing } from './do-nothing';
 import { funnel } from './funnel';
-import { sleep } from './sleep';
 
 // We need some non-trivial duration to use in all our tests, to abstract the
-// actual chosen value we use this UnitOfTime (UT) constant. As long as it is a
-// positive integer, the actual value doesn't matter (but the larger it is,
-// the longer the tests would take to run). The number is in milliseconds.
-const UT = 16;
+// actual chosen value we use this constant. The actual value doesn't matter as
+// long as the fractions of it that the tests advance by still land on
+// different milliseconds, because the fake clock only fires timers on whole
+// ones.
+const UNIT_OF_TIME_MS = 16;
+
+// The tests assert the funnel's state at exact offsets from each call. That
+// only holds on a clock that moves when the test moves it: with real timers a
+// late event loop wake-up can run timers in a different order.
+beforeEach(() => {
+  // The default list also fakes `process.hrtime`, which breaks on Node 18 where
+  // `performance.now` is derived from it.
+  vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'Date'] });
+});
+
+afterEach(() => {
+  // Test files share a worker (`isolate: false`) so the fake clock would leak
+  // into whichever file runs next.
+  vi.useRealTimers();
+});
 
 // We use this reducer to collect arguments from each invocation so we can test
 // what the function was invoked with.
@@ -28,9 +43,12 @@ describe('without a reducer', () => {
     expect(mockFn).toHaveBeenLastCalledWith();
   });
 
-  it('handles multiple calls', async () => {
+  it('handles multiple calls', () => {
     const mockFn = vi.fn<() => void>();
-    const foo = funnel(mockFn, { triggerAt: 'both', minQuietPeriodMs: UT });
+    const foo = funnel(mockFn, {
+      triggerAt: 'both',
+      minQuietPeriodMs: UNIT_OF_TIME_MS,
+    });
     foo.call();
     foo.call();
     foo.call();
@@ -38,7 +56,7 @@ describe('without a reducer', () => {
     expect(mockFn).toHaveBeenCalledTimes(1);
     expect(mockFn).toHaveBeenLastCalledWith();
 
-    await sleep(2 * UT);
+    vi.advanceTimersByTime(2 * UNIT_OF_TIME_MS);
 
     expect(mockFn).toHaveBeenCalledTimes(2);
     expect(mockFn).toHaveBeenLastCalledWith();
@@ -51,7 +69,7 @@ describe('reducer behavior', () => {
     const foo = funnel(mockFn, {
       reducer: constant('hello world'),
       triggerAt: 'start',
-      minQuietPeriodMs: UT,
+      minQuietPeriodMs: UNIT_OF_TIME_MS,
     });
     foo.call();
 
@@ -59,36 +77,36 @@ describe('reducer behavior', () => {
     expect(mockFn).toHaveBeenLastCalledWith('hello world');
   });
 
-  it('reduces call args', async () => {
+  it('reduces call args', () => {
     const mockFn = vi.fn<(x: number) => void>();
 
     const foo = funnel(mockFn, {
       reducer: (total, item: number) => (total ?? 0) + item,
-      minQuietPeriodMs: 2 * UT,
+      minQuietPeriodMs: 2 * UNIT_OF_TIME_MS,
       triggerAt: 'end',
     });
     foo.call(1);
     foo.call(2);
     foo.call(3);
-    await sleep(UT);
+    vi.advanceTimersByTime(UNIT_OF_TIME_MS);
     foo.call(4);
     foo.call(5);
     foo.call(6);
-    await sleep(2 * UT);
+    vi.advanceTimersByTime(2 * UNIT_OF_TIME_MS);
 
     expect(mockFn).toHaveBeenCalledTimes(1);
     expect(mockFn).toHaveBeenLastCalledWith(21 /* 1 + 2 + ... + 6 */);
   });
 
-  it('does not invoke if reduceArgs returns undefined', async () => {
+  it('does not invoke if reduceArgs returns undefined', () => {
     const mockFn = vi.fn<(x: unknown) => void>();
     const foo = funnel(mockFn, {
       reducer: constant(undefined),
       triggerAt: 'end',
-      minQuietPeriodMs: UT,
+      minQuietPeriodMs: UNIT_OF_TIME_MS,
     });
     foo.call();
-    await sleep(2 * UT);
+    vi.advanceTimersByTime(2 * UNIT_OF_TIME_MS);
 
     expect(mockFn).toHaveBeenCalledTimes(0);
   });
@@ -103,7 +121,7 @@ describe('reducer behavior', () => {
         c,
       ],
       triggerAt: 'start',
-      minQuietPeriodMs: UT,
+      minQuietPeriodMs: UNIT_OF_TIME_MS,
     });
     foo.call(1, 'a', true);
 
@@ -111,12 +129,12 @@ describe('reducer behavior', () => {
     expect(mockFn).toHaveBeenLastCalledWith([undefined, 1, 'a', true]);
   });
 
-  it('reducer isn\'t called again when \'invokedAt: start\'', async () => {
+  it('reducer isn\'t called again when \'invokedAt: start\'', () => {
     const mockFn = vi.fn(ARGS_COLLECTOR);
     const foo = funnel(doNothing(), {
       reducer: mockFn,
       triggerAt: 'start',
-      minQuietPeriodMs: UT,
+      minQuietPeriodMs: UNIT_OF_TIME_MS,
     });
     foo.call('a');
 
@@ -128,7 +146,7 @@ describe('reducer behavior', () => {
 
     expect(mockFn).toHaveBeenCalledTimes(1);
 
-    await sleep(2 * UT);
+    vi.advanceTimersByTime(2 * UNIT_OF_TIME_MS);
 
     expect(mockFn).toHaveBeenCalledTimes(1);
   });
@@ -136,12 +154,12 @@ describe('reducer behavior', () => {
 
 describe('non-trivial (>0ms) timer duration', () => {
   describe('delay timer', () => {
-    it('invokedAt: start', async () => {
+    it('invokedAt: start', () => {
       const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
         triggerAt: 'start',
-        minGapMs: UT,
+        minGapMs: UNIT_OF_TIME_MS,
       });
       foo.call('a');
       foo.call('b');
@@ -150,7 +168,7 @@ describe('non-trivial (>0ms) timer duration', () => {
       expect(mockFn).toHaveBeenCalledTimes(1);
       expect(mockFn).toHaveBeenLastCalledWith(['a']);
 
-      await sleep(UT);
+      vi.advanceTimersByTime(UNIT_OF_TIME_MS);
 
       expect(mockFn).toHaveBeenCalledTimes(1);
 
@@ -163,12 +181,12 @@ describe('non-trivial (>0ms) timer duration', () => {
       expect(mockFn).toHaveBeenLastCalledWith(['d']);
     });
 
-    it('invokedAt: both', async () => {
+    it('invokedAt: both', () => {
       const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
         triggerAt: 'both',
-        minGapMs: UT,
+        minGapMs: UNIT_OF_TIME_MS,
       });
       foo.call('a');
       foo.call('b');
@@ -177,7 +195,11 @@ describe('non-trivial (>0ms) timer duration', () => {
       expect(mockFn).toHaveBeenCalledTimes(1);
       expect(mockFn).toHaveBeenLastCalledWith(['a']);
 
-      await sleep(UT);
+      vi.advanceTimersByTime(UNIT_OF_TIME_MS - 1);
+
+      expect(mockFn).toHaveBeenCalledTimes(1);
+
+      vi.advanceTimersByTime(1);
 
       expect(mockFn).toHaveBeenCalledTimes(2);
       expect(mockFn).toHaveBeenLastCalledWith(['b', 'c']);
@@ -188,18 +210,18 @@ describe('non-trivial (>0ms) timer duration', () => {
 
       expect(mockFn).toHaveBeenCalledTimes(2);
 
-      await sleep(UT);
+      vi.advanceTimersByTime(UNIT_OF_TIME_MS);
 
       expect(mockFn).toHaveBeenCalledTimes(3);
       expect(mockFn).toHaveBeenLastCalledWith(['d', 'e', 'f']);
     });
 
-    it('invocations in the middle of a window', async () => {
+    it('invocations in the middle of a window', () => {
       const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
         triggerAt: 'both',
-        minGapMs: UT,
+        minGapMs: UNIT_OF_TIME_MS,
       });
       foo.call('a');
       foo.call('b');
@@ -208,14 +230,14 @@ describe('non-trivial (>0ms) timer duration', () => {
       expect(mockFn).toHaveBeenCalledTimes(1);
       expect(mockFn).toHaveBeenLastCalledWith(['a']);
 
-      await sleep(0.75 * UT);
+      vi.advanceTimersByTime(0.75 * UNIT_OF_TIME_MS);
       foo.call('d');
       foo.call('e');
       foo.call('f');
 
       expect(mockFn).toHaveBeenCalledTimes(1);
 
-      await sleep(0.75 * UT);
+      vi.advanceTimersByTime(0.75 * UNIT_OF_TIME_MS);
 
       expect(mockFn).toHaveBeenCalledTimes(2);
       expect(mockFn).toHaveBeenLastCalledWith(['b', 'c', 'd', 'e', 'f']);
@@ -223,12 +245,12 @@ describe('non-trivial (>0ms) timer duration', () => {
   });
 
   describe('burst timer', () => {
-    it('invokedAt: start', async () => {
+    it('invokedAt: start', () => {
       const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
         triggerAt: 'start',
-        minQuietPeriodMs: UT,
+        minQuietPeriodMs: UNIT_OF_TIME_MS,
       });
       foo.call('a');
       foo.call('b');
@@ -237,7 +259,7 @@ describe('non-trivial (>0ms) timer duration', () => {
       expect(mockFn).toHaveBeenCalledTimes(1);
       expect(mockFn).toHaveBeenLastCalledWith(['a']);
 
-      await sleep(UT);
+      vi.advanceTimersByTime(UNIT_OF_TIME_MS);
 
       expect(mockFn).toHaveBeenCalledTimes(1);
 
@@ -245,17 +267,17 @@ describe('non-trivial (>0ms) timer duration', () => {
 
       expect(mockFn).toHaveBeenCalledTimes(2);
       // "b" and "c" have been ignored because the funnel is only configured to
-      // run the function at the start of the delay window, meaning anything
+      // run the function at the start of the burst window, meaning anything
       // after that is simply dropped.
       expect(mockFn).toHaveBeenLastCalledWith(['d']);
     });
 
-    it('invokedAt: both', async () => {
+    it('invokedAt: both', () => {
       const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
         triggerAt: 'both',
-        minQuietPeriodMs: UT,
+        minQuietPeriodMs: UNIT_OF_TIME_MS,
       });
       foo.call('a');
       foo.call('b');
@@ -264,7 +286,7 @@ describe('non-trivial (>0ms) timer duration', () => {
       expect(mockFn).toHaveBeenCalledTimes(1);
       expect(mockFn).toHaveBeenLastCalledWith(['a']);
 
-      await sleep(UT);
+      vi.advanceTimersByTime(UNIT_OF_TIME_MS);
 
       expect(mockFn).toHaveBeenCalledTimes(2);
       expect(mockFn).toHaveBeenLastCalledWith(['b', 'c']);
@@ -276,18 +298,18 @@ describe('non-trivial (>0ms) timer duration', () => {
       expect(mockFn).toHaveBeenCalledTimes(3);
       expect(mockFn).toHaveBeenLastCalledWith(['d']);
 
-      await sleep(UT);
+      vi.advanceTimersByTime(UNIT_OF_TIME_MS);
 
       expect(mockFn).toHaveBeenCalledTimes(4);
       expect(mockFn).toHaveBeenLastCalledWith(['e', 'f']);
     });
 
-    it('invokedAt: end', async () => {
+    it('invokedAt: end', () => {
       const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
         triggerAt: 'end',
-        minQuietPeriodMs: UT,
+        minQuietPeriodMs: UNIT_OF_TIME_MS,
       });
       foo.call('a');
       foo.call('b');
@@ -295,7 +317,11 @@ describe('non-trivial (>0ms) timer duration', () => {
 
       expect(mockFn).toHaveBeenCalledTimes(0);
 
-      await sleep(UT);
+      vi.advanceTimersByTime(UNIT_OF_TIME_MS - 1);
+
+      expect(mockFn).toHaveBeenCalledTimes(0);
+
+      vi.advanceTimersByTime(1);
 
       expect(mockFn).toHaveBeenCalledTimes(1);
       expect(mockFn).toHaveBeenLastCalledWith(['a', 'b', 'c']);
@@ -306,18 +332,18 @@ describe('non-trivial (>0ms) timer duration', () => {
 
       expect(mockFn).toHaveBeenCalledTimes(1);
 
-      await sleep(UT);
+      vi.advanceTimersByTime(UNIT_OF_TIME_MS);
 
       expect(mockFn).toHaveBeenCalledTimes(2);
       expect(mockFn).toHaveBeenLastCalledWith(['e', 'f', 'g']);
     });
 
-    it('invocations in the middle of a window', async () => {
+    it('invocations in the middle of a window', () => {
       const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
         triggerAt: 'end',
-        minQuietPeriodMs: UT,
+        minQuietPeriodMs: UNIT_OF_TIME_MS,
       });
       foo.call('a');
       foo.call('b');
@@ -325,45 +351,43 @@ describe('non-trivial (>0ms) timer duration', () => {
 
       expect(mockFn).toHaveBeenCalledTimes(0);
 
-      await sleep(0.9 * UT);
+      vi.advanceTimersByTime(0.9 * UNIT_OF_TIME_MS);
       foo.call('d');
       foo.call('e');
       foo.call('f');
 
       expect(mockFn).toHaveBeenCalledTimes(0);
 
-      await sleep(0.1 * UT);
+      vi.advanceTimersByTime(0.1 * UNIT_OF_TIME_MS);
 
       expect(mockFn).toHaveBeenCalledTimes(0);
 
-      await sleep(UT);
+      vi.advanceTimersByTime(UNIT_OF_TIME_MS);
 
       expect(mockFn).toHaveBeenCalledTimes(1);
       expect(mockFn).toHaveBeenLastCalledWith(['a', 'b', 'c', 'd', 'e', 'f']);
     });
 
-    it('maxBurstDurationMs limits the burst duration', async () => {
+    it('maxBurstDurationMs limits the burst duration', () => {
       const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
-        minQuietPeriodMs: UT,
-        maxBurstDurationMs: 2 * UT,
+        minQuietPeriodMs: UNIT_OF_TIME_MS,
+        maxBurstDurationMs: 2 * UNIT_OF_TIME_MS,
         triggerAt: 'end',
       });
       foo.call('a');
-      await sleep(0.75 * UT);
+      vi.advanceTimersByTime(0.75 * UNIT_OF_TIME_MS);
       foo.call('b');
-      await sleep(0.75 * UT);
+      vi.advanceTimersByTime(0.75 * UNIT_OF_TIME_MS);
       foo.call('c');
 
-      // Total time is approximately 1.5*UT, less than 2UT which is
-      // maxBurstDurationMs
+      // Total time is 1.5*UT, less than 2UT which is maxBurstDurationMs
       expect(mockFn).toHaveBeenCalledTimes(0);
 
-      // We sleep less than minQuietPeriodMs but more than our
-      // maxBurstDurationMs so that we validate that the burst is being ended
-      // prematurely.
-      await sleep(0.75 * UT);
+      // We advance less than minQuietPeriodMs but past our maxBurstDurationMs
+      // so that we validate that the burst is being ended prematurely.
+      vi.advanceTimersByTime(0.75 * UNIT_OF_TIME_MS);
 
       expect(mockFn).toHaveBeenCalledTimes(1);
       expect(mockFn).toHaveBeenLastCalledWith(['a', 'b', 'c']);
@@ -371,12 +395,12 @@ describe('non-trivial (>0ms) timer duration', () => {
   });
 
   describe('both timers', () => {
-    it('delay is longer than burst', async () => {
+    it('delay is longer than burst', () => {
       const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
-        minGapMs: 2 * UT,
-        minQuietPeriodMs: UT,
+        minGapMs: 2 * UNIT_OF_TIME_MS,
+        minQuietPeriodMs: UNIT_OF_TIME_MS,
         triggerAt: 'both',
       });
       foo.call('a');
@@ -386,25 +410,25 @@ describe('non-trivial (>0ms) timer duration', () => {
       expect(mockFn).toHaveBeenCalledTimes(1);
       expect(mockFn).toHaveBeenLastCalledWith(['a']);
 
-      await sleep(UT);
+      vi.advanceTimersByTime(UNIT_OF_TIME_MS);
       foo.call('d');
       foo.call('e');
       foo.call('f');
 
       expect(mockFn).toHaveBeenCalledTimes(1);
 
-      await sleep(UT);
+      vi.advanceTimersByTime(UNIT_OF_TIME_MS);
 
       expect(mockFn).toHaveBeenCalledTimes(2);
       expect(mockFn).toHaveBeenLastCalledWith(['b', 'c', 'd', 'e', 'f']);
     });
 
-    it('burst is longer than delay', async () => {
+    it('burst is longer than delay', () => {
       const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
-        minGapMs: UT,
-        minQuietPeriodMs: 2 * UT,
+        minGapMs: UNIT_OF_TIME_MS,
+        minQuietPeriodMs: 2 * UNIT_OF_TIME_MS,
         triggerAt: 'both',
       });
       foo.call('a');
@@ -414,29 +438,29 @@ describe('non-trivial (>0ms) timer duration', () => {
       expect(mockFn).toHaveBeenCalledTimes(1);
       expect(mockFn).toHaveBeenLastCalledWith(['a']);
 
-      await sleep(UT);
+      vi.advanceTimersByTime(UNIT_OF_TIME_MS);
       foo.call('d');
       foo.call('e');
       foo.call('f');
 
       expect(mockFn).toHaveBeenCalledTimes(1);
 
-      await sleep(UT);
+      vi.advanceTimersByTime(UNIT_OF_TIME_MS);
 
       expect(mockFn).toHaveBeenCalledTimes(1);
 
-      await sleep(UT);
+      vi.advanceTimersByTime(UNIT_OF_TIME_MS);
 
       expect(mockFn).toHaveBeenCalledTimes(2);
       expect(mockFn).toHaveBeenLastCalledWith(['b', 'c', 'd', 'e', 'f']);
     });
 
-    it('burst and delay are equal', async () => {
+    it('burst and delay are equal', () => {
       const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
-        minGapMs: UT,
-        minQuietPeriodMs: UT,
+        minGapMs: UNIT_OF_TIME_MS,
+        minQuietPeriodMs: UNIT_OF_TIME_MS,
         triggerAt: 'both',
       });
       foo.call('a');
@@ -446,7 +470,7 @@ describe('non-trivial (>0ms) timer duration', () => {
       expect(mockFn).toHaveBeenCalledTimes(1);
       expect(mockFn).toHaveBeenLastCalledWith(['a']);
 
-      await sleep(UT);
+      vi.advanceTimersByTime(UNIT_OF_TIME_MS);
       foo.call('d');
       foo.call('e');
       foo.call('f');
@@ -454,19 +478,19 @@ describe('non-trivial (>0ms) timer duration', () => {
       expect(mockFn).toHaveBeenCalledTimes(2);
       expect(mockFn).toHaveBeenLastCalledWith(['b', 'c']);
 
-      await sleep(UT);
+      vi.advanceTimersByTime(UNIT_OF_TIME_MS);
 
       expect(mockFn).toHaveBeenCalledTimes(3);
       expect(mockFn).toHaveBeenLastCalledWith(['d', 'e', 'f']);
     });
 
-    it('delay and maxBurstDurationMs are equal', async () => {
+    it('delay and maxBurstDurationMs are equal', () => {
       const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
-        minGapMs: UT,
-        minQuietPeriodMs: 2 * UT,
-        maxBurstDurationMs: UT,
+        minGapMs: UNIT_OF_TIME_MS,
+        minQuietPeriodMs: 2 * UNIT_OF_TIME_MS,
+        maxBurstDurationMs: UNIT_OF_TIME_MS,
         triggerAt: 'both',
       });
       foo.call('a');
@@ -476,7 +500,7 @@ describe('non-trivial (>0ms) timer duration', () => {
       expect(mockFn).toHaveBeenCalledTimes(1);
       expect(mockFn).toHaveBeenLastCalledWith(['a']);
 
-      await sleep(UT);
+      vi.advanceTimersByTime(UNIT_OF_TIME_MS);
       foo.call('d');
       foo.call('e');
       foo.call('f');
@@ -484,7 +508,7 @@ describe('non-trivial (>0ms) timer duration', () => {
       expect(mockFn).toHaveBeenCalledTimes(2);
       expect(mockFn).toHaveBeenLastCalledWith(['b', 'c']);
 
-      await sleep(UT);
+      vi.advanceTimersByTime(UNIT_OF_TIME_MS);
 
       expect(mockFn).toHaveBeenCalledTimes(3);
       expect(mockFn).toHaveBeenLastCalledWith(['d', 'e', 'f']);
@@ -494,7 +518,7 @@ describe('non-trivial (>0ms) timer duration', () => {
 
 describe('immediate (===0) timer durations', () => {
   describe('delay timer', () => {
-    it('invokedAt: start', async () => {
+    it('invokedAt: start', () => {
       const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
@@ -508,7 +532,7 @@ describe('immediate (===0) timer durations', () => {
       expect(mockFn).toHaveBeenCalledTimes(1);
       expect(mockFn).toHaveBeenLastCalledWith(['a']);
 
-      await sleep(0);
+      vi.advanceTimersByTime(0);
       foo.call('d');
       foo.call('e');
       foo.call('f');
@@ -519,12 +543,12 @@ describe('immediate (===0) timer durations', () => {
       // after that is simply dropped.
       expect(mockFn).toHaveBeenLastCalledWith(['d']);
 
-      await sleep(0);
+      vi.advanceTimersByTime(0);
 
       expect(mockFn).toHaveBeenCalledTimes(2);
     });
 
-    it('invokedAt: both', async () => {
+    it('invokedAt: both', () => {
       const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
@@ -538,7 +562,7 @@ describe('immediate (===0) timer durations', () => {
       expect(mockFn).toHaveBeenCalledTimes(1);
       expect(mockFn).toHaveBeenLastCalledWith(['a']);
 
-      await sleep(0);
+      vi.advanceTimersByTime(0);
       foo.call('d');
       foo.call('e');
       foo.call('f');
@@ -546,19 +570,21 @@ describe('immediate (===0) timer durations', () => {
       expect(mockFn).toHaveBeenCalledTimes(2);
       expect(mockFn).toHaveBeenLastCalledWith(['b', 'c']);
 
-      await sleep(0);
+      // The last invocation started its 0ms timer from inside a timer callback,
+      // where the fake clock enforces a 1ms minimum delay.
+      vi.advanceTimersByTime(1);
 
       expect(mockFn).toHaveBeenCalledTimes(3);
       expect(mockFn).toHaveBeenLastCalledWith(['d', 'e', 'f']);
     });
 
-    it('with a non-trivial burst timer', async () => {
+    it('with a non-trivial burst timer', () => {
       const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
         triggerAt: 'both',
         minGapMs: 0,
-        minQuietPeriodMs: UT,
+        minQuietPeriodMs: UNIT_OF_TIME_MS,
       });
       foo.call('a');
 
@@ -569,7 +595,7 @@ describe('immediate (===0) timer durations', () => {
 
       expect(mockFn).toHaveBeenCalledTimes(1);
 
-      await sleep(UT);
+      vi.advanceTimersByTime(UNIT_OF_TIME_MS);
 
       expect(mockFn).toHaveBeenCalledTimes(2);
       expect(mockFn).toHaveBeenLastCalledWith(['b']);
@@ -577,7 +603,7 @@ describe('immediate (===0) timer durations', () => {
   });
 
   describe('burst timer', () => {
-    it('invokedAt: start', async () => {
+    it('invokedAt: start', () => {
       const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
@@ -591,23 +617,23 @@ describe('immediate (===0) timer durations', () => {
       expect(mockFn).toHaveBeenCalledTimes(1);
       expect(mockFn).toHaveBeenLastCalledWith(['a']);
 
-      await sleep(0);
+      vi.advanceTimersByTime(0);
       foo.call('d');
       foo.call('e');
       foo.call('f');
 
       expect(mockFn).toHaveBeenCalledTimes(2);
       // "b" and "c" have been ignored because the funnel is only configured to
-      // run the function at the start of the delay window, meaning anything
+      // run the function at the start of the burst window, meaning anything
       // after that is simply dropped.
       expect(mockFn).toHaveBeenLastCalledWith(['d']);
 
-      await sleep(0);
+      vi.advanceTimersByTime(0);
 
       expect(mockFn).toHaveBeenCalledTimes(2);
     });
 
-    it('invokedAt: both', async () => {
+    it('invokedAt: both', () => {
       const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
@@ -621,7 +647,7 @@ describe('immediate (===0) timer durations', () => {
       expect(mockFn).toHaveBeenCalledTimes(1);
       expect(mockFn).toHaveBeenLastCalledWith(['a']);
 
-      await sleep(0);
+      vi.advanceTimersByTime(0);
 
       expect(mockFn).toHaveBeenCalledTimes(2);
       expect(mockFn).toHaveBeenLastCalledWith(['b', 'c']);
@@ -633,13 +659,13 @@ describe('immediate (===0) timer durations', () => {
       expect(mockFn).toHaveBeenCalledTimes(3);
       expect(mockFn).toHaveBeenLastCalledWith(['d']);
 
-      await sleep(0);
+      vi.advanceTimersByTime(0);
 
       expect(mockFn).toHaveBeenCalledTimes(4);
       expect(mockFn).toHaveBeenLastCalledWith(['e', 'f']);
     });
 
-    it('invokedAt: end', async () => {
+    it('invokedAt: end', () => {
       const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
@@ -652,7 +678,7 @@ describe('immediate (===0) timer durations', () => {
 
       expect(mockFn).toHaveBeenCalledTimes(0);
 
-      await sleep(0);
+      vi.advanceTimersByTime(0);
 
       expect(mockFn).toHaveBeenCalledTimes(1);
       expect(mockFn).toHaveBeenLastCalledWith(['a', 'b', 'c']);
@@ -663,18 +689,18 @@ describe('immediate (===0) timer durations', () => {
 
       expect(mockFn).toHaveBeenCalledTimes(1);
 
-      await sleep(0);
+      vi.advanceTimersByTime(0);
 
       expect(mockFn).toHaveBeenCalledTimes(2);
       expect(mockFn).toHaveBeenLastCalledWith(['d', 'e', 'f']);
     });
 
-    it('with a non-trivial delay timer', async () => {
+    it('with a non-trivial delay timer', () => {
       const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
         triggerAt: 'both',
-        minGapMs: UT,
+        minGapMs: UNIT_OF_TIME_MS,
         minQuietPeriodMs: 0,
       });
       foo.call('a');
@@ -683,22 +709,22 @@ describe('immediate (===0) timer durations', () => {
       expect(mockFn).toHaveBeenCalledTimes(1);
       expect(mockFn).toHaveBeenLastCalledWith(['a']);
 
-      await sleep(0);
+      vi.advanceTimersByTime(0);
 
       expect(mockFn).toHaveBeenCalledTimes(1);
 
-      await sleep(UT);
+      vi.advanceTimersByTime(UNIT_OF_TIME_MS);
 
       expect(mockFn).toHaveBeenCalledTimes(2);
       expect(mockFn).toHaveBeenLastCalledWith(['b']);
     });
 
-    it('burst timer with non-trivial maxBurstDuration', async () => {
+    it('burst timer with non-trivial maxBurstDuration', () => {
       const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
         minQuietPeriodMs: 0,
-        maxBurstDurationMs: UT,
+        maxBurstDurationMs: UNIT_OF_TIME_MS,
         triggerAt: 'end',
       });
       foo.call('a');
@@ -707,14 +733,14 @@ describe('immediate (===0) timer durations', () => {
 
       expect(mockFn).toHaveBeenCalledTimes(0);
 
-      await sleep(0);
+      vi.advanceTimersByTime(0);
 
       expect(mockFn).toHaveBeenCalledTimes(1);
       expect(mockFn).toHaveBeenLastCalledWith(['a', 'b', 'c']);
     });
   });
 
-  it('both timers', async () => {
+  it('both timers', () => {
     const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
     const foo = funnel(mockFn, {
       reducer: ARGS_COLLECTOR,
@@ -727,27 +753,27 @@ describe('immediate (===0) timer durations', () => {
     expect(mockFn).toHaveBeenCalledTimes(1);
     expect(mockFn).toHaveBeenLastCalledWith(['a']);
 
-    await sleep(0);
+    vi.advanceTimersByTime(0);
 
     expect(mockFn).toHaveBeenCalledTimes(1);
   });
 
-  it('maxBurstDurationMs = 0 limits the burst immediately', async () => {
+  it('maxBurstDurationMs = 0 limits the burst immediately', () => {
     const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
     const foo = funnel(mockFn, {
       reducer: ARGS_COLLECTOR,
       triggerAt: 'end',
-      minQuietPeriodMs: UT,
+      minQuietPeriodMs: UNIT_OF_TIME_MS,
       maxBurstDurationMs: 0,
     });
     foo.call('a');
-    await sleep(0);
+    vi.advanceTimersByTime(0);
 
     expect(mockFn).toHaveBeenCalledTimes(1);
     expect(mockFn).toHaveBeenLastCalledWith(['a']);
   });
 
-  it('all timeouts zero', async () => {
+  it('all timeouts zero', () => {
     const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
     const foo = funnel(mockFn, {
       reducer: ARGS_COLLECTOR,
@@ -762,7 +788,7 @@ describe('immediate (===0) timer durations', () => {
     expect(mockFn).toHaveBeenCalledTimes(1);
     expect(mockFn).toHaveBeenLastCalledWith(['a']);
 
-    await sleep(0);
+    vi.advanceTimersByTime(0);
 
     expect(mockFn).toHaveBeenCalledTimes(2);
     expect(mockFn).toHaveBeenLastCalledWith(['b']);
@@ -770,7 +796,7 @@ describe('immediate (===0) timer durations', () => {
 });
 
 describe('default minQuietPeriodMs === 0 when minGapMs is not defined', () => {
-  it('invokedAt: start', async () => {
+  it('invokedAt: start', () => {
     const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
     const foo = funnel(mockFn, {
       reducer: ARGS_COLLECTOR,
@@ -785,7 +811,7 @@ describe('default minQuietPeriodMs === 0 when minGapMs is not defined', () => {
 
     expect(mockFn).toHaveBeenCalledTimes(1);
 
-    await sleep(0);
+    vi.advanceTimersByTime(0);
 
     expect(mockFn).toHaveBeenCalledTimes(1);
 
@@ -795,7 +821,7 @@ describe('default minQuietPeriodMs === 0 when minGapMs is not defined', () => {
     expect(mockFn).toHaveBeenLastCalledWith(['c']);
   });
 
-  it('invokedAt: both', async () => {
+  it('invokedAt: both', () => {
     const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
     const foo = funnel(mockFn, {
       reducer: ARGS_COLLECTOR,
@@ -810,7 +836,7 @@ describe('default minQuietPeriodMs === 0 when minGapMs is not defined', () => {
 
     expect(mockFn).toHaveBeenCalledTimes(1);
 
-    await sleep(0);
+    vi.advanceTimersByTime(0);
 
     expect(mockFn).toHaveBeenCalledTimes(2);
     expect(mockFn).toHaveBeenLastCalledWith(['b']);
@@ -824,12 +850,12 @@ describe('default minQuietPeriodMs === 0 when minGapMs is not defined', () => {
 
 describe('utility functions', () => {
   describe('flush', () => {
-    it('flush triggers an immediate invocation', async () => {
+    it('flush triggers an immediate invocation', () => {
       const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
         triggerAt: 'end',
-        minQuietPeriodMs: UT,
+        minQuietPeriodMs: UNIT_OF_TIME_MS,
       });
       foo.call('a');
       foo.call('b');
@@ -839,66 +865,66 @@ describe('utility functions', () => {
       expect(mockFn).toHaveBeenCalledTimes(1);
       expect(mockFn).toHaveBeenLastCalledWith(['a', 'b', 'c']);
 
-      await sleep(UT);
+      vi.advanceTimersByTime(UNIT_OF_TIME_MS);
 
       expect(mockFn).toHaveBeenCalledTimes(1);
     });
 
-    it('flush during active burst', async () => {
+    it('flush during active burst', () => {
       const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
         triggerAt: 'end',
-        minQuietPeriodMs: 2 * UT,
+        minQuietPeriodMs: 2 * UNIT_OF_TIME_MS,
       });
       foo.call('a');
       foo.call('b');
       foo.call('c');
 
-      await sleep(UT);
+      vi.advanceTimersByTime(UNIT_OF_TIME_MS);
 
       foo.flush();
 
       expect(mockFn).toHaveBeenCalledTimes(1);
       expect(mockFn).toHaveBeenLastCalledWith(['a', 'b', 'c']);
 
-      await sleep(2 * UT);
+      vi.advanceTimersByTime(2 * UNIT_OF_TIME_MS);
 
       expect(mockFn).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('cancel', () => {
-    it('cancel prevents invocation', async () => {
+    it('cancel prevents invocation', () => {
       const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
         triggerAt: 'end',
-        minQuietPeriodMs: UT,
+        minQuietPeriodMs: UNIT_OF_TIME_MS,
       });
       foo.call('a');
       foo.call('b');
       foo.call('c');
       foo.cancel();
-      await sleep(UT);
+      vi.advanceTimersByTime(UNIT_OF_TIME_MS);
 
       expect(mockFn).toHaveBeenCalledTimes(0);
     });
 
-    it('cancel during delay period', async () => {
+    it('cancel during delay period', () => {
       const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
         triggerAt: 'start',
-        minGapMs: 2 * UT,
+        minGapMs: 2 * UNIT_OF_TIME_MS,
       });
       foo.call('a');
       foo.call('b');
 
-      await sleep(UT);
+      vi.advanceTimersByTime(UNIT_OF_TIME_MS);
       foo.cancel();
 
-      await sleep(UT);
+      vi.advanceTimersByTime(UNIT_OF_TIME_MS);
 
       expect(mockFn).toHaveBeenCalledTimes(1);
     });
@@ -910,7 +936,7 @@ describe('utility functions', () => {
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
         triggerAt: 'end',
-        minQuietPeriodMs: UT,
+        minQuietPeriodMs: UNIT_OF_TIME_MS,
       });
 
       expect(foo.isIdle).toBe(true);
@@ -924,7 +950,7 @@ describe('utility functions', () => {
       expect(foo.isIdle).toBe(true);
     });
 
-    it('isIdle works when burst duration is 0', async () => {
+    it('isIdle works when burst duration is 0', () => {
       const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
@@ -940,7 +966,7 @@ describe('utility functions', () => {
 
       expect(foo.isIdle).toBe(false);
 
-      await sleep(0);
+      vi.advanceTimersByTime(0);
 
       expect(foo.isIdle).toBe(true);
     });
@@ -952,7 +978,7 @@ describe('utility functions', () => {
       const foo = funnel(mockFn, {
         reducer: ARGS_COLLECTOR,
         triggerAt: 'end',
-        minQuietPeriodMs: UT,
+        minQuietPeriodMs: UNIT_OF_TIME_MS,
       });
 
       expect(foo.pendingData).toBeUndefined();
@@ -972,7 +998,7 @@ describe('utility functions', () => {
       const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
       const foo = funnel(mockFn, {
         triggerAt: 'end',
-        minQuietPeriodMs: UT,
+        minQuietPeriodMs: UNIT_OF_TIME_MS,
       });
 
       expect(foo.pendingData).toBeUndefined();
@@ -987,13 +1013,13 @@ describe('utility functions', () => {
 });
 
 describe('edge-cases', () => {
-  it('bursts that start late don\'t prevent delayed invocations', async () => {
+  it('bursts that start late don\'t prevent delayed invocations', () => {
     const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
     const foo = funnel(mockFn, {
       reducer: ARGS_COLLECTOR,
       triggerAt: 'both',
-      minQuietPeriodMs: UT,
-      minGapMs: 2 * UT,
+      minQuietPeriodMs: UNIT_OF_TIME_MS,
+      minGapMs: 2 * UNIT_OF_TIME_MS,
     });
     foo.call('a');
     foo.call('b');
@@ -1004,7 +1030,7 @@ describe('edge-cases', () => {
     expect(mockFn).toHaveBeenCalledTimes(1);
     expect(mockFn).toHaveBeenLastCalledWith(['a']);
 
-    await sleep(1.5 * UT);
+    vi.advanceTimersByTime(1.5 * UNIT_OF_TIME_MS);
 
     // But because our delay time is still longer, we still expect that the
     // function hasn't been called yet again for the end of the blackout period.
@@ -1016,7 +1042,7 @@ describe('edge-cases', () => {
 
     expect(mockFn).toHaveBeenCalledTimes(1);
 
-    await sleep(0.5 * UT);
+    vi.advanceTimersByTime(0.5 * UNIT_OF_TIME_MS);
 
     // After the delay is over we expect the function to be invoked again for
     // the end of the blackout period.
@@ -1024,39 +1050,39 @@ describe('edge-cases', () => {
     expect(mockFn).toHaveBeenLastCalledWith(['b', 'c', 'd', 'e', 'f']);
   });
 
-  it('delay timeouts don\'t cause an invocation in the middle of bursts', async () => {
+  it('delay timeouts don\'t cause an invocation in the middle of bursts', () => {
     const mockFn = vi.fn<(x: ReadonlyArray<string>) => void>();
     const foo = funnel(mockFn, {
       reducer: ARGS_COLLECTOR,
       triggerAt: 'both',
-      minQuietPeriodMs: 2 * UT,
-      minGapMs: UT,
+      minQuietPeriodMs: 2 * UNIT_OF_TIME_MS,
+      minGapMs: UNIT_OF_TIME_MS,
     });
     foo.call('a');
 
     expect(mockFn).toHaveBeenCalledTimes(1);
     expect(mockFn).toHaveBeenLastCalledWith(['a']);
 
-    await sleep(UT);
+    vi.advanceTimersByTime(UNIT_OF_TIME_MS);
     foo.call('b');
 
     expect(mockFn).toHaveBeenCalledTimes(1);
 
-    await sleep(UT);
+    vi.advanceTimersByTime(UNIT_OF_TIME_MS);
     foo.call('c');
 
     expect(mockFn).toHaveBeenCalledTimes(1);
 
-    await sleep(UT);
+    vi.advanceTimersByTime(UNIT_OF_TIME_MS);
     foo.call('d');
 
     expect(mockFn).toHaveBeenCalledTimes(1);
 
-    await sleep(UT);
+    vi.advanceTimersByTime(UNIT_OF_TIME_MS);
 
     expect(mockFn).toHaveBeenCalledTimes(1);
 
-    await sleep(UT);
+    vi.advanceTimersByTime(UNIT_OF_TIME_MS);
 
     expect(mockFn).toHaveBeenCalledTimes(2);
   });

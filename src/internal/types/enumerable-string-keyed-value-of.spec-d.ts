@@ -123,5 +123,5 @@ it('parameterized record key', () => {
   // surfacing it as unused (`js/unused-local-variable`), which it technically
   // is, albeit this being a **type test** where execution is meaningless to
   // begin with...
-  void foo;
+  expectTypeOf(foo).toBeFunction();
 });

@@ -303,7 +303,8 @@ describe('binary search correctness via indexed', () => {
 function indicesSeen<T>(
   items: ReadonlyArray<T>,
   item: T,
-  valueFunction: (item: T) => NonNullable<unknown>,
+  // eslint-disable-next-line ts/no-empty-object-type -- Matches the return type of the value function of `sortedIndexBy`.
+  valueFunction: (item: T) => {},
 ): ReadonlyArray<number | undefined> {
   const indices: Array<number | undefined> = [];
   sortedIndexBy(items, item, (pivot, index) => {

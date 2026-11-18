@@ -1,3 +1,8 @@
+/* eslint-disable ts/no-empty-object-type --
+ * The value function can return anything other than `null` and `undefined`,
+ * which is exactly what `{}` means.
+ */
+
 import { curry } from './curry';
 import { binarySearchCutoffIndex } from './internal/binary-search-cutoff-index';
 
@@ -41,7 +46,7 @@ export function sortedIndexBy<T>(
     item: T,
     index: number | undefined,
     data: ReadonlyArray<T>,
-  ) => NonNullable<unknown>,
+  ) => {},
 ): number;
 
 /**
@@ -84,7 +89,7 @@ export function sortedIndexBy<T = never>(
     item: NoInfer<T>,
     index: number | undefined,
     data: ReadonlyArray<NoInfer<T>>,
-  ) => NonNullable<unknown>,
+  ) => {},
 ): (data: ReadonlyArray<T>) => number;
 
 export function sortedIndexBy<T>(
@@ -94,7 +99,7 @@ export function sortedIndexBy<T>(
     item: NoInfer<T>,
     index: number | undefined,
     data: ReadonlyArray<NoInfer<T>>,
-  ) => NonNullable<unknown>,
+  ) => {},
 ): (data: ReadonlyArray<NoInfer<T>>) => number;
 
 export function sortedIndexBy(...args: ReadonlyArray<unknown>): unknown {
@@ -108,7 +113,7 @@ function sortedIndexByImplementation<T>(
     item: T,
     index: number | undefined,
     data: ReadonlyArray<T>,
-  ) => NonNullable<unknown>,
+  ) => {},
 ): number {
   const value = valueFunction(item, undefined /* index */, data);
   return binarySearchCutoffIndex(
