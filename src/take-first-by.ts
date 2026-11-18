@@ -1,7 +1,7 @@
 import type { OrderRules } from './internal/curry-order-rules';
 import type { CompareFunction } from './internal/types/compare-function';
 import { curryOrderRulesWithArgument } from './internal/curry-order-rules';
-import { heapMaybeInsert, heapify } from './internal/heap';
+import { heapify, heapMaybeInsert } from './internal/heap';
 
 /**
  * Take the first `n` items from `data` based on the provided ordering criteria. This allows you to avoid sorting the array before taking the items. The complexity of this function is *O(Nlogn)* where `N` is the length of the array.

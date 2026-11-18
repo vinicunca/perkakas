@@ -57,12 +57,10 @@ export function swapProps(
   );
 }
 
-const swapPropsImplementation = <T extends object>(
-  data: T,
-  key1: keyof T,
-  key2: keyof T,
-): Record<PropertyKey, unknown> => ({
-  ...data,
-  [key1]: data[key2],
-  [key2]: data[key1],
-});
+function swapPropsImplementation<T extends object>(data: T, key1: keyof T, key2: keyof T): Record<PropertyKey, unknown> {
+  return {
+    ...data,
+    [key1]: data[key2],
+    [key2]: data[key1],
+  };
+}

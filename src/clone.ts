@@ -1,8 +1,3 @@
-/* eslint-disable @typescript-eslint/prefer-readonly-parameter-types --
- * The state needed to compute the clone is passed by reference via mutable
- * arrays.
- */
-
 import { curry1 } from './internal/curry-by-arity';
 
 /**

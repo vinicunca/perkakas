@@ -1,7 +1,7 @@
 import type { IsNumericLiteral } from 'type-fest';
-import { curry2 } from './internal/curry-by-arity';
 import type { ArrayRequiredPrefix } from './internal/types/array-required-prefix';
 import type { IterableContainer } from './internal/types/iterable-container';
+import { curry2 } from './internal/curry-by-arity';
 
 /**
  * Checks if the given array has at least the defined number of elements. When

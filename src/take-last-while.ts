@@ -72,8 +72,8 @@ export function takeLastWhile(
       );
 }
 
-const dataLast: DataLastBuilder<typeof takeLastWhileImplementation> =
-  (predicate) => (data) =>
+const dataLast: DataLastBuilder<typeof takeLastWhileImplementation>
+  = (predicate) => (data) =>
     takeLastWhileImplementation(data, predicate);
 
 function takeLastWhileImplementation<T extends IterableContainer>(

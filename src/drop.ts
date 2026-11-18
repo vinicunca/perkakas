@@ -1,8 +1,8 @@
+import type { IsInteger, IsNegative, Writable } from 'type-fest';
+import type { LazyEvaluator } from './internal/lazy-evaluator';
 import type { ClampedIntegerSubtract } from './internal/types/clamped-integer-subtract';
 import type { IterableContainer } from './internal/types/iterable-container';
-import type { LazyEvaluator } from './internal/types/lazy-evaluator';
 import type { TupleParts } from './internal/types/tuple-parts';
-import type { IsInteger, IsNegative, Writable } from 'type-fest';
 import { curryWithLazy2 } from './internal/curry-with-lazy-by-arity';
 import { SKIP_ITEM } from './internal/lazy-control';
 
@@ -145,10 +145,11 @@ export function drop(dataOrN: IterableContainer | number, n?: number): unknown {
   );
 }
 
-const dropImplementation = <T extends IterableContainer>(
-  data: T,
-  n: number,
-): T[number][] => (n < 0 ? data.concat() : data.slice(n));
+function dropImplementation<T extends IterableContainer>(data: T, n: number): Array<T[number]> {
+  return n < 0
+    ? data.concat()
+    : data.slice(n);
+}
 
 function lazyImplementation<T>(n: number): LazyEvaluator<T> {
   if (Number.isNaN(n) || n < 1) {

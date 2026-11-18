@@ -1,5 +1,6 @@
 import type { MergeDeep } from 'type-fest';
 import { curry2 } from './internal/curry-by-arity';
+// eslint-disable-next-line ts/no-restricted-imports -- `isPlainObject` is a plain type guard with no data-first/data-last dispatch, so importing it adds only the check itself.
 import { isPlainObject } from './is-plain-object';
 
 /**
@@ -55,7 +56,10 @@ function mergeDeepImplementation<
   Source extends object,
 >(data: Destination, source: Source): MergeDeep<Destination, Source> {
   // At this point the output is already merged, simply not deeply merged.
-  const output = { ...data, ...source } as Record<
+  const output = {
+    ...data,
+    ...source,
+  } as Record<
     keyof Destination | keyof Source,
     unknown
   >;
@@ -64,12 +68,12 @@ function mergeDeepImplementation<
   // eslint-disable-next-line no-restricted-syntax
   for (const key in source) {
     if (
-      Object.hasOwn(data, key) &&
-      isPlainObject(
+      Object.hasOwn(data, key)
+      && isPlainObject(
         // @ts-expect-error [ts2536] -- TypeScript isn't narrowing `key` although we checked that it exists in both objects, so it can't see this access is valid.
         data[key],
-      ) &&
-      isPlainObject(source[key])
+      )
+      && isPlainObject(source[key])
     ) {
       // Both destination and source have a mergeable object for this key, so we
       // recursively merge them.

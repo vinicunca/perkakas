@@ -1,6 +1,6 @@
-import { curry1 } from './internal/curry-by-arity';
 import type { IterableContainer } from './internal/types/iterable-container';
 import type { ReorderedArray } from './internal/types/reordered-array';
+import { curry1 } from './internal/curry-by-arity';
 
 /**
  * Shuffles the input array, returning a new array with the same elements in a random order.

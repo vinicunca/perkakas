@@ -89,7 +89,9 @@ function rangeImplementation(
 
   const result: Array<number> = [];
   for (let index = 0; index < length; index++) {
-    result.push(index === 0 ? start : start + index * step);
+    result.push(index === 0
+      ? start
+      : start + index * step);
   }
 
   return result;

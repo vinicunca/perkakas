@@ -1,6 +1,6 @@
+import type { LazyEvaluator } from './internal/lazy-evaluator';
 import type { DataLastBuilder } from './internal/types/data-last-builder';
 import type { IterableContainer } from './internal/types/iterable-container';
-import type { LazyEvaluator } from './internal/types/lazy-evaluator';
 import type { Mapped } from './internal/types/mapped';
 import type { NonEmptyPrefix } from './internal/types/non-empty-prefix';
 import { withLazyImplementation } from './internal/lazy-data-last-implementation';
@@ -76,10 +76,10 @@ export function mapWithFeedback(
   dataOrCallbackfn:
     | IterableContainer
     | FeedbackCallback<
-        IterableContainer,
-        unknown,
-        Readonly<NonEmptyPrefix<IterableContainer>>
-      >,
+      IterableContainer,
+      unknown,
+      Readonly<NonEmptyPrefix<IterableContainer>>
+    >,
   callbackfnOrInitialValue: unknown,
   initialValue?: unknown,
 ): unknown {
@@ -106,8 +106,8 @@ export function mapWithFeedback(
       );
 }
 
-const dataLast: DataLastBuilder<typeof mapWithFeedbackImplementation> =
-  (callbackfn, initialValue) => (data) =>
+const dataLast: DataLastBuilder<typeof mapWithFeedbackImplementation>
+  = (callbackfn, initialValue) => (data) =>
     mapWithFeedbackImplementation(data, callbackfn, initialValue);
 
 function mapWithFeedbackImplementation<T, U>(
@@ -131,10 +131,7 @@ function mapWithFeedbackImplementation<T, U>(
   return result;
 }
 
-function lazyImplementation<T, U>([callbackfn, initialValue]: readonly [
-  callbackfn: FeedbackCallback<ReadonlyArray<T>, U>,
-  initialValue: U,
-]): LazyEvaluator<T, U> {
+function lazyImplementation<T, U>([callbackfn, initialValue]: readonly [callbackfn: FeedbackCallback<ReadonlyArray<T>, U>, initialValue: U]): LazyEvaluator<T, U> {
   let previousValue = initialValue;
 
   return requireDataByArity(callbackfn, 3, (currentValue, index, data) => {

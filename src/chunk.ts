@@ -1,9 +1,9 @@
+import type { IntRange, IsNever, IsNumericLiteral, LessThan, Subtract, ValueOf } from 'type-fest';
 import type { IntRangeInclusive } from './internal/types/int-range-inclusive';
 import type { IterableContainer } from './internal/types/iterable-container';
 import type { NTuple } from './internal/types/n-tuple';
 import type { NonEmptyArray } from './internal/types/non-empty-array';
 import type { TupleParts } from './internal/types/tuple-parts';
-import type { IntRange, IsNever, IsNumericLiteral, LessThan, Subtract, ValueOf } from 'type-fest';
 import { curry2 } from './internal/curry-by-arity';
 
 // This prevents typescript from failing on complex arrays and large chunks. It
@@ -237,7 +237,9 @@ function chunkImplementation<T>(data: ReadonlyArray<T>, size: number): Array<Arr
 
   if (size >= data.length) {
     // Optimized for when there is only one chunk.
-    return [data.concat()];
+    return [
+      data.concat(),
+    ];
   }
 
   const chunks = Math.ceil(data.length / size);

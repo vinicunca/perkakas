@@ -76,5 +76,8 @@ it('in a pipe', () => {
       [1, 2, 3],
       splitWhen((x) => x === 2),
     ),
-  ).toStrictEqual([[1], [2, 3]]);
+  ).toStrictEqual([
+    [1],
+    [2, 3],
+  ]);
 });

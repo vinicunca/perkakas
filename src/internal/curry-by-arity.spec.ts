@@ -81,12 +81,12 @@ describe('data-last below the arity', () => {
 
       expect(dataLast).toBeTypeOf('function');
       expect(
-        typeof dataLast === 'function' &&
-          dataLast(
-            'data',
-            // @ts-expect-error [ts2554] -- Intentional! A point-free caller passes extra arguments (`map` passes the index and the array), which the data-last function must not forward.
-            'extra',
-          ),
+        typeof dataLast === 'function'
+        && dataLast(
+          'data',
+          // @ts-expect-error [ts2554] -- Intentional! A point-free caller passes extra arguments (`map` passes the index and the array), which the data-last function must not forward.
+          'extra',
+        ),
       ).toStrictEqual(['data', 1]);
     });
   });
@@ -116,16 +116,17 @@ describe('data-last below the arity', () => {
 
       expect(dataLast).toBeTypeOf('function');
       expect(
-        typeof dataLast === 'function' &&
-          dataLast(
-            'data',
-            // @ts-expect-error [ts2554] -- Intentional! A point-free caller passes extra arguments (`map` passes the index and the array), which the data-last function must not forward.
-            'extra',
-          ),
+        typeof dataLast === 'function'
+        && dataLast(
+          'data',
+          // @ts-expect-error [ts2554] -- Intentional! A point-free caller passes extra arguments (`map` passes the index and the array), which the data-last function must not forward.
+          'extra',
+        ),
       ).toStrictEqual(['data', 1, 2]);
     });
   });
 });
 
-const collectArguments = (...args: ReadonlyArray<unknown>): ReadonlyArray<unknown> =>
-  args;
+function collectArguments(...args: ReadonlyArray<unknown>): ReadonlyArray<unknown> {
+  return args;
+}

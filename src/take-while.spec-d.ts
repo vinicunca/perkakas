@@ -453,6 +453,6 @@ describe('callback data param', () => {
           return item === 1;
         }),
       ),
-    ).toEqualTypeOf<1[]>();
+    ).toEqualTypeOf<Array<1>>();
   });
 });

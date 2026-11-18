@@ -1,6 +1,6 @@
+import type { LazyEvaluator } from './lazy-evaluator';
 import { describe, it } from 'vitest';
 import { withLazyImplementation } from './lazy-data-last-implementation';
-import type { LazyEvaluator } from './types/lazy-evaluator';
 
 declare const dataLast: (data: ReadonlyArray<number>) => Array<number>;
 
@@ -30,7 +30,10 @@ describe('lazy argument', () => {
   });
 
   it('two arguments as a tuple', () => {
-    withLazyImplementation(dataLast, lazyOfTuple, [[1], isEqual]);
+    withLazyImplementation(dataLast, lazyOfTuple, [
+      [1],
+      isEqual,
+    ]);
   });
 
   it('rejects a single argument in a tuple', () => {
@@ -56,7 +59,10 @@ describe('lazy argument', () => {
       dataLast,
       // @ts-expect-error [ts2345] -- A lazy implementation receives two arguments as one tuple, not spread.
       lazyOfTwoParameters,
-      [[1], isEqual],
+      [
+        [1],
+        isEqual,
+      ],
     );
   });
 });

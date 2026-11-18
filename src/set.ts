@@ -1,5 +1,5 @@
-import { curry3 } from './internal/curry-by-arity';
 import type { UpsertProp } from './internal/types/upsert-prop';
+import { curry3 } from './internal/curry-by-arity';
 
 /**
  * Sets the `value` at `prop` of `data`.
@@ -57,10 +57,6 @@ export function set(
   );
 }
 
-const setImplementation = <T, K extends keyof T, V extends Required<T>[K]>(
-  data: T,
-  prop: K,
-  value: V,
-): UpsertProp<T, K, V> =>
-  // @ts-expect-error [ts2322] - Hard to type
-  ({ ...data, [prop]: value });
+function setImplementation<T, K extends keyof T, V extends Required<T>[K]>(data: T, prop: K, value: V): UpsertProp<T, K, V> {
+  return { ...data, [prop]: value };
+}

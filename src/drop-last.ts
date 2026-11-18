@@ -1,5 +1,5 @@
+import type { LazyEvaluator } from './internal/lazy-evaluator';
 import type { IterableContainer } from './internal/types/iterable-container';
-import type { LazyEvaluator } from './internal/types/lazy-evaluator';
 import { curryWithLazy2 } from './internal/curry-with-lazy-by-arity';
 import { SKIP_ITEM } from './internal/lazy-control';
 
@@ -45,7 +45,7 @@ export function dropLast<T extends IterableContainer>(
  */
 export function dropLast(
   n: number,
-): <T extends IterableContainer>(data: T) => T[number][];
+): <T extends IterableContainer>(data: T) => Array<T[number]>;
 
 export function dropLast(
   dataOrN: IterableContainer | number,
@@ -60,17 +60,15 @@ export function dropLast(
   );
 }
 
-const dropLastImplementation = <T extends IterableContainer>(
-  data: T,
-  n: number,
-): T[number][] =>
-  n > 0
+function dropLastImplementation<T extends IterableContainer>(data: T, n: number): Array<T[number]> {
+  return n > 0
     ? data.slice(
         0,
         // Rounded up because we can't drop an item partially!
         -Math.ceil(n),
       )
     : data.concat();
+}
 
 function lazyImplementation<T>(n: number): LazyEvaluator<T> {
   if (Number.isNaN(n) || n <= 0) {

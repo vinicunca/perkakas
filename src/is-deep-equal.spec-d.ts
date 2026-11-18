@@ -60,7 +60,7 @@ it('doesn\'t narrow when comparing objects of the same type', () => {
   }
 });
 
-it('headless usage can infer types', () => {
+it('infers types as a function reference', () => {
   const result = differenceWith(['a', 'b', 'c'], ['a', 'c', 'd'], isDeepEqual);
 
   expectTypeOf(result).toEqualTypeOf<Array<string>>();

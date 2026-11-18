@@ -1,9 +1,9 @@
 import type { EmptyObject, IsNever, KeysOfUnion, Writable } from 'type-fest';
-import { curry2 } from './internal/curry-by-arity';
 import type { IsBounded } from './internal/types/is-bounded';
 import type { IsBoundedRecord } from './internal/types/is-bounded-record';
 import type { PartitionByUnion } from './internal/types/partition-by-union';
 import type { TupleParts } from './internal/types/tuple-parts';
+import { curry2 } from './internal/curry-by-arity';
 
 type PickFromArray<T, Keys extends ReadonlyArray<KeysOfUnion<T>>>
   // Distribute unions for both object types and key arrays.

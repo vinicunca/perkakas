@@ -69,11 +69,10 @@ export function findIndex(
       );
 }
 
-const dataLast: DataLastBuilder<typeof findIndexImplementation> =
-  (predicate) => (data) =>
+const dataLast: DataLastBuilder<typeof findIndexImplementation>
+  = (predicate) => (data) =>
     findIndexImplementation(data, predicate);
 
-const findIndexImplementation = <T>(
-  data: ReadonlyArray<T>,
-  predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
-): number => data.findIndex(predicate);
+function findIndexImplementation<T>(data: ReadonlyArray<T>, predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean): number {
+  return data.findIndex(predicate);
+}

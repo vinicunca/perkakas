@@ -111,7 +111,7 @@ describe('unions', () => {
   });
 });
 
-describe('as a factory function', () => {
+describe('stored partial application', () => {
   it('direct usage', () => {
     const propA = prop('a');
 

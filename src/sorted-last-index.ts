@@ -62,14 +62,12 @@ export function sortedLastIndex(dataOrItem: unknown, item?: unknown): unknown {
   );
 }
 
-const sortedLastIndexImplementation = <T>(
-  data: ReadonlyArray<T>,
-  item: T,
-): number =>
-  binarySearchCutoffIndex(
+function sortedLastIndexImplementation<T>(data: ReadonlyArray<T>, item: T): number {
+  return binarySearchCutoffIndex(
     data,
     // The only difference between the regular implementation and the "last"
     // variation is that we consider the pivot with equality too, so that we
     // skip all equal values in addition to the lower ones.
     (pivot) => pivot <= item,
   );
+}

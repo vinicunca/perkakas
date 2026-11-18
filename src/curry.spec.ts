@@ -1,5 +1,5 @@
-import { curry } from './curry';
 import { describe, expect, it } from 'vitest';
+import { curry } from './curry';
 
 // A regular arrow function would only return these keys when inspected via
 // `Reflect.ownKeys`. Any other key on the function means it was augmented after
@@ -93,11 +93,9 @@ function addWithDefault(augend: number, addend = 1): number {
   return augend + addend;
 }
 
-const concatenateThreeNumbers = (
-  data: number,
-  first: number,
-  second: number,
-): string => [data, first, second].join('');
+function concatenateThreeNumbers(data: number, first: number, second: number): string {
+  return [data, first, second].join('');
+}
 
 function concatenateNumberArgs(_a: number, _b: number): string {
   // eslint-disable-next-line prefer-rest-params -- Intentional, we want to bypass the function shape (which is observable at runtime via `Function.length`) to lock in how excess arguments are passed through.

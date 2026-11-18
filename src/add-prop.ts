@@ -1,5 +1,5 @@
-import { curry3 } from './internal/curry-by-arity';
 import type { UpsertProp } from './internal/types/upsert-prop';
+import { curry3 } from './internal/curry-by-arity';
 
 /**
  * Add a new property to an object.

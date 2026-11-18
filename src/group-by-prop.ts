@@ -5,12 +5,12 @@ import type {
   IsNever,
   Simplify,
 } from 'type-fest';
-import { curry2 } from './internal/curry-by-arity';
 import type { ArrayRequiredPrefix } from './internal/types/array-required-prefix';
 import type { BoundedPartial } from './internal/types/bounded-partial';
 import type { FilteredArray } from './internal/types/filtered-array';
 import type { IterableContainer } from './internal/types/iterable-container';
 import type { TupleParts } from './internal/types/tuple-parts';
+import { curry2 } from './internal/curry-by-arity';
 
 type GroupByProp<T extends IterableContainer, Prop extends GroupableProps<T>>
   // Distribute unions.

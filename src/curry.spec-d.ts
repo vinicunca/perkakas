@@ -52,7 +52,7 @@ describe('known issues!', () => {
     expectTypeOf(result).not.toEqualTypeOf<Array<number>>();
 
     // Actual
-    expectTypeOf(result).toEqualTypeOf<((minuend: number) => number)[]>();
+    expectTypeOf(result).toEqualTypeOf<Array<(minuend: number) => number>>();
     expectTypeOf([1, 2, 3].map(dataFirstDeclaredLast)).toEqualTypeOf<
       Array<number>
     >();
@@ -61,7 +61,10 @@ describe('known issues!', () => {
   it('perkakas\' own utilities passed by reference are typed by their data-last overload', () => {
     // Every utility declares its data-last overload last, so the limitation
     // above applies to all of them: at runtime this returns `[3, 3]`.
-    const result = [[1, 2], [3]].map(sum);
+    const result = [
+      [1, 2],
+      [3],
+    ].map(sum);
 
     expectTypeOf(result).not.toEqualTypeOf<Array<number>>();
 
@@ -73,7 +76,11 @@ describe('known issues!', () => {
     // TypeScript only carries type parameters through a function reference when
     // the function has a single signature. For an overloaded function it
     // replaces them with their constraints instead.
-    const result = [[1], [2], [3]].map(genericDataFirstDeclaredLast);
+    const result = [
+      [1],
+      [2],
+      [3],
+    ].map(genericDataFirstDeclaredLast);
 
     expectTypeOf(result).not.toEqualTypeOf<Array<number | undefined>>();
 
@@ -100,7 +107,7 @@ describe('known issues!', () => {
     // TypeScript infers from the last overload of a function passed by
     // reference, which for `Object.fromEntries` is the one returning `any`. An
     // instantiation expression selects the typed overload.
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- The `any` is what this test pins.
+
     const result = curry(Object.fromEntries, []);
 
     expectTypeOf(result).not.toEqualTypeOf(

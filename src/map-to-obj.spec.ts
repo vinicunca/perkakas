@@ -36,21 +36,29 @@ describe('data_first', () => {
     it('keeps the prototype', () => {
       expect(
         Object.getPrototypeOf(
-          mapToObj(['__proto__'], (item) => [item, { a: 1 }]),
+          mapToObj(['__proto__'], (item) => [
+            item,
+            { a: 1 },
+          ]),
         ),
       ).toBe(Object.prototype);
     });
 
     it('with an object value is an own property', () => {
       expect(
-        Reflect.ownKeys(mapToObj(['__proto__'], (item) => [item, { a: 1 }])),
+        Reflect.ownKeys(mapToObj(['__proto__'], (item) => [
+          item,
+          { a: 1 },
+        ])),
       ).toStrictEqual(['__proto__']);
     });
 
     it('with a primitive value is an own property', () => {
       expect(
         Object.entries(mapToObj(['__proto__'], (item) => [item, 1])),
-      ).toStrictEqual([['__proto__', 1]]);
+      ).toStrictEqual([
+        ['__proto__', 1],
+      ]);
     });
   });
 

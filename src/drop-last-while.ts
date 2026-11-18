@@ -19,7 +19,7 @@ import type { IterableContainer } from './internal/types/iterable-container';
 export function dropLastWhile<T extends IterableContainer>(
   data: T,
   predicate: ArrayCallback<T, boolean>,
-): T[number][];
+): Array<T[number]>;
 
 /**
  * Removes elements from the end of the array until the predicate returns false.
@@ -36,7 +36,7 @@ export function dropLastWhile<T extends IterableContainer>(
  */
 export function dropLastWhile<T extends IterableContainer>(
   predicate: ArrayCallback<T, boolean>,
-): (data: T) => T[number][];
+): (data: T) => Array<T[number]>;
 
 export function dropLastWhile(
   dataOrPredicate:
@@ -53,8 +53,8 @@ export function dropLastWhile(
       );
 }
 
-const dataLast: DataLastBuilder<typeof dropLastWhileImplementation> =
-  (predicate) => (data) =>
+const dataLast: DataLastBuilder<typeof dropLastWhileImplementation>
+  = (predicate) => (data) =>
     dropLastWhileImplementation(data, predicate);
 
 function dropLastWhileImplementation<T extends IterableContainer>(

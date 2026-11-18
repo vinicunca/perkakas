@@ -69,8 +69,8 @@ export function findLastIndex(
       );
 }
 
-const dataLast: DataLastBuilder<typeof findLastIndexImplementation> =
-  (predicate) => (data) =>
+const dataLast: DataLastBuilder<typeof findLastIndexImplementation>
+  = (predicate) => (data) =>
     findLastIndexImplementation(data, predicate);
 
 function findLastIndexImplementation<T>(data: ReadonlyArray<T>, predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean): number {

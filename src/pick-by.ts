@@ -1,5 +1,4 @@
 import type { IsNever, Simplify } from 'type-fest';
-import { curry2 } from './internal/curry-by-arity';
 import type {
   ObjectCallback,
   ObjectTypePredicate,
@@ -8,6 +7,7 @@ import type { EnumerableStringKeyOf } from './internal/types/enumerable-string-k
 import type { EnumerableStringKeyedValueOf } from './internal/types/enumerable-string-keyed-value-of';
 import type { IsBoundedRecord } from './internal/types/is-bounded-record';
 import type { ToString } from './internal/types/to-string';
+import { curry2 } from './internal/curry-by-arity';
 
 // When the predicate isn't a type-guard we don't know which properties would be
 // part of the output and which wouldn't so we can only safely downgrade the

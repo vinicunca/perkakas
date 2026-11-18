@@ -1,7 +1,7 @@
+import type { LazyEvaluator } from './internal/lazy-evaluator';
 import type { ArrayCallback, LazyCallback } from './internal/types/callback';
 import type { DataLastBuilder } from './internal/types/data-last-builder';
 import type { IterableContainer } from './internal/types/iterable-container';
-import type { LazyEvaluator } from './internal/types/lazy-evaluator';
 import { withLazyImplementation } from './internal/lazy-data-last-implementation';
 import { requireDataByArity } from './internal/require-data';
 
@@ -84,8 +84,8 @@ export function forEach(
       );
 }
 
-const dataLast: DataLastBuilder<typeof forEachImplementation> =
-  (callbackfn) => (data) =>
+const dataLast: DataLastBuilder<typeof forEachImplementation>
+  = (callbackfn) => (data) =>
     forEachImplementation(data, callbackfn);
 
 function forEachImplementation<T>(

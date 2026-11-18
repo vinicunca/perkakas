@@ -1,24 +1,28 @@
 import type { UnaryFunction } from './data-last-implementation';
-import { createLazySlot, MANY, SKIP_ITEM, type LazySlot } from './lazy-control';
+import type { LazySlot } from './lazy-control';
 import type { LazyUnaryFunction } from './lazy-data-last-implementation';
-import { LAST, STOP, type StoppableLazyEvaluator } from './make-stoppable';
+import type { StoppableLazyEvaluator } from './make-stoppable';
+import { createLazySlot, MANY, SKIP_ITEM } from './lazy-control';
+import { LAST, STOP } from './make-stoppable';
 import { UNEXPECTED_ACCESS_SENTINEL } from './unexpected-access-sentinel';
 
 export type LazyStep = {
-  // `LazyEvaluator`s are also `StoppableLazyEvaluator`s so this accepts both.
+  /** `LazyEvaluator`s are also `StoppableLazyEvaluator`s so this accepts both. */
   readonly lazyEvaluator: StoppableLazyEvaluator;
   itemIndex: number;
 } & (
   | {
-      readonly requiresData: true;
-      // Notice the array is mutable, we will be adding items as the pipe is
-      // evaluating them. It is shared with every invocation of the evaluator.
-      readonly data: Array<unknown>;
-    }
+    readonly requiresData: true;
+    /**
+     * Notice the array is mutable, we will be adding items as the pipe is
+     * evaluating them. It is shared with every invocation of the evaluator.
+     */
+    readonly data: Array<unknown>;
+  }
   | {
-      readonly requiresData: false;
-      readonly data: typeof UNEXPECTED_ACCESS_SENTINEL;
-    }
+    readonly requiresData: false;
+    readonly data: typeof UNEXPECTED_ACCESS_SENTINEL;
+  }
 );
 
 /**
@@ -86,12 +90,12 @@ export function buildFusedSequence(
  */
 export function runFusedSequence(
   input: unknown,
-  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Steps are mutated in place (the data buffer and the item index) to avoid per-item allocations.
   fusedSequence: ReadonlyArray<LazyStep>,
 ): Array<unknown> {
   const accumulator: Array<unknown> = [];
   const slot = createLazySlot();
 
+  // eslint-disable-next-line sonarjs/no-all-duplicated-branches
   if (Array.isArray(input)) {
     for (const item of input) {
       const isDone = processItem(fusedSequence, accumulator, item, slot, 0);
@@ -99,8 +103,7 @@ export function runFusedSequence(
         break;
       }
     }
-
-    // eslint-disable-next-line unicorn/no-duplicate-if-branches -- Intentional! Identical on purpose. In V8, a `for...of` that has only ever seen arrays skips the iterator protocol; each loop is its own iteration site, so sets, strings and generators only reach the second, and the compiler can specialize the first for arrays.
+  // eslint-disable-next-line sonarjs/no-duplicated-branches -- Intentional! Identical on purpose. In V8, a `for...of` that has only ever seen arrays skips the iterator protocol; each loop is its own iteration site, so sets, strings and generators only reach the second, and the compiler can specialize the first for arrays.
   } else {
     // @ts-expect-error [ts18046] -- The overloads only pipe a value into a function that accepts it, and lazy functions only accept iterables.
     for (const item of input) {
@@ -121,9 +124,7 @@ export function runFusedSequence(
  * @returns Whether the iteration is done.
  */
 function processItem(
-  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Steps are mutated in place (the data buffer and the item index) to avoid per-item allocations.
   fusedSequence: ReadonlyArray<LazyStep>,
-  // eslint-disable-next-line @typescript-eslint/prefer-readonly-parameter-types -- Intentionally mutable, the results are accumulated into it directly.
   accumulator: Array<unknown>,
   item: unknown,
   slot: LazySlot,

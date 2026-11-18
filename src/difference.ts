@@ -1,4 +1,4 @@
-import type { LazyEvaluator } from './internal/types/lazy-evaluator';
+import type { LazyEvaluator } from './internal/lazy-evaluator';
 import { curryWithLazy2 } from './internal/curry-with-lazy-by-arity';
 import { SKIP_ITEM } from './internal/lazy-control';
 

@@ -3,7 +3,7 @@ import type { DataLastBuilder } from './internal/types/data-last-builder';
 import type { IterableContainer } from './internal/types/iterable-container';
 import type { NonEmptyPrefix } from './internal/types/non-empty-prefix';
 import { withLazyImplementation } from './internal/lazy-data-last-implementation';
-import { LAZY_EMPTY_EVALUATOR, lastLazyValue, makeStoppable } from './internal/make-stoppable';
+import { lastLazyValue, LAZY_EMPTY_EVALUATOR, makeStoppable } from './internal/make-stoppable';
 import { requireDataByArity } from './internal/require-data';
 
 type ZippingFunction<
@@ -87,7 +87,7 @@ export function zipWith<
   Value,
 >(data: T, other: S, fn: ZippingFunction<T, S, Value>): Array<Value>;
 
-// TODO [>2]: Consider removing this function. `map(zip(data, other), ([first, second], index) => fn(first, second, index, [data, other]))` covers it, as does `zip(other)` then `map(...)` inside a `pipe` for a callback that doesn't read its fourth argument, and both keep tuple shapes in the output type; an arrow function over `zip` covers the `zipWith(fn)` form. All it adds is a callback that takes the pair unpacked, with no pair allocated per item.
+/** TODO [>2]: Consider removing this function. `map(zip(data, other), ([first, second], index) => fn(first, second, index, [data, other]))` covers it, as does `zip(other)` then `map(...)` inside a `pipe` for a callback that doesn't read its fourth argument, and both keep tuple shapes in the output type; an arrow function over `zip` covers the `zipWith(fn)` form. All it adds is a callback that takes the pair unpacked, with no pair allocated per item. */
 export function zipWith(
   dataOtherOrFn: IterableContainer | ZippingFunction,
   otherOrFn?: IterableContainer | LazyZippingFunction | ZippingFunction,
@@ -122,14 +122,14 @@ export function zipWith(
   return zipWithImplementation(dataOtherOrFn, otherOrFn!, fn!);
 }
 
-const dataLast: DataLastBuilder<typeof zipWithImplementation> =
-  (other, fn) => (data) =>
+const dataLast: DataLastBuilder<typeof zipWithImplementation>
+  = (other, fn) => (data) =>
     zipWithImplementation(data, other, fn);
 
-const bothListsLast =
-  (fn: ZippingFunction) =>
-  (data: IterableContainer, other: IterableContainer) =>
+function bothListsLast(fn: ZippingFunction) {
+  return (data: IterableContainer, other: IterableContainer) =>
     zipWithImplementation(data, other, fn);
+}
 
 function zipWithImplementation<
   T extends IterableContainer,
@@ -143,10 +143,7 @@ function zipWithImplementation<
 }
 
 const lazyImplementation = makeStoppable(
-  <T, S extends IterableContainer, Value>([other, fn]: readonly [
-    other: S,
-    fn: ZippingFunction<ReadonlyArray<T>, S, Value>,
-  ]): StoppableLazyEvaluator<T, Value> =>
+  <T, S extends IterableContainer, Value>([other, fn]: readonly [other: S, fn: ZippingFunction<ReadonlyArray<T>, S, Value>]): StoppableLazyEvaluator<T, Value> =>
     other.length === 0
       ? LAZY_EMPTY_EVALUATOR
       : requireDataByArity(fn, 3, (value, index, data, slot) => {

@@ -165,14 +165,11 @@ export function findLast(
       );
 }
 
-const dataLast: DataLastBuilder<typeof findLastImplementation> =
-  (predicate) => (data) =>
+const dataLast: DataLastBuilder<typeof findLastImplementation>
+  = (predicate) => (data) =>
     findLastImplementation(data, predicate);
 
-const findLastImplementation = <T>(
-  data: ReadonlyArray<T>,
-  predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
-): T | undefined => {
+function findLastImplementation<T>(data: ReadonlyArray<T>, predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean): T | undefined {
   for (let i = data.length - 1; i >= 0; i--) {
     const item = data[i]!;
     if (predicate(item, i, data)) {

@@ -41,8 +41,13 @@ function splitAtImplementation<T>(
   index: number,
 ): [Array<T>, Array<T>] {
   const effectiveIndex = Math.max(
-    Math.min(index < 0 ? data.length + index : index, data.length),
+    Math.min(index < 0
+      ? data.length + index
+      : index, data.length),
     0,
   );
-  return [data.slice(0, effectiveIndex), data.slice(effectiveIndex)];
+  return [
+    data.slice(0, effectiveIndex),
+    data.slice(effectiveIndex),
+  ];
 }

@@ -1,6 +1,5 @@
-import { curry1 } from './internal/curry-by-arity';
 import type { IterableContainer } from './internal/types/iterable-container';
-import { sum } from './sum';
+import { curry1 } from './internal/curry-by-arity';
 
 type Mean<T extends IterableContainer<number>>
   = | (T extends readonly [] ? never : number)
@@ -62,5 +61,10 @@ function meanImplementation<T extends IterableContainer<number>>(
     return undefined;
   }
 
-  return sum(data) / data.length;
+  let total = 0;
+  for (const value of data) {
+    total += value;
+  }
+
+  return total / data.length;
 }

@@ -1,5 +1,5 @@
+import type { LazyEvaluator } from './lazy-evaluator';
 import type { StoppableLazyEvaluator } from './make-stoppable';
-import type { LazyEvaluator } from './types/lazy-evaluator';
 import { describe, it } from 'vitest';
 import {
   lastLazyValue,

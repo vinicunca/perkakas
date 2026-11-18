@@ -31,5 +31,8 @@ export function length(data?: Enumerable<unknown>): unknown {
   return curry1(lengthImplementation, arguments.length, data);
 }
 
-const lengthImplementation = <T>(data: Enumerable<T>): number =>
-  'length' in data ? data.length : [...data].length;
+function lengthImplementation<T>(data: Enumerable<T>): number {
+  return 'length' in data
+    ? data.length
+    : [...data].length;
+}

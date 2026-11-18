@@ -87,8 +87,8 @@ export function groupBy(
       );
 }
 
-const dataLast: DataLastBuilder<typeof groupByImplementation> =
-  (callbackfn) => (data) =>
+const dataLast: DataLastBuilder<typeof groupByImplementation>
+  = (callbackfn) => (data) =>
     groupByImplementation(data, callbackfn);
 
 function groupByImplementation<T, Key extends PropertyKey = PropertyKey>(data: ReadonlyArray<T>, callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => Key | undefined): BoundedPartial<Record<Key, NonEmptyArray<T>>> {

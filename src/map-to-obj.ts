@@ -90,8 +90,8 @@ export function mapToObj(
       );
 }
 
-const dataLast: DataLastBuilder<typeof mapToObjImplementation> =
-  (mapper) => (data) =>
+const dataLast: DataLastBuilder<typeof mapToObjImplementation>
+  = (mapper) => (data) =>
     mapToObjImplementation(data, mapper);
 
 function mapToObjImplementation(

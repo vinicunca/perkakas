@@ -1,6 +1,6 @@
 import type { IsEqual, Join } from 'type-fest';
-import { curry3 } from './internal/curry-by-arity';
 import type { IterableContainer } from './internal/types/iterable-container';
+import { curry3 } from './internal/curry-by-arity';
 
 type Difference<A extends number, B extends number>
   = TupleOfLength<A> extends [...infer U, ...TupleOfLength<B>]

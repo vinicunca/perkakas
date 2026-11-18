@@ -1,5 +1,5 @@
-import { curry1 } from './internal/curry-by-arity';
 import type { IterableContainer } from './internal/types/iterable-container';
+import { curry1 } from './internal/curry-by-arity';
 
 type Median<T extends IterableContainer<number>>
   = | (T extends readonly [] ? never : number)

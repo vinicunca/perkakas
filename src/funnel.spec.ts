@@ -16,7 +16,9 @@ const UNIT_OF_TIME_MS = 16;
 beforeEach(() => {
   // The default list also fakes `process.hrtime`, which breaks on Node 18 where
   // `performance.now` is derived from it.
-  vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'Date'] });
+  vi.useFakeTimers({
+    toFake: ['setTimeout', 'clearTimeout', 'Date'],
+  });
 });
 
 afterEach(() => {

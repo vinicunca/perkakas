@@ -57,10 +57,18 @@ describe('data first', () => {
   });
 
   it('should not mutate nested arrays', () => {
-    const data = { a: [{ b: 1 }] };
+    const data = {
+      a: [
+        { b: 1 },
+      ],
+    };
     setPath(data, ['a', 0, 'b'], 2);
 
-    expect(data).toStrictEqual({ a: [{ b: 1 }] });
+    expect(data).toStrictEqual({
+      a: [
+        { b: 1 },
+      ],
+    });
   });
 
   it('should work with undefined / optional types', () => {

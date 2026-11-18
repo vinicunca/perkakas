@@ -85,13 +85,34 @@ describe('runtime (dataFirst)', () => {
   });
 
   it.each([
-    [0, [1, 2, 3, 4, 5]],
-    [-1, [1, 2, 3, 4, 5]],
-    [-Infinity, [1, 2, 3, 4, 5]],
-    [NaN, [1, 2, 3, 4, 5]],
-    [2, [3, 4, 5]],
-    [0.5, [1, 2, 3, 4, 5]],
-    [2.5, [3, 4, 5]],
+    [
+      0,
+      [1, 2, 3, 4, 5],
+    ],
+    [
+      -1,
+      [1, 2, 3, 4, 5],
+    ],
+    [
+      -Infinity,
+      [1, 2, 3, 4, 5],
+    ],
+    [
+      NaN,
+      [1, 2, 3, 4, 5],
+    ],
+    [
+      2,
+      [3, 4, 5],
+    ],
+    [
+      0.5,
+      [1, 2, 3, 4, 5],
+    ],
+    [
+      2.5,
+      [3, 4, 5],
+    ],
     [5, []],
     [10, []],
     [Infinity, []],
@@ -112,11 +133,16 @@ describe('runtime (dataFirst)', () => {
         4,
         prop('key'),
       ),
-    ).toStrictEqual([{ id: 'd', key: 1 }]);
+    ).toStrictEqual([
+      { id: 'd', key: 1 },
+    ]);
   });
 
   it('works with a descending order rule', () => {
-    expect(dropFirstBy([5, 1, 3], 2, [identity(), 'desc'])).toStrictEqual([1]);
+    expect(dropFirstBy([5, 1, 3], 2, [
+      identity(),
+      'desc',
+    ])).toStrictEqual([1]);
   });
 });
 
@@ -125,7 +151,11 @@ describe('runtime (dataLast)', () => {
     const data = [4, 5, 1, 6, 2, 3, 7];
 
     expect(pipe(data, dropFirstBy(2, identity()))).toStrictEqual([
-      5, 6, 4, 3, 7,
+      5,
+      6,
+      4,
+      3,
+      7,
     ]);
   });
 
@@ -171,7 +201,15 @@ describe('runtime (dataLast)', () => {
 
     expect(
       pipe(data, dropFirstBy(3, prop('length'), identity())),
-    ).toStrictEqual(['bbbbb', 'aaa', 'bbb', 'bbbb', 'aaaa', 'bb', 'aaaaa']);
+    ).toStrictEqual([
+      'bbbbb',
+      'aaa',
+      'bbb',
+      'bbbb',
+      'aaaa',
+      'bb',
+      'aaaaa',
+    ]);
   });
 
   it('keeps a null item from the first n', () => {
@@ -193,19 +231,43 @@ describe('runtime (dataLast)', () => {
   });
 
   it('works with a descending order rule', () => {
-    expect(pipe([5, 1, 3], dropFirstBy(2, [identity(), 'desc']))).toStrictEqual(
+    expect(pipe([5, 1, 3], dropFirstBy(2, [
+      identity(),
+      'desc',
+    ]))).toStrictEqual(
       [1],
     );
   });
 
   it.each([
-    [0, [1, 2, 3, 4, 5]],
-    [-1, [1, 2, 3, 4, 5]],
-    [-Infinity, [1, 2, 3, 4, 5]],
-    [NaN, [1, 2, 3, 4, 5]],
-    [2, [3, 4, 5]],
-    [0.5, [1, 2, 3, 4, 5]],
-    [2.5, [3, 4, 5]],
+    [
+      0,
+      [1, 2, 3, 4, 5],
+    ],
+    [
+      -1,
+      [1, 2, 3, 4, 5],
+    ],
+    [
+      -Infinity,
+      [1, 2, 3, 4, 5],
+    ],
+    [
+      NaN,
+      [1, 2, 3, 4, 5],
+    ],
+    [
+      2,
+      [3, 4, 5],
+    ],
+    [
+      0.5,
+      [1, 2, 3, 4, 5],
+    ],
+    [
+      2.5,
+      [3, 4, 5],
+    ],
     [5, []],
     [10, []],
     [Infinity, []],
@@ -230,7 +292,18 @@ describe('runtime (dataLast)', () => {
   it('works with complex compare rules in a fused sequence', () => {
     expect(
       pipe(
-        ['a', 'aaa', 'bbbbb', 'aa', 'bb', 'bbb', 'bbbb', 'aaaa', 'b', 'aaaaa'],
+        [
+          'a',
+          'aaa',
+          'bbbbb',
+          'aa',
+          'bb',
+          'bbb',
+          'bbbb',
+          'aaaa',
+          'b',
+          'aaaaa',
+        ],
         forceFusion(),
         dropFirstBy(3, prop('length'), identity()),
       ),
@@ -323,7 +396,10 @@ describe('runtime (dataLast)', () => {
         ],
         piped(forceFusion(), dropFirstBy(1, identity())),
       ),
-    ).toStrictEqual([[3, 2], [0]]);
+    ).toStrictEqual([
+      [3, 2],
+      [0],
+    ]);
   });
 
   it('earlier steps see the whole input', () => {

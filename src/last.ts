@@ -1,6 +1,6 @@
 import type { LastArrayElement } from 'type-fest';
-import { curry1 } from './internal/curry-by-arity';
 import type { IterableContainer } from './internal/types/iterable-container';
+import { curry1 } from './internal/curry-by-arity';
 
 /**
  * Gets the last element of `array`.
@@ -39,5 +39,6 @@ export function last(data?: IterableContainer): unknown {
   return curry1(lastImplementation, arguments.length, data);
 }
 
-const lastImplementation = <T>(data: ReadonlyArray<T>): T | undefined =>
-  data.at(-1);
+function lastImplementation<T>(data: ReadonlyArray<T>): T | undefined {
+  return data.at(-1);
+}

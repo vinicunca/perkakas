@@ -1,5 +1,3 @@
-/* eslint-disable jsdoc/require-param, jsdoc/require-example, jsdoc/require-description -- allow us to deprecate all overloads of the function, not just those that have the docblock directly above them. */
-
 import { curry3 } from './internal/curry-by-arity';
 
 /**
@@ -174,7 +172,7 @@ export function pathOr<
   defaultValue: PathValue3<T, A, B, C>,
 ): (data: T) => PathValue3<T, A, B, C>;
 
-// TODO [>2]: Remove this function!
+/** TODO [>2]: Remove this function! */
 export function pathOr(
   dataOrPath: unknown,
   pathOrDefaultValue?: unknown,

@@ -1,5 +1,5 @@
-import { curry2 } from './internal/curry-by-arity';
 import type { IterableContainer } from './internal/types/iterable-container';
+import { curry2 } from './internal/curry-by-arity';
 
 /**
  * Merge two or more arrays. This method does not change the existing arrays,

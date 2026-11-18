@@ -1,14 +1,15 @@
+import type { OrderRule, OrderRules } from './internal/curry-order-rules';
+import type { LazyEvaluator } from './internal/lazy-evaluator';
+import type { CompareFunction } from './internal/types/compare-function';
+import type { DataLastBuilder } from './internal/types/data-last-builder';
+import {
+
+  orderRuleComparer,
+
+} from './internal/curry-order-rules';
 import { heapify, heapMaybeInsert } from './internal/heap';
 import { SKIP_ITEM } from './internal/lazy-control';
 import { withLazyImplementation } from './internal/lazy-data-last-implementation';
-import {
-  orderRuleComparer,
-  type OrderRule,
-  type OrderRules,
-} from './internal/curry-order-rules';
-import type { CompareFunction } from './internal/types/compare-function';
-import type { DataLastBuilder } from './internal/types/data-last-builder';
-import type { LazyEvaluator } from './internal/types/lazy-evaluator';
 
 /**
  * Drop the first `n` items from `data` based on the provided ordering criteria. This allows you to avoid sorting the array before dropping the items. The complexity of this function is *O(Nlogn)* where `N` is the length of the array.
@@ -86,8 +87,8 @@ export function dropFirstBy(
   );
 }
 
-const dataLast: DataLastBuilder<typeof dropFirstByImplementation> =
-  (compareFn, n) => (data) =>
+const dataLast: DataLastBuilder<typeof dropFirstByImplementation>
+  = (compareFn, n) => (data) =>
     dropFirstByImplementation(data, compareFn, n);
 
 function dropFirstByImplementation<T>(
@@ -115,10 +116,7 @@ function dropFirstByImplementation<T>(
   return out;
 }
 
-function lazyImplementation<T>([compareFn, n]: readonly [
-  compareFn: CompareFunction<T>,
-  n: number,
-]): LazyEvaluator<T> {
+function lazyImplementation<T>([compareFn, n]: readonly [ compareFn: CompareFunction<T>, n: number]): LazyEvaluator<T> {
   if (Number.isNaN(n) || n < 1) {
     // Trivially dropping nothing...
     return (item) => item;

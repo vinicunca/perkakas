@@ -1,8 +1,3 @@
-/* eslint-disable unicorn/consistent-boolean-name --
- * TODO [>2] -- This rule is on-point! The function's name should communicate
- * more clearly that it returns a boolean value.
- */
-
 import { curry2 } from './internal/curry-by-arity';
 
 type Predicate<T = unknown> = (data: T) => boolean;

@@ -1,5 +1,5 @@
-import { curry1 } from './internal/curry-by-arity';
 import type { IterableContainer } from './internal/types/iterable-container';
+import { curry1 } from './internal/curry-by-arity';
 
 type Sum<T extends IterableContainer<bigint> | IterableContainer<number>>
   // Empty arrays would always result in a sum of (a non-bigint) 0.

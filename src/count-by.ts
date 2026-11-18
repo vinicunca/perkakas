@@ -60,8 +60,8 @@ export function countBy(
       );
 }
 
-const dataLast: DataLastBuilder<typeof countByImplementation> =
-  (categorizationFn) => (data) =>
+const dataLast: DataLastBuilder<typeof countByImplementation>
+  = (categorizationFn) => (data) =>
     countByImplementation(data, categorizationFn);
 
 function countByImplementation<T>(data: ReadonlyArray<T>, categorizationFn: (

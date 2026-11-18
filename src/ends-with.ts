@@ -4,9 +4,9 @@ import type {
   IsStringLiteral,
   UnionToIntersection,
 } from 'type-fest';
-import { curry2 } from './internal/curry-by-arity';
 import type { Boxed } from './internal/types/boxed';
 import type { PerkakasTypeError } from './internal/types/perkakas-type-error';
+import { curry2 } from './internal/curry-by-arity';
 
 // By intersecting with a suffix template we force all types that satisfy this
 // type to also be of this shape. For a raw primitive string this narrows

@@ -48,8 +48,8 @@ export function splitWhen(
       );
 }
 
-const dataLast: DataLastBuilder<typeof splitWhenImplementation> =
-  (predicate) => (data) =>
+const dataLast: DataLastBuilder<typeof splitWhenImplementation>
+  = (predicate) => (data) =>
     splitWhenImplementation(data, predicate);
 
 function splitWhenImplementation<T>(

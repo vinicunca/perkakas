@@ -59,7 +59,9 @@ it('number keys and values', () => {
 it('values are stored by reference', () => {
   const value = { a: 1 };
 
-  expect(fromEntries([['a', value]] as const).a).toBe(value);
+  expect(fromEntries([
+    ['a', value],
+  ] as const).a).toBe(value);
 });
 
 it('prototype is Object.prototype', () => {
@@ -176,7 +178,9 @@ describe('known issues!', () => {
     });
 
     try {
-      expect(() => fromEntries([['readOnlyMember', 1]])).toThrow(TypeError);
+      expect(() => fromEntries([
+        ['readOnlyMember', 1],
+      ])).toThrow(TypeError);
     } finally {
       Reflect.deleteProperty(Object.prototype, 'readOnlyMember');
     }

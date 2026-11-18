@@ -1,7 +1,7 @@
 import type { StoppableLazyEvaluator } from './internal/make-stoppable';
 import type { IterableContainer } from './internal/types/iterable-container';
 import { curryWithLazy2 } from './internal/curry-with-lazy-by-arity';
-import { LAZY_EMPTY_EVALUATOR, lastLazyValue, makeStoppable } from './internal/make-stoppable';
+import { lastLazyValue, LAZY_EMPTY_EVALUATOR, makeStoppable } from './internal/make-stoppable';
 
 type Zipped<Left extends IterableContainer, Right extends IterableContainer>
   // If the array is empty the output is empty, no surprises
@@ -75,16 +75,14 @@ export function zip(
   );
 }
 
-const zipImplementation = <
+function zipImplementation<
   T extends IterableContainer,
   S extends IterableContainer,
->(
-  data: T,
-  other: S,
-): Zipped<T, S> =>
-  (data.length < other.length
+>(data: T, other: S): Zipped<T, S> {
+  return (data.length < other.length
     ? data.map((item, index) => [item, other[index]])
     : other.map((item, index) => [data[index], item])) as Zipped<T, S>;
+}
 
 const lazyImplementation = makeStoppable(
   <T extends IterableContainer, S extends IterableContainer>(
@@ -94,6 +92,8 @@ const lazyImplementation = makeStoppable(
       ? LAZY_EMPTY_EVALUATOR
       : (value, index, _data, slot) => {
           const pair: [T[number], S[number]] = [value, other[index]];
-          return index >= other.length - 1 ? lastLazyValue(pair, slot) : pair;
+          return index >= other.length - 1
+            ? lastLazyValue(pair, slot)
+            : pair;
         },
 );

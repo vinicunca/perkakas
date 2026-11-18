@@ -1,5 +1,5 @@
-import type { PerkakasTypeError } from './internal/types/perkakas-type-error';
 import type { IsEqual } from 'type-fest';
+import type { PerkakasTypeError } from './internal/types/perkakas-type-error';
 import { curry2 } from './internal/curry-by-arity';
 
 type FallbackOf<T>

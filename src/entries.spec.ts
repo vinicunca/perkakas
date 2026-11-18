@@ -46,5 +46,7 @@ it('works with complex objects as values', () => {
 });
 
 it('data-last', () => {
-  expect(pipe({ a: 1 }, entries())).toStrictEqual([['a', 1]]);
+  expect(pipe({ a: 1 }, entries())).toStrictEqual([
+    ['a', 1],
+  ]);
 });

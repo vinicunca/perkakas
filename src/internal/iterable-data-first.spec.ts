@@ -1,9 +1,5 @@
-/* eslint-disable unicorn/consistent-function-scoping --
- * A lazy implementation is a factory that returns its evaluator, so these tests
- * nest functions that capture nothing; each evaluator stays inline to read next
- * to its assertion.
- */
-
+import type { LazyEvaluator } from './lazy-evaluator';
+import type { StoppableLazyEvaluator } from './make-stoppable';
 import { describe, expect, it, vi } from 'vitest';
 import { iterableDataFirst } from './iterable-data-first';
 import { manyLazyValues, SKIP_ITEM } from './lazy-control';
@@ -12,10 +8,9 @@ import {
   lastLazyValue,
   makeStoppable,
   STOP,
-  type StoppableLazyEvaluator,
+
 } from './make-stoppable';
 import { requireData } from './require-data';
-import type { LazyEvaluator } from './types/lazy-evaluator';
 
 it('builds the evaluator with the lazy argument', () => {
   const lazy = vi.fn<(lazyArgument: ReadonlyArray<unknown>) => LazyEvaluator>(
@@ -45,7 +40,9 @@ describe('input', () => {
         naturals(),
         makeStoppable(
           () => (value, index, _data, slot) =>
-            index === 2 ? lastLazyValue(value, slot) : value,
+            index === 2
+              ? lastLazyValue(value, slot)
+              : value,
         ),
         [],
       ),
@@ -97,7 +94,11 @@ describe('data', () => {
         (): LazyEvaluator => requireData((_value, _index, data) => [...data]),
         [],
       ),
-    ).toStrictEqual([[1], [1, 2], [1, 2, 3]]);
+    ).toStrictEqual([
+      [1],
+      [1, 2],
+      [1, 2, 3],
+    ]);
   });
 
   it('the sentinel when not required', () => {
@@ -115,7 +116,9 @@ describe('skipping an item', () => {
     expect(
       iterableDataFirst(
         [1, 2, 3],
-        () => (value) => (value === 2 ? SKIP_ITEM : value),
+        () => (value) => (value === 2
+          ? SKIP_ITEM
+          : value),
         [],
       ),
     ).toStrictEqual([1, 3]);
@@ -125,7 +128,9 @@ describe('skipping an item', () => {
     expect(
       iterableDataFirst(
         ['a', 'b', 'c', 'd', 'e'],
-        () => (_value, index) => (index % 2 === 0 ? index : SKIP_ITEM),
+        () => (_value, index) => (index % 2 === 0
+          ? index
+          : SKIP_ITEM),
         [],
       ),
     ).toStrictEqual([0, 2, 4]);
@@ -149,7 +154,9 @@ describe('fanning out an item', () => {
       iterableDataFirst(
         [1, 2, 3],
         () => (value, _index, _data, slot) =>
-          manyLazyValues(value === 2 ? [] : [value], slot),
+          manyLazyValues(value === 2
+            ? []
+            : [value], slot),
         [],
       ),
     ).toStrictEqual([1, 3]);
@@ -184,7 +191,9 @@ describe('stopping', () => {
     expect(
       iterableDataFirst(
         [1, 2, 3],
-        makeStoppable(() => (value) => (value === 2 ? STOP : value)),
+        makeStoppable(() => (value) => (value === 2
+          ? STOP
+          : value)),
         [],
       ),
     ).toStrictEqual([1]);
@@ -209,7 +218,9 @@ describe('stopping with a last value', () => {
         [1, 2, 3],
         makeStoppable(
           () => (value, _index, _data, slot) =>
-            value === 2 ? lastLazyValue('last', slot) : value,
+            value === 2
+              ? lastLazyValue('last', slot)
+              : value,
         ),
         [],
       ),
@@ -238,7 +249,9 @@ describe('reducing', () => {
         makeReducing(
           makeStoppable(
             () => (value, _index, _data, slot) =>
-              value === 2 ? lastLazyValue(value, slot) : SKIP_ITEM,
+              value === 2
+                ? lastLazyValue(value, slot)
+                : SKIP_ITEM,
           ),
         ),
         [],

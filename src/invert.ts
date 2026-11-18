@@ -1,5 +1,5 @@
-import type { ToString } from './internal/types/to-string';
 import type { Simplify } from 'type-fest';
+import type { ToString } from './internal/types/to-string';
 import { curry1 } from './internal/curry-by-arity';
 
 type Inverted<T extends object> = Simplify<{

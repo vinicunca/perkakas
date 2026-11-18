@@ -1,6 +1,6 @@
+import type { LazyEvaluator } from './internal/lazy-evaluator';
 import type { Deduped } from './internal/types/deduped';
 import type { IterableContainer } from './internal/types/iterable-container';
-import type { LazyEvaluator } from './internal/types/lazy-evaluator';
 import { curryWithLazy1 } from './internal/curry-with-lazy-by-arity';
 import { SKIP_ITEM } from './internal/lazy-control';
 

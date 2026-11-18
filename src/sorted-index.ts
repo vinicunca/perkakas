@@ -57,5 +57,6 @@ export function sortedIndex(dataOrItem: unknown, item?: unknown): unknown {
   return curry2(sortedIndexImplementation, arguments.length, dataOrItem, item);
 }
 
-const sortedIndexImplementation = <T>(data: ReadonlyArray<T>, item: T): number =>
-  binarySearchCutoffIndex(data, (pivot) => pivot < item);
+function sortedIndexImplementation<T>(data: ReadonlyArray<T>, item: T): number {
+  return binarySearchCutoffIndex(data, (pivot) => pivot < item);
+}

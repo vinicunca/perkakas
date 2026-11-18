@@ -113,7 +113,9 @@ describe('dataFirst', () => {
     it('with a primitive value is an own property', () => {
       expect(
         Object.entries(pullObject(['__proto__'], identity(), constant(1))),
-      ).toStrictEqual([['__proto__', 1]]);
+      ).toStrictEqual([
+        ['__proto__', 1],
+      ]);
     });
   });
 

@@ -1,7 +1,7 @@
+import type { LazyEvaluator } from './internal/lazy-evaluator';
 import type { ArrayCallback, LazyCallback } from './internal/types/callback';
 import type { DataLastBuilder } from './internal/types/data-last-builder';
 import type { IterableContainer } from './internal/types/iterable-container';
-import type { LazyEvaluator } from './internal/types/lazy-evaluator';
 import { SKIP_ITEM } from './internal/lazy-control';
 import { withLazyImplementation } from './internal/lazy-data-last-implementation';
 import { requireDataByArity } from './internal/require-data';
@@ -24,7 +24,7 @@ import { requireDataByArity } from './internal/require-data';
 export function dropWhile<T extends IterableContainer>(
   data: T,
   predicate: ArrayCallback<T, boolean>,
-): T[number][];
+): Array<T[number]>;
 
 /**
  * Removes elements from the beginning of the array until the predicate returns false.
@@ -66,8 +66,8 @@ export function dropWhile(
       );
 }
 
-const dataLast: DataLastBuilder<typeof dropWhileImplementation> =
-  (predicate) => (data) =>
+const dataLast: DataLastBuilder<typeof dropWhileImplementation>
+  = (predicate) => (data) =>
     dropWhileImplementation(data, predicate);
 
 function dropWhileImplementation<T>(

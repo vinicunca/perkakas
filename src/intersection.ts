@@ -1,7 +1,7 @@
 import type { StoppableLazyEvaluator } from './internal/make-stoppable';
 import { curryWithLazy2 } from './internal/curry-with-lazy-by-arity';
 import { SKIP_ITEM } from './internal/lazy-control';
-import { LAZY_EMPTY_EVALUATOR, lastLazyValue, makeStoppable } from './internal/make-stoppable';
+import { lastLazyValue, LAZY_EMPTY_EVALUATOR, makeStoppable } from './internal/make-stoppable';
 
 /**
  * Returns a list of elements that exist in both array. The output maintains the
@@ -47,7 +47,6 @@ export function intersection(
   dataOrOther: ReadonlyArray<unknown>,
   other?: ReadonlyArray<unknown>,
 ): unknown {
-  // eslint-disable-next-line ts/no-use-before-define -- implementations follow the overloaded signatures
   return curryWithLazy2(
     intersectionImplementation,
     // eslint-disable-next-line ts/no-use-before-define -- implementations follow the overloaded signatures

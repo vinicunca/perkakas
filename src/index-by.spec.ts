@@ -78,13 +78,17 @@ it('number keys share the property of their string form', () => {
 describe('`__proto__` key', () => {
   it('keeps the prototype', () => {
     expect(
-      Object.getPrototypeOf(indexBy([{ id: '__proto__' }], prop('id'))),
+      Object.getPrototypeOf(indexBy([
+        { id: '__proto__' },
+      ], prop('id'))),
     ).toBe(Object.prototype);
   });
 
   it('with an object item is an own property', () => {
     expect(
-      Reflect.ownKeys(indexBy([{ id: '__proto__' }], prop('id'))),
+      Reflect.ownKeys(indexBy([
+        { id: '__proto__' },
+      ], prop('id'))),
     ).toStrictEqual(['__proto__']);
   });
 
@@ -96,7 +100,9 @@ describe('`__proto__` key', () => {
 
   it('with a primitive item is an own property', () => {
     expect(Object.entries(indexBy(['a'], constant('__proto__')))).toStrictEqual(
-      [['__proto__', 'a']],
+      [
+        ['__proto__', 'a'],
+      ],
     );
   });
 });

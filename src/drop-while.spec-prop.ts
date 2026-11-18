@@ -4,7 +4,10 @@ import { forceFusion } from '../test/force-fusion';
 import { dropWhile } from './drop-while';
 import { pipe } from './pipe';
 
-test.prop([fc.array(fc.anything()), fc.func(fc.boolean())])(
+test.prop([
+  fc.array(fc.anything()),
+  fc.func(fc.boolean()),
+])(
   'data-first and a fused sequence produce the same result',
   (data, predicateOf) => {
     // The predicate ignores `data`, which differs between the two on purpose:
@@ -18,16 +21,19 @@ test.prop([fc.array(fc.anything()), fc.func(fc.boolean())])(
   },
 );
 
-test.prop([fc.array(fc.anything()), fc.func(fc.boolean())])(
+test.prop([
+  fc.array(fc.anything()),
+  fc.func(fc.boolean()),
+])(
   'data-first and a fused sequence call the predicate the same way',
   (data, predicateOf) => {
-    const dataFirstCalls: [unknown, number][] = [];
+    const dataFirstCalls: Array<[unknown, number]> = [];
     dropWhile(data, (value, index) => {
       dataFirstCalls.push([value, index]);
       return predicateOf(value, index);
     });
 
-    const fusedCalls: [unknown, number][] = [];
+    const fusedCalls: Array<[unknown, number]> = [];
     pipe(
       data,
       forceFusion(),

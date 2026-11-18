@@ -55,8 +55,8 @@ export function sort(
       );
 }
 
-const dataLast: DataLastBuilder<typeof sortImplementation> =
-  (comparator) => (data) =>
+const dataLast: DataLastBuilder<typeof sortImplementation>
+  = (comparator) => (data) =>
     sortImplementation(data, comparator);
 
 function sortImplementation<T extends IterableContainer>(

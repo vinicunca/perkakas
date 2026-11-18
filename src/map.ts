@@ -1,7 +1,7 @@
+import type { LazyEvaluator } from './internal/lazy-evaluator';
 import type { ArrayCallback, LazyCallback } from './internal/types/callback';
 import type { DataLastBuilder } from './internal/types/data-last-builder';
 import type { IterableContainer } from './internal/types/iterable-container';
-import type { LazyEvaluator } from './internal/types/lazy-evaluator';
 import type { Mapped } from './internal/types/mapped';
 import { withLazyImplementation } from './internal/lazy-data-last-implementation';
 import { canReadData, requireData } from './internal/require-data';
@@ -74,19 +74,20 @@ export function map(
       );
 }
 
-const dataLast: DataLastBuilder<typeof mapImplementation> =
-  (callbackfn) => (data) =>
+const dataLast: DataLastBuilder<typeof mapImplementation>
+  = (callbackfn) => (data) =>
     mapImplementation(data, callbackfn);
 
-const mapImplementation = <T, U>(
-  data: ReadonlyArray<T>,
-  callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => U,
-): U[] => data.map(callbackfn);
+function mapImplementation<T, U>(data: ReadonlyArray<T>, callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => U): Array<U> {
+  return data.map(callbackfn);
+}
 
 function lazyImplementation<T, U>(callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => U): LazyEvaluator<T, U> {
   return canReadData(callbackfn, 2)
     ? requireData((value, index, data) => callbackfn(value, index, data))
     : // A callback that doesn't read `data` already is a complete evaluator,
-  // and using it directly saves a call per item.
+  // and using it directly saves a call per item. It also receives `slot`
+  // as a 4th argument, which only a callback slipping through
+  // `canReadData`'s gaps can see.
     callbackfn;
 }

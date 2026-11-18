@@ -45,6 +45,5 @@ export function reverse(data?: ReadonlyArray<unknown>): unknown {
 }
 
 function reverseImplementation<T>(data: ReadonlyArray<T>): Array<T> {
-  // eslint-disable-next-line unicorn/no-array-reverse -- `reverse` only mutates our own copy here, and `toReversed` is slower on larger arrays.
   return data.concat().reverse();
 }

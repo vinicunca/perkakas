@@ -87,8 +87,8 @@ export function fromKeys(
       );
 }
 
-const dataLast: DataLastBuilder<typeof fromKeysImplementation> =
-  (mapper) => (data) =>
+const dataLast: DataLastBuilder<typeof fromKeysImplementation>
+  = (mapper) => (data) =>
     fromKeysImplementation(data, mapper);
 
 function fromKeysImplementation<K extends PropertyKey, V>(

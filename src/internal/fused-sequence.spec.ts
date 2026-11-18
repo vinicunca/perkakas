@@ -1,52 +1,64 @@
-/* eslint-disable unicorn/consistent-function-scoping --
- * Evaluators capture nothing, and lazy implementations nest them in a factory;
- * each one stays inline to read next to its assertion.
- */
-
+/* eslint-disable ts/no-use-before-define */
+import type { LazyStep } from './fused-sequence';
+import type { LazyEvaluatorFactory, LazyUnaryFunction } from './lazy-data-last-implementation';
+import type { LazyEvaluator } from './lazy-evaluator';
+import type { StoppableLazyEvaluator } from './make-stoppable';
 import { describe, expect, it, vi } from 'vitest';
 import { identity } from '../identity';
 import {
   buildFusedSequence,
+
   runFusedSequence,
-  type LazyStep,
 } from './fused-sequence';
 import { manyLazyValues, SKIP_ITEM } from './lazy-control';
 import {
   lazyDataLastImplementation0,
   lazyDataLastImplementation2,
-  type LazyEvaluatorFactory,
-  type LazyUnaryFunction,
+
 } from './lazy-data-last-implementation';
 import { makeReducing } from './make-reducing';
 import {
   lastLazyValue,
   STOP,
-  type StoppableLazyEvaluator,
+
 } from './make-stoppable';
 import { requireData } from './require-data';
-import type { LazyEvaluator } from './types/lazy-evaluator';
 import { UNEXPECTED_ACCESS_SENTINEL } from './unexpected-access-sentinel';
 
 describe(buildFusedSequence, () => {
   it('takes consecutive lazy functions', () => {
-    expect(buildFusedSequence([lazy(), lazy()], 0)).toHaveLength(2);
+    expect(buildFusedSequence([
+      lazy(),
+      lazy(),
+    ], 0)).toHaveLength(2);
   });
 
   it('starts at `startIndex`', () => {
     const skipped = vi.fn<() => LazyEvaluator>(() => (value) => value);
-    buildFusedSequence([lazyFunction(skipped), lazy()], 1);
+    buildFusedSequence([
+      lazyFunction(skipped),
+      lazy(),
+    ], 1);
 
     expect(skipped).not.toHaveBeenCalled();
   });
 
   it('ends before a non-lazy function', () => {
-    expect(buildFusedSequence([lazy(), identity(), lazy()], 0)).toHaveLength(1);
+    expect(buildFusedSequence([
+      lazy(),
+      identity(),
+      lazy(),
+    ], 0)).toHaveLength(1);
   });
 
   it('ends after a reducing function', () => {
     expect(
       buildFusedSequence(
-        [lazy(), lazyFunction(makeReducing(() => (value) => value)), lazy()],
+        [
+          lazy(),
+          lazyFunction(makeReducing(() => (value) => value)),
+          lazy(),
+        ],
         0,
       ),
     ).toHaveLength(2);
@@ -80,7 +92,9 @@ describe(buildFusedSequence, () => {
     const lazyImplementation = vi.fn<() => LazyEvaluator>(
       () => (value) => value,
     );
-    const lazyFunctions = [lazyFunction(lazyImplementation)];
+    const lazyFunctions = [
+      lazyFunction(lazyImplementation),
+    ];
     buildFusedSequence(lazyFunctions, 0);
     buildFusedSequence(lazyFunctions, 0);
 
@@ -91,14 +105,18 @@ describe(buildFusedSequence, () => {
     it('an empty buffer when data is required', () => {
       expect(
         buildFusedSequence(
-          [lazyFunction((): LazyEvaluator => requireData((value) => value))],
+          [
+            lazyFunction((): LazyEvaluator => requireData((value) => value)),
+          ],
           0,
         )[0]?.data,
       ).toStrictEqual([]);
     });
 
     it('the sentinel when data isn\'t required', () => {
-      const data = buildFusedSequence([lazy()], 0)[0]?.data;
+      const data = buildFusedSequence([
+        lazy(),
+      ], 0)[0]?.data;
 
       // Asserting identity with `toBe` would make the matcher format the
       // sentinel on failure, which throws and hides the real mismatch.
@@ -110,14 +128,18 @@ describe(buildFusedSequence, () => {
 describe(runFusedSequence, () => {
   it('doesn\'t bind evaluators to their step', () => {
     const evaluator = vi.fn<LazyEvaluator>((value) => value);
-    runFusedSequence([1], [step(evaluator)]);
+    runFusedSequence([1], [
+      step(evaluator),
+    ]);
 
     expect(evaluator.mock.contexts[0]).toBeUndefined();
   });
 
   describe('input', () => {
     it('empty', () => {
-      expect(runFusedSequence([], [step()])).toStrictEqual([]);
+      expect(runFusedSequence([], [
+        step(),
+      ])).toStrictEqual([]);
     });
 
     it('an array is iterated, not indexed', () => {
@@ -135,29 +157,36 @@ describe(runFusedSequence, () => {
               : Reflect.get(target, key, receiver);
           },
         }),
-        [step()],
+        [
+          step(),
+        ],
       );
 
       expect(keys).toStrictEqual([Symbol.iterator]);
     });
 
     it('a string is iterated by character', () => {
-      expect(runFusedSequence('abc', [step()])).toStrictEqual(['a', 'b', 'c']);
+      expect(runFusedSequence('abc', [
+        step(),
+      ])).toStrictEqual(['a', 'b', 'c']);
     });
 
     it('a generator is pulled only until done', () => {
       expect(
         runFusedSequence(naturals(), [
           step((value, index, _data, slot) =>
-            index === 2 ? lastLazyValue(value, slot) : value,
-          ),
+            index === 2
+              ? lastLazyValue(value, slot)
+              : value),
         ]),
       ).toStrictEqual([0, 1, 2]);
     });
 
     it('a generator is closed when done', () => {
       const onClose = vi.fn<() => void>();
-      runFusedSequence(closesWith(onClose), [step(() => STOP)]);
+      runFusedSequence(closesWith(onClose), [
+        step(() => STOP),
+      ]);
 
       expect(onClose).toHaveBeenCalledTimes(1);
     });
@@ -165,13 +194,17 @@ describe(runFusedSequence, () => {
 
   describe('items', () => {
     it.each([null, undefined, 0, '', false])('%s is emitted', (item) => {
-      expect(runFusedSequence([item], [step()])).toStrictEqual([item]);
+      expect(runFusedSequence([item], [
+        step(),
+      ])).toStrictEqual([item]);
     });
 
     it('a symbol is emitted', () => {
       const mySymbol = Symbol('item');
 
-      expect(runFusedSequence([0], [step(() => mySymbol)])).toStrictEqual([
+      expect(runFusedSequence([0], [
+        step(() => mySymbol),
+      ])).toStrictEqual([
         mySymbol,
       ]);
     });
@@ -182,7 +215,10 @@ describe(runFusedSequence, () => {
       const { proxy: item, revoke } = Proxy.revocable({}, {});
       revoke();
 
-      expect(runFusedSequence([item], [step(), step()])[0]).toBe(item);
+      expect(runFusedSequence([item], [
+        step(),
+        step(),
+      ])[0]).toBe(item);
     });
   });
 
@@ -192,7 +228,9 @@ describe(runFusedSequence, () => {
         runFusedSequence(
           [1, 2, 3, 4],
           [
-            step((value) => (value === 2 || value === 4 ? value : SKIP_ITEM)),
+            step((value) => (value === 2 || value === 4
+              ? value
+              : SKIP_ITEM)),
             step((_value, index) => index),
           ],
         ),
@@ -205,8 +243,7 @@ describe(runFusedSequence, () => {
           ['a', 'b'],
           [
             step((value, index, _data, slot) =>
-              manyLazyValues([value, index], slot),
-            ),
+              manyLazyValues([value, index], slot)),
           ],
         ),
       ).toStrictEqual(['a', 0, 'b', 1]);
@@ -231,8 +268,7 @@ describe(runFusedSequence, () => {
           [
             step((_value, _index, _data, slot) => manyLazyValues([1, 2], slot)),
             step((value, _index, _data, slot) =>
-              manyLazyValues([value, value], slot),
-            ),
+              manyLazyValues([value, value], slot)),
             step((_value, index) => index),
           ],
         ),
@@ -245,9 +281,15 @@ describe(runFusedSequence, () => {
       expect(
         runFusedSequence(
           [1, 2, 3],
-          [stepWithData((_value, _index, data) => [...data])],
+          [
+            stepWithData((_value, _index, data) => [...data]),
+          ],
         ),
-      ).toStrictEqual([[1], [1, 2], [1, 2, 3]]);
+      ).toStrictEqual([
+        [1],
+        [1, 2],
+        [1, 2, 3],
+      ]);
     });
 
     it('includes the items the step skipped', () => {
@@ -256,11 +298,14 @@ describe(runFusedSequence, () => {
           [1, 2, 3],
           [
             stepWithData((value, _index, data) =>
-              value === 3 ? [...data] : SKIP_ITEM,
-            ),
+              value === 3
+                ? [...data]
+                : SKIP_ITEM),
           ],
         ),
-      ).toStrictEqual([[1, 2, 3]]);
+      ).toStrictEqual([
+        [1, 2, 3],
+      ]);
     });
 
     it('holds what reached the step, not the input', () => {
@@ -268,11 +313,16 @@ describe(runFusedSequence, () => {
         runFusedSequence(
           [1, 2, 3],
           [
-            step((value) => (value === 2 ? SKIP_ITEM : value)),
+            step((value) => (value === 2
+              ? SKIP_ITEM
+              : value)),
             stepWithData((_value, _index, data) => [...data]),
           ],
         ),
-      ).toStrictEqual([[1], [1, 3]]);
+      ).toStrictEqual([
+        [1],
+        [1, 3],
+      ]);
     });
 
     it('includes the items a fan-out emitted', () => {
@@ -281,12 +331,15 @@ describe(runFusedSequence, () => {
           [1],
           [
             step((_value, _index, _data, slot) =>
-              manyLazyValues([1, 2, 3], slot),
-            ),
+              manyLazyValues([1, 2, 3], slot)),
             stepWithData((_value, _index, data) => [...data]),
           ],
         ),
-      ).toStrictEqual([[1], [1, 2], [1, 2, 3]]);
+      ).toStrictEqual([
+        [1],
+        [1, 2],
+        [1, 2, 3],
+      ]);
     });
   });
 
@@ -295,14 +348,21 @@ describe(runFusedSequence, () => {
       expect(
         runFusedSequence(
           [1, 2, 3],
-          [step((value) => (value === 2 ? SKIP_ITEM : value))],
+          [
+            step((value) => (value === 2
+              ? SKIP_ITEM
+              : value)),
+          ],
         ),
       ).toStrictEqual([1, 3]);
     });
 
     it('hides it from later steps', () => {
       const later = vi.fn<LazyEvaluator>((value) => value);
-      runFusedSequence([1, 2, 3], [step(() => SKIP_ITEM), step(later)]);
+      runFusedSequence([1, 2, 3], [
+        step(() => SKIP_ITEM),
+        step(later),
+      ]);
 
       expect(later).not.toHaveBeenCalled();
     });
@@ -315,12 +375,16 @@ describe(runFusedSequence, () => {
           [1, 2],
           [
             step((value, _index, _data, slot) =>
-              manyLazyValues([value, 'sub-item'], slot),
-            ),
+              manyLazyValues([value, 'sub-item'], slot)),
             step((value) => [value]),
           ],
         ),
-      ).toStrictEqual([[1], ['sub-item'], [2], ['sub-item']]);
+      ).toStrictEqual([
+        [1],
+        ['sub-item'],
+        [2],
+        ['sub-item'],
+      ]);
     });
 
     it('to nothing drops it', () => {
@@ -329,8 +393,9 @@ describe(runFusedSequence, () => {
           [1, 2, 3],
           [
             step((value, _index, _data, slot) =>
-              manyLazyValues(value === 2 ? [] : [value], slot),
-            ),
+              manyLazyValues(value === 2
+                ? []
+                : [value], slot)),
           ],
         ),
       ).toStrictEqual([1, 3]);
@@ -344,8 +409,7 @@ describe(runFusedSequence, () => {
           [0],
           [
             step((_value, _index, _data, slot) =>
-              manyLazyValues(subItems, slot),
-            ),
+              manyLazyValues(subItems, slot)),
           ],
         ),
       ).toHaveLength(500_000);
@@ -358,8 +422,7 @@ describe(runFusedSequence, () => {
           [
             step((_value, _index, _data, slot) => manyLazyValues([1, 2], slot)),
             step((value, _index, _data, slot) =>
-              manyLazyValues([value, 'sub-item'], slot),
-            ),
+              manyLazyValues([value, 'sub-item'], slot)),
           ],
         ),
       ).toStrictEqual([1, 'sub-item', 2, 'sub-item']);
@@ -372,9 +435,10 @@ describe(runFusedSequence, () => {
             [0],
             [
               step((_value, _index, _data, slot) =>
-                manyLazyValues([1, 2, 3], slot),
-              ),
-              step((value) => (value === 2 ? STOP : value)),
+                manyLazyValues([1, 2, 3], slot)),
+              step((value) => (value === 2
+                ? STOP
+                : value)),
             ],
           ),
         ).toStrictEqual([1]);
@@ -382,9 +446,11 @@ describe(runFusedSequence, () => {
 
       it('ends the iteration', () => {
         const evaluator = vi.fn<LazyEvaluator>((_value, _index, _data, slot) =>
-          manyLazyValues([1, 2], slot),
-        );
-        runFusedSequence([1, 2, 3], [step(evaluator), step(() => STOP)]);
+          manyLazyValues([1, 2], slot));
+        runFusedSequence([1, 2, 3], [
+          step(evaluator),
+          step(() => STOP),
+        ]);
 
         expect(evaluator).toHaveBeenCalledTimes(1);
       });
@@ -396,21 +462,31 @@ describe(runFusedSequence, () => {
       expect(
         runFusedSequence(
           [1, 2, 3],
-          [step((value) => (value === 2 ? STOP : value))],
+          [
+            step((value) => (value === 2
+              ? STOP
+              : value)),
+          ],
         ),
       ).toStrictEqual([1]);
     });
 
     it('ends the iteration', () => {
       const evaluator = vi.fn<LazyEvaluator>((value) => value);
-      runFusedSequence([1, 2, 3], [step(evaluator), step(() => STOP)]);
+      runFusedSequence([1, 2, 3], [
+        step(evaluator),
+        step(() => STOP),
+      ]);
 
       expect(evaluator).toHaveBeenCalledTimes(1);
     });
 
     it('hides the item from later steps', () => {
       const later = vi.fn<LazyEvaluator>((value) => value);
-      runFusedSequence([1, 2, 3], [step(() => STOP), step(later)]);
+      runFusedSequence([1, 2, 3], [
+        step(() => STOP),
+        step(later),
+      ]);
 
       expect(later).not.toHaveBeenCalled();
     });
@@ -426,14 +502,18 @@ describe(runFusedSequence, () => {
             step((value) => [value]),
           ],
         ),
-      ).toStrictEqual([['last']]);
+      ).toStrictEqual([
+        ['last'],
+      ]);
     });
 
     it('ends the iteration', () => {
       const evaluator = vi.fn<StoppableLazyEvaluator>(
         (value, _index, _data, slot) => lastLazyValue(value, slot),
       );
-      runFusedSequence([1, 2, 3], [step(evaluator)]);
+      runFusedSequence([1, 2, 3], [
+        step(evaluator),
+      ]);
 
       expect(evaluator).toHaveBeenCalledTimes(1);
     });
@@ -442,7 +522,10 @@ describe(runFusedSequence, () => {
       const evaluator = vi.fn<StoppableLazyEvaluator>(
         (value, _index, _data, slot) => lastLazyValue(value, slot),
       );
-      runFusedSequence([1, 2, 3], [step(evaluator), step(() => SKIP_ITEM)]);
+      runFusedSequence([1, 2, 3], [
+        step(evaluator),
+        step(() => SKIP_ITEM),
+      ]);
 
       expect(evaluator).toHaveBeenCalledTimes(1);
     });
@@ -454,8 +537,7 @@ describe(runFusedSequence, () => {
           [
             step((value, _index, _data, slot) => lastLazyValue(value, slot)),
             step((value, _index, _data, slot) =>
-              manyLazyValues([value, 'sub-item'], slot),
-            ),
+              manyLazyValues([value, 'sub-item'], slot)),
           ],
         ),
       ).toStrictEqual([1, 'sub-item']);
@@ -490,28 +572,32 @@ describe(runFusedSequence, () => {
       expect(
         runFusedSequence(
           [1, 2, 3],
-          [step((value) => (value === 2 ? otherSkipItem : value))],
+          [
+            step((value) => (value === 2
+              ? otherSkipItem
+              : value)),
+          ],
         ),
       ).toStrictEqual([1, 3]);
     });
 
     it('a fan-out feeding a last value', async () => {
       vi.resetModules();
-      const { manyLazyValues: otherManyLazyValues } =
-        await import('./lazy-control');
-      const { lastLazyValue: otherLastLazyValue } =
-        await import('./make-stoppable');
+      const { manyLazyValues: otherManyLazyValues }
+        = await import('./lazy-control');
+      const { lastLazyValue: otherLastLazyValue }
+        = await import('./make-stoppable');
 
       expect(
         runFusedSequence(
           [0],
           [
             step((_value, _index, _data, slot) =>
-              otherManyLazyValues([1, 2, 3], slot),
-            ),
+              otherManyLazyValues([1, 2, 3], slot)),
             step((value, _index, _data, slot) =>
-              value === 2 ? otherLastLazyValue(value, slot) : SKIP_ITEM,
-            ),
+              value === 2
+                ? otherLastLazyValue(value, slot)
+                : SKIP_ITEM),
           ],
         ),
       ).toStrictEqual([2]);
@@ -522,7 +608,9 @@ describe(runFusedSequence, () => {
       const { STOP: otherStop } = await import('./make-stoppable');
 
       expect(
-        runFusedSequence([1, 2, 3], [step(() => otherStop)]),
+        runFusedSequence([1, 2, 3], [
+          step(() => otherStop),
+        ]),
       ).toStrictEqual([]);
     });
   });
@@ -530,30 +618,31 @@ describe(runFusedSequence, () => {
 
 const lazy = (): LazyUnaryFunction => lazyFunction(() => (value) => value);
 
-const lazyFunction = (
-  lazyImplementation: LazyEvaluatorFactory<ReadonlyArray<unknown>, never>,
-): LazyUnaryFunction =>
-  lazyDataLastImplementation0(() => {
+function lazyFunction(lazyImplementation: LazyEvaluatorFactory<ReadonlyArray<unknown>, never>): LazyUnaryFunction {
+  return lazyDataLastImplementation0(() => {
     throw new Error(
       'Intentional! a fused sequence doesn\'t call the data-first',
     );
   }, lazyImplementation);
+}
 
-const step = (lazyEvaluator: StoppableLazyEvaluator = (value) => value) =>
-  ({
+function step(lazyEvaluator: StoppableLazyEvaluator = (value) => value): LazyStep {
+  return ({
     lazyEvaluator,
     itemIndex: 0,
     requiresData: false,
     data: UNEXPECTED_ACCESS_SENTINEL,
   }) as const satisfies LazyStep;
+}
 
-const stepWithData = (lazyEvaluator: LazyEvaluator) =>
-  ({
+function stepWithData(lazyEvaluator: LazyEvaluator): LazyStep {
+  return ({
     lazyEvaluator,
     itemIndex: 0,
     requiresData: true,
     data: [],
   }) as const satisfies LazyStep;
+}
 
 // Never finishes on its own, so only a loop that stops pulling can consume it.
 function* naturals(): Generator<number> {

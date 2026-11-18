@@ -1,8 +1,8 @@
+import type { LazyEvaluator } from './internal/lazy-evaluator';
 import type { DataLastBuilder } from './internal/types/data-last-builder';
 import type { Deduped } from './internal/types/deduped';
 import type { IsEqualFunction } from './internal/types/is-equal-function';
 import type { IterableContainer } from './internal/types/iterable-container';
-import type { LazyEvaluator } from './internal/types/lazy-evaluator';
 import { SKIP_ITEM } from './internal/lazy-control';
 import { withLazyImplementation } from './internal/lazy-data-last-implementation';
 import { requireData } from './internal/require-data';
@@ -70,29 +70,26 @@ export function uniqueWith(
       );
 }
 
-const dataLast: DataLastBuilder<typeof uniqueWithImplementation> =
-  (isEquals) => (data) =>
+const dataLast: DataLastBuilder<typeof uniqueWithImplementation>
+  = (isEquals) => (data) =>
     uniqueWithImplementation(data, isEquals);
 
-const uniqueWithImplementation = <T>(
-  data: ReadonlyArray<T>,
-  isEquals: IsEqualFunction<T>,
-): T[] =>
-  data.filter(
+function uniqueWithImplementation<T>(data: ReadonlyArray<T>, isEquals: IsEqualFunction<T>): Array<T> {
+  return data.filter(
     (value, index) =>
       data.findIndex(
         (otherValue, otherIndex) =>
           index === otherIndex || isEquals(value, otherValue),
       ) === index,
   );
+}
 
-const lazyImplementation = <T>(
-  isEquals: IsEqualFunction<T>,
-): LazyEvaluator<T> =>
-  requireData((value, index, data) =>
+function lazyImplementation<T>(isEquals: IsEqualFunction<T>): LazyEvaluator<T> {
+  return requireData((value, index, data) =>
     data.findIndex(
       (otherValue, otherIndex) =>
         index === otherIndex || isEquals(value, otherValue),
     ) === index
       ? value
       : SKIP_ITEM);
+}

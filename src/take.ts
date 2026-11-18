@@ -1,7 +1,7 @@
 import type { StoppableLazyEvaluator } from './internal/make-stoppable';
 import type { IterableContainer } from './internal/types/iterable-container';
 import { curryWithLazy2 } from './internal/curry-with-lazy-by-arity';
-import { LAZY_EMPTY_EVALUATOR, lastLazyValue, makeStoppable } from './internal/make-stoppable';
+import { lastLazyValue, LAZY_EMPTY_EVALUATOR, makeStoppable } from './internal/make-stoppable';
 
 /**
  * Returns the first `n` elements of `data`.
@@ -45,7 +45,7 @@ export function take<T extends IterableContainer>(
  */
 export function take(
   n: number,
-): <T extends IterableContainer>(data: T) => T[number][];
+): <T extends IterableContainer>(data: T) => Array<T[number]>;
 
 export function take(dataOrN: IterableContainer | number, n?: number): unknown {
   return curryWithLazy2(
@@ -58,10 +58,11 @@ export function take(dataOrN: IterableContainer | number, n?: number): unknown {
   );
 }
 
-const takeImplementation = <T extends IterableContainer>(
-  data: T,
-  n: number,
-): T[number][] => (n < 0 ? [] : data.slice(0, n));
+function takeImplementation<T extends IterableContainer>(data: T, n: number): Array<T[number]> {
+  return n < 0
+    ? []
+    : data.slice(0, n);
+}
 
 const lazyImplementation = makeStoppable(
   <T>(n: number): StoppableLazyEvaluator<T> => {

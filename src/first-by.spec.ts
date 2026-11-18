@@ -137,6 +137,10 @@ describe('runtime (dataFirst)', () => {
   it('a NaN projection ties with every item', () => {
     expect(firstBy([NaN, 1], identity())).toBeNaN();
   });
+
+  it('an undefined item can come first', () => {
+    expect(firstBy([undefined, 2, 1], (x) => x ?? -Infinity)).toBeUndefined();
+  });
 });
 
 describe('runtime (dataLast)', () => {

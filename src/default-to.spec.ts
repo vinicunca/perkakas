@@ -1,5 +1,5 @@
-import { defaultTo } from './default-to';
 import { describe, expect, it, vi } from 'vitest';
+import { defaultTo } from './default-to';
 
 describe('falsy values', () => {
   describe('nullish', () => {

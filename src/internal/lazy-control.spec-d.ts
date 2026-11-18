@@ -1,4 +1,4 @@
-import type { LazyEvaluator } from './types/lazy-evaluator';
+import type { LazyEvaluator } from './lazy-evaluator';
 import { describe, it } from 'vitest';
 import { MANY, manyLazyValues } from './lazy-control';
 

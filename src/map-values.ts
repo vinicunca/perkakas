@@ -1,6 +1,6 @@
 import type { Simplify } from 'type-fest';
-import { curry2 } from './internal/curry-by-arity';
 import type { ObjectCallback } from './internal/types/callback';
+import { curry2 } from './internal/curry-by-arity';
 
 type MappedValues<T extends object, Value> = Simplify<{
   -readonly [P in keyof T as P extends number | string ? P : never]: Value;

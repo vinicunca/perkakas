@@ -11,7 +11,7 @@ it('data-last', () => {
   expect(pipe({ foo: 'bar' }, prop('foo'))).toBe('bar');
 });
 
-it('factory function', () => {
+it('stored partial application', () => {
   const propA = prop('a');
 
   expect(indexBy([

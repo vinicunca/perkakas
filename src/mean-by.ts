@@ -56,14 +56,11 @@ export function meanBy(
       );
 }
 
-const dataLast: DataLastBuilder<typeof meanByImplementation> =
-  (callbackfn) => (data) =>
+const dataLast: DataLastBuilder<typeof meanByImplementation>
+  = (callbackfn) => (data) =>
     meanByImplementation(data, callbackfn);
 
-const meanByImplementation = <T>(
-  data: ReadonlyArray<T>,
-  callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => number,
-): number => {
+function meanByImplementation<T>(data: ReadonlyArray<T>, callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => number): number {
   if (data.length === 0) {
     return NaN;
   }
@@ -77,4 +74,4 @@ const meanByImplementation = <T>(
   }
 
   return sum / data.length;
-};
+}

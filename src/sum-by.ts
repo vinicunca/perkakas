@@ -96,14 +96,11 @@ export function sumBy(
       );
 }
 
-const dataLast: DataLastBuilder<typeof sumByImplementation> =
-  (callbackfn) => (data) =>
+const dataLast: DataLastBuilder<typeof sumByImplementation>
+  = (callbackfn) => (data) =>
     sumByImplementation(data, callbackfn);
 
-const sumByImplementation = <T>(
-  data: ReadonlyArray<T>,
-  callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => bigint | number,
-): bigint | number => {
+function sumByImplementation<T>(data: ReadonlyArray<T>, callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => bigint | number): bigint | number {
   let sum: bigint | number = 0;
 
   let index = 0;
@@ -111,7 +108,9 @@ const sumByImplementation = <T>(
     const summand = callbackfn(item, index, data);
 
     // @ts-expect-error [ts2365] -- Typescript can't infer that all elements will be a number of the same type.
-    sum = index === 0 ? summand : sum + summand;
+    sum = index === 0
+      ? summand
+      : sum + summand;
     index += 1;
   }
 

@@ -16,7 +16,9 @@ const KEYED_ITEMS = fc.array(
   // Fresh objects with few distinct keys, so ties are common and only the
   // reference tells apart which of the tied items the heap dropped.
   fc.oneof(
-    fc.record({ key: fc.integer({ min: 0, max: 2 }) }),
+    fc.record({
+      key: fc.integer({ min: 0, max: 2 }),
+    }),
     fc.constantFrom(null, undefined),
   ),
 );

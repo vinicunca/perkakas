@@ -1,5 +1,5 @@
-import { curry2 } from './internal/curry-by-arity';
 import type { IterableContainer } from './internal/types/iterable-container';
+import { curry2 } from './internal/curry-by-arity';
 
 /**
  * Basic structure of `evolver` parameter of the function `evolve`.
@@ -151,8 +151,8 @@ function evolveImplementation(data: unknown, evolver: GenericEvolver): unknown {
     }
 
     const value = entry[1];
-    out[key] =
-      typeof value === 'function'
+    out[key]
+      = typeof value === 'function'
         ? value(out[key])
         : evolveImplementation(out[key], value);
   }

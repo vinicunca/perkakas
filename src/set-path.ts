@@ -1,6 +1,6 @@
 import type { ValueOf } from 'type-fest';
-import { curry3 } from './internal/curry-by-arity';
 import type { PerkakasTypeError } from './internal/types/perkakas-type-error';
+import { curry3 } from './internal/curry-by-arity';
 
 type Paths<T, Prefix extends ReadonlyArray<unknown> = []>
   = | Prefix

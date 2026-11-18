@@ -50,15 +50,24 @@ describe('`__proto__` key', () => {
   it('is an own property', () => {
     expect(
       Object.entries(
-        omitBy({ ['__proto__']: { hello: 'world' } }, constant(false)),
+        omitBy({
+          ['__proto__']: { hello: 'world' },
+        }, constant(false)),
       ),
-    ).toStrictEqual([['__proto__', { hello: 'world' }]]);
+    ).toStrictEqual([
+      [
+        '__proto__',
+        { hello: 'world' },
+      ],
+    ]);
   });
 
   it('keeps the prototype', () => {
     expect(
       Object.getPrototypeOf(
-        omitBy({ ['__proto__']: { a: 1 } }, constant(false)),
+        omitBy({
+          ['__proto__']: { a: 1 },
+        }, constant(false)),
       ),
     ).toBe(Object.prototype);
   });
@@ -66,7 +75,9 @@ describe('`__proto__` key', () => {
   it('is omitted when the predicate matches', () => {
     expect(
       Object.entries(
-        omitBy({ ['__proto__']: { hello: 'world' } }, constant(true)),
+        omitBy({
+          ['__proto__']: { hello: 'world' },
+        }, constant(true)),
       ),
     ).toStrictEqual([]);
   });

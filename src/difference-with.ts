@@ -1,5 +1,5 @@
+import type { LazyEvaluator } from './internal/lazy-evaluator';
 import type { IsEqualFunction } from './internal/types/is-equal-function';
-import type { LazyEvaluator } from './internal/types/lazy-evaluator';
 import { curryWithLazy3 } from './internal/curry-with-lazy-by-arity';
 import { SKIP_ITEM } from './internal/lazy-control';
 
@@ -79,12 +79,11 @@ function differenceWithImplementation<T, Other>(
   return result;
 }
 
-const lazyImplementation =
-  <T, Other>([other, isEqual]: readonly [
-    other: ReadonlyArray<Other>,
-    isEqual: IsEqualFunction<T, Other>,
-  ]): LazyEvaluator<T> =>
-  (value) =>
+function lazyImplementation<T, Other>(
+  [other, isEqual]: readonly [ other: ReadonlyArray<Other>, isEqual: IsEqualFunction<T, Other>],
+): LazyEvaluator<T> {
+  return (value) =>
     other.every((otherValue) => !isEqual(value, otherValue))
       ? value
       : SKIP_ITEM;
+}

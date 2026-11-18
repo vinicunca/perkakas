@@ -1,8 +1,8 @@
+import { describe, expect, it } from 'vitest';
 import { map } from './map';
 import { mapValues } from './map-values';
 import { pipe } from './pipe';
 import { range } from './range';
-import { describe, expect, it } from 'vitest';
 
 describe('trivial 0 cases', () => {
   it('start at 0', () => {
@@ -294,12 +294,16 @@ describe('lodash spec', () => {
   });
 
   it('should work as an iteratee for methods like `_.map`', () => {
-    // Lodash supports "headless" invocations via an explicit guard against the
-    // "index" parameter being passed as a second parameter to range (which
-    // would lead to funky ranges). We don't support "headless" invocations in
+    // Lodash guards `range` for use as a function reference
+    // (`_.map(array, _.range)`), ignoring the index `_.map` passes as a second
+    // argument (which would lead to funky ranges). We don't add such guards in
     // general, and `range` doesn't support a single-param (implicit start)
     // invocation anyway, so the index or key becomes `end`.
-    expect(map([1, 2, 3], range)).not.toStrictEqual([[0], [0, 1], [0, 1, 2]]);
+    expect(map([1, 2, 3], range)).not.toStrictEqual([
+      [0],
+      [0, 1],
+      [0, 1, 2],
+    ]);
     expect(mapValues({ a: 1, b: 2, c: 3 }, range)).not.toStrictEqual({
       a: [0],
       b: [0, 1],

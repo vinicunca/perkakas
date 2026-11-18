@@ -46,15 +46,21 @@ describe('`__proto__` key', () => {
   it('is an own property', () => {
     expect(
       Object.entries(
-        mapValues({ ['__proto__']: { hello: 'world' } }, constant(2)),
+        mapValues({
+          ['__proto__']: { hello: 'world' },
+        }, constant(2)),
       ),
-    ).toStrictEqual([['__proto__', 2]]);
+    ).toStrictEqual([
+      ['__proto__', 2],
+    ]);
   });
 
   it('keeps the prototype', () => {
     expect(
       Object.getPrototypeOf(
-        mapValues({ ['__proto__']: { hello: 'world' } }, constant({ a: 1 })),
+        mapValues({
+          ['__proto__']: { hello: 'world' },
+        }, constant({ a: 1 })),
       ),
     ).toBe(Object.prototype);
   });

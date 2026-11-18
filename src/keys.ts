@@ -1,8 +1,8 @@
 import type { IsNever } from 'type-fest';
-import { curry1 } from './internal/curry-by-arity';
 import type { EnumerableStringKeyOf } from './internal/types/enumerable-string-key-of';
 import type { IterableContainer } from './internal/types/iterable-container';
 import type { ToString } from './internal/types/to-string';
+import { curry1 } from './internal/curry-by-arity';
 
 type Keys<T> = T extends IterableContainer ? ArrayKeys<T> : ObjectKeys<T>;
 

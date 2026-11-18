@@ -1,12 +1,12 @@
-import { describe, expectTypeOf, it } from 'vitest';
 import type { LazyUnaryFunction } from './lazy-data-last-implementation';
+import type { LazyEvaluator } from './lazy-evaluator';
+import type { IterableContainer } from './types/iterable-container';
+import { describe, expectTypeOf, it } from 'vitest';
 import {
   curryWithLazy1,
   curryWithLazy2,
   curryWithLazy3,
 } from './curry-with-lazy-by-arity';
-import type { IterableContainer } from './types/iterable-container';
-import type { LazyEvaluator } from './types/lazy-evaluator';
 
 declare function takeImplementation(
   data: ReadonlyArray<number>,
@@ -26,7 +26,7 @@ declare const passThrough: LazyEvaluator<number>;
 declare function genericTakeImplementation<T extends IterableContainer>(
   data: T,
   count: number,
-): T[number][];
+): Array<T[number]>;
 
 declare function genericLazyImplementation<T>(count: number): LazyEvaluator<T>;
 

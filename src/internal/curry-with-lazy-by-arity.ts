@@ -1,13 +1,12 @@
 import type { DataFirst } from './data-last-implementation';
+import type { LazyEvaluatorFactory, LazyEvaluatorFactoryOf, LazyUnaryFunction } from './lazy-data-last-implementation';
+import type { IterableContainer } from './types/iterable-container';
 import {
   lazyDataLastImplementation0,
   lazyDataLastImplementation1,
   lazyDataLastImplementation2,
-  type LazyEvaluatorFactory,
-  type LazyEvaluatorFactoryOf,
-  type LazyUnaryFunction,
+
 } from './lazy-data-last-implementation';
-import type { IterableContainer } from './types/iterable-container';
 
 /**
  * `curry1` for a data-first implementation that also has a lazy
@@ -25,24 +24,20 @@ import type { IterableContainer } from './types/iterable-container';
  *    }
  * @see curry1
  */
-export const curryWithLazy1 = <
+export function curryWithLazy1<
   T extends IterableContainer,
   // Always empty, but it keeps a generic implementation's data type inferred
   // from its constraint, as in `curry1`.
   P extends readonly [],
   R,
->(
-  dataFirst: DataFirst<T, P, R>,
-  lazy: LazyEvaluatorFactory<T, P>,
-  argumentsLength: number,
-  data: unknown,
-): R | LazyUnaryFunction<T, P, R> =>
-  argumentsLength >= 1
+>(dataFirst: DataFirst<T, P, R>, lazy: LazyEvaluatorFactory<T, P>, argumentsLength: number, data: unknown): R | LazyUnaryFunction<T, P, R> {
+  return argumentsLength >= 1
     ? dataFirst(
         // @ts-expect-error [ts2345] -- `arguments.length` picks the call style at runtime, which TypeScript can't narrow the parameters from; the overloads guarantee their types.
         data,
       )
     : lazyDataLastImplementation0(dataFirst, lazy);
+}
 
 /**
  * `curry2` for a data-first implementation that also has a lazy
@@ -65,27 +60,23 @@ export const curryWithLazy1 = <
  * @see curry2
  * @see withLazyImplementation
  */
-export const curryWithLazy2 = <
+export function curryWithLazy2<
   T extends IterableContainer,
   P extends readonly [unknown],
   R,
->(
-  dataFirst: DataFirst<T, P, R>,
+>(dataFirst: DataFirst<T, P, R>,
   // A single argument reaches the lazy implementation as is, so its own
   // parameters are `P`; typing it by them lets TypeScript infer `P` from it
   // too, which `LazyEvaluatorFactory`'s deferred `LazyArgument` blocks.
-  lazy: LazyEvaluatorFactoryOf<T, P>,
-  argumentsLength: number,
-  dataOrArgument: unknown,
-  argument: unknown,
-): R | LazyUnaryFunction<T, P, R> =>
-  argumentsLength >= 2
+  lazy: LazyEvaluatorFactoryOf<T, P>, argumentsLength: number, dataOrArgument: unknown, argument: unknown): R | LazyUnaryFunction<T, P, R> {
+  return argumentsLength >= 2
     ? dataFirst(
         // @ts-expect-error [ts2345] -- `arguments.length` picks the call style at runtime, which TypeScript can't narrow the parameters from; the overloads guarantee their types.
         dataOrArgument,
         argument,
       )
     : lazyDataLastImplementation1(dataFirst, lazy, dataOrArgument);
+}
 
 /**
  * `curry3` for a data-first implementation that also has a lazy
@@ -110,19 +101,12 @@ export const curryWithLazy2 = <
  * @see curry3
  * @see withLazyImplementation
  */
-export const curryWithLazy3 = <
+export function curryWithLazy3<
   T extends IterableContainer,
   P extends readonly [unknown, unknown],
   R,
->(
-  dataFirst: DataFirst<T, P, R>,
-  lazy: LazyEvaluatorFactory<T, P>,
-  argumentsLength: number,
-  dataOrFirst: unknown,
-  firstOrSecond: unknown,
-  second: unknown,
-): R | LazyUnaryFunction<T, P, R> =>
-  argumentsLength >= 3
+>(dataFirst: DataFirst<T, P, R>, lazy: LazyEvaluatorFactory<T, P>, argumentsLength: number, dataOrFirst: unknown, firstOrSecond: unknown, second: unknown): R | LazyUnaryFunction<T, P, R> {
+  return argumentsLength >= 3
     ? dataFirst(
         // @ts-expect-error [ts2345] -- `arguments.length` picks the call style at runtime, which TypeScript can't narrow the parameters from; the overloads guarantee their types.
         dataOrFirst,
@@ -130,3 +114,4 @@ export const curryWithLazy3 = <
         second,
       )
     : lazyDataLastImplementation2(dataFirst, lazy, dataOrFirst, firstOrSecond);
+}

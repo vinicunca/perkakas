@@ -68,8 +68,8 @@ export function indexBy(
       );
 }
 
-const dataLast: DataLastBuilder<typeof indexByImplementation> =
-  (mapper) => (data) =>
+const dataLast: DataLastBuilder<typeof indexByImplementation>
+  = (mapper) => (data) =>
     indexByImplementation(data, mapper);
 
 function indexByImplementation<T, K extends PropertyKey>(

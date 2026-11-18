@@ -59,7 +59,7 @@ export default vinicuncaESLint(
   },
 
   {
-    files: ['src/**/*.ts'],
+    files: ['src/*.ts'],
     ignores: [
       'src/index.ts',
       'src/**/*.spec.ts',
@@ -75,6 +75,49 @@ export default vinicuncaESLint(
               regex: '/curry$',
               message:
                 'Pass the arguments as parameters: curry1-3, curryWithLazy1-3, or a typeof check.',
+            },
+            {
+              regex: String.raw`^(?!\./internal/|type-fest$)`,
+              message:
+                'Utilities import only from src/internal and type-fest: move what this needs into src/internal.',
+            },
+          ],
+        },
+      ],
+    },
+  },
+
+  {
+    files: ['src/internal/*.ts'],
+    ignores: ['src/**/*.spec.ts', 'src/**/*.spec-d.ts'],
+    rules: {
+      'ts/no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              regex: String.raw`^(?!\./|type-fest$)`,
+              message:
+                'src/internal sits below the utilities and imports only itself and type-fest: move what this needs into src/internal.',
+            },
+          ],
+        },
+      ],
+    },
+  },
+
+  {
+    files: ['src/internal/types/*.ts'],
+    ignores: ['src/**/*.spec-d.ts'],
+    rules: {
+      'ts/no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              regex: String.raw`^(?!\./[^/]+$|type-fest$)`,
+              message:
+                'Types in src/internal/types import only each other and type-fest: move the type this needs into src/internal/types.',
             },
           ],
         },

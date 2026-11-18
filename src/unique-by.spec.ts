@@ -1,11 +1,11 @@
 import type { LazyCallback } from './internal/types/callback';
+import { describe, expect, it, vi } from 'vitest';
 import { forceFusion } from '../test/force-fusion';
 import { createLazyInvocationCounter } from '../test/lazy-invocation-counter';
 import { identity } from './identity';
 import { pipe } from './pipe';
 import { take } from './take';
 import { uniqueBy } from './unique-by';
-import { describe, expect, it, vi } from 'vitest';
 
 const PEOPLE = [
   { name: 'John', age: 42 },

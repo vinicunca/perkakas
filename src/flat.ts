@@ -1,7 +1,7 @@
+import type { IsInteger } from 'type-fest';
 import type { LazyResult, LazySlot } from './internal/lazy-control';
 import type { DataLastBuilder } from './internal/types/data-last-builder';
 import type { IterableContainer } from './internal/types/iterable-container';
-import type { IsInteger } from 'type-fest';
 import { manyLazyValues } from './internal/lazy-control';
 import { withLazyImplementation } from './internal/lazy-data-last-implementation';
 
@@ -123,8 +123,8 @@ export function flat(
       );
 }
 
-const dataLast: DataLastBuilder<typeof flatImplementation> =
-  (depth) => (data) =>
+const dataLast: DataLastBuilder<typeof flatImplementation>
+  = (depth) => (data) =>
     flatImplementation(data, depth);
 
 function flatImplementation(data: IterableContainer, depth?: number): IterableContainer {

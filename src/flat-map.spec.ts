@@ -1,11 +1,11 @@
 import type { LazyCallback } from './internal/types/callback';
+import { describe, expect, it, vi } from 'vitest';
 import { forceFusion } from '../test/force-fusion';
 import { createLazyInvocationCounter } from '../test/lazy-invocation-counter';
 import { add } from './add';
 import { find } from './find';
 import { flatMap } from './flat-map';
 import { pipe } from './pipe';
-import { describe, expect, it, vi } from 'vitest';
 
 describe('dataFirst', () => {
   it('flatMap', () => {

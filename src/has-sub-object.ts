@@ -1,6 +1,6 @@
 import type { IsNever, Simplify, Tagged } from 'type-fest';
 import { curry2 } from './internal/curry-by-arity';
-import { isDeepEqual } from './is-deep-equal';
+import { isDeepEqual } from './internal/is-deep-equal';
 
 // eslint-disable-next-line ts/no-unused-vars -- We want to confine the typing to a specific symbol
 declare const HAS_SUB_OBJECT_BRAND: unique symbol;

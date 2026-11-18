@@ -106,14 +106,11 @@ export function partition(
       );
 }
 
-const dataLast: DataLastBuilder<typeof partitionImplementation> =
-  (predicate) => (data) =>
+const dataLast: DataLastBuilder<typeof partitionImplementation>
+  = (predicate) => (data) =>
     partitionImplementation(data, predicate);
 
-const partitionImplementation = <T>(
-  data: ReadonlyArray<T>,
-  predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
-): [Array<T>, Array<T>] => {
+function partitionImplementation<T>(data: ReadonlyArray<T>, predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean): [Array<T>, Array<T>] {
   const ret: [Array<T>, Array<T>] = [[], []];
   data.forEach((item, index) => {
     if (predicate(item, index, data)) {

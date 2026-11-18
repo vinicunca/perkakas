@@ -1,7 +1,7 @@
 import type { IsNever, Simplify } from 'type-fest';
-import { curry1 } from './internal/curry-by-arity';
 import type { IterableContainer } from './internal/types/iterable-container';
 import type { PerkakasTypeError } from './internal/types/perkakas-type-error';
+import { curry1 } from './internal/curry-by-arity';
 
 type FromEntriesError<Message extends string> = PerkakasTypeError<
   'fromEntries',
@@ -93,7 +93,7 @@ type ValueForKey<
  * `indexBy` - Builds an object from an array of *values* and a mapper for
  * keys.
  * `pullObject` - Builds an object from an array of items with mappers for
- * *both* keys and values.
+ * both* keys and values.
  * Refer to the docs for more details.
  *
  * @param data - An array of key-value pairs.
@@ -121,7 +121,7 @@ export function fromEntries<Entries extends IterableContainer<Entry>>(
  * `indexBy` - Builds an object from an array of *values* and a mapper for
  * keys.
  * `pullObject` - Builds an object from an array of items with mappers for
- * *both* keys and values.
+ * both* keys and values.
  * Refer to the docs for more details.
  *
  * @signature

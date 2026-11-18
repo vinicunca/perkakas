@@ -14,11 +14,11 @@ import type { StrictFunction } from './strict-function';
  *     (callbackfn) => (data) =>
  *       mapImplementation(data, callbackfn);
  */
-export type DataLastBuilder<F extends StrictFunction> =
-  Parameters<F> extends readonly [infer Data, ...infer Parameters]
+export type DataLastBuilder<F extends StrictFunction>
+  = Parameters<F> extends readonly [infer Data, ...infer Parameters]
     ? (...parameters: Parameters) => (data: Data) => ReturnType<F>
     : PerkakasTypeError<
-        'DataLastBuilder',
-        'failed to parse data-first implementation signature',
-        { metadata: F }
-      >;
+      'DataLastBuilder',
+      'failed to parse data-first implementation signature',
+      { metadata: F }
+    >;

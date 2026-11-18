@@ -5,7 +5,7 @@ import type { IterableContainer } from './internal/types/iterable-container';
 import type { NarrowedArray } from './internal/types/narrowed-array';
 import type { NonRefinedFilteredArray } from './internal/types/non-refined-filtered-array';
 import { withLazyImplementation } from './internal/lazy-data-last-implementation';
-import { STOP, makeStoppable } from './internal/make-stoppable';
+import { makeStoppable, STOP } from './internal/make-stoppable';
 import { requireDataByArity } from './internal/require-data';
 
 /**
@@ -84,8 +84,8 @@ export function takeWhile(
       );
 }
 
-const dataLast: DataLastBuilder<typeof takeWhileImplementation> =
-  (predicate) => (data) =>
+const dataLast: DataLastBuilder<typeof takeWhileImplementation>
+  = (predicate) => (data) =>
     takeWhileImplementation(data, predicate);
 
 function takeWhileImplementation<T>(

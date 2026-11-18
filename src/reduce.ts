@@ -81,8 +81,8 @@ export function reduce(
       );
 }
 
-const dataLast: DataLastBuilder<typeof reduceImplementation> =
-  (callbackfn, initialValue) => (data) =>
+const dataLast: DataLastBuilder<typeof reduceImplementation>
+  = (callbackfn, initialValue) => (data) =>
     reduceImplementation(data, callbackfn, initialValue);
 
 function reduceImplementation<T, U>(data: ReadonlyArray<T>, callbackfn: (

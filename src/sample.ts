@@ -1,7 +1,7 @@
+import type { IsNever, NonNegativeInteger, Writable } from 'type-fest';
 import type { IterableContainer } from './internal/types/iterable-container';
 import type { NTuple } from './internal/types/n-tuple';
 import type { TupleParts } from './internal/types/tuple-parts';
-import type { IsNever, NonNegativeInteger, Writable } from 'type-fest';
 import { curry2 } from './internal/curry-by-arity';
 
 type Sampled<T extends IterableContainer, N extends number> = [N] extends [0]

@@ -1,6 +1,6 @@
-import { curry1 } from './internal/curry-by-arity';
 import type { EnumerableStringKeyedValueOf } from './internal/types/enumerable-string-keyed-value-of';
 import type { IterableContainer } from './internal/types/iterable-container';
+import { curry1 } from './internal/curry-by-arity';
 
 type Values<T extends object> = T extends IterableContainer
   ? Array<T[number]>

@@ -23,15 +23,39 @@ describe('data first', () => {
   });
 
   it.each([
-    [0, [1, 2, 3, 4, 5]],
-    [-1, [1, 2, 3, 4, 5]],
-    [-Infinity, [1, 2, 3, 4, 5]],
-    [NaN, [1, 2, 3, 4, 5]],
-    [2, [1, 2, 3]],
-    [0.5, [1, 2, 3, 4]],
-    [2.5, [1, 2]],
+    [
+      0,
+      [1, 2, 3, 4, 5],
+    ],
+    [
+      -1,
+      [1, 2, 3, 4, 5],
+    ],
+    [
+      -Infinity,
+      [1, 2, 3, 4, 5],
+    ],
+    [
+      NaN,
+      [1, 2, 3, 4, 5],
+    ],
+    [
+      2,
+      [1, 2, 3],
+    ],
+    [
+      0.5,
+      [1, 2, 3, 4],
+    ],
+    [
+      2.5,
+      [1, 2],
+    ],
     // Too small to change `5 - n`, but still a partial item.
-    [1e-20, [1, 2, 3, 4]],
+    [
+      1e-20,
+      [1, 2, 3, 4],
+    ],
     [5, []],
     [10, []],
     [Infinity, []],
@@ -46,15 +70,39 @@ describe('data last', () => {
   });
 
   it.each([
-    [0, [1, 2, 3, 4, 5]],
-    [-1, [1, 2, 3, 4, 5]],
-    [-Infinity, [1, 2, 3, 4, 5]],
-    [NaN, [1, 2, 3, 4, 5]],
-    [2, [1, 2, 3]],
-    [0.5, [1, 2, 3, 4]],
-    [2.5, [1, 2]],
+    [
+      0,
+      [1, 2, 3, 4, 5],
+    ],
+    [
+      -1,
+      [1, 2, 3, 4, 5],
+    ],
+    [
+      -Infinity,
+      [1, 2, 3, 4, 5],
+    ],
+    [
+      NaN,
+      [1, 2, 3, 4, 5],
+    ],
+    [
+      2,
+      [1, 2, 3],
+    ],
+    [
+      0.5,
+      [1, 2, 3, 4],
+    ],
+    [
+      2.5,
+      [1, 2],
+    ],
     // Too small to change `5 - n`, but still a partial item.
-    [1e-20, [1, 2, 3, 4]],
+    [
+      1e-20,
+      [1, 2, 3, 4],
+    ],
     [5, []],
     [10, []],
     [Infinity, []],
@@ -115,7 +163,11 @@ describe('data last', () => {
 
   it('index advances across fan-out', () => {
     expect(
-      pipe([[1, 2], [3], [4, 5]], forceFusion(), flat(), dropLast(2)),
+      pipe([
+        [1, 2],
+        [3],
+        [4, 5],
+      ], forceFusion(), flat(), dropLast(2)),
     ).toStrictEqual([1, 2, 3]);
   });
 
@@ -128,7 +180,10 @@ describe('data last', () => {
         ],
         piped(forceFusion(), dropLast(2)),
       ),
-    ).toStrictEqual([[1], [4]]);
+    ).toStrictEqual([
+      [1],
+      [4],
+    ]);
   });
 
   it('earlier steps see the whole input', () => {

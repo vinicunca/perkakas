@@ -228,7 +228,6 @@ export function truncate(
         );
 }
 
-// eslint-disable-next-line sonarjs/cognitive-complexity
 function truncateImplementation(
   data: string,
   n: number,

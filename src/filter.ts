@@ -1,8 +1,8 @@
+import type { LazyEvaluator } from './internal/lazy-evaluator';
 import type { ArrayCallback, ArrayTypePredicate, LazyCallback, LazyTypePredicate } from './internal/types/callback';
 import type { DataLastBuilder } from './internal/types/data-last-builder';
 import type { FilteredArray } from './internal/types/filtered-array';
 import type { IterableContainer } from './internal/types/iterable-container';
-import type { LazyEvaluator } from './internal/types/lazy-evaluator';
 import type { NonRefinedFilteredArray } from './internal/types/non-refined-filtered-array';
 import { SKIP_ITEM } from './internal/lazy-control';
 import { withLazyImplementation } from './internal/lazy-data-last-implementation';
@@ -97,14 +97,13 @@ export function filter(
       );
 }
 
-const dataLast: DataLastBuilder<typeof filterImplementation> =
-  (predicate) => (data) =>
+const dataLast: DataLastBuilder<typeof filterImplementation>
+  = (predicate) => (data) =>
     filterImplementation(data, predicate);
 
-const filterImplementation = <T>(
-  data: ReadonlyArray<T>,
-  predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
-): T[] => data.filter(predicate);
+function filterImplementation<T>(data: ReadonlyArray<T>, predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean): Array<T> {
+  return data.filter(predicate);
+}
 
 function lazyImplementation<T>(predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean): LazyEvaluator<T> {
   return requireDataByArity(predicate, 2, (value, index, data) =>

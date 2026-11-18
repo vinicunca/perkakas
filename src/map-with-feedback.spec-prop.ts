@@ -4,7 +4,11 @@ import { forceFusion } from '../test/force-fusion';
 import { mapWithFeedback } from './map-with-feedback';
 import { pipe } from './pipe';
 
-test.prop([fc.array(fc.anything()), fc.func(fc.integer()), fc.integer()])(
+test.prop([
+  fc.array(fc.anything()),
+  fc.func(fc.integer()),
+  fc.integer(),
+])(
   'data-first and data-last produce the same result',
   (data, reducerOf, initialValue) => {
     // The reducer ignores `data`, which differs between the calling styles on

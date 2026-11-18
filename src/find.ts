@@ -178,14 +178,13 @@ export function find(
       );
 }
 
-const dataLast: DataLastBuilder<typeof findImplementation> =
-  (predicate) => (data) =>
+const dataLast: DataLastBuilder<typeof findImplementation>
+  = (predicate) => (data) =>
     findImplementation(data, predicate);
 
-const findImplementation = <T>(
-  data: ReadonlyArray<T>,
-  predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
-): T | undefined => data.find(predicate);
+function findImplementation<T>(data: ReadonlyArray<T>, predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean): T | undefined {
+  return data.find(predicate);
+}
 
 const lazyImplementation = makeReducing(
   makeStoppable(

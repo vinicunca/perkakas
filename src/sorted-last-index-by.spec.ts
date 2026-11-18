@@ -318,7 +318,12 @@ function indicesSeen<T>(
 it('data-last', () => {
   expect(
     pipe(
-      [{ value: 1 }, { value: 2 }, { value: 2 }, { value: 3 }],
+      [
+        { value: 1 },
+        { value: 2 },
+        { value: 2 },
+        { value: 3 },
+      ],
       sortedLastIndexBy({ value: 2 }, ({ value }) => value),
     ),
   ).toBe(3);

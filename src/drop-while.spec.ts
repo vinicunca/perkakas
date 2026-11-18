@@ -149,7 +149,7 @@ describe('data last', () => {
   });
 
   it('provides the items processed so far to the predicate', () => {
-    const dataSnapshots: Array<number>[] = [];
+    const dataSnapshots: Array<Array<number>> = [];
     pipe(
       [1, 2, 3],
       forceFusion(),
@@ -159,7 +159,11 @@ describe('data last', () => {
       }),
     );
 
-    expect(dataSnapshots).toStrictEqual([[1], [1, 2], [1, 2, 3]]);
+    expect(dataSnapshots).toStrictEqual([
+      [1],
+      [1, 2],
+      [1, 2, 3],
+    ]);
   });
 
   it('doesn\'t collect the items processed so far for a predicate without `data`', () => {

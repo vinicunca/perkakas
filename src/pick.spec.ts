@@ -34,14 +34,23 @@ describe('`__proto__` key', () => {
   it('is an own property', () => {
     expect(
       Object.entries(
-        pick({ ['__proto__']: { hello: 'world' } }, ['__proto__']),
+        pick({
+          ['__proto__']: { hello: 'world' },
+        }, ['__proto__']),
       ),
-    ).toStrictEqual([['__proto__', { hello: 'world' }]]);
+    ).toStrictEqual([
+      [
+        '__proto__',
+        { hello: 'world' },
+      ],
+    ]);
   });
 
   it('keeps the prototype', () => {
     expect(
-      Object.getPrototypeOf(pick({ ['__proto__']: { a: 1 } }, ['__proto__'])),
+      Object.getPrototypeOf(pick({
+        ['__proto__']: { a: 1 },
+      }, ['__proto__'])),
     ).toBe(Object.prototype);
   });
 

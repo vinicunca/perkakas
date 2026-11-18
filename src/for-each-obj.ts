@@ -1,5 +1,5 @@
-import { curry2 } from './internal/curry-by-arity';
 import type { ObjectCallback } from './internal/types/callback';
+import { curry2 } from './internal/curry-by-arity';
 
 /**
  * Iterate an object using a defined callback function.

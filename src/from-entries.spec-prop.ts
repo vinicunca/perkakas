@@ -44,9 +44,7 @@ test.prop([entries])(
 // Descriptors compare each value along with its attributes, and listing them in
 // key order (unlike `Object.getOwnPropertyDescriptors`) keeps the order part of
 // the comparison.
-const ownPropertyDescriptors = (
-  data: object,
-): (PropertyDescriptor | undefined)[] =>
-  Reflect.ownKeys(data).map((ownKey) =>
-    Object.getOwnPropertyDescriptor(data, ownKey),
-  );
+function ownPropertyDescriptors(data: object): Array<PropertyDescriptor | undefined> {
+  return Reflect.ownKeys(data).map((ownKey) =>
+    Object.getOwnPropertyDescriptor(data, ownKey));
+}

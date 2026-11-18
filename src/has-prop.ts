@@ -1,6 +1,6 @@
 import type { KeysOfUnion, Simplify } from 'type-fest';
-import { curry2 } from './internal/curry-by-arity';
 import type { IsBounded } from './internal/types/is-bounded';
+import { curry2 } from './internal/curry-by-arity';
 
 // Arrays route to the `boolean`-returning overload below: their `keyof`
 // includes prototype methods (`push`, `pop`, …) that aren't own properties

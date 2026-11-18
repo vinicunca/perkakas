@@ -97,8 +97,8 @@ export function pullObject(
       );
 }
 
-const dataLast: DataLastBuilder<typeof pullObjectImplementation> =
-  (keyExtractor, valueExtractor) => (data) =>
+const dataLast: DataLastBuilder<typeof pullObjectImplementation>
+  = (keyExtractor, valueExtractor) => (data) =>
     pullObjectImplementation(data, keyExtractor, valueExtractor);
 
 function pullObjectImplementation<T, K extends PropertyKey, V>(

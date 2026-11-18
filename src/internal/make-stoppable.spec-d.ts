@@ -1,7 +1,7 @@
 import type { LazyResult, LazySlot } from './lazy-control';
 import type { LazyEvaluatorFactory } from './lazy-data-last-implementation';
+import type { LazyEvaluator } from './lazy-evaluator';
 import type { StoppableLazyEvaluator, StoppableResult } from './make-stoppable';
-import type { LazyEvaluator } from './types/lazy-evaluator';
 import { describe, it } from 'vitest';
 import { $typed } from '../../test/$typed';
 import {

@@ -98,12 +98,21 @@ describe('objects', () => {
   describe('`__proto__` key', () => {
     it('is an own property', () => {
       expect(
-        Object.entries(clone({ ['__proto__']: { hello: 'world' } })),
-      ).toStrictEqual([['__proto__', { hello: 'world' }]]);
+        Object.entries(clone({
+          ['__proto__']: { hello: 'world' },
+        })),
+      ).toStrictEqual([
+        [
+          '__proto__',
+          { hello: 'world' },
+        ],
+      ]);
     });
 
     it('keeps the prototype', () => {
-      expect(Object.getPrototypeOf(clone({ ['__proto__']: { a: 1 } }))).toBe(
+      expect(Object.getPrototypeOf(clone({
+        ['__proto__']: { a: 1 },
+      }))).toBe(
         Object.prototype,
       );
     });
@@ -115,7 +124,10 @@ describe('objects', () => {
       value.hello = 'mutated';
 
       expect(Object.entries(cloned)).toStrictEqual([
-        ['__proto__', { hello: 'world' }],
+        [
+          '__proto__',
+          { hello: 'world' },
+        ],
       ]);
     });
   });
@@ -340,7 +352,12 @@ describe('edge cases', () => {
   });
 
   it('data-last in a callback', () => {
-    const data = [{ a: 1 }, { b: [2] }];
+    const data = [
+      { a: 1 },
+      {
+        b: [2],
+      },
+    ];
 
     const result = data.map(clone());
 

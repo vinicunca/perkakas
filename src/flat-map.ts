@@ -1,7 +1,7 @@
 import type { LazyResult } from './internal/lazy-control';
+import type { LazyEvaluator } from './internal/lazy-evaluator';
 import type { ArrayCallback, LazyCallback } from './internal/types/callback';
 import type { DataLastBuilder } from './internal/types/data-last-builder';
-import type { LazyEvaluator } from './internal/types/lazy-evaluator';
 import { manyLazyValues } from './internal/lazy-control';
 import { withLazyImplementation } from './internal/lazy-data-last-implementation';
 import { requireDataByArity } from './internal/require-data';
@@ -78,14 +78,13 @@ export function flatMap(
       );
 }
 
-const dataLast: DataLastBuilder<typeof flatMapImplementation> =
-  (callbackfn) => (data) =>
+const dataLast: DataLastBuilder<typeof flatMapImplementation>
+  = (callbackfn) => (data) =>
     flatMapImplementation(data, callbackfn);
 
-const flatMapImplementation = <T, U>(
-  data: ReadonlyArray<T>,
-  callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => ReadonlyArray<U> | U,
-): U[] => data.flatMap(callbackfn);
+function flatMapImplementation<T, U>(data: ReadonlyArray<T>, callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => ReadonlyArray<U> | U): Array<U> {
+  return data.flatMap(callbackfn);
+}
 
 function lazyImplementation<T, K>(callbackfn: (input: T, index: number, data: ReadonlyArray<T>) => K | ReadonlyArray<K>): LazyEvaluator<T, K> {
   return requireDataByArity(callbackfn, 2, (value, index, data, slot): LazyResult<K> => {

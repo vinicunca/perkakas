@@ -1,5 +1,4 @@
 import type { IsNever, Simplify } from 'type-fest';
-import { curry2 } from './internal/curry-by-arity';
 import type {
   ObjectCallback,
   ObjectTypePredicate,
@@ -7,6 +6,7 @@ import type {
 import type { EnumerableStringKeyOf } from './internal/types/enumerable-string-key-of';
 import type { EnumerableStringKeyedValueOf } from './internal/types/enumerable-string-keyed-value-of';
 import type { IsBoundedRecord } from './internal/types/is-bounded-record';
+import { curry2 } from './internal/curry-by-arity';
 
 // Symbols are not passed to the predicate (because they can't be enumerated
 // with the `Object.entries` function) and the enumerable ones are copied to the
@@ -190,9 +190,9 @@ function omitByImplementation<T extends object>(
   // The predicate only sees string keys, so enumerable symbol keys always stay.
   for (const symbol of Object.getOwnPropertySymbols(data)) {
     if (Object.prototype.propertyIsEnumerable.call(data, symbol)) {
-      out[symbol] =
+      out[symbol]
         // @ts-expect-error [ts7053] -- `symbol` is an own key of `data`, but TypeScript can't tie it to `T`.
-        data[symbol];
+        = data[symbol];
     }
   }
 

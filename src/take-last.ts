@@ -1,5 +1,5 @@
-import { curry2 } from './internal/curry-by-arity';
 import type { IterableContainer } from './internal/types/iterable-container';
+import { curry2 } from './internal/curry-by-arity';
 
 /**
  * Takes the last `n` elements from `data`.
@@ -41,7 +41,7 @@ export function takeLast<T extends IterableContainer>(
  */
 export function takeLast<T extends IterableContainer>(
   n: number,
-): (data: T) => T[number][];
+): (data: T) => Array<T[number]>;
 
 export function takeLast(
   dataOrN: IterableContainer | number,
@@ -50,7 +50,8 @@ export function takeLast(
   return curry2(takeLastImplementation, arguments.length, dataOrN, n);
 }
 
-const takeLastImplementation = <T extends IterableContainer>(
-  data: T,
-  n: number,
-): T[number][] => (n > 0 ? data.slice(Math.max(0, data.length - n)) : []);
+function takeLastImplementation<T extends IterableContainer>(data: T, n: number): Array<T[number]> {
+  return n > 0
+    ? data.slice(Math.max(0, data.length - n))
+    : [];
+}

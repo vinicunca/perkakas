@@ -1,8 +1,9 @@
-import { createLazySlot, MANY, SKIP_ITEM, type LazySlot } from './lazy-control';
+import type { LazySlot } from './lazy-control';
 import type {
   LazyArgument,
   LazyEvaluatorFactory,
 } from './lazy-data-last-implementation';
+import { createLazySlot, MANY, SKIP_ITEM } from './lazy-control';
 import { LAST, STOP } from './make-stoppable';
 import { UNEXPECTED_ACCESS_SENTINEL } from './unexpected-access-sentinel';
 

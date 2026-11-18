@@ -36,15 +36,24 @@ describe('`__proto__` key', () => {
   it('is an own property', () => {
     expect(
       Object.entries(
-        pickBy({ ['__proto__']: { hello: 'world' } }, constant(true)),
+        pickBy({
+          ['__proto__']: { hello: 'world' },
+        }, constant(true)),
       ),
-    ).toStrictEqual([['__proto__', { hello: 'world' }]]);
+    ).toStrictEqual([
+      [
+        '__proto__',
+        { hello: 'world' },
+      ],
+    ]);
   });
 
   it('keeps the prototype', () => {
     expect(
       Object.getPrototypeOf(
-        pickBy({ ['__proto__']: { a: 1 } }, constant(true)),
+        pickBy({
+          ['__proto__']: { a: 1 },
+        }, constant(true)),
       ),
     ).toBe(Object.prototype);
   });

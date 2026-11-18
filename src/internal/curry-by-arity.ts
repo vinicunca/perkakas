@@ -1,8 +1,9 @@
+import type { DataFirst, UnaryFunction } from './data-last-implementation';
 import {
+
   dataLastImplementation1,
   dataLastImplementation2,
-  type DataFirst,
-  type UnaryFunction,
+
 } from './data-last-implementation';
 
 /**
@@ -19,7 +20,7 @@ import {
  *    }
  * @see curryWithLazy1
  */
-export const curry1 = <
+export function curry1<
   T,
   // Always empty, but only a type parameter here lets TypeScript infer a
   // generic implementation's data type from its constraint
@@ -27,23 +28,18 @@ export const curry1 = <
   // `unknown`, which such an implementation rejects.
   P extends readonly [],
   R,
->(
-  // The intersection rejects an optional parameter after the data, which a
-  // point-free caller's extra arguments would fill.
-  dataFirst: DataFirst<T, P, R> &
-    ((data: never, ...extraArguments: ReadonlyArray<unknown>) => unknown),
-  argumentsLength: number,
-  data: unknown,
-): R | UnaryFunction<T, R> =>
-  argumentsLength >= 1
+>(dataFirst: DataFirst<T, P, R>
+  & ((data: never, ...extraArguments: ReadonlyArray<unknown>) => unknown), argumentsLength: number, data: unknown): R | UnaryFunction<T, R> {
+  return argumentsLength >= 1
     ? dataFirst(
         // @ts-expect-error [ts2769] -- `arguments.length` picks the call style at runtime, which TypeScript can't narrow the parameters from; the overloads guarantee their types.
         data,
       )
     : // A closure around `dataFirst` would only add a call to every data-last
-      // invocation.
-      // @ts-expect-error [ts2322] -- `P` is always empty, which TypeScript can't use to drop the rest parameter from `dataFirst`'s type.
-      dataFirst;
+  // invocation.
+  // @ts-expect-error [ts2322] -- `P` is always empty, which TypeScript can't use to drop the rest parameter from `dataFirst`'s type.
+    dataFirst;
+}
 
 /**
  * `curry` for a data-first implementation that takes one argument after the
@@ -61,19 +57,15 @@ export const curry1 = <
  *    }
  * @see curryWithLazy2
  */
-export const curry2 = <T, P extends readonly [unknown], R>(
-  dataFirst: DataFirst<T, P, R>,
-  argumentsLength: number,
-  dataOrArgument: unknown,
-  argument: unknown,
-): R | UnaryFunction<T, R> =>
-  argumentsLength >= 2
+export function curry2<T, P extends readonly [unknown], R>(dataFirst: DataFirst<T, P, R>, argumentsLength: number, dataOrArgument: unknown, argument: unknown): R | UnaryFunction<T, R> {
+  return argumentsLength >= 2
     ? dataFirst(
         // @ts-expect-error [ts2345] -- `arguments.length` picks the call style at runtime, which TypeScript can't narrow the parameters from; the overloads guarantee their types.
         dataOrArgument,
         argument,
       )
     : dataLastImplementation1(dataFirst, dataOrArgument);
+}
 
 /**
  * `curry` for a data-first implementation that takes two arguments after the
@@ -98,14 +90,8 @@ export const curry2 = <T, P extends readonly [unknown], R>(
  *    }
  * @see curryWithLazy3
  */
-export const curry3 = <T, P extends readonly [unknown, unknown], R>(
-  dataFirst: DataFirst<T, P, R>,
-  argumentsLength: number,
-  dataOrFirst: unknown,
-  firstOrSecond: unknown,
-  second: unknown,
-): R | UnaryFunction<T, R> =>
-  argumentsLength >= 3
+export function curry3<T, P extends readonly [unknown, unknown], R>(dataFirst: DataFirst<T, P, R>, argumentsLength: number, dataOrFirst: unknown, firstOrSecond: unknown, second: unknown): R | UnaryFunction<T, R> {
+  return argumentsLength >= 3
     ? dataFirst(
         // @ts-expect-error [ts2345] -- `arguments.length` picks the call style at runtime, which TypeScript can't narrow the parameters from; the overloads guarantee their types.
         dataOrFirst,
@@ -113,3 +99,4 @@ export const curry3 = <T, P extends readonly [unknown, unknown], R>(
         second,
       )
     : dataLastImplementation2(dataFirst, dataOrFirst, firstOrSecond);
+}
