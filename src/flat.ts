@@ -1,5 +1,6 @@
 import type { IsInteger } from 'type-fest';
 import type { LazyResult, LazySlot } from './internal/lazy-control';
+import type { LazyEvaluator } from './internal/lazy-evaluator';
 import type { DataLastBuilder } from './internal/types/data-last-builder';
 import type { IterableContainer } from './internal/types/iterable-container';
 import { manyLazyValues } from './internal/lazy-control';

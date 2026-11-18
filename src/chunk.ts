@@ -3,6 +3,7 @@ import type { IntRangeInclusive } from './internal/types/int-range-inclusive';
 import type { IterableContainer } from './internal/types/iterable-container';
 import type { NTuple } from './internal/types/n-tuple';
 import type { NonEmptyArray } from './internal/types/non-empty-array';
+import type { PartialArray } from './internal/types/partial-array';
 import type { TupleParts } from './internal/types/tuple-parts';
 import { curry2 } from './internal/curry-by-arity';
 

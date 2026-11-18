@@ -1,7 +1,9 @@
 import type { IsInteger, IsNegative, Writable } from 'type-fest';
 import type { LazyEvaluator } from './internal/lazy-evaluator';
 import type { ClampedIntegerSubtract } from './internal/types/clamped-integer-subtract';
+import type { CoercedArray } from './internal/types/coerced-array';
 import type { IterableContainer } from './internal/types/iterable-container';
+import type { PartialArray } from './internal/types/partial-array';
 import type { TupleParts } from './internal/types/tuple-parts';
 import { curryWithLazy2 } from './internal/curry-with-lazy-by-arity';
 import { SKIP_ITEM } from './internal/lazy-control';

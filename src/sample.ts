@@ -1,6 +1,8 @@
 import type { IsNever, NonNegativeInteger, Writable } from 'type-fest';
+import type { CoercedArray } from './internal/types/coerced-array';
 import type { IterableContainer } from './internal/types/iterable-container';
 import type { NTuple } from './internal/types/n-tuple';
+import type { PartialArray } from './internal/types/partial-array';
 import type { TupleParts } from './internal/types/tuple-parts';
 import { curry2 } from './internal/curry-by-arity';
 

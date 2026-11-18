@@ -59,7 +59,7 @@ export default defineConfig({
 
   dts: {
     // Only emit DTS files, skip JS output
-    emitDtsOnly: true,
+    dtsOnly: true,
   },
 
   deps: {

@@ -83,9 +83,9 @@ describe('edge-cases', () => {
   });
 
   it('nested arrays join their own items with commas', () => {
-    // @ts-expect-error [ts2322] -- The nested array is the input under test.
     expect(join([
       1,
+      // @ts-expect-error [ts2322] -- The nested array is the input under test.
       [
         2,
         [3, null],
@@ -95,9 +95,9 @@ describe('edge-cases', () => {
 
   it('objects convert with the string hint', () => {
     expect(
-      // @ts-expect-error [ts2322] -- The object is the input under test.
       join([
         'a',
+        // @ts-expect-error [ts2322] -- The object is the input under test.
         {
           toString: constant('b'),
           valueOf: constant('c'),
@@ -115,8 +115,8 @@ describe('edge-cases', () => {
   });
 
   it('a symbol item throws', () => {
-    // @ts-expect-error [ts2322] -- The symbol is the input under test.
     expect(() => join([
+      // @ts-expect-error [ts2322] -- The symbol is the input under test.
       Symbol('a'),
     ], '-')).toThrow(
       new TypeError('Cannot convert a Symbol value to a string'),
@@ -134,8 +134,8 @@ describe('data last', () => {
   });
 
   it('a symbol item throws', () => {
-    // @ts-expect-error [ts2322] -- The symbol is the input under test.
     expect(() => pipe([
+      // @ts-expect-error [ts2322] -- The symbol is the input under test.
       Symbol('a'),
     ], join(','))).toThrow(
       new TypeError('Cannot convert a Symbol value to a string'),

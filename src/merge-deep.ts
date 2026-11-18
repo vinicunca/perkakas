@@ -83,18 +83,6 @@ function mergeDeepImplementation<
         source[key],
       );
     }
-
-    const { [key]: sourceValue } = source;
-    if (!isPlainObject(sourceValue)) {
-      // The value in source is not a mergeable object either, so it will
-      // override the object in destination.
-      continue;
-    }
-
-    // Both destination and source have a mergeable object for this key, so we
-    // recursively merge them.
-    // @ts-expect-error [ts2590] - We build the output object iteratively, I don't think it's possible to improve the types here so that typescript infers this correctly.
-    output[key] = mergeDeepImplementation(destinationValue, sourceValue);
   }
 
   // @ts-expect-error [ts2322] - We build the output object iteratively, I don't think it's possible to improve the types here so that typescript infers this correctly.

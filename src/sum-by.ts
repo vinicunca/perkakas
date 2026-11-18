@@ -107,9 +107,9 @@ function sumByImplementation<T>(data: ReadonlyArray<T>, callbackfn: (value: T, i
   for (const item of data) {
     const summand = callbackfn(item, index, data);
 
-    // @ts-expect-error [ts2365] -- Typescript can't infer that all elements will be a number of the same type.
     sum = index === 0
       ? summand
+      // @ts-expect-error [ts2365] -- Typescript can't infer that all elements will be a number of the same type.
       : sum + summand;
     index += 1;
   }

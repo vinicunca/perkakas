@@ -58,5 +58,6 @@ export function set(
 }
 
 function setImplementation<T, K extends keyof T, V extends Required<T>[K]>(data: T, prop: K, value: V): UpsertProp<T, K, V> {
+  // @ts-expect-error [ts2322] - Hard to type
   return { ...data, [prop]: value };
 }
