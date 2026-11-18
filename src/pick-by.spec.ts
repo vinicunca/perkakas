@@ -1,4 +1,4 @@
-import { expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { constant } from './constant';
 import { pickBy } from './pick-by';
 import { pipe } from './pipe';
@@ -30,4 +30,22 @@ it('symbols are not passed to the predicate', () => {
   pickBy(data, mock);
 
   expect(mock).toHaveBeenCalledExactlyOnceWith('hello', 'a', data);
+});
+
+describe('`__proto__` key', () => {
+  it('is an own property', () => {
+    expect(
+      Object.entries(
+        pickBy({ ['__proto__']: { hello: 'world' } }, constant(true)),
+      ),
+    ).toStrictEqual([['__proto__', { hello: 'world' }]]);
+  });
+
+  it('keeps the prototype', () => {
+    expect(
+      Object.getPrototypeOf(
+        pickBy({ ['__proto__']: { a: 1 } }, constant(true)),
+      ),
+    ).toBe(Object.prototype);
+  });
 });
