@@ -46,7 +46,7 @@ export function takeFirstBy<T>(
  */
 export function takeFirstBy<T>(
   n: number,
-  ...rules: Readonly<NonEmptyArray<OrderRule<T>>>
+  ...rules: Readonly<NonEmptyArray<OrderRule<NoInfer<T>>>>
 ): (data: ReadonlyArray<T>) => Array<T>;
 
 export function takeFirstBy(...args: ReadonlyArray<unknown>): unknown {

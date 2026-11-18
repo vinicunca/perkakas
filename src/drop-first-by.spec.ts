@@ -60,6 +60,22 @@ describe('runtime (dataFirst)', () => {
       'aaaaa',
     ]);
   });
+
+  it('keeps a null item from the first n', () => {
+    expect(dropFirstBy([null, -1], 1, (x) => x ?? 0)).toStrictEqual([null]);
+  });
+
+  it('keeps an undefined item from the first n', () => {
+    expect(dropFirstBy([undefined, -1], 1, (x) => x ?? 0)).toStrictEqual([
+      undefined,
+    ]);
+  });
+
+  it('keeps every nullish item from the first n', () => {
+    expect(
+      dropFirstBy([null, null, 1, 2], 2, (x) => x ?? Infinity),
+    ).toStrictEqual([null, null]);
+  });
 });
 
 describe('runtime (dataLast)', () => {
@@ -150,5 +166,32 @@ describe('runtime (dataLast)', () => {
       'bb',
       'aaaaa',
     ]);
+  });
+
+  it('keeps a null item from the first n', () => {
+    expect(
+      pipe(
+        [null, -1],
+        dropFirstBy(1, (x) => x ?? 0),
+      ),
+    ).toStrictEqual([null]);
+  });
+
+  it('keeps an undefined item from the first n', () => {
+    expect(
+      pipe(
+        [undefined, -1],
+        dropFirstBy(1, (x) => x ?? 0),
+      ),
+    ).toStrictEqual([undefined]);
+  });
+
+  it('keeps every nullish item from the first n', () => {
+    expect(
+      pipe(
+        [null, null, 1, 2],
+        dropFirstBy(2, (x) => x ?? Infinity),
+      ),
+    ).toStrictEqual([null, null]);
   });
 });

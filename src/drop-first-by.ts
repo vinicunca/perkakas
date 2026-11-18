@@ -46,7 +46,7 @@ export function dropFirstBy<T>(
  */
 export function dropFirstBy<T>(
   n: number,
-  ...rules: Readonly<NonEmptyArray<OrderRule<T>>>
+  ...rules: Readonly<NonEmptyArray<OrderRule<NoInfer<T>>>>
 ): (data: ReadonlyArray<T>) => Array<T>;
 
 export function dropFirstBy(...args: ReadonlyArray<unknown>): unknown {
@@ -73,8 +73,7 @@ function dropFirstByImplementation<T>(
 
   const rest = data.slice(n);
   for (const item of rest) {
-    const previousHead = heapMaybeInsert(heap, compareFn, item);
-    out.push(previousHead ?? item);
+    out.push(heapMaybeInsert(heap, compareFn, item));
   }
 
   return out;

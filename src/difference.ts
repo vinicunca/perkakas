@@ -35,7 +35,22 @@ export function difference<T>(data: ReadonlyArray<T>, other: ReadonlyArray<T>): 
  * @lazy
  * @category Array
  */
-export function difference<T>(other: ReadonlyArray<T>): (data: ReadonlyArray<T>) => Array<T>;
+export function difference<T = never>(
+  // We first try to infer T through the callback to allow the type to be pulled
+  // from the call site it is used in (like `pipe`).
+  other: ReadonlyArray<NoInfer<T>>,
+): (data: ReadonlyArray<T>) => Array<T>;
+
+export function difference<T>(
+  // Otherwise we allow T to be inferred directly from the operand.
+  other: ReadonlyArray<T>,
+): <
+  // We allow the actual type of `data` to be wider than the operand type to
+  // allow TypeScript the most freedom inferring types.
+  D extends T,
+>(
+  data: ReadonlyArray<D>,
+) => Array<D>;
 
 export function difference(...args: ReadonlyArray<unknown>): unknown {
   return curryWithLazy(differenceImplementation, args, lazyImplementation);
