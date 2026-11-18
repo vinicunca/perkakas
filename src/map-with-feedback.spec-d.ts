@@ -55,11 +55,11 @@ it('data param is complete in data-first', () => {
   );
 });
 
-it('data param is readonly for a mutable array in data-first', () => {
+it('data param is mutable for a mutable array in data-first', () => {
   mapWithFeedback(
     [1, 2, 3] as Array<number>,
     (_previousValue, _currentValue, _currentIndex, data) => {
-      expectTypeOf(data).toEqualTypeOf<ReadonlyArray<number>>();
+      expectTypeOf(data).toEqualTypeOf<Array<number>>();
 
       return 0;
     },

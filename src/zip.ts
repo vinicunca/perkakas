@@ -1,11 +1,7 @@
 import type { StoppableLazyEvaluator } from './internal/make-stoppable';
 import type { IterableContainer } from './internal/types/iterable-container';
-import { curryWithLazy } from './internal/curry-with-lazy';
-import {
-  lastLazyValue,
-  LAZY_EMPTY_EVALUATOR,
-  makeStoppable,
-} from './internal/make-stoppable';
+import { curryWithLazy2 } from './internal/curry-with-lazy-by-arity';
+import { LAZY_EMPTY_EVALUATOR, lastLazyValue, makeStoppable } from './internal/make-stoppable';
 
 type Zipped<Left extends IterableContainer, Right extends IterableContainer>
   // If the array is empty the output is empty, no surprises
@@ -32,29 +28,29 @@ type Zipped<Left extends IterableContainer, Right extends IterableContainer>
  * items. The length of the returned list will match the shortest of the two
  * inputs.
  *
- * @param first - The first input list.
- * @param second - The second input list.
+ * @param data - The first input list.
+ * @param other - The second input list.
  * @signature
- *   zip(first, second)
+ *   zip(data, other)
  * @example
  *   zip([1, 2], ['a', 'b']) // => [[1, 'a'], [2, 'b']]
  * @dataFirst
  * @lazy
  * @category Array
  */
-export function zip<F extends IterableContainer, S extends IterableContainer>(
-  first: F,
-  second: S,
-): Zipped<F, S>;
+export function zip<T extends IterableContainer, S extends IterableContainer>(
+  data: T,
+  other: S,
+): Zipped<T, S>;
 
 /**
  * Creates a new list from two supplied lists by pairing up equally-positioned
  * items. The length of the returned list will match the shortest of the two
  * inputs.
  *
- * @param second - The second input list.
+ * @param other - The second input list.
  * @signature
- *   zip(second)(first)
+ *   zip(other)(data)
  * @example
  *   zip(['a', 'b'])([1, 2]) // => [[1, 'a'], [2, 'b']]
  * @dataLast
@@ -62,33 +58,42 @@ export function zip<F extends IterableContainer, S extends IterableContainer>(
  * @category Array
  */
 export function zip<S extends IterableContainer>(
-  second: S,
-): <F extends IterableContainer>(first: F) => Zipped<F, S>;
+  other: S,
+): <T extends IterableContainer>(data: T) => Zipped<T, S>;
 
-export function zip(...args: ReadonlyArray<unknown>): unknown {
-  // eslint-disable-next-line ts/no-use-before-define -- implementations follow the overloaded signatures
-  return curryWithLazy(zipImplementation, 2, lazyImplementation, args);
+export function zip(
+  dataOrOther: IterableContainer,
+  other?: IterableContainer,
+): unknown {
+  return curryWithLazy2(
+    zipImplementation,
+    // eslint-disable-next-line ts/no-use-before-define -- implementations follow the overloaded signatures
+    lazyImplementation,
+    arguments.length,
+    dataOrOther,
+    other,
+  );
 }
 
-function zipImplementation<
-  F extends IterableContainer,
+const zipImplementation = <
+  T extends IterableContainer,
   S extends IterableContainer,
->(first: F, second: S): Zipped<F, S> {
-  return (first.length < second.length
-    ? first.map((item, index) => [item, second[index]])
-    : second.map((item, index) => [first[index], item])) as Zipped<F, S>;
-}
+>(
+  data: T,
+  other: S,
+): Zipped<T, S> =>
+  (data.length < other.length
+    ? data.map((item, index) => [item, other[index]])
+    : other.map((item, index) => [data[index], item])) as Zipped<T, S>;
 
 const lazyImplementation = makeStoppable(
-  <F extends IterableContainer, S extends IterableContainer>(
-    second: S,
-  ): StoppableLazyEvaluator<F[number], [F[number], S[number]]> =>
-    second.length === 0
+  <T extends IterableContainer, S extends IterableContainer>(
+    other: S,
+  ): StoppableLazyEvaluator<T[number], [T[number], S[number]]> =>
+    other.length === 0
       ? LAZY_EMPTY_EVALUATOR
       : (value, index, _data, slot) => {
-          const pair: [F[number], S[number]] = [value, second[index]];
-          return index >= second.length - 1
-            ? lastLazyValue(pair, slot)
-            : pair;
+          const pair: [T[number], S[number]] = [value, other[index]];
+          return index >= other.length - 1 ? lastLazyValue(pair, slot) : pair;
         },
 );

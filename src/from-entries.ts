@@ -1,7 +1,7 @@
 import type { IsNever, Simplify } from 'type-fest';
+import { curry1 } from './internal/curry-by-arity';
 import type { IterableContainer } from './internal/types/iterable-container';
 import type { PerkakasTypeError } from './internal/types/perkakas-type-error';
-import { curry } from './curry';
 
 type FromEntriesError<Message extends string> = PerkakasTypeError<
   'fromEntries',
@@ -96,16 +96,16 @@ type ValueForKey<
  * *both* keys and values.
  * Refer to the docs for more details.
  *
- * @param entries - An array of key-value pairs.
+ * @param data - An array of key-value pairs.
  * @signature
- *   fromEntries(tuples)
+ *   fromEntries(data)
  * @example
  *   fromEntries([['a', 'b'], ['c', 'd']]); // => {a: 'b', c: 'd'}
  * @dataFirst
  * @category Object
  */
 export function fromEntries<Entries extends IterableContainer<Entry>>(
-  entries: Entries,
+  data: Entries,
 ): Simplify<FromEntries<Entries>>;
 
 /**
@@ -125,7 +125,7 @@ export function fromEntries<Entries extends IterableContainer<Entry>>(
  * Refer to the docs for more details.
  *
  * @signature
- *   fromEntries()(tuples)
+ *   fromEntries()(data)
  * @example
  *   pipe(
  *     [['a', 'b'], ['c', 'd']] as const,
@@ -135,11 +135,11 @@ export function fromEntries<Entries extends IterableContainer<Entry>>(
  * @category Object
  */
 export function fromEntries(): <Entries extends IterableContainer<Entry>>(
-  entries: Entries,
+  data: Entries,
 ) => Simplify<FromEntries<Entries>>;
 
-export function fromEntries(...args: ReadonlyArray<unknown>): unknown {
-  return curry(fromEntriesImplementation, 1, args);
+export function fromEntries(data?: IterableContainer<Entry>): unknown {
+  return curry1(fromEntriesImplementation, arguments.length, data);
 }
 
 function fromEntriesImplementation(

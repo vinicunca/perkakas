@@ -1,10 +1,8 @@
-import type { IsNever, NonNegativeInteger, Writable } from 'type-fest';
-import type { CoercedArray } from './internal/types/coerced-array';
 import type { IterableContainer } from './internal/types/iterable-container';
 import type { NTuple } from './internal/types/n-tuple';
-import type { PartialArray } from './internal/types/partial-array';
 import type { TupleParts } from './internal/types/tuple-parts';
-import { curry } from './curry';
+import type { IsNever, NonNegativeInteger, Writable } from 'type-fest';
+import { curry2 } from './internal/curry-by-arity';
 
 type Sampled<T extends IterableContainer, N extends number> = [N] extends [0]
   ? // Short-circuit on trivial inputs.
@@ -115,7 +113,7 @@ type Combinations<
     : never;
 
 /**
- * Returns a random subset of size `sampleSize` from `array`.
+ * Returns a random subset of size `sampleSize` from `data`.
  *
  * Maintains and infers most of the typing information that could be passed
  * along to the output. This means that when using tuples, the output will be
@@ -128,7 +126,7 @@ type Combinations<
  * @param data - The array.
  * @param sampleSize - The number of elements to take.
  * @signature
- *    sample(array, sampleSize)
+ *    sample(data, sampleSize)
  * @example
  *    sample(["hello", "world"], 1); // => ["hello"] // typed string[]
  *    sample(["hello", "world"] as const, 1); // => ["world"] // typed ["hello" | "world"]
@@ -141,7 +139,7 @@ export function sample<const T extends IterableContainer, N extends number>(
 ): Sampled<T, N>;
 
 /**
- * Returns a random subset of size `sampleSize` from `array`.
+ * Returns a random subset of size `sampleSize` from `data`.
  *
  * Maintains and infers most of the typing information that could be passed
  * along to the output. This means that when using tuples, the output will be
@@ -153,7 +151,7 @@ export function sample<const T extends IterableContainer, N extends number>(
  *
  * @param sampleSize - The number of elements to take.
  * @signature
- *    sample(sampleSize)(array)
+ *    sample(sampleSize)(data)
  * @example
  *    sample(1)(["hello", "world"]); // => ["hello"] // typed string[]
  *    sample(1)(["hello", "world"] as const); // => ["world"] // typed ["hello" | "world"]
@@ -164,8 +162,16 @@ export function sample<const T extends IterableContainer, N extends number>(
   sampleSize: N,
 ): (data: T) => Sampled<T, N>;
 
-export function sample(...args: ReadonlyArray<unknown>): unknown {
-  return curry(sampleImplementation, 2, args);
+export function sample(
+  dataOrSampleSize: IterableContainer | number,
+  sampleSize?: number,
+): unknown {
+  return curry2(
+    sampleImplementation,
+    arguments.length,
+    dataOrSampleSize,
+    sampleSize,
+  );
 }
 
 function sampleImplementation<T>(data: ReadonlyArray<T>, sampleSize: number): Array<T> {

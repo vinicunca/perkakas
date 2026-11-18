@@ -1,8 +1,12 @@
+import type {
+  ArrayCallback,
+  ArrayTypePredicate,
+} from './internal/types/callback';
+import type { DataLastBuilder } from './internal/types/data-last-builder';
 import type { FilteredArray } from './internal/types/filtered-array';
 import type { IterableContainer } from './internal/types/iterable-container';
 import type { NonRefinedFilteredArray } from './internal/types/non-refined-filtered-array';
 import type { Not } from './internal/types/not';
-import { curry } from './curry';
 
 /**
  * Splits a collection into two groups, the first of which contains elements the
@@ -28,7 +32,7 @@ import { curry } from './curry';
  */
 export function partition<T extends IterableContainer, Condition>(
   data: T,
-  predicate: (value: T[number], index: number, data: T) => value is Condition,
+  predicate: ArrayTypePredicate<T, Condition>,
 ): [
   FilteredArray<T, Condition>,
   FilteredArray<T, Condition, true>,
@@ -39,7 +43,7 @@ export function partition<
   IsItemIncluded extends boolean,
 >(
   data: T,
-  predicate: (value: T[number], index: number, data: T) => IsItemIncluded,
+  predicate: ArrayCallback<T, IsItemIncluded>,
 ): [
   NonRefinedFilteredArray<T, IsItemIncluded>,
   NonRefinedFilteredArray<T, Not<IsItemIncluded>>,
@@ -67,7 +71,7 @@ export function partition<
  * @category Array
  */
 export function partition<T extends IterableContainer, Condition>(
-  predicate: (value: T[number], index: number, data: T) => value is Condition,
+  predicate: ArrayTypePredicate<T, Condition>,
 ): (
   data: T,
 ) => [
@@ -79,7 +83,7 @@ export function partition<
   T extends IterableContainer,
   IsItemIncluded extends boolean,
 >(
-  predicate: (value: T[number], index: number, data: T) => IsItemIncluded,
+  predicate: ArrayCallback<T, IsItemIncluded>,
 ): (
   data: T,
 ) => [
@@ -87,12 +91,30 @@ export function partition<
   NonRefinedFilteredArray<T, Not<IsItemIncluded>>,
 ];
 
-export function partition(...args: ReadonlyArray<unknown>): unknown {
-  return curry(partitionImplementation, 2, args);
+export function partition(
+  dataOrPredicate:
+    IterableContainer | ArrayCallback<IterableContainer, boolean>,
+  predicate?: ArrayCallback<IterableContainer, boolean>,
+): unknown {
+  return typeof dataOrPredicate === 'function'
+    // eslint-disable-next-line ts/no-use-before-define -- implementations follow the overloaded signatures
+    ? dataLast(dataOrPredicate)
+    : partitionImplementation(
+        dataOrPredicate,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
+        predicate,
+      );
 }
 
-function partitionImplementation<T, S extends T>(data: ReadonlyArray<T>, predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S): [Array<S>, Array<T>] {
-  const ret: [Array<S>, Array<T>] = [[], []];
+const dataLast: DataLastBuilder<typeof partitionImplementation> =
+  (predicate) => (data) =>
+    partitionImplementation(data, predicate);
+
+const partitionImplementation = <T>(
+  data: ReadonlyArray<T>,
+  predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
+): [Array<T>, Array<T>] => {
+  const ret: [Array<T>, Array<T>] = [[], []];
   data.forEach((item, index) => {
     if (predicate(item, index, data)) {
       ret[0].push(item);

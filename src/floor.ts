@@ -1,4 +1,4 @@
-import { curry } from './curry';
+import { curry2 } from './internal/curry-by-arity';
 import { withPrecision } from './internal/with-precision';
 
 /**
@@ -38,6 +38,14 @@ export function floor(value: number, precision: number): number;
  */
 export function floor(precision: number): (value: number) => number;
 
-export function floor(...args: ReadonlyArray<unknown>): unknown {
-  return curry(withPrecision(Math.floor), 2, args);
+export function floor(valueOrPrecision: number, precision?: number): unknown {
+  return curry2(
+    // eslint-disable-next-line ts/no-use-before-define -- implementations follow the overloaded signatures
+    floorImplementation,
+    arguments.length,
+    valueOrPrecision,
+    precision,
+  );
 }
+
+const floorImplementation = withPrecision(Math.floor);

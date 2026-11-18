@@ -1,11 +1,11 @@
-import type { LazyCallback } from './internal/types/lazy-callback';
-import { describe, expect, it, vi } from 'vitest';
+import type { LazyCallback } from './internal/types/callback';
 import { forceFusion } from '../test/force-fusion';
 import { createLazyInvocationCounter } from '../test/lazy-invocation-counter';
 import { identity } from './identity';
 import { pipe } from './pipe';
 import { take } from './take';
 import { uniqueBy } from './unique-by';
+import { describe, expect, it, vi } from 'vitest';
 
 const PEOPLE = [
   { name: 'John', age: 42 },
@@ -78,8 +78,17 @@ it('provides the whole input to the key function', () => {
 });
 
 describe(pipe, () => {
+  it('on its own', () => {
+    expect(
+      pipe(
+        [1, 2, 3, 4, 5],
+        uniqueBy((item) => item % 3),
+      ),
+    ).toStrictEqual([1, 2, 3]);
+  });
+
   it('provides the items processed so far to the key function', () => {
-    const keyFunction = vi.fn<LazyCallback<Array<unknown>, unknown>>(
+    const keyFunction = vi.fn<LazyCallback<Array<unknown>>>(
       (_item, _index, data) => [...data],
     );
     pipe([1, 2, 2, 3], forceFusion(), uniqueBy(keyFunction));

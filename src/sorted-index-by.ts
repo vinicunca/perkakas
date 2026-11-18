@@ -3,8 +3,14 @@
  * which is exactly what `{}` means.
  */
 
-import { curry } from './curry';
 import { binarySearchCutoffIndex } from './internal/binary-search-cutoff-index';
+import { curry3 } from './internal/curry-by-arity';
+
+type ValueFunction<T = unknown> = (
+  item: T,
+  index: number | undefined,
+  data: ReadonlyArray<T>,
+) => {};
 
 /**
  * Find the insertion position (index) of an item in an array with items sorted
@@ -42,11 +48,7 @@ import { binarySearchCutoffIndex } from './internal/binary-search-cutoff-index';
 export function sortedIndexBy<T>(
   data: ReadonlyArray<T>,
   item: T,
-  valueFunction: (
-    item: T,
-    index: number | undefined,
-    data: ReadonlyArray<T>,
-  ) => {},
+  valueFunction: ValueFunction<T>,
 ): number;
 
 /**
@@ -85,25 +87,27 @@ export function sortedIndexBy<T = never>(
   // We first try to infer T through the callback to allow the type to be pulled
   // from the call site it is used in (like `pipe`).
   item: NoInfer<T>,
-  valueFunction: (
-    item: NoInfer<T>,
-    index: number | undefined,
-    data: ReadonlyArray<NoInfer<T>>,
-  ) => {},
+  valueFunction: ValueFunction<NoInfer<T>>,
 ): (data: ReadonlyArray<T>) => number;
 
 export function sortedIndexBy<T>(
   // Otherwise we allow T to be inferred directly from the operand.
   item: T,
-  valueFunction: (
-    item: NoInfer<T>,
-    index: number | undefined,
-    data: ReadonlyArray<NoInfer<T>>,
-  ) => {},
+  valueFunction: ValueFunction<NoInfer<T>>,
 ): (data: ReadonlyArray<NoInfer<T>>) => number;
 
-export function sortedIndexBy(...args: ReadonlyArray<unknown>): unknown {
-  return curry(sortedIndexByImplementation, 3, args);
+export function sortedIndexBy(
+  dataOrItem: unknown,
+  itemOrValueFunction?: unknown,
+  valueFunction?: ValueFunction,
+): unknown {
+  return curry3(
+    sortedIndexByImplementation,
+    arguments.length,
+    dataOrItem,
+    itemOrValueFunction,
+    valueFunction,
+  );
 }
 
 function sortedIndexByImplementation<T>(

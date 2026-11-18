@@ -1,6 +1,6 @@
-import type { IsEqual } from 'type-fest';
 import type { PerkakasTypeError } from './internal/types/perkakas-type-error';
-import { curry } from './curry';
+import type { IsEqual } from 'type-fest';
+import { curry2 } from './internal/curry-by-arity';
 
 type FallbackOf<T>
   = IsEqual<T, NonNullable<T>> extends true
@@ -58,8 +58,16 @@ export function defaultTo<T, const Fallback extends FallbackOf<T>>(
   fallback: Fallback,
 ): (data: T) => NonNullable<T> | Fallback;
 
-export function defaultTo(...args: ReadonlyArray<unknown>): unknown {
-  return curry(defaultToImplementation, 2, args);
+export function defaultTo(
+  dataOrFallback: unknown,
+  fallback?: unknown,
+): unknown {
+  return curry2(
+    defaultToImplementation,
+    arguments.length,
+    dataOrFallback,
+    fallback,
+  );
 }
 
 function defaultToImplementation<T, Fallback extends FallbackOf<T>>(data: T, fallback: Fallback): NonNullable<T> | Fallback {

@@ -144,6 +144,15 @@ describe('data last', () => {
     expect(() => predicate.mock.calls[0]?.[2]?.at(0)).toThrow(/^Perkakas: /u);
   });
 
+  it('on its own', () => {
+    expect(
+      pipe(
+        [1, 2, 3],
+        find((x) => x > 1),
+      ),
+    ).toBe(2);
+  });
+
   it('a lone step stops calling the predicate at the first match', () => {
     const predicate = vi.fn<(x: number) => boolean>(isStrictEqual(2));
     pipe([1, 2, 3], find(predicate));

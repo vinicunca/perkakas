@@ -1,9 +1,13 @@
 import type { IsNever, Simplify } from 'type-fest';
+import { curry2 } from './internal/curry-by-arity';
+import type {
+  ObjectCallback,
+  ObjectTypePredicate,
+} from './internal/types/callback';
 import type { EnumerableStringKeyOf } from './internal/types/enumerable-string-key-of';
 import type { EnumerableStringKeyedValueOf } from './internal/types/enumerable-string-keyed-value-of';
 import type { IsBoundedRecord } from './internal/types/is-bounded-record';
 import type { ToString } from './internal/types/to-string';
-import { curry } from './curry';
 
 // When the predicate isn't a type-guard we don't know which properties would be
 // part of the output and which wouldn't so we can only safely downgrade the
@@ -131,19 +135,11 @@ export function pickBy<
   S extends EnumerableStringKeyedValueOf<T>,
 >(
   data: T,
-  predicate: (
-    value: EnumerableStringKeyedValueOf<T>,
-    key: EnumerableStringKeyOf<T>,
-    data: T,
-  ) => value is S,
+  predicate: ObjectTypePredicate<T, S>,
 ): EnumeratedPartialNarrowed<T, S>;
 export function pickBy<T extends object>(
   data: T,
-  predicate: (
-    value: EnumerableStringKeyedValueOf<T>,
-    key: EnumerableStringKeyOf<T>,
-    data: T,
-  ) => boolean,
+  predicate: ObjectCallback<T, boolean>,
 ): EnumeratedPartial<T>;
 
 /**
@@ -173,22 +169,22 @@ export function pickBy<
   T extends object,
   S extends EnumerableStringKeyedValueOf<T>,
 >(
-  predicate: (
-    value: EnumerableStringKeyedValueOf<T>,
-    key: EnumerableStringKeyOf<T>,
-    data: T,
-  ) => value is S,
+  predicate: ObjectTypePredicate<T, S>,
 ): (data: T) => EnumeratedPartialNarrowed<T, S>;
 export function pickBy<T extends object>(
-  predicate: (
-    value: EnumerableStringKeyedValueOf<T>,
-    key: EnumerableStringKeyOf<T>,
-    data: T,
-  ) => boolean,
+  predicate: ObjectCallback<T, boolean>,
 ): (data: T) => EnumeratedPartial<T>;
 
-export function pickBy(...args: ReadonlyArray<unknown>): unknown {
-  return curry(pickByImplementation, 2, args);
+export function pickBy(
+  dataOrPredicate: object | ObjectCallback<object, boolean>,
+  predicate?: ObjectCallback<object, boolean>,
+): unknown {
+  return curry2(
+    pickByImplementation,
+    arguments.length,
+    dataOrPredicate,
+    predicate,
+  );
 }
 
 function pickByImplementation<T extends object>(

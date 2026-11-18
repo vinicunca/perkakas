@@ -59,6 +59,30 @@ export default vinicuncaESLint(
   },
 
   {
+    files: ['src/**/*.ts'],
+    ignores: [
+      'src/index.ts',
+      'src/**/*.spec.ts',
+      'src/**/*.spec-d.ts',
+      'src/**/*.spec-prop.ts',
+    ],
+    rules: {
+      'ts/no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              regex: '/curry$',
+              message:
+                'Pass the arguments as parameters: curry1-3, curryWithLazy1-3, or a typeof check.',
+            },
+          ],
+        },
+      ],
+    },
+  },
+
+  {
     files: ['**/tsconfig.**'],
     rules: {
       'jsonc/sort-keys': 'off',

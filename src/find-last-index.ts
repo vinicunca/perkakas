@@ -1,4 +1,5 @@
-import { curry } from './curry';
+import type { ArrayCallback } from './internal/types/callback';
+import type { DataLastBuilder } from './internal/types/data-last-builder';
 
 /**
  * Iterates the array in reverse order and returns the index of the first
@@ -40,7 +41,7 @@ export function findLastIndex<T>(
  * @returns The index of the last (highest-index) element in the array that
  * passes the test. Otherwise -1 if no matching element is found.
  * @signature
- *    findLastIndex(fn)(items)
+ *    findLastIndex(predicate)(data)
  * @example
  *    pipe(
  *      [1, 3, 4, 6],
@@ -51,11 +52,26 @@ export function findLastIndex<T>(
  */
 export function findLastIndex<T>(
   predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
-): (array: ReadonlyArray<T>) => number;
+): (data: ReadonlyArray<T>) => number;
 
-export function findLastIndex(...args: ReadonlyArray<unknown>): unknown {
-  return curry(findLastIndexImplementation, 2, args);
+export function findLastIndex(
+  dataOrPredicate:
+    ReadonlyArray<unknown> | ArrayCallback<ReadonlyArray<unknown>, boolean>,
+  predicate?: ArrayCallback<ReadonlyArray<unknown>, boolean>,
+): unknown {
+  return typeof dataOrPredicate === 'function'
+    // eslint-disable-next-line ts/no-use-before-define -- implementations follow the overloaded signatures
+    ? dataLast(dataOrPredicate)
+    : findLastIndexImplementation(
+        dataOrPredicate,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
+        predicate,
+      );
 }
+
+const dataLast: DataLastBuilder<typeof findLastIndexImplementation> =
+  (predicate) => (data) =>
+    findLastIndexImplementation(data, predicate);
 
 function findLastIndexImplementation<T>(data: ReadonlyArray<T>, predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean): number {
   for (let i = data.length - 1; i >= 0; i--) {

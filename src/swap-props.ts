@@ -1,4 +1,4 @@
-import { curry } from './curry';
+import { curry3 } from './internal/curry-by-arity';
 
 type SwappedProps<T, K1 extends keyof T, K2 extends keyof T> = {
   [K in keyof T]: T[K1 extends K ? K2 : K2 extends K ? K1 : K];
@@ -43,19 +43,26 @@ export function swapProps<
   K2 extends keyof T,
 >(key1: K1, key2: K2): (data: T) => SwappedProps<T, K1, K2>;
 
-export function swapProps(...args: ReadonlyArray<unknown>): unknown {
-  return curry(swapPropsImplementation, 3, args);
+export function swapProps(
+  dataOrKey1: object | PropertyKey,
+  key1OrKey2?: PropertyKey,
+  key2?: PropertyKey,
+): unknown {
+  return curry3(
+    swapPropsImplementation,
+    arguments.length,
+    dataOrKey1,
+    key1OrKey2,
+    key2,
+  );
 }
 
-function swapPropsImplementation<T extends object>(
-  obj: T,
+const swapPropsImplementation = <T extends object>(
+  data: T,
   key1: keyof T,
   key2: keyof T,
-): Record<PropertyKey, unknown> {
-  const { [key1]: value1, [key2]: value2 } = obj;
-  return {
-    ...obj,
-    [key1]: value2,
-    [key2]: value1,
-  };
-}
+): Record<PropertyKey, unknown> => ({
+  ...data,
+  [key1]: data[key2],
+  [key2]: data[key1],
+});

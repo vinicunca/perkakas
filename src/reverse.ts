@@ -1,4 +1,4 @@
-import { curry } from './curry';
+import { curry1 } from './internal/curry-by-arity';
 
 type Reverse<
   T extends ReadonlyArray<unknown>,
@@ -40,8 +40,8 @@ export function reverse<T extends ReadonlyArray<unknown>>(): (
   data: T,
 ) => Reverse<T>;
 
-export function reverse(...args: ReadonlyArray<unknown>): unknown {
-  return curry(reverseImplementation, 1, args);
+export function reverse(data?: ReadonlyArray<unknown>): unknown {
+  return curry1(reverseImplementation, arguments.length, data);
 }
 
 function reverseImplementation<T>(data: ReadonlyArray<T>): Array<T> {

@@ -1,6 +1,7 @@
 import type { BoundedPartial } from './internal/types/bounded-partial';
+import type { ArrayCallback } from './internal/types/callback';
+import type { DataLastBuilder } from './internal/types/data-last-builder';
 import type { IterableContainer } from './internal/types/iterable-container';
-import { curry } from './curry';
 
 /**
  * Creates an object that maps the result of `valueExtractor` with a key
@@ -38,8 +39,8 @@ export function pullObject<
   V,
 >(
   data: T,
-  keyExtractor: (item: T[number], index: number, data: T) => K,
-  valueExtractor: (item: T[number], index: number, data: T) => V,
+  keyExtractor: ArrayCallback<T, K>,
+  valueExtractor: ArrayCallback<T, V>,
 ): BoundedPartial<Record<K, V>>;
 
 /**
@@ -75,13 +76,30 @@ export function pullObject<
   K extends PropertyKey,
   V,
 >(
-  keyExtractor: (item: T[number], index: number, data: T) => K,
-  valueExtractor: (item: T[number], index: number, data: T) => V,
+  keyExtractor: ArrayCallback<T, K>,
+  valueExtractor: ArrayCallback<T, V>,
 ): (data: T) => BoundedPartial<Record<K, V>>;
 
-export function pullObject(...args: ReadonlyArray<unknown>): unknown {
-  return curry(pullObjectImplementation, 3, args);
+export function pullObject(
+  dataOrKeyExtractor:
+    IterableContainer | ArrayCallback<IterableContainer, PropertyKey>,
+  keyExtractorOrValueExtractor: ArrayCallback,
+  valueExtractor?: ArrayCallback,
+): unknown {
+  return typeof dataOrKeyExtractor === 'function'
+    // eslint-disable-next-line ts/no-use-before-define -- implementations follow the overloaded signatures
+    ? dataLast(dataOrKeyExtractor, keyExtractorOrValueExtractor)
+    : pullObjectImplementation(
+        dataOrKeyExtractor,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
+        keyExtractorOrValueExtractor,
+        valueExtractor,
+      );
 }
+
+const dataLast: DataLastBuilder<typeof pullObjectImplementation> =
+  (keyExtractor, valueExtractor) => (data) =>
+    pullObjectImplementation(data, keyExtractor, valueExtractor);
 
 function pullObjectImplementation<T, K extends PropertyKey, V>(
   data: ReadonlyArray<T>,

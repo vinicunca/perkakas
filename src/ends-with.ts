@@ -4,9 +4,9 @@ import type {
   IsStringLiteral,
   UnionToIntersection,
 } from 'type-fest';
+import { curry2 } from './internal/curry-by-arity';
 import type { Boxed } from './internal/types/boxed';
 import type { PerkakasTypeError } from './internal/types/perkakas-type-error';
-import { curry } from './curry';
 
 // By intersecting with a suffix template we force all types that satisfy this
 // type to also be of this shape. For a raw primitive string this narrows
@@ -220,8 +220,8 @@ export function endsWith<Suffix extends string>(
 
 export function endsWith(suffix: string): (data: string) => boolean;
 
-export function endsWith(...args: ReadonlyArray<unknown>): unknown {
-  return curry(endsWithImplementation, 2, args);
+export function endsWith(dataOrSuffix: string, suffix?: string): unknown {
+  return curry2(endsWithImplementation, arguments.length, dataOrSuffix, suffix);
 }
 
 function endsWithImplementation(data: string, suffix: string): boolean {

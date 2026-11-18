@@ -1,13 +1,11 @@
+import type { ArrayCallback, ArrayTypePredicate, LazyCallback, LazyTypePredicate } from './internal/types/callback';
+import type { DataLastBuilder } from './internal/types/data-last-builder';
 import type { FilteredArray } from './internal/types/filtered-array';
 import type { IterableContainer } from './internal/types/iterable-container';
-import type {
-  LazyCallback,
-  LazyTypePredicate,
-} from './internal/types/lazy-callback';
 import type { LazyEvaluator } from './internal/types/lazy-evaluator';
 import type { NonRefinedFilteredArray } from './internal/types/non-refined-filtered-array';
-import { curryWithLazy } from './internal/curry-with-lazy';
 import { SKIP_ITEM } from './internal/lazy-control';
+import { withLazyImplementation } from './internal/lazy-data-last-implementation';
 import { requireDataByArity } from './internal/require-data';
 
 /**
@@ -34,7 +32,7 @@ import { requireDataByArity } from './internal/require-data';
  */
 export function filter<T extends IterableContainer, Condition>(
   data: T,
-  predicate: (value: T[number], index: number, data: T) => value is Condition,
+  predicate: ArrayTypePredicate<T, Condition>,
 ): FilteredArray<T, Condition>;
 
 export function filter<
@@ -42,7 +40,7 @@ export function filter<
   IsItemIncluded extends boolean,
 >(
   data: T,
-  predicate: (value: T[number], index: number, data: T) => IsItemIncluded,
+  predicate: ArrayCallback<T, IsItemIncluded>,
 ): NonRefinedFilteredArray<T, IsItemIncluded>;
 
 /**
@@ -77,13 +75,36 @@ export function filter<
   predicate: LazyCallback<T, IsItemIncluded>,
 ): (data: T) => NonRefinedFilteredArray<T, IsItemIncluded>;
 
-export function filter(...args: ReadonlyArray<unknown>): unknown {
-  return curryWithLazy(filterImplementation, 2, lazyImplementation, args);
+export function filter(
+  dataOrPredicate: IterableContainer | LazyCallback<IterableContainer, boolean>,
+  predicate?: ArrayCallback<IterableContainer, boolean>,
+): unknown {
+  return typeof dataOrPredicate === 'function'
+    ? withLazyImplementation(
+        // eslint-disable-next-line ts/no-use-before-define -- implementations follow the overloaded signatures
+        dataLast(
+          // @ts-expect-error [ts2345] -- Run eagerly, the data-last function hands the callback the complete input, a valid non-empty prefix whenever the callback is invoked (it never is for an empty input); TypeScript can't relate `T` to `NonEmptyPrefix<T>`.
+          dataOrPredicate,
+        ),
+        lazyImplementation,
+        // @ts-expect-error [ts2345] -- `lazyImplementation` invokes the callback only once the input has an item, so the prefix it passes is never empty; TypeScript can't tell from its `readonly T[]` type.
+        dataOrPredicate,
+      )
+    : filterImplementation(
+        dataOrPredicate,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
+        predicate,
+      );
 }
 
-function filterImplementation<T>(data: ReadonlyArray<T>, predicate: (value: T, index: number, array: ReadonlyArray<T>) => boolean): Array<T> {
-  return data.filter(predicate);
-}
+const dataLast: DataLastBuilder<typeof filterImplementation> =
+  (predicate) => (data) =>
+    filterImplementation(data, predicate);
+
+const filterImplementation = <T>(
+  data: ReadonlyArray<T>,
+  predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
+): T[] => data.filter(predicate);
 
 function lazyImplementation<T>(predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean): LazyEvaluator<T> {
   return requireDataByArity(predicate, 2, (value, index, data) =>

@@ -1,5 +1,5 @@
+import { curry3 } from './internal/curry-by-arity';
 import type { UpsertProp } from './internal/types/upsert-prop';
-import { curry } from './curry';
 
 /**
  * Add a new property to an object.
@@ -10,18 +10,18 @@ import { curry } from './curry';
  *
  * Use `set` to override values explicitly with better protections.
  *
- * @param obj - The target object.
+ * @param data - The target object.
  * @param prop - The property name.
  * @param value - The property value.
  * @signature
- *    addProp(obj, prop, value)
+ *    addProp(data, prop, value)
  * @example
  *    addProp({firstName: 'john'}, 'lastName', 'doe') // => {firstName: 'john', lastName: 'doe'}
  * @dataFirst
  * @category Object
  */
 export function addProp<T, K extends PropertyKey, V>(
-  obj: T,
+  data: T,
   prop: K,
   value: V,
 ): UpsertProp<T, K, V>;
@@ -38,7 +38,7 @@ export function addProp<T, K extends PropertyKey, V>(
  * @param prop - The property name.
  * @param value - The property value.
  * @signature
- *    addProp(prop, value)(obj)
+ *    addProp(prop, value)(data)
  * @example
  *    addProp('lastName', 'doe')({firstName: 'john'}) // => {firstName: 'john', lastName: 'doe'}
  * @dataLast
@@ -47,17 +47,23 @@ export function addProp<T, K extends PropertyKey, V>(
 export function addProp<T, K extends PropertyKey, V>(
   prop: K,
   value: V,
-): (obj: T) => UpsertProp<T, K, V>;
+): (data: T) => UpsertProp<T, K, V>;
 
-export function addProp(...args: ReadonlyArray<unknown>): unknown {
-  return curry(addPropImplementation, 3, args);
+export function addProp(
+  dataOrProp: unknown,
+  propOrValue?: unknown,
+  value?: unknown,
+): unknown {
+  return curry3(
+    addPropImplementation,
+    arguments.length,
+    dataOrProp,
+    propOrValue,
+    value,
+  );
 }
 
-function addPropImplementation<T, K extends PropertyKey, V>(
-  obj: T,
-  prop: K,
-  value: V,
-): UpsertProp<T, K, V> {
+function addPropImplementation<T, K extends PropertyKey, V>(data: T, prop: K, value: V): UpsertProp<T, K, V> {
   // @ts-expect-error [ts2322] - Hard to type...
-  return { ...obj, [prop]: value };
+  return { ...data, [prop]: value };
 }

@@ -1,11 +1,7 @@
-import type { OrderRule } from './internal/curry-order-rules';
+import type { OrderRules } from './internal/curry-order-rules';
 import type { CompareFunction } from './internal/types/compare-function';
-import type { NonEmptyArray } from './internal/types/non-empty-array';
-import {
-  curryOrderRulesWithArgument,
-
-} from './internal/curry-order-rules';
-import { heapify, heapMaybeInsert } from './internal/heap';
+import { curryOrderRulesWithArgument } from './internal/curry-order-rules';
+import { heapMaybeInsert, heapify } from './internal/heap';
 
 /**
  * Take the first `n` items from `data` based on the provided ordering criteria. This allows you to avoid sorting the array before taking the items. The complexity of this function is *O(Nlogn)* where `N` is the length of the array.
@@ -26,7 +22,7 @@ import { heapify, heapMaybeInsert } from './internal/heap';
 export function takeFirstBy<T>(
   data: ReadonlyArray<T>,
   n: number,
-  ...rules: Readonly<NonEmptyArray<OrderRule<T>>>
+  ...rules: OrderRules<T>
 ): Array<T>;
 
 /**
@@ -46,7 +42,7 @@ export function takeFirstBy<T>(
  */
 export function takeFirstBy<T>(
   n: number,
-  ...rules: Readonly<NonEmptyArray<OrderRule<NoInfer<T>>>>
+  ...rules: OrderRules<NoInfer<T>>
 ): (data: ReadonlyArray<T>) => Array<T>;
 
 export function takeFirstBy(...args: ReadonlyArray<unknown>): unknown {

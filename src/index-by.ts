@@ -1,5 +1,6 @@
 import type { BoundedPartial } from './internal/types/bounded-partial';
-import { curry } from './curry';
+import type { ArrayCallback } from './internal/types/callback';
+import type { DataLastBuilder } from './internal/types/data-last-builder';
 
 /**
  * Converts a list of objects into an object indexing the objects by the given
@@ -15,7 +16,7 @@ import { curry } from './curry';
  * @param data - The array.
  * @param mapper - The indexing function.
  * @signature
- *    indexBy(array, fn)
+ *    indexBy(data, mapper)
  * @example
  *    indexBy(['one', 'two', 'three'], x => x.length) // => {3: 'two', 5: 'three'}
  * @dataFirst
@@ -23,7 +24,7 @@ import { curry } from './curry';
  */
 export function indexBy<T, K extends PropertyKey>(
   data: ReadonlyArray<T>,
-  mapper: (item: T, index: number, data: ReadonlyArray<T>) => K,
+  mapper: ArrayCallback<ReadonlyArray<T>, K>,
 ): BoundedPartial<Record<K, T>>;
 
 /**
@@ -39,7 +40,7 @@ export function indexBy<T, K extends PropertyKey>(
  *
  * @param mapper - The indexing function.
  * @signature
- *    indexBy(fn)(array)
+ *    indexBy(mapper)(data)
  * @example
  *    pipe(
  *      ['one', 'two', 'three'],
@@ -49,12 +50,27 @@ export function indexBy<T, K extends PropertyKey>(
  * @category Array
  */
 export function indexBy<T, K extends PropertyKey>(
-  mapper: (item: T, index: number, data: ReadonlyArray<T>) => K,
+  mapper: ArrayCallback<ReadonlyArray<T>, K>,
 ): (data: ReadonlyArray<T>) => BoundedPartial<Record<K, T>>;
 
-export function indexBy(...args: ReadonlyArray<unknown>): unknown {
-  return curry(indexByImplementation, 2, args);
+export function indexBy(
+  dataOrMapper:
+    ReadonlyArray<unknown> | ArrayCallback<ReadonlyArray<unknown>, PropertyKey>,
+  mapper?: ArrayCallback<ReadonlyArray<unknown>, PropertyKey>,
+): unknown {
+  return typeof dataOrMapper === 'function'
+    // eslint-disable-next-line ts/no-use-before-define -- implementations follow the overloaded signatures
+    ? dataLast(dataOrMapper)
+    : indexByImplementation(
+        dataOrMapper,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
+        mapper,
+      );
 }
+
+const dataLast: DataLastBuilder<typeof indexByImplementation> =
+  (mapper) => (data) =>
+    indexByImplementation(data, mapper);
 
 function indexByImplementation<T, K extends PropertyKey>(
   data: ReadonlyArray<T>,

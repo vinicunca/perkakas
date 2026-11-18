@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest';
 import { defaultTo } from './default-to';
+import { describe, expect, it, vi } from 'vitest';
 
 describe('falsy values', () => {
   describe('nullish', () => {
@@ -91,4 +91,12 @@ describe('object identity', () => {
 it('undefined fallback', () => {
   expect(defaultTo(undefined as string | undefined, undefined)).toBeUndefined();
   expect(defaultTo(null as string | null, null)).toBeNull();
+});
+
+it('a function as the data', () => {
+  const callback = vi.fn<() => number>();
+
+  expect(defaultTo(callback as (() => number) | undefined, () => 2)).toBe(
+    callback,
+  );
 });

@@ -1,4 +1,4 @@
-import { curry } from './curry';
+import { curry1 } from './internal/curry-by-arity';
 
 /**
  * Replaces all uppercase characters with their lowercase equivalents.
@@ -49,8 +49,8 @@ export function toLowerCase<T extends string>(data: T): Lowercase<T>;
  */
 export function toLowerCase(): <T extends string>(data: T) => Lowercase<T>;
 
-export function toLowerCase(...args: ReadonlyArray<unknown>): unknown {
-  return curry(toLowerCaseImplementation, 1, args);
+export function toLowerCase(data?: string): unknown {
+  return curry1(toLowerCaseImplementation, arguments.length, data);
 }
 
 function toLowerCaseImplementation<T extends string>(data: T): Lowercase<T> {

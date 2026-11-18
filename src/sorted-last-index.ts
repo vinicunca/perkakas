@@ -1,5 +1,5 @@
-import { curry } from './curry';
 import { binarySearchCutoffIndex } from './internal/binary-search-cutoff-index';
+import { curry2 } from './internal/curry-by-arity';
 
 /**
  * Find the insertion position (index) of an item in an array with items sorted
@@ -53,16 +53,23 @@ export function sortedLastIndex<T>(
   item: T,
 ): (data: ReadonlyArray<NoInfer<T>>) => number;
 
-export function sortedLastIndex(...args: ReadonlyArray<unknown>): unknown {
-  return curry(sortedLastIndexImplementation, 2, args);
+export function sortedLastIndex(dataOrItem: unknown, item?: unknown): unknown {
+  return curry2(
+    sortedLastIndexImplementation,
+    arguments.length,
+    dataOrItem,
+    item,
+  );
 }
 
-function sortedLastIndexImplementation<T>(array: ReadonlyArray<T>, item: T): number {
-  return binarySearchCutoffIndex(
-    array,
+const sortedLastIndexImplementation = <T>(
+  data: ReadonlyArray<T>,
+  item: T,
+): number =>
+  binarySearchCutoffIndex(
+    data,
     // The only difference between the regular implementation and the "last"
     // variation is that we consider the pivot with equality too, so that we
     // skip all equal values in addition to the lower ones.
     (pivot) => pivot <= item,
   );
-}

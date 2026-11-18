@@ -1,11 +1,11 @@
-import type { LazyCallback } from './internal/types/lazy-callback';
-import { describe, expect, it, vi } from 'vitest';
+import type { LazyCallback } from './internal/types/callback';
 import { forceFusion } from '../test/force-fusion';
 import { createLazyInvocationCounter } from '../test/lazy-invocation-counter';
 import { add } from './add';
 import { find } from './find';
 import { flatMap } from './flat-map';
 import { pipe } from './pipe';
+import { describe, expect, it, vi } from 'vitest';
 
 describe('dataFirst', () => {
   it('flatMap', () => {
@@ -67,9 +67,9 @@ describe('dataLast', () => {
     });
 
     it('provides the items processed so far to the callback', () => {
-      const mapper = vi.fn<LazyCallback<Array<unknown>, unknown>>(
-        (_value, _index, data) => [...data],
-      );
+      const mapper = vi.fn<LazyCallback<Array<unknown>>>((_value, _index, data) => [
+        ...data,
+      ]);
       pipe([1, 2, 3], forceFusion(), flatMap(mapper));
 
       expect(mapper).toHaveNthReturnedWith(1, [1]);

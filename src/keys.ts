@@ -1,8 +1,8 @@
 import type { IsNever } from 'type-fest';
+import { curry1 } from './internal/curry-by-arity';
 import type { EnumerableStringKeyOf } from './internal/types/enumerable-string-key-of';
 import type { IterableContainer } from './internal/types/iterable-container';
 import type { ToString } from './internal/types/to-string';
-import { curry } from './curry';
 
 type Keys<T> = T extends IterableContainer ? ArrayKeys<T> : ObjectKeys<T>;
 
@@ -80,6 +80,6 @@ export function keys<T extends object>(data: T): Keys<T>;
  */
 export function keys(): <T extends object>(data: T) => Keys<T>;
 
-export function keys(...args: ReadonlyArray<unknown>): unknown {
-  return curry(Object.keys, 1, args);
+export function keys(data?: object): unknown {
+  return curry1(Object.keys, arguments.length, data);
 }

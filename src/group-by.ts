@@ -1,6 +1,7 @@
 import type { BoundedPartial } from './internal/types/bounded-partial';
+import type { ArrayCallback } from './internal/types/callback';
+import type { DataLastBuilder } from './internal/types/data-last-builder';
 import type { NonEmptyArray } from './internal/types/non-empty-array';
-import { curry } from './curry';
 
 /**
  * Groups the elements of a given iterable according to the string values
@@ -31,7 +32,7 @@ import { curry } from './curry';
  */
 export function groupBy<T, Key extends PropertyKey = PropertyKey>(
   data: ReadonlyArray<T>,
-  callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => Key | undefined,
+  callbackfn: ArrayCallback<ReadonlyArray<T>, Key | undefined>,
 ): BoundedPartial<Record<Key, NonEmptyArray<T>>>;
 
 /**
@@ -67,12 +68,28 @@ export function groupBy<T, Key extends PropertyKey = PropertyKey>(
  * @category Array
  */
 export function groupBy<T, Key extends PropertyKey = PropertyKey>(
-  callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => Key | undefined,
-): (items: ReadonlyArray<T>) => BoundedPartial<Record<Key, NonEmptyArray<T>>>;
+  callbackfn: ArrayCallback<ReadonlyArray<T>, Key | undefined>,
+): (data: ReadonlyArray<T>) => BoundedPartial<Record<Key, NonEmptyArray<T>>>;
 
-export function groupBy(...args: ReadonlyArray<unknown>): unknown {
-  return curry(groupByImplementation, 2, args);
+export function groupBy(
+  dataOrCallbackfn:
+    | ReadonlyArray<unknown>
+    | ArrayCallback<ReadonlyArray<unknown>, PropertyKey | undefined>,
+  callbackfn?: ArrayCallback<ReadonlyArray<unknown>, PropertyKey | undefined>,
+): unknown {
+  return typeof dataOrCallbackfn === 'function'
+    // eslint-disable-next-line ts/no-use-before-define -- implementations follow the overloaded signatures
+    ? dataLast(dataOrCallbackfn)
+    : groupByImplementation(
+        dataOrCallbackfn,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
+        callbackfn,
+      );
 }
+
+const dataLast: DataLastBuilder<typeof groupByImplementation> =
+  (callbackfn) => (data) =>
+    groupByImplementation(data, callbackfn);
 
 function groupByImplementation<T, Key extends PropertyKey = PropertyKey>(data: ReadonlyArray<T>, callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => Key | undefined): BoundedPartial<Record<Key, NonEmptyArray<T>>> {
   const output: BoundedPartial<Record<Key, NonEmptyArray<T>>>

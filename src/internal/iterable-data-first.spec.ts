@@ -17,13 +17,13 @@ import {
 import { requireData } from './require-data';
 import type { LazyEvaluator } from './types/lazy-evaluator';
 
-it('builds the evaluator with the lazy arguments', () => {
-  const lazy = vi.fn<(first: number, second: string) => LazyEvaluator>(
+it('builds the evaluator with the lazy argument', () => {
+  const lazy = vi.fn<(lazyArgument: ReadonlyArray<unknown>) => LazyEvaluator>(
     () => (value) => value,
   );
   iterableDataFirst([], lazy, [1, 'a']);
 
-  expect(lazy).toHaveBeenCalledExactlyOnceWith(1, 'a');
+  expect(lazy).toHaveBeenCalledExactlyOnceWith([1, 'a']);
 });
 
 describe('input', () => {
@@ -106,7 +106,7 @@ describe('data', () => {
 
     // Asserting identity with `toBe` would make the matcher format the sentinel
     // on failure, which throws and hides the real mismatch.
-    expect(() => evaluator.mock.calls[0]?.[2]?.at(0)).toThrow(/^Remeda: /u);
+    expect(() => evaluator.mock.calls[0]?.[2]?.at(0)).toThrow(/^Perkakas: /u);
   });
 });
 

@@ -1,11 +1,11 @@
 import type { EmptyObject, IsNever, KeysOfUnion } from 'type-fest';
+import { hasAtLeast } from './has-at-least';
+import { curry2 } from './internal/curry-by-arity';
 import type { IsBounded } from './internal/types/is-bounded';
 import type { IsBoundedRecord } from './internal/types/is-bounded-record';
 import type { PartitionByUnion } from './internal/types/partition-by-union';
 import type { SimplifiedWritable } from './internal/types/simplified-writable';
 import type { TupleParts } from './internal/types/tuple-parts';
-import { curry } from './curry';
-import { hasAtLeast } from './has-at-least';
 
 type OmitFromArray<T, Keys extends ReadonlyArray<PropertyKey>>
   // Distribute unions for both object types and key arrays.
@@ -97,7 +97,7 @@ type Bounded<T> = T extends unknown
  *
  * @param keys - The property names.
  * @signature
- *    omit(keys)(obj);
+ *    omit(keys)(data);
  * @example
  *    pipe({ a: 1, b: 2, c: 3, d: 4 }, omit(['a', 'd'])) // => { b: 2, c: 3 }
  * @dataLast
@@ -113,7 +113,7 @@ export function omit<T, const Keys extends ReadonlyArray<KeysOfUnion<T>>>(
  * @param data - The object.
  * @param keys - The property names.
  * @signature
- *    omit(obj, keys);
+ *    omit(data, keys);
  * @example
  *    omit({ a: 1, b: 2, c: 3, d: 4 }, ['a', 'd']) // => { b: 2, c: 3 }
  * @dataFirst
@@ -124,8 +124,11 @@ export function omit<T, const Keys extends ReadonlyArray<KeysOfUnion<T>>>(
   keys: Keys,
 ): OmitFromArray<T, Keys>;
 
-export function omit(...args: ReadonlyArray<unknown>): unknown {
-  return curry(omitImplementation, 2, args);
+export function omit(
+  dataOrKeys: unknown,
+  keys?: ReadonlyArray<PropertyKey>,
+): unknown {
+  return curry2(omitImplementation, arguments.length, dataOrKeys, keys);
 }
 
 function omitImplementation<

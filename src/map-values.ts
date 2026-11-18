@@ -1,7 +1,6 @@
 import type { Simplify } from 'type-fest';
-import type { EnumerableStringKeyOf } from './internal/types/enumerable-string-key-of';
-import type { EnumerableStringKeyedValueOf } from './internal/types/enumerable-string-keyed-value-of';
-import { curry } from './curry';
+import { curry2 } from './internal/curry-by-arity';
+import type { ObjectCallback } from './internal/types/callback';
 
 type MappedValues<T extends object, Value> = Simplify<{
   -readonly [P in keyof T as P extends number | string ? P : never]: Value;
@@ -25,11 +24,7 @@ type MappedValues<T extends object, Value> = Simplify<{
  */
 export function mapValues<T extends object, Value>(
   data: T,
-  valueMapper: (
-    value: EnumerableStringKeyedValueOf<T>,
-    key: EnumerableStringKeyOf<T>,
-    data: T,
-  ) => Value,
+  valueMapper: ObjectCallback<T, Value>,
 ): MappedValues<T, Value>;
 
 /**
@@ -48,15 +43,19 @@ export function mapValues<T extends object, Value>(
  * @category Object
  */
 export function mapValues<T extends object, Value>(
-  valueMapper: (
-    value: EnumerableStringKeyedValueOf<T>,
-    key: EnumerableStringKeyOf<T>,
-    data: T,
-  ) => Value,
+  valueMapper: ObjectCallback<T, Value>,
 ): (data: T) => MappedValues<T, Value>;
 
-export function mapValues(...args: ReadonlyArray<unknown>): unknown {
-  return curry(mapValuesImplementation, 2, args);
+export function mapValues(
+  dataOrValueMapper: object | ObjectCallback,
+  valueMapper?: ObjectCallback,
+): unknown {
+  return curry2(
+    mapValuesImplementation,
+    arguments.length,
+    dataOrValueMapper,
+    valueMapper,
+  );
 }
 
 function mapValuesImplementation<T extends object, Value>(

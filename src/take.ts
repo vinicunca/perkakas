@@ -1,24 +1,20 @@
 import type { StoppableLazyEvaluator } from './internal/make-stoppable';
 import type { IterableContainer } from './internal/types/iterable-container';
-import { curryWithLazy } from './internal/curry-with-lazy';
-import {
-  lastLazyValue,
-  LAZY_EMPTY_EVALUATOR,
-  makeStoppable,
-} from './internal/make-stoppable';
+import { curryWithLazy2 } from './internal/curry-with-lazy-by-arity';
+import { LAZY_EMPTY_EVALUATOR, lastLazyValue, makeStoppable } from './internal/make-stoppable';
 
 /**
- * Returns the first `n` elements of `array`.
+ * Returns the first `n` elements of `data`.
  *
  * Related operations:
  * - `drop` - to skip past the first `n` instead.
  * - `splice` - to remove or insert at an arbitrary index.
  * - `takeLast` - same, but from the end of the array.
  *
- * @param array - The array.
+ * @param data - The array.
  * @param n - The number of elements to take.
  * @signature
- *    take(array, n)
+ *    take(data, n)
  * @example
  *    take([1, 2, 3, 4, 3, 2, 1], 3) // => [1, 2, 3]
  * @dataFirst
@@ -26,12 +22,12 @@ import {
  * @category Array
  */
 export function take<T extends IterableContainer>(
-  array: T,
+  data: T,
   n: number,
 ): Array<T[number]>;
 
 /**
- * Returns the first `n` elements of `array`.
+ * Returns the first `n` elements of `data`.
  *
  * Related operations:
  * - `drop` - to skip past the first `n` instead.
@@ -40,7 +36,7 @@ export function take<T extends IterableContainer>(
  *
  * @param n - The number of elements to take.
  * @signature
- *    take(n)(array)
+ *    take(n)(data)
  * @example
  *    pipe([1, 2, 3, 4, 3, 2, 1], take(3)) // => [1, 2, 3]
  * @dataLast
@@ -49,18 +45,23 @@ export function take<T extends IterableContainer>(
  */
 export function take(
   n: number,
-): <T extends IterableContainer>(array: T) => Array<T[number]>;
+): <T extends IterableContainer>(data: T) => T[number][];
 
-export function take(...args: ReadonlyArray<unknown>): unknown {
-  // eslint-disable-next-line ts/no-use-before-define -- implementations follow the overloaded signatures
-  return curryWithLazy(takeImplementation, 2, lazyImplementation, args);
+export function take(dataOrN: IterableContainer | number, n?: number): unknown {
+  return curryWithLazy2(
+    takeImplementation,
+    // eslint-disable-next-line ts/no-use-before-define -- implementations follow the overloaded signatures
+    lazyImplementation,
+    arguments.length,
+    dataOrN,
+    n,
+  );
 }
 
-function takeImplementation<T extends IterableContainer>(array: T, n: number): Array<T[number]> {
-  return n < 0
-    ? []
-    : array.slice(0, n);
-}
+const takeImplementation = <T extends IterableContainer>(
+  data: T,
+  n: number,
+): T[number][] => (n < 0 ? [] : data.slice(0, n));
 
 const lazyImplementation = makeStoppable(
   <T>(n: number): StoppableLazyEvaluator<T> => {

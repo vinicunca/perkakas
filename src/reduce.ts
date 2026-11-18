@@ -1,4 +1,11 @@
-import { curry } from './curry';
+import type { DataLastBuilder } from './internal/types/data-last-builder';
+
+type Reducer<T = unknown, U = unknown> = (
+  previousValue: U,
+  currentValue: T,
+  currentIndex: number,
+  data: ReadonlyArray<T>,
+) => U;
 
 /**
  * Executes a user-supplied "reducer" callback function on each element of the
@@ -26,12 +33,7 @@ import { curry } from './curry';
  */
 export function reduce<T, U>(
   data: ReadonlyArray<T>,
-  callbackfn: (
-    previousValue: U,
-    currentValue: T,
-    currentIndex: number,
-    data: ReadonlyArray<T>,
-  ) => U,
+  callbackfn: Reducer<T, U>,
   initialValue: U,
 ): U;
 
@@ -52,25 +54,36 @@ export function reduce<T, U>(
  * @returns The value that results from running the "reducer" callback function
  * to completion over the entire array.
  * @signature
- *    reduce(fn, initialValue)(array)
+ *    reduce(callbackfn, initialValue)(data)
  * @example
  *    pipe([1, 2, 3, 4, 5], reduce((acc, x) => acc + x, 100)) // => 115
  * @dataLast
  * @category Array
  */
 export function reduce<T, U>(
-  callbackfn: (
-    previousValue: U,
-    currentValue: T,
-    currentIndex: number,
-    data: ReadonlyArray<T>,
-  ) => U,
+  callbackfn: Reducer<T, U>,
   initialValue: U,
 ): (data: ReadonlyArray<T>) => U;
 
-export function reduce(...args: ReadonlyArray<unknown>): unknown {
-  return curry(reduceImplementation, 3, args);
+export function reduce(
+  dataOrCallbackfn: ReadonlyArray<unknown> | Reducer,
+  callbackfnOrInitialValue: unknown,
+  initialValue?: unknown,
+): unknown {
+  return typeof dataOrCallbackfn === 'function'
+    // eslint-disable-next-line ts/no-use-before-define -- implementations follow the overloaded signatures
+    ? dataLast(dataOrCallbackfn, callbackfnOrInitialValue)
+    : reduceImplementation(
+        dataOrCallbackfn,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
+        callbackfnOrInitialValue,
+        initialValue,
+      );
 }
+
+const dataLast: DataLastBuilder<typeof reduceImplementation> =
+  (callbackfn, initialValue) => (data) =>
+    reduceImplementation(data, callbackfn, initialValue);
 
 function reduceImplementation<T, U>(data: ReadonlyArray<T>, callbackfn: (
   previousValue: U,

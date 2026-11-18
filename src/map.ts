@@ -1,8 +1,9 @@
+import type { ArrayCallback, LazyCallback } from './internal/types/callback';
+import type { DataLastBuilder } from './internal/types/data-last-builder';
 import type { IterableContainer } from './internal/types/iterable-container';
-import type { LazyCallback } from './internal/types/lazy-callback';
 import type { LazyEvaluator } from './internal/types/lazy-evaluator';
 import type { Mapped } from './internal/types/mapped';
-import { curryWithLazy } from './internal/curry-with-lazy';
+import { withLazyImplementation } from './internal/lazy-data-last-implementation';
 import { canReadData, requireData } from './internal/require-data';
 
 /**
@@ -26,7 +27,7 @@ import { canReadData, requireData } from './internal/require-data';
  */
 export function map<T extends IterableContainer, U>(
   data: T,
-  callbackfn: (value: T[number], index: number, data: T) => U,
+  callbackfn: ArrayCallback<T, U>,
 ): Mapped<T, U>;
 
 /**
@@ -51,13 +52,36 @@ export function map<T extends IterableContainer, U>(
   callbackfn: LazyCallback<T, U>,
 ): (data: T) => Mapped<T, U>;
 
-export function map(...args: ReadonlyArray<unknown>): unknown {
-  return curryWithLazy(mapImplementation, 2, lazyImplementation, args);
+export function map(
+  dataOrCallbackfn: IterableContainer | LazyCallback<IterableContainer>,
+  callbackfn?: ArrayCallback,
+): unknown {
+  return typeof dataOrCallbackfn === 'function'
+    ? withLazyImplementation(
+        // eslint-disable-next-line ts/no-use-before-define -- implementations follow the overloaded signatures
+        dataLast(
+          // @ts-expect-error [ts2345] -- Run eagerly, the data-last function hands the callback the complete input, a valid non-empty prefix whenever the callback is invoked (it never is for an empty input); TypeScript can't relate `T` to `NonEmptyPrefix<T>`.
+          dataOrCallbackfn,
+        ),
+        lazyImplementation,
+        // @ts-expect-error [ts2345] -- `lazyImplementation` invokes the callback only once the input has an item, so the prefix it passes is never empty; TypeScript can't tell from its `readonly T[]` type.
+        dataOrCallbackfn,
+      )
+    : mapImplementation(
+        dataOrCallbackfn,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
+        callbackfn,
+      );
 }
 
-function mapImplementation<T, U>(data: ReadonlyArray<T>, callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => U): Array<U> {
-  return data.map(callbackfn);
-}
+const dataLast: DataLastBuilder<typeof mapImplementation> =
+  (callbackfn) => (data) =>
+    mapImplementation(data, callbackfn);
+
+const mapImplementation = <T, U>(
+  data: ReadonlyArray<T>,
+  callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => U,
+): U[] => data.map(callbackfn);
 
 function lazyImplementation<T, U>(callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => U): LazyEvaluator<T, U> {
   return canReadData(callbackfn, 2)

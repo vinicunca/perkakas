@@ -1,4 +1,4 @@
-import { curry } from './curry';
+import { curry2 } from './internal/curry-by-arity';
 
 /**
  * Adds two numbers.
@@ -32,8 +32,11 @@ export function add(value: number, addend: number): number;
 export function add(addend: bigint): (value: bigint) => bigint;
 export function add(addend: number): (value: number) => number;
 
-export function add(...args: ReadonlyArray<unknown>): unknown {
-  return curry(addImplementation, 2, args);
+export function add(
+  valueOrAddend: bigint | number,
+  addend?: bigint | number,
+): unknown {
+  return curry2(addImplementation, arguments.length, valueOrAddend, addend);
 }
 
 // The implementation only uses `number` types, but that's just because it's

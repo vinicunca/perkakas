@@ -4,9 +4,9 @@ import type {
   IsStringLiteral,
   UnionToIntersection,
 } from 'type-fest';
+import { curry2 } from './internal/curry-by-arity';
 import type { Boxed } from './internal/types/boxed';
 import type { PerkakasTypeError } from './internal/types/perkakas-type-error';
-import { curry } from './curry';
 
 // By intersecting with a prefix template we force all types that satisfy this
 // type to also be of this shape. For a raw primitive string this narrows
@@ -220,8 +220,13 @@ export function startsWith<Prefix extends string>(
 
 export function startsWith(prefix: string): (data: string) => boolean;
 
-export function startsWith(...args: ReadonlyArray<unknown>): unknown {
-  return curry(startsWithImplementation, 2, args);
+export function startsWith(dataOrPrefix: string, prefix?: string): unknown {
+  return curry2(
+    startsWithImplementation,
+    arguments.length,
+    dataOrPrefix,
+    prefix,
+  );
 }
 
 function startsWithImplementation(data: string, prefix: string): boolean {

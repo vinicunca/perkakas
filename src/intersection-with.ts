@@ -1,8 +1,7 @@
+import type { IsEqualFunction } from './internal/types/is-equal-function';
 import type { LazyEvaluator } from './internal/types/lazy-evaluator';
-import { curryWithLazy } from './internal/curry-with-lazy';
+import { curryWithLazy3 } from './internal/curry-with-lazy-by-arity';
 import { SKIP_ITEM } from './internal/lazy-control';
-
-type IsEqual<T, S> = (a: T, b: S) => boolean;
 
 /**
  * Returns a list of intersecting values based on a custom
@@ -29,7 +28,7 @@ type IsEqual<T, S> = (a: T, b: S) => boolean;
 export function intersectionWith<T, S>(
   data: ReadonlyArray<T>,
   other: ReadonlyArray<S>,
-  isEqual: IsEqual<T, S>,
+  isEqual: IsEqualFunction<T, S>,
 ): Array<T>;
 
 /**
@@ -58,22 +57,28 @@ export function intersectionWith<T, S>(
    * Type inference doesn't work properly for the comparator's first parameter
    * in data last variant.
    */
-  isEqual: IsEqual<T, S>,
+  isEqual: IsEqualFunction<T, S>,
 ): (data: ReadonlyArray<T>) => Array<T>;
 
-export function intersectionWith(...args: ReadonlyArray<unknown>): unknown {
-  return curryWithLazy(
+export function intersectionWith(
+  dataOrOther: ReadonlyArray<unknown>,
+  otherOrIsEqual?: ReadonlyArray<unknown> | IsEqualFunction,
+  isEqual?: IsEqualFunction,
+): unknown {
+  return curryWithLazy3(
     intersectionWithImplementation,
-    3,
     lazyImplementation,
-    args,
+    arguments.length,
+    dataOrOther,
+    otherOrIsEqual,
+    isEqual,
   );
 }
 
 function intersectionWithImplementation<T, S>(
   data: ReadonlyArray<T>,
   other: ReadonlyArray<S>,
-  isEqual: IsEqual<T, S>,
+  isEqual: IsEqualFunction<T, S>,
 ): Array<T> {
   const result: Array<T> = [];
   for (const value of data) {
@@ -85,9 +90,10 @@ function intersectionWithImplementation<T, S>(
   return result;
 }
 
-function lazyImplementation<T, S>(other: ReadonlyArray<S>, isEqual: IsEqual<T, S>): LazyEvaluator<T> {
-  return (value) =>
-    other.some((otherValue) => isEqual(value, otherValue))
-      ? value
-      : SKIP_ITEM;
-}
+const lazyImplementation =
+  <T, S>([other, isEqual]: readonly [
+    other: ReadonlyArray<S>,
+    isEqual: IsEqualFunction<T, S>,
+  ]): LazyEvaluator<T> =>
+  (value) =>
+    other.some((otherValue) => isEqual(value, otherValue)) ? value : SKIP_ITEM;

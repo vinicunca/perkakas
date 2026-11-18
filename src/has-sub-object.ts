@@ -1,5 +1,5 @@
 import type { IsNever, Simplify, Tagged } from 'type-fest';
-import { curry } from './curry';
+import { curry2 } from './internal/curry-by-arity';
 import { isDeepEqual } from './is-deep-equal';
 
 // eslint-disable-next-line ts/no-unused-vars -- We want to confine the typing to a specific symbol
@@ -102,8 +102,16 @@ export function hasSubObject<S extends object>(
   data: T,
 ) => data is HasSubObjectGuard<T, S>;
 
-export function hasSubObject(...args: ReadonlyArray<unknown>): unknown {
-  return curry(hasSubObjectImplementation, 2, args);
+export function hasSubObject(
+  dataOrSubObject: object,
+  subObject?: object,
+): unknown {
+  return curry2(
+    hasSubObjectImplementation,
+    arguments.length,
+    dataOrSubObject,
+    subObject,
+  );
 }
 
 function hasSubObjectImplementation<

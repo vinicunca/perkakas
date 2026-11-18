@@ -1,5 +1,5 @@
 import type { Join, Words } from 'type-fest';
-import { curry } from './curry';
+import { curry1 } from './internal/curry-by-arity';
 import { words } from './internal/words';
 
 type SnakeCase<S extends string> = string extends S
@@ -61,8 +61,8 @@ export function toSnakeCase<S extends string>(data: S): SnakeCase<S>;
  */
 export function toSnakeCase(): <S extends string>(data: S) => SnakeCase<S>;
 
-export function toSnakeCase(...args: ReadonlyArray<unknown>): unknown {
-  return curry(toSnakeCaseImplementation, 1, args);
+export function toSnakeCase(data?: string): unknown {
+  return curry1(toSnakeCaseImplementation, arguments.length, data);
 }
 
 function toSnakeCaseImplementation<S extends string>(data: S): SnakeCase<S> {

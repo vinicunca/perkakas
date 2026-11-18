@@ -1,4 +1,4 @@
-import { curry } from './curry';
+import { curry2 } from './internal/curry-by-arity';
 
 const DEFAULT_STEP = 1;
 
@@ -57,8 +57,16 @@ export function range(
   endOrOptions: number | RangeOptions,
 ): (start: number) => Array<number>;
 
-export function range(...args: ReadonlyArray<unknown>): unknown {
-  return curry(rangeImplementation, 2, args);
+export function range(
+  startOrEndOrOptions: number | RangeOptions,
+  endOrOptions?: number | RangeOptions,
+): unknown {
+  return curry2(
+    rangeImplementation,
+    arguments.length,
+    startOrEndOrOptions,
+    endOrOptions,
+  );
 }
 
 function rangeImplementation(

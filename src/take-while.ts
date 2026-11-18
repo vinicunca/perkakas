@@ -1,13 +1,11 @@
 import type { StoppableLazyEvaluator } from './internal/make-stoppable';
+import type { ArrayCallback, LazyCallback, LazyTypePredicate } from './internal/types/callback';
+import type { DataLastBuilder } from './internal/types/data-last-builder';
 import type { IterableContainer } from './internal/types/iterable-container';
-import type {
-  LazyCallback,
-  LazyTypePredicate,
-} from './internal/types/lazy-callback';
 import type { NarrowedArray } from './internal/types/narrowed-array';
 import type { NonRefinedFilteredArray } from './internal/types/non-refined-filtered-array';
-import { curryWithLazy } from './internal/curry-with-lazy';
-import { makeStoppable, STOP } from './internal/make-stoppable';
+import { withLazyImplementation } from './internal/lazy-data-last-implementation';
+import { STOP, makeStoppable } from './internal/make-stoppable';
 import { requireDataByArity } from './internal/require-data';
 
 /**
@@ -63,10 +61,32 @@ export function takeWhile<
   predicate: LazyCallback<T, IsItemIncluded>,
 ): (data: T) => NonRefinedFilteredArray<T, IsItemIncluded>;
 
-export function takeWhile(...args: ReadonlyArray<unknown>): unknown {
-  // eslint-disable-next-line ts/no-use-before-define -- implementations follow the overloaded signatures
-  return curryWithLazy(takeWhileImplementation, 2, lazyImplementation, args);
+export function takeWhile(
+  dataOrPredicate: IterableContainer | LazyCallback<IterableContainer, boolean>,
+  predicate?: ArrayCallback<IterableContainer, boolean>,
+): unknown {
+  return typeof dataOrPredicate === 'function'
+    ? withLazyImplementation(
+        // eslint-disable-next-line ts/no-use-before-define -- implementations follow the overloaded signatures
+        dataLast(
+          // @ts-expect-error [ts2345] -- Run eagerly, the data-last function hands the callback the complete input, a valid non-empty prefix whenever the callback is invoked (it never is for an empty input); TypeScript can't relate `T` to `NonEmptyPrefix<T>`.
+          dataOrPredicate,
+        ),
+        // eslint-disable-next-line ts/no-use-before-define -- implementations follow the overloaded signatures
+        lazyImplementation,
+        // @ts-expect-error [ts2345] -- `lazyImplementation` invokes the callback only once the input has an item, so the prefix it passes is never empty; TypeScript can't tell from its `readonly T[]` type.
+        dataOrPredicate,
+      )
+    : takeWhileImplementation(
+        dataOrPredicate,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
+        predicate,
+      );
 }
+
+const dataLast: DataLastBuilder<typeof takeWhileImplementation> =
+  (predicate) => (data) =>
+    takeWhileImplementation(data, predicate);
 
 function takeWhileImplementation<T>(
   data: ReadonlyArray<T>,

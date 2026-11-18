@@ -1,8 +1,9 @@
 import type { LazyResult } from './internal/lazy-control';
-import type { LazyCallback } from './internal/types/lazy-callback';
+import type { ArrayCallback, LazyCallback } from './internal/types/callback';
+import type { DataLastBuilder } from './internal/types/data-last-builder';
 import type { LazyEvaluator } from './internal/types/lazy-evaluator';
-import { curryWithLazy } from './internal/curry-with-lazy';
 import { manyLazyValues } from './internal/lazy-control';
+import { withLazyImplementation } from './internal/lazy-data-last-implementation';
 import { requireDataByArity } from './internal/require-data';
 
 /**
@@ -28,7 +29,7 @@ import { requireDataByArity } from './internal/require-data';
  */
 export function flatMap<T, U>(
   data: ReadonlyArray<T>,
-  callbackfn: (input: T, index: number, data: ReadonlyArray<T>) => ReadonlyArray<U> | U,
+  callbackfn: ArrayCallback<ReadonlyArray<T>, ReadonlyArray<U> | U>,
 ): Array<U>;
 
 /**
@@ -55,13 +56,36 @@ export function flatMap<T, U>(
   callbackfn: LazyCallback<ReadonlyArray<T>, ReadonlyArray<U> | U>,
 ): (data: ReadonlyArray<T>) => Array<U>;
 
-export function flatMap(...args: ReadonlyArray<unknown>): unknown {
-  return curryWithLazy(flatMapImplementation, 2, lazyImplementation, args);
+export function flatMap(
+  dataOrCallbackfn: ReadonlyArray<unknown> | LazyCallback<ReadonlyArray<unknown>>,
+  callbackfn?: ArrayCallback<ReadonlyArray<unknown>>,
+): unknown {
+  return typeof dataOrCallbackfn === 'function'
+    ? withLazyImplementation(
+        // eslint-disable-next-line ts/no-use-before-define -- implementations follow the overloaded signatures
+        dataLast(
+          // @ts-expect-error [ts2345] -- Run eagerly, the data-last function hands the callback the complete input, a valid non-empty prefix whenever the callback is invoked (it never is for an empty input); TypeScript can't relate `T` to `NonEmptyPrefix<T>`.
+          dataOrCallbackfn,
+        ),
+        lazyImplementation,
+        // @ts-expect-error [ts2345] -- `lazyImplementation` invokes the callback only once the input has an item, so the prefix it passes is never empty; TypeScript can't tell from its `readonly T[]` type.
+        dataOrCallbackfn,
+      )
+    : flatMapImplementation(
+        dataOrCallbackfn,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
+        callbackfn,
+      );
 }
 
-function flatMapImplementation<T, U>(data: ReadonlyArray<T>, callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => ReadonlyArray<U> | U): Array<U> {
-  return data.flatMap(callbackfn);
-}
+const dataLast: DataLastBuilder<typeof flatMapImplementation> =
+  (callbackfn) => (data) =>
+    flatMapImplementation(data, callbackfn);
+
+const flatMapImplementation = <T, U>(
+  data: ReadonlyArray<T>,
+  callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => ReadonlyArray<U> | U,
+): U[] => data.flatMap(callbackfn);
 
 function lazyImplementation<T, K>(callbackfn: (input: T, index: number, data: ReadonlyArray<T>) => K | ReadonlyArray<K>): LazyEvaluator<T, K> {
   return requireDataByArity(callbackfn, 2, (value, index, data, slot): LazyResult<K> => {

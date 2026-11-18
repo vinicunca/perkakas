@@ -1,11 +1,9 @@
-import type { IsInteger, IsNegative, Writable } from 'type-fest';
 import type { ClampedIntegerSubtract } from './internal/types/clamped-integer-subtract';
-import type { CoercedArray } from './internal/types/coerced-array';
 import type { IterableContainer } from './internal/types/iterable-container';
 import type { LazyEvaluator } from './internal/types/lazy-evaluator';
-import type { PartialArray } from './internal/types/partial-array';
 import type { TupleParts } from './internal/types/tuple-parts';
-import { curryWithLazy } from './internal/curry-with-lazy';
+import type { IsInteger, IsNegative, Writable } from 'type-fest';
+import { curryWithLazy2 } from './internal/curry-with-lazy-by-arity';
 import { SKIP_ITEM } from './internal/lazy-control';
 
 type Drop<T extends IterableContainer, N extends number>
@@ -94,17 +92,17 @@ type DropFixedTuple<
     : [];
 
 /**
- * Removes first `n` elements from the `array`.
+ * Removes first `n` elements from `data`.
  *
  * Related operations:
  * - `dropLast` - same, but from the end of the array.
  * - `splice` - to remove or insert at an arbitrary index.
  * - `take` - to keep the first `n` instead.
  *
- * @param array - The target array.
+ * @param data - The target array.
  * @param n - The number of elements to skip.
  * @signature
- *    drop(array, n)
+ *    drop(data, n)
  * @example
  *    drop([1, 2, 3, 4, 5], 2) // => [3, 4, 5]
  * @dataFirst
@@ -112,12 +110,12 @@ type DropFixedTuple<
  * @category Array
  */
 export function drop<T extends IterableContainer, N extends number>(
-  array: T,
+  data: T,
   n: N,
 ): Drop<T, N>;
 
 /**
- * Removes first `n` elements from the `array`.
+ * Removes first `n` elements from `data`.
  *
  * Related operations:
  * - `dropLast` - same, but from the end of the array.
@@ -126,7 +124,7 @@ export function drop<T extends IterableContainer, N extends number>(
  *
  * @param n - The number of elements to skip.
  * @signature
- *    drop(n)(array)
+ *    drop(n)(data)
  * @example
  *    drop(2)([1, 2, 3, 4, 5]) // => [3, 4, 5]
  * @dataLast
@@ -135,17 +133,22 @@ export function drop<T extends IterableContainer, N extends number>(
  */
 export function drop<N extends number>(
   n: N,
-): <T extends IterableContainer>(array: T) => Drop<T, N>;
+): <T extends IterableContainer>(data: T) => Drop<T, N>;
 
-export function drop(...args: ReadonlyArray<unknown>): unknown {
-  return curryWithLazy(dropImplementation, 2, lazyImplementation, args);
+export function drop(dataOrN: IterableContainer | number, n?: number): unknown {
+  return curryWithLazy2(
+    dropImplementation,
+    lazyImplementation,
+    arguments.length,
+    dataOrN,
+    n,
+  );
 }
 
-function dropImplementation<T extends IterableContainer>(array: T, n: number): Array<T[number]> {
-  return n < 0
-    ? array.concat()
-    : array.slice(n);
-}
+const dropImplementation = <T extends IterableContainer>(
+  data: T,
+  n: number,
+): T[number][] => (n < 0 ? data.concat() : data.slice(n));
 
 function lazyImplementation<T>(n: number): LazyEvaluator<T> {
   if (Number.isNaN(n) || n < 1) {

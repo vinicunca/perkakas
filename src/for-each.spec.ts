@@ -1,7 +1,7 @@
-import type { LazyCallback } from './internal/types/lazy-callback';
 import { expect, it, vi } from 'vitest';
 import { forceFusion } from '../test/force-fusion';
 import { forEach } from './for-each';
+import type { LazyCallback } from './internal/types/callback';
 import { pipe } from './pipe';
 import { take } from './take';
 
@@ -74,9 +74,9 @@ it('pipe with another lazy step that can\'t stop early', () => {
 });
 
 it('provides the items processed so far to the callback', () => {
-  const callback = vi.fn<LazyCallback<Array<unknown>, unknown>>(
-    (_value, _index, data) => [...data],
-  );
+  const callback = vi.fn<LazyCallback<Array<unknown>>>((_value, _index, data) => [
+    ...data,
+  ]);
   pipe([1, 2, 3], forceFusion(), forEach(callback));
 
   expect(callback).toHaveNthReturnedWith(1, [1]);

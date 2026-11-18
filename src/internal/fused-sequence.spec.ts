@@ -12,7 +12,8 @@ import {
 } from './fused-sequence';
 import { manyLazyValues, SKIP_ITEM } from './lazy-control';
 import {
-  lazyDataLastImplementation,
+  lazyDataLastImplementation0,
+  lazyDataLastImplementation2,
   type LazyEvaluatorFactory,
   type LazyUnaryFunction,
 } from './lazy-data-last-implementation';
@@ -51,30 +52,28 @@ describe(buildFusedSequence, () => {
     ).toHaveLength(2);
   });
 
-  it('builds evaluators with their lazy arguments', () => {
+  it('builds evaluators with their lazy argument', () => {
     const lazyImplementation = vi.fn<
-      (first: number, second: string) => LazyEvaluator
+      (lazyArgument: readonly [number, string]) => LazyEvaluator
     >(() => (value) => value);
     buildFusedSequence(
       [
-        // @ts-expect-error [ts2322] -- The `never` arguments of the default `LazyUnaryFunction` are what let it hold any lazy function, and the helper only spreads `lazyArgs` into the `lazy` they were built with.
-        lazyDataLastImplementation(
-          (
-            _data: ReadonlyArray<unknown>,
-            ..._args: Readonly<Parameters<typeof lazyImplementation>>
-          ) => {
+        // @ts-expect-error [ts2322] -- The default `LazyUnaryFunction` types `lazyArgument` as `never`, which no stored argument matches; `buildFusedSequence` only passes a function's `lazyArgument` to that function's own `lazy`.
+        lazyDataLastImplementation2(
+          (_data: ReadonlyArray<unknown>, _first: number, _second: string) => {
             throw new Error(
               'Intentional! a fused sequence doesn\'t call the data-first',
             );
           },
-          [1, 'a'],
           lazyImplementation,
+          1,
+          'a',
         ),
       ],
       0,
     );
 
-    expect(lazyImplementation).toHaveBeenCalledExactlyOnceWith(1, 'a');
+    expect(lazyImplementation).toHaveBeenCalledExactlyOnceWith([1, 'a']);
   });
 
   it('builds evaluators anew each time, as they can hold state', () => {
@@ -103,7 +102,7 @@ describe(buildFusedSequence, () => {
 
       // Asserting identity with `toBe` would make the matcher format the
       // sentinel on failure, which throws and hides the real mismatch.
-      expect(() => data?.at(0)).toThrow(/^Remeda: /u);
+      expect(() => data?.at(0)).toThrow(/^Perkakas: /u);
     });
   });
 });
@@ -534,16 +533,11 @@ const lazy = (): LazyUnaryFunction => lazyFunction(() => (value) => value);
 const lazyFunction = (
   lazyImplementation: LazyEvaluatorFactory<ReadonlyArray<unknown>, never>,
 ): LazyUnaryFunction =>
-  lazyDataLastImplementation(
-    () => {
-      throw new Error(
-        'Intentional! a fused sequence doesn\'t call the data-first',
-      );
-    },
-    // @ts-expect-error [ts2345] -- These functions take no arguments, so the empty ones can stand in for the `never` of the default `LazyUnaryFunction`, which is what lets it hold any lazy function.
-    [],
-    lazyImplementation,
-  );
+  lazyDataLastImplementation0(() => {
+    throw new Error(
+      'Intentional! a fused sequence doesn\'t call the data-first',
+    );
+  }, lazyImplementation);
 
 const step = (lazyEvaluator: StoppableLazyEvaluator = (value) => value) =>
   ({

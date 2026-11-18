@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest';
 import { curry } from './curry';
+import { describe, expect, it } from 'vitest';
 
 // A regular arrow function would only return these keys when inspected via
 // `Reflect.ownKeys`. Any other key on the function means it was augmented after
@@ -72,6 +72,13 @@ describe('data-last (curried)', () => {
       expect(Reflect.ownKeys(curried)).toStrictEqual(ARROW_FUNCTION_OWN_PROPS);
     });
   });
+
+  it('passes every argument when there are several', () => {
+    const curried = curry(concatenateThreeNumbers, 3, [3, 7]);
+
+    expect(curried).toBeTypeOf('function');
+    expect(typeof curried === 'function' && curried(1)).toBe('137');
+  });
 });
 
 it('curries a call that omits a defaulted parameter', () => {
@@ -85,6 +92,12 @@ function purriedFn(...args: ReadonlyArray<unknown>): unknown {
 function addWithDefault(augend: number, addend = 1): number {
   return augend + addend;
 }
+
+const concatenateThreeNumbers = (
+  data: number,
+  first: number,
+  second: number,
+): string => [data, first, second].join('');
 
 function concatenateNumberArgs(_a: number, _b: number): string {
   // eslint-disable-next-line prefer-rest-params -- Intentional, the declared parameters keep the fixture shaped like a real utility (so its arity type is the literal `2` that `curry` checks), while `arguments` exposes the excess arguments it passes through, which the declared parameters would drop.

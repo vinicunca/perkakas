@@ -1,5 +1,5 @@
+import { curry1 } from './internal/curry-by-arity';
 import type { IterableContainer } from './internal/types/iterable-container';
-import { curry } from './curry';
 
 type Product<T extends IterableContainer<bigint> | IterableContainer<number>>
   // Empty arrays would always result in a product of (a non-bigint) 1
@@ -67,8 +67,10 @@ export function product(): <
   data: T,
 ) => Product<T>;
 
-export function product(...args: ReadonlyArray<unknown>): unknown {
-  return curry(productImplementation, 1, args);
+export function product(
+  data?: IterableContainer<bigint> | IterableContainer<number>,
+): unknown {
+  return curry1(productImplementation, arguments.length, data);
 }
 
 function productImplementation<

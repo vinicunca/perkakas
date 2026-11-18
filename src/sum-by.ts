@@ -1,5 +1,6 @@
+import type { ArrayCallback } from './internal/types/callback';
+import type { DataLastBuilder } from './internal/types/data-last-builder';
 import type { IterableContainer } from './internal/types/iterable-container';
-import { curry } from './curry';
 
 type SumBy<
   T extends IterableContainer,
@@ -23,7 +24,7 @@ type SumBy<
  *
  * @param callbackfn - Predicate function.
  * @signature
- *   sumBy(fn)(array)
+ *   sumBy(callbackfn)(data)
  * @example
  *    pipe(
  *      [{a: 5}, {a: 1}, {a: 3}],
@@ -38,11 +39,11 @@ type SumBy<
  * @category Array
  */
 export function sumBy<T extends IterableContainer>(
-  callbackfn: (value: T[number], index: number, data: T) => number,
-): (items: T) => SumBy<T, number>;
+  callbackfn: ArrayCallback<T, number>,
+): (data: T) => SumBy<T, number>;
 export function sumBy<T extends IterableContainer>(
-  callbackfn: (value: T[number], index: number, data: T) => bigint,
-): (items: T) => SumBy<T, bigint>;
+  callbackfn: ArrayCallback<T, bigint>,
+): (data: T) => SumBy<T, bigint>;
 
 /**
  * Returns the sum of the elements of an array using the provided mapper.
@@ -58,7 +59,7 @@ export function sumBy<T extends IterableContainer>(
  * @param data - The array.
  * @param callbackfn - Predicate function.
  * @signature
- *   sumBy(array, fn)
+ *   sumBy(data, callbackfn)
  * @example
  *    sumBy(
  *      [{a: 5}, {a: 1}, {a: 3}],
@@ -73,23 +74,41 @@ export function sumBy<T extends IterableContainer>(
  */
 export function sumBy<T extends IterableContainer>(
   data: T,
-  callbackfn: (value: T[number], index: number, data: T) => number,
+  callbackfn: ArrayCallback<T, number>,
 ): SumBy<T, number>;
 export function sumBy<T extends IterableContainer>(
   data: T,
-  callbackfn: (value: T[number], index: number, data: T) => bigint,
+  callbackfn: ArrayCallback<T, bigint>,
 ): SumBy<T, bigint>;
 
-export function sumBy(...args: ReadonlyArray<unknown>): unknown {
-  return curry(sumByImplementation, 2, args);
+export function sumBy(
+  dataOrCallbackfn:
+    IterableContainer | ArrayCallback<IterableContainer, bigint | number>,
+  callbackfn?: ArrayCallback<IterableContainer, bigint | number>,
+): unknown {
+  return typeof dataOrCallbackfn === 'function'
+    // eslint-disable-next-line ts/no-use-before-define -- implementations follow the overloaded signatures
+    ? dataLast(dataOrCallbackfn)
+    : sumByImplementation(
+        dataOrCallbackfn,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
+        callbackfn,
+      );
 }
 
-function sumByImplementation<T>(array: ReadonlyArray<T>, callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => bigint | number): bigint | number {
+const dataLast: DataLastBuilder<typeof sumByImplementation> =
+  (callbackfn) => (data) =>
+    sumByImplementation(data, callbackfn);
+
+const sumByImplementation = <T>(
+  data: ReadonlyArray<T>,
+  callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => bigint | number,
+): bigint | number => {
   let sum: bigint | number = 0;
 
   let index = 0;
-  for (const item of array) {
-    const summand = callbackfn(item, index, array);
+  for (const item of data) {
+    const summand = callbackfn(item, index, data);
 
     // @ts-expect-error [ts2365] -- Typescript can't infer that all elements will be a number of the same type.
     sum = index === 0 ? summand : sum + summand;

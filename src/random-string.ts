@@ -1,4 +1,4 @@
-import { curry } from './curry';
+import { curry1 } from './internal/curry-by-arity';
 
 const ALPHABET
   = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -36,8 +36,8 @@ export function randomString(length: number): string;
  */
 export function randomString(): (length: number) => string;
 
-export function randomString(...args: ReadonlyArray<unknown>): unknown {
-  return curry(randomStringImplementation, 1, args);
+export function randomString(length?: number): unknown {
+  return curry1(randomStringImplementation, arguments.length, length);
 }
 
 function randomStringImplementation(length: number): string {

@@ -1,11 +1,11 @@
+import type { DataLastBuilder } from './internal/types/data-last-builder';
 import type { Deduped } from './internal/types/deduped';
+import type { IsEqualFunction } from './internal/types/is-equal-function';
 import type { IterableContainer } from './internal/types/iterable-container';
 import type { LazyEvaluator } from './internal/types/lazy-evaluator';
-import { curryWithLazy } from './internal/curry-with-lazy';
 import { SKIP_ITEM } from './internal/lazy-control';
+import { withLazyImplementation } from './internal/lazy-data-last-implementation';
 import { requireData } from './internal/require-data';
-
-type IsEquals<T> = (a: T, b: T) => boolean;
 
 /**
  * Returns a new array containing only one copy of each element in the original
@@ -14,7 +14,7 @@ type IsEquals<T> = (a: T, b: T) => boolean;
  * @param data - The array to filter.
  * @param isEquals - The comparator.
  * @signature
- *    uniqueWith(array, isEquals)
+ *    uniqueWith(data, isEquals)
  * @example
  *    uniqueWith(
  *      [{a: 1}, {a: 2}, {a: 2}, {a: 5}, {a: 1}, {a: 6}, {a: 7}],
@@ -26,7 +26,7 @@ type IsEquals<T> = (a: T, b: T) => boolean;
  */
 export function uniqueWith<T extends IterableContainer>(
   data: T,
-  isEquals: IsEquals<T[number]>,
+  isEquals: IsEqualFunction<T[number]>,
 ): Deduped<T>;
 
 /**
@@ -34,7 +34,7 @@ export function uniqueWith<T extends IterableContainer>(
  * list. Elements are compared by custom comparator isEquals.
  *
  * @param isEquals - The comparator.
- * @signature uniqueWith(isEquals)(array)
+ * @signature uniqueWith(isEquals)(data)
  * @example
  *    uniqueWith(equals)(
  *      [{a: 1}, {a: 2}, {a: 2}, {a: 5}, {a: 1}, {a: 6}, {a: 7}],
@@ -49,16 +49,34 @@ export function uniqueWith<T extends IterableContainer>(
  * @category Array
  */
 export function uniqueWith<T extends IterableContainer>(
-  isEquals: IsEquals<T[number]>,
+  isEquals: IsEqualFunction<T[number]>,
 ): (data: T) => Deduped<T>;
 
-export function uniqueWith(...args: ReadonlyArray<unknown>): unknown {
-  return curryWithLazy(uniqueWithImplementation, 2, lazyImplementation, args);
+export function uniqueWith(
+  dataOrIsEquals: IterableContainer | IsEqualFunction,
+  isEquals?: IsEqualFunction,
+): unknown {
+  return typeof dataOrIsEquals === 'function'
+    ? withLazyImplementation(
+        // eslint-disable-next-line ts/no-use-before-define -- implementations follow the overloaded signatures
+        dataLast(dataOrIsEquals),
+        lazyImplementation,
+        dataOrIsEquals,
+      )
+    : uniqueWithImplementation(
+        dataOrIsEquals,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
+        isEquals,
+      );
 }
+
+const dataLast: DataLastBuilder<typeof uniqueWithImplementation> =
+  (isEquals) => (data) =>
+    uniqueWithImplementation(data, isEquals);
 
 const uniqueWithImplementation = <T>(
   data: ReadonlyArray<T>,
-  isEquals: IsEquals<T>,
+  isEquals: IsEqualFunction<T>,
 ): T[] =>
   data.filter(
     (value, index) =>
@@ -68,12 +86,13 @@ const uniqueWithImplementation = <T>(
       ) === index,
   );
 
-function lazyImplementation<T>(isEquals: IsEquals<T>): LazyEvaluator<T> {
-  return requireData((value, index, data) =>
+const lazyImplementation = <T>(
+  isEquals: IsEqualFunction<T>,
+): LazyEvaluator<T> =>
+  requireData((value, index, data) =>
     data.findIndex(
       (otherValue, otherIndex) =>
         index === otherIndex || isEquals(value, otherValue),
     ) === index
       ? value
       : SKIP_ITEM);
-}

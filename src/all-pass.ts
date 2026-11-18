@@ -1,4 +1,11 @@
-import { curry } from './curry';
+/* eslint-disable unicorn/consistent-boolean-name --
+ * TODO [>2] -- This rule is on-point! The function's name should communicate
+ * more clearly that it returns a boolean value.
+ */
+
+import { curry2 } from './internal/curry-by-arity';
+
+type Predicate<T = unknown> = (data: T) => boolean;
 
 /**
  * Determines whether all predicates return true for the input data.
@@ -16,10 +23,7 @@ import { curry } from './curry';
  * @dataFirst
  * @category Array
  */
-export function allPass<T>(
-  data: T,
-  fns: ReadonlyArray<(data: T) => boolean>,
-): boolean;
+export function allPass<T>(data: T, fns: ReadonlyArray<Predicate<T>>): boolean;
 
 /**
  * Determines whether all predicates return true for the input data.
@@ -36,12 +40,13 @@ export function allPass<T>(
  * @dataLast
  * @category Array
  */
-export function allPass<T>(
-  fns: ReadonlyArray<(data: T) => boolean>,
-): (data: T) => boolean;
+export function allPass<T>(fns: ReadonlyArray<Predicate<T>>): (data: T) => boolean;
 
-export function allPass(...args: ReadonlyArray<unknown>): unknown {
-  return curry(allPassImplementation, 2, args);
+export function allPass(
+  dataOrFns: unknown,
+  fns?: ReadonlyArray<Predicate>,
+): unknown {
+  return curry2(allPassImplementation, arguments.length, dataOrFns, fns);
 }
 
 function allPassImplementation<T>(data: T, fns: ReadonlyArray<(data: T) => boolean>): boolean {

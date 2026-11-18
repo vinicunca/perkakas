@@ -1,6 +1,5 @@
-import type { EnumerableStringKeyOf } from './internal/types/enumerable-string-key-of';
-import type { EnumerableStringKeyedValueOf } from './internal/types/enumerable-string-keyed-value-of';
-import { curry } from './curry';
+import { curry2 } from './internal/curry-by-arity';
+import type { ObjectCallback } from './internal/types/callback';
 
 /**
  * Iterate an object using a defined callback function.
@@ -12,7 +11,7 @@ import { curry } from './curry';
  * @param data - The object who'se entries would be iterated on.
  * @param callbackfn - A function to execute for each element in the array.
  * @signature
- *    forEachObj(object, fn)
+ *    forEachObj(data, callbackfn)
  * @example
  *    forEachObj({a: 1}, (val, key, obj) => {
  *      console.log(`${key}: ${val}`)
@@ -22,11 +21,7 @@ import { curry } from './curry';
  */
 export function forEachObj<T extends object>(
   data: T,
-  callbackfn: (
-    value: EnumerableStringKeyedValueOf<T>,
-    key: EnumerableStringKeyOf<T>,
-    obj: T,
-  ) => void,
+  callbackfn: ObjectCallback<T, void>,
 ): void;
 
 /**
@@ -39,7 +34,7 @@ export function forEachObj<T extends object>(
  * @param callbackfn - A function to execute for each element in the array.
  * @returns The original object (the ref itself, not a shallow copy of it).
  * @signature
- *    forEachObj(fn)(object)
+ *    forEachObj(callbackfn)(data)
  * @example
  *    pipe(
  *      {a: 1},
@@ -49,15 +44,19 @@ export function forEachObj<T extends object>(
  * @category Object
  */
 export function forEachObj<T extends object>(
-  callbackfn: (
-    value: EnumerableStringKeyedValueOf<T>,
-    key: EnumerableStringKeyOf<T>,
-    obj: T,
-  ) => void,
-): (object: T) => T;
+  callbackfn: ObjectCallback<T, void>,
+): (data: T) => T;
 
-export function forEachObj(...args: ReadonlyArray<unknown>): unknown {
-  return curry(forEachObjImplementation, 2, args);
+export function forEachObj(
+  dataOrCallbackfn: object | ObjectCallback<object, void>,
+  callbackfn?: ObjectCallback<object, void>,
+): unknown {
+  return curry2(
+    forEachObjImplementation,
+    arguments.length,
+    dataOrCallbackfn,
+    callbackfn,
+  );
 }
 
 function forEachObjImplementation<T extends object>(

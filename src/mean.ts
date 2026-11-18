@@ -1,5 +1,5 @@
+import { curry1 } from './internal/curry-by-arity';
 import type { IterableContainer } from './internal/types/iterable-container';
-import { curry } from './curry';
 import { sum } from './sum';
 
 type Mean<T extends IterableContainer<number>>
@@ -51,8 +51,8 @@ export function mean(): <T extends IterableContainer<number>>(
   data: T,
 ) => Mean<T>;
 
-export function mean(...args: ReadonlyArray<unknown>): unknown {
-  return curry(meanImplementation, 1, args);
+export function mean(data?: IterableContainer<number>): unknown {
+  return curry1(meanImplementation, arguments.length, data);
 }
 
 function meanImplementation<T extends IterableContainer<number>>(

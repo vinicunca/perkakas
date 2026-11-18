@@ -1,7 +1,7 @@
 import type { Deduped } from './internal/types/deduped';
 import type { IterableContainer } from './internal/types/iterable-container';
 import type { LazyEvaluator } from './internal/types/lazy-evaluator';
-import { curryWithLazy } from './internal/curry-with-lazy';
+import { curryWithLazy1 } from './internal/curry-with-lazy-by-arity';
 import { SKIP_ITEM } from './internal/lazy-control';
 
 /**
@@ -10,7 +10,7 @@ import { SKIP_ITEM } from './internal/lazy-control';
  *
  * @param data - The array to filter.
  * @signature
- *    unique(array)
+ *    unique(data)
  * @example
  *    unique([1, 2, 2, 5, 1, 6, 7]) // => [1, 2, 5, 6, 7]
  * @dataFirst
@@ -24,7 +24,7 @@ export function unique<T extends IterableContainer>(data: T): Deduped<T>;
  * list. Elements are compared by reference using Set.
  *
  * @signature
- *    unique()(array)
+ *    unique()(data)
  * @example
  *    pipe(
  *      [1, 2, 2, 5, 1, 6, 7], // only 4 iterations
@@ -37,8 +37,13 @@ export function unique<T extends IterableContainer>(data: T): Deduped<T>;
  */
 export function unique(): <T extends IterableContainer>(data: T) => Deduped<T>;
 
-export function unique(...args: ReadonlyArray<unknown>): unknown {
-  return curryWithLazy(uniqueImplementation, 1, lazyImplementation, args);
+export function unique(data?: IterableContainer): unknown {
+  return curryWithLazy1(
+    uniqueImplementation,
+    lazyImplementation,
+    arguments.length,
+    data,
+  );
 }
 
 function uniqueImplementation<T>(data: ReadonlyArray<T>): Array<T> {

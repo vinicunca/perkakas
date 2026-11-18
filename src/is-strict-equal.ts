@@ -1,4 +1,4 @@
-import { curry } from './curry';
+import { curry2 } from './internal/curry-by-arity';
 
 /**
  * Determines whether two values are *functionally identical* in all contexts.
@@ -70,8 +70,13 @@ export function isStrictEqual<T, S extends T>(
 ): (data: T) => data is S;
 export function isStrictEqual<T>(other: T): (data: T) => boolean;
 
-export function isStrictEqual(...args: ReadonlyArray<unknown>): unknown {
-  return curry(isStrictlyEqualImplementation, 2, args);
+export function isStrictEqual(dataOrOther: unknown, other?: unknown): unknown {
+  return curry2(
+    isStrictlyEqualImplementation,
+    arguments.length,
+    dataOrOther,
+    other,
+  );
 }
 
 function isStrictlyEqualImplementation<T>(data: unknown, other: T): data is T {

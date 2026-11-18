@@ -1,9 +1,10 @@
+import type { ArrayCallback, LazyCallback } from './internal/types/callback';
+import type { DataLastBuilder } from './internal/types/data-last-builder';
 import type { Deduped } from './internal/types/deduped';
 import type { IterableContainer } from './internal/types/iterable-container';
-import type { LazyCallback } from './internal/types/lazy-callback';
 import type { LazyEvaluator } from './internal/types/lazy-evaluator';
-import { curryWithLazy } from './internal/curry-with-lazy';
 import { SKIP_ITEM } from './internal/lazy-control';
+import { withLazyImplementation } from './internal/lazy-data-last-implementation';
 import { requireDataByArity } from './internal/require-data';
 
 /**
@@ -25,7 +26,7 @@ import { requireDataByArity } from './internal/require-data';
  */
 export function uniqueBy<T extends IterableContainer>(
   data: T,
-  keyFunction: (value: T[number], index: number, data: Readonly<T>) => unknown,
+  keyFunction: ArrayCallback<T>,
 ): Deduped<T>;
 
 /**
@@ -46,12 +47,34 @@ export function uniqueBy<T extends IterableContainer>(
  * @category Array
  */
 export function uniqueBy<T extends IterableContainer>(
-  keyFunction: LazyCallback<T, unknown>,
+  keyFunction: LazyCallback<T>,
 ): (data: T) => Deduped<T>;
 
-export function uniqueBy(...args: ReadonlyArray<unknown>): unknown {
-  return curryWithLazy(uniqueByImplementation, 2, lazyImplementation, args);
+export function uniqueBy(
+  dataOrKeyFunction: IterableContainer | LazyCallback<IterableContainer>,
+  keyFunction?: ArrayCallback,
+): unknown {
+  return typeof dataOrKeyFunction === 'function'
+    ? withLazyImplementation(
+        // eslint-disable-next-line ts/no-use-before-define -- implementations follow the overloaded signatures
+        dataLast(
+          // @ts-expect-error [ts2345] -- Run eagerly, the data-last function hands the callback the complete input, a valid non-empty prefix whenever the callback is invoked (it never is for an empty input); TypeScript can't relate `T` to `NonEmptyPrefix<T>`.
+          dataOrKeyFunction,
+        ),
+        lazyImplementation,
+        // @ts-expect-error [ts2345] -- `lazyImplementation` invokes the callback only once the input has an item, so the prefix it passes is never empty; TypeScript can't tell from its `readonly T[]` type.
+        dataOrKeyFunction,
+      )
+    : uniqueByImplementation(
+        dataOrKeyFunction,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
+        keyFunction,
+      );
 }
+
+const dataLast: DataLastBuilder<typeof uniqueByImplementation> =
+  (keyFunction) => (data) =>
+    uniqueByImplementation(data, keyFunction);
 
 function uniqueByImplementation<T>(
   data: ReadonlyArray<T>,

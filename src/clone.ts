@@ -1,4 +1,9 @@
-import { curry } from './curry';
+/* eslint-disable @typescript-eslint/prefer-readonly-parameter-types --
+ * The state needed to compute the clone is passed by reference via mutable
+ * arrays.
+ */
+
+import { curry1 } from './internal/curry-by-arity';
 
 /**
  * Creates a deep copy of the value. Supported types: [plain objects](#isPlainObject),
@@ -33,8 +38,8 @@ export function clone<T>(data: T): T;
  */
 export function clone(): <T>(data: T) => T;
 
-export function clone(...args: ReadonlyArray<unknown>): unknown {
-  return curry(cloneImplementation, 1, args);
+export function clone(data?: unknown): unknown {
+  return curry1(cloneImplementation, arguments.length, data);
 }
 
 // A thin wrapper so `Function.length` is 1 (no defaulted params). That lets

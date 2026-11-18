@@ -1,5 +1,5 @@
 import type { LazyEvaluator } from './internal/types/lazy-evaluator';
-import { curryWithLazy } from './internal/curry-with-lazy';
+import { curryWithLazy2 } from './internal/curry-with-lazy-by-arity';
 import { SKIP_ITEM } from './internal/lazy-control';
 
 /**
@@ -52,8 +52,17 @@ export function difference<T>(
   data: ReadonlyArray<D>,
 ) => Array<D>;
 
-export function difference(...args: ReadonlyArray<unknown>): unknown {
-  return curryWithLazy(differenceImplementation, 2, lazyImplementation, args);
+export function difference(
+  dataOrOther: ReadonlyArray<unknown>,
+  other?: ReadonlyArray<unknown>,
+): unknown {
+  return curryWithLazy2(
+    differenceImplementation,
+    lazyImplementation,
+    arguments.length,
+    dataOrOther,
+    other,
+  );
 }
 
 function differenceImplementation<T>(

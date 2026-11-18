@@ -1,20 +1,15 @@
 import type { StoppableLazyEvaluator } from './internal/make-stoppable';
 import type { Assignability } from './internal/types/assignability';
+import type { ArrayCallback, ArrayTypePredicate, LazyCallback, LazyTypePredicate } from './internal/types/callback';
+import type { DataLastBuilder } from './internal/types/data-last-builder';
 import type { First } from './internal/types/first';
 import type { IterableContainer } from './internal/types/iterable-container';
-import type {
-  LazyCallback,
-  LazyTypePredicate,
-} from './internal/types/lazy-callback';
 import type { Narrowed } from './internal/types/narrowed';
 import type { TupleParts } from './internal/types/tuple-parts';
-import { curryWithLazy } from './internal/curry-with-lazy';
 import { SKIP_ITEM } from './internal/lazy-control';
+import { withLazyImplementation } from './internal/lazy-data-last-implementation';
 import { makeReducing } from './internal/make-reducing';
-import {
-  lastLazyValue,
-  makeStoppable,
-} from './internal/make-stoppable';
+import { lastLazyValue, makeStoppable } from './internal/make-stoppable';
 import { requireDataByArity } from './internal/require-data';
 
 type Found<T extends IterableContainer, Condition>
@@ -109,7 +104,7 @@ type FoundNonRefined<
  */
 export function find<T extends IterableContainer, Condition>(
   data: T,
-  predicate: (value: T[number], index: number, data: T) => value is Condition,
+  predicate: ArrayTypePredicate<T, Condition>,
 ): Found<T, Condition>;
 
 export function find<
@@ -117,7 +112,7 @@ export function find<
   IsItemIncluded extends boolean,
 >(
   data: T,
-  predicate: (value: T[number], index: number, data: T) => IsItemIncluded,
+  predicate: ArrayCallback<T, IsItemIncluded>,
 ): FoundNonRefined<T, IsItemIncluded>;
 
 /**
@@ -160,20 +155,43 @@ export function find<
   predicate: LazyCallback<T, IsItemIncluded>,
 ): (data: T) => FoundNonRefined<T, IsItemIncluded>;
 
-export function find(...args: ReadonlyArray<unknown>): unknown {
-  // eslint-disable-next-line ts/no-use-before-define -- implementations follow the overloaded signatures
-  return curryWithLazy(findImplementation, 2, lazyImplementation, args);
+export function find(
+  dataOrPredicate: IterableContainer | LazyCallback<IterableContainer, boolean>,
+  predicate?: ArrayCallback<IterableContainer, boolean>,
+): unknown {
+  return typeof dataOrPredicate === 'function'
+    ? withLazyImplementation(
+        // eslint-disable-next-line ts/no-use-before-define -- implementations follow the overloaded signatures
+        dataLast(
+          // @ts-expect-error [ts2345] -- Run eagerly, the data-last function hands the callback the complete input, a valid non-empty prefix whenever the callback is invoked (it never is for an empty input); TypeScript can't relate `T` to `NonEmptyPrefix<T>`.
+          dataOrPredicate,
+        ),
+        // eslint-disable-next-line ts/no-use-before-define -- implementations follow the overloaded signatures
+        lazyImplementation,
+        // @ts-expect-error [ts2345] -- `lazyImplementation` invokes the callback only once the input has an item, so the prefix it passes is never empty; TypeScript can't tell from its `readonly T[]` type.
+        dataOrPredicate,
+      )
+    : findImplementation(
+        dataOrPredicate,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
+        predicate,
+      );
 }
 
-function findImplementation<T, S extends T>(data: ReadonlyArray<T>, predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S): S | undefined {
-  return data.find(predicate);
-}
+const dataLast: DataLastBuilder<typeof findImplementation> =
+  (predicate) => (data) =>
+    findImplementation(data, predicate);
+
+const findImplementation = <T>(
+  data: ReadonlyArray<T>,
+  predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
+): T | undefined => data.find(predicate);
 
 const lazyImplementation = makeReducing(
   makeStoppable(
-    <T, S extends T>(
-      predicate: (value: T, index: number, data: ReadonlyArray<T>) => value is S,
-    ): StoppableLazyEvaluator<T, S> =>
+    <T>(
+      predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
+    ): StoppableLazyEvaluator<T> =>
       requireDataByArity(predicate, 2, (value, index, data, slot) =>
         predicate(value, index, data)
           ? lastLazyValue(value, slot)

@@ -1,10 +1,7 @@
 import type { StoppableLazyEvaluator } from '../src/internal/make-stoppable';
 import type { IterableContainer } from '../src/internal/types/iterable-container';
-import { lazyDataLastImplementation } from '../src/internal/lazy-data-last-implementation';
-import {
-  makeStoppable,
-
-} from '../src/internal/make-stoppable';
+import { lazyDataLastImplementation0 } from '../src/internal/lazy-data-last-implementation';
+import { makeStoppable } from '../src/internal/make-stoppable';
 
 /**
  * A `pipe` step that makes the sequence of lazy functions it's part of evaluate
@@ -20,8 +17,8 @@ import {
 export function forceFusion<T extends IterableContainer>(): ((
   data: T,
 ) => Array<T[number]>) {
-  // eslint-disable-next-line ts/no-use-before-define -- `lazyImplementation` is only read when the evaluator is built, after the module has loaded.
-  return lazyDataLastImplementation(throwNotFused, [], lazyImplementation);
+  // eslint-disable-next-line ts/no-use-before-define -- implementations follow the overloaded signatures
+  return lazyDataLastImplementation0(throwNotFused, lazyImplementation);
 }
 
 function throwNotFused(): never {

@@ -1,8 +1,8 @@
-import { describe, expect, it } from 'vitest';
 import { map } from './map';
 import { mapValues } from './map-values';
 import { pipe } from './pipe';
 import { range } from './range';
+import { describe, expect, it } from 'vitest';
 
 describe('trivial 0 cases', () => {
   it('start at 0', () => {
@@ -293,20 +293,25 @@ describe('lodash spec', () => {
     expect(range(Number.NaN, Number.NaN)).toStrictEqual([]);
   });
 
-  it.fails(
-    'should work as an iteratee for methods like `_.map`',
-    // => Lodash test for this because "headless" invocations are supported via an explicit guard that protects against the "index" parameter being passed as a second parameter to range (which would lead to funky ranges). We don't support "headless" invocations in general, and `range` doesn't support a single-param (implicit start) invocation anyway.
-    () => {
-      expect(map([1, 2, 3], range)).toStrictEqual([
-        [0],
-        [0, 1],
-        [0, 1, 2],
-      ]);
-      expect(mapValues({ a: 1, b: 2, c: 3 }, range)).toStrictEqual({
-        a: [0],
-        b: [0, 1],
-        c: [0, 1, 2],
-      });
-    },
-  );
+  it('should work as an iteratee for methods like `_.map`', () => {
+    // Lodash supports "headless" invocations via an explicit guard against the
+    // "index" parameter being passed as a second parameter to range (which
+    // would lead to funky ranges). We don't support "headless" invocations in
+    // general, and `range` doesn't support a single-param (implicit start)
+    // invocation anyway, so the index or key becomes `end`.
+    expect(map([1, 2, 3], range)).not.toStrictEqual([[0], [0, 1], [0, 1, 2]]);
+    expect(mapValues({ a: 1, b: 2, c: 3 }, range)).not.toStrictEqual({
+      a: [0],
+      b: [0, 1],
+      c: [0, 1, 2],
+    });
+
+    // Actual
+    expect(map([1, 2, 3], range)).toStrictEqual([[], [], []]);
+    expect(mapValues({ a: 1, b: 2, c: 3 }, range)).toStrictEqual({
+      a: [],
+      b: [],
+      c: [],
+    });
+  });
 });

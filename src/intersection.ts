@@ -1,11 +1,7 @@
 import type { StoppableLazyEvaluator } from './internal/make-stoppable';
-import { curryWithLazy } from './internal/curry-with-lazy';
+import { curryWithLazy2 } from './internal/curry-with-lazy-by-arity';
 import { SKIP_ITEM } from './internal/lazy-control';
-import {
-  lastLazyValue,
-  LAZY_EMPTY_EVALUATOR,
-  makeStoppable,
-} from './internal/make-stoppable';
+import { LAZY_EMPTY_EVALUATOR, lastLazyValue, makeStoppable } from './internal/make-stoppable';
 
 /**
  * Returns a list of elements that exist in both array. The output maintains the
@@ -47,9 +43,19 @@ export function intersection<S>(
   other: ReadonlyArray<S>,
 ): <T>(data: ReadonlyArray<T>) => Array<T & S>;
 
-export function intersection(...args: ReadonlyArray<unknown>): unknown {
+export function intersection(
+  dataOrOther: ReadonlyArray<unknown>,
+  other?: ReadonlyArray<unknown>,
+): unknown {
   // eslint-disable-next-line ts/no-use-before-define -- implementations follow the overloaded signatures
-  return curryWithLazy(intersectionImplementation, 2, lazyImplementation, args);
+  return curryWithLazy2(
+    intersectionImplementation,
+    // eslint-disable-next-line ts/no-use-before-define -- implementations follow the overloaded signatures
+    lazyImplementation,
+    arguments.length,
+    dataOrOther,
+    other,
+  );
 }
 
 function intersectionImplementation<T, S>(

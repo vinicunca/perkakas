@@ -1,6 +1,6 @@
-import type { Simplify } from 'type-fest';
 import type { ToString } from './internal/types/to-string';
-import { curry } from './curry';
+import type { Simplify } from 'type-fest';
+import { curry1 } from './internal/curry-by-arity';
 
 type Inverted<T extends object> = Simplify<{
   -readonly [K in keyof T as K extends number | string
@@ -14,31 +14,31 @@ type Inverted<T extends object> = Simplify<{
  * Returns an object whose keys and values are swapped. If the object contains duplicate values,
  * subsequent values will overwrite previous values.
  *
- * @param object - The object.
+ * @param data - The object.
  * @signature
- *    invert(object)
+ *    invert(data)
  * @example
  *    invert({ a: "d", b: "e", c: "f" }) // => { d: "a", e: "b", f: "c" }
  * @dataFirst
  * @category Object
  */
-export function invert<T extends object>(object: T): Inverted<T>;
+export function invert<T extends object>(data: T): Inverted<T>;
 
 /**
  * Returns an object whose keys and values are swapped. If the object contains duplicate values,
  * subsequent values will overwrite previous values.
  *
  * @signature
- *    invert()(object)
+ *    invert()(data)
  * @example
  *    pipe({ a: "d", b: "e", c: "f" }, invert()); // => { d: "a", e: "b", f: "c" }
  * @dataLast
  * @category Object
  */
-export function invert<T extends object>(): (object: T) => Inverted<T>;
+export function invert<T extends object>(): (data: T) => Inverted<T>;
 
-export function invert(...args: ReadonlyArray<unknown>): unknown {
-  return curry(invertImplementation, 1, args);
+export function invert(data?: object): unknown {
+  return curry1(invertImplementation, arguments.length, data);
 }
 
 function invertImplementation(

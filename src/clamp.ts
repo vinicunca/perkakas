@@ -1,4 +1,4 @@
-import { curry } from './curry';
+import { curry2 } from './internal/curry-by-arity';
 
 interface Limits {
   readonly min?: number;
@@ -36,8 +36,11 @@ export function clamp(value: number, limits: Limits): number;
  */
 export function clamp(limits: Limits): (value: number) => number;
 
-export function clamp(...args: ReadonlyArray<unknown>): unknown {
-  return curry(clampImplementation, 2, args);
+export function clamp(
+  valueOrLimits: number | Limits,
+  limits?: Limits,
+): unknown {
+  return curry2(clampImplementation, arguments.length, valueOrLimits, limits);
 }
 
 function clampImplementation(value: number, { max, min }: Limits): number {

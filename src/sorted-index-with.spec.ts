@@ -4,10 +4,20 @@
  */
 
 import { expect, it } from 'vitest';
+import { pipe } from './pipe';
 import { sortedIndexWith } from './sorted-index-with';
 
 it('regular', () => {
   expect(sortedIndexWith([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], (x) => x < 5)).toBe(5);
+});
+
+it('data-last', () => {
+  expect(
+    pipe(
+      [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+      sortedIndexWith((x) => x < 5),
+    ),
+  ).toBe(5);
 });
 
 it('indexed', () => {

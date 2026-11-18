@@ -339,6 +339,15 @@ describe('edge cases', () => {
     expect(result[0]).not.toBe(data[0]);
   });
 
+  it('data-last in a callback', () => {
+    const data = [{ a: 1 }, { b: [2] }];
+
+    const result = data.map(clone());
+
+    expect(result).toStrictEqual(data);
+    expect(result[0]).not.toBe(data[0]);
+  });
+
   it('undefined', () => {
     expect(clone(undefined)).toBeUndefined();
   });

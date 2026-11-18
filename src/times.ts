@@ -1,10 +1,12 @@
 import type { GreaterThan } from 'type-fest';
-import { curry } from './curry';
+import { curry2 } from './internal/curry-by-arity';
 
 // This number was picked by trial-and-error until typescript stops failing with
 // "Type instantiation is excessively deep and possibly infinite. (ts2589)".
 // See the type tests for more information.
 type MAX_LITERAL_SIZE = 46;
+
+type IndexCallback<T = unknown> = (index: number) => T;
 
 type TimesArray<
   T,
@@ -50,7 +52,7 @@ type TimesArray<
  */
 export function times<T, N extends number>(
   count: N,
-  fn: (index: number) => T,
+  fn: IndexCallback<T>,
 ): TimesArray<T, N>;
 
 /**
@@ -71,11 +73,14 @@ export function times<T, N extends number>(
  * @category Array
  */
 export function times<T>(
-  fn: (index: number) => T,
+  fn: IndexCallback<T>,
 ): <N extends number>(count: N) => TimesArray<T, N>;
 
-export function times(...args: ReadonlyArray<unknown>): unknown {
-  return curry(timesImplementation, 2, args);
+export function times(
+  countOrFn: number | IndexCallback,
+  fn?: IndexCallback,
+): unknown {
+  return curry2(timesImplementation, arguments.length, countOrFn, fn);
 }
 
 function timesImplementation<T>(count: number, fn: (index: number) => T): Array<T> {

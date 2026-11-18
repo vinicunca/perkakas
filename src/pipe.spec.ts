@@ -1,5 +1,4 @@
-import type { LazyCallback } from './internal/types/lazy-callback';
-import { describe, expect, it, vi } from 'vitest';
+import type { LazyCallback } from './internal/types/callback';
 import { forceFusion } from '../test/force-fusion';
 import { constant } from './constant';
 import { filter } from './filter';
@@ -9,7 +8,7 @@ import { flat } from './flat';
 import { flatMap } from './flat-map';
 import { identity } from './identity';
 import { SKIP_ITEM } from './internal/lazy-control';
-import { lazyDataLastImplementation } from './internal/lazy-data-last-implementation';
+import { lazyDataLastImplementation0 } from './internal/lazy-data-last-implementation';
 import { makeReducing } from './internal/make-reducing';
 import { join } from './join';
 import { map } from './map';
@@ -17,6 +16,7 @@ import { multiply } from './multiply';
 import { pipe } from './pipe';
 import { prop } from './prop';
 import { take } from './take';
+import { describe, expect, it, vi } from 'vitest';
 
 it('should pass through data with 0 functions', () => {
   const data = { a: 'hello', b: 123 };
@@ -423,9 +423,9 @@ describe('lazy', () => {
     });
 
     it('a later step\'s callbacks get the previous step\'s complete output', () => {
-      const mapper = vi.fn<LazyCallback<Array<unknown>, unknown>>(
-        (_value, _index, data) => [...data],
-      );
+      const mapper = vi.fn<LazyCallback<Array<unknown>>>((_value, _index, data) => [
+        ...data,
+      ]);
       pipe([1, 2, 3], map(multiply(10)), map(mapper));
 
       expect(mapper).toHaveNthReturnedWith(1, [10, 20, 30]);
@@ -502,10 +502,9 @@ describe('lazy', () => {
         }),
         // No utility reduces without being able to stop early, which would
         // fuse the sequence by itself.
-        lazyDataLastImplementation(
+        lazyDataLastImplementation0(
           (data: ReadonlyArray<ReadonlyArray<number>>): ReadonlyArray<number> =>
             data[0] ?? [],
-          [],
           makeReducing(
             // eslint-disable-next-line unicorn/consistent-function-scoping -- The evaluator captures nothing and could be hoisted; it stays inline so the test's fixture reads in one place.
             () => (value, index) => (index === 0 ? value : SKIP_ITEM),

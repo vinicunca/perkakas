@@ -1,9 +1,7 @@
-import type { OrderRule } from './internal/curry-order-rules';
+import { hasAtLeast } from './has-at-least';
+import { curryOrderRules, type OrderRules } from './internal/curry-order-rules';
 import type { CompareFunction } from './internal/types/compare-function';
 import type { IterableContainer } from './internal/types/iterable-container';
-import type { NonEmptyArray } from './internal/types/non-empty-array';
-import { hasAtLeast } from './has-at-least';
-import { curryOrderRules } from './internal/curry-order-rules';
 
 type FirstBy<T extends IterableContainer>
   = | T[number]
@@ -38,7 +36,7 @@ type FirstBy<T extends IterableContainer>
  * @category Array
  */
 export function firstBy<T extends IterableContainer>(
-  ...rules: Readonly<NonEmptyArray<OrderRule<T[number]>>>
+  ...rules: OrderRules<T[number]>
 ): (data: T) => FirstBy<T>;
 
 /**
@@ -68,7 +66,7 @@ export function firstBy<T extends IterableContainer>(
  */
 export function firstBy<T extends IterableContainer>(
   data: T,
-  ...rules: Readonly<NonEmptyArray<OrderRule<T[number]>>>
+  ...rules: OrderRules<T[number]>
 ): FirstBy<T>;
 
 export function firstBy(...args: ReadonlyArray<unknown>): unknown {

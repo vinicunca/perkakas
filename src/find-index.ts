@@ -1,4 +1,5 @@
-import { curry } from './curry';
+import type { ArrayCallback } from './internal/types/callback';
+import type { DataLastBuilder } from './internal/types/data-last-builder';
 
 /**
  * Returns the index of the first element in an array that satisfies the
@@ -23,7 +24,7 @@ import { curry } from './curry';
  */
 export function findIndex<T>(
   data: ReadonlyArray<T>,
-  predicate: (value: T, index: number, obj: ReadonlyArray<T>) => boolean,
+  predicate: ArrayCallback<ReadonlyArray<T>, boolean>,
 ): number;
 
 /**
@@ -50,13 +51,29 @@ export function findIndex<T>(
  * @category Array
  */
 export function findIndex<T>(
-  predicate: (value: T, index: number, obj: ReadonlyArray<T>) => boolean,
+  predicate: ArrayCallback<ReadonlyArray<T>, boolean>,
 ): (data: ReadonlyArray<T>) => number;
 
-export function findIndex(...args: ReadonlyArray<unknown>): unknown {
-  return curry(findIndexImplementation, 2, args);
+export function findIndex(
+  dataOrPredicate:
+    ReadonlyArray<unknown> | ArrayCallback<ReadonlyArray<unknown>, boolean>,
+  predicate?: ArrayCallback<ReadonlyArray<unknown>, boolean>,
+): unknown {
+  return typeof dataOrPredicate === 'function'
+    // eslint-disable-next-line ts/no-use-before-define -- implementations follow the overloaded signatures
+    ? dataLast(dataOrPredicate)
+    : findIndexImplementation(
+        dataOrPredicate,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
+        predicate,
+      );
 }
 
-function findIndexImplementation<T>(data: ReadonlyArray<T>, predicate: (value: T, index: number, obj: ReadonlyArray<T>) => boolean): number {
-  return data.findIndex(predicate);
-}
+const dataLast: DataLastBuilder<typeof findIndexImplementation> =
+  (predicate) => (data) =>
+    findIndexImplementation(data, predicate);
+
+const findIndexImplementation = <T>(
+  data: ReadonlyArray<T>,
+  predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
+): number => data.findIndex(predicate);

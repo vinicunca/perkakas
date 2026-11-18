@@ -1,5 +1,5 @@
-import { curry } from './curry';
 import { binarySearchCutoffIndex } from './internal/binary-search-cutoff-index';
+import { curry2 } from './internal/curry-by-arity';
 
 /**
  * Find the insertion position (index) of an item in an array with items sorted
@@ -53,10 +53,9 @@ export function sortedIndex<T>(
   item: T,
 ): (data: ReadonlyArray<NoInfer<T>>) => number;
 
-export function sortedIndex(...args: ReadonlyArray<unknown>): unknown {
-  return curry(sortedIndexImplementation, 2, args);
+export function sortedIndex(dataOrItem: unknown, item?: unknown): unknown {
+  return curry2(sortedIndexImplementation, arguments.length, dataOrItem, item);
 }
 
-function sortedIndexImplementation<T>(array: ReadonlyArray<T>, item: T): number {
-  return binarySearchCutoffIndex(array, (pivot) => pivot < item);
-}
+const sortedIndexImplementation = <T>(data: ReadonlyArray<T>, item: T): number =>
+  binarySearchCutoffIndex(data, (pivot) => pivot < item);

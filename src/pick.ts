@@ -1,9 +1,9 @@
 import type { EmptyObject, IsNever, KeysOfUnion, Writable } from 'type-fest';
+import { curry2 } from './internal/curry-by-arity';
 import type { IsBounded } from './internal/types/is-bounded';
 import type { IsBoundedRecord } from './internal/types/is-bounded-record';
 import type { PartitionByUnion } from './internal/types/partition-by-union';
 import type { TupleParts } from './internal/types/tuple-parts';
-import { curry } from './curry';
 
 type PickFromArray<T, Keys extends ReadonlyArray<KeysOfUnion<T>>>
   // Distribute unions for both object types and key arrays.
@@ -84,7 +84,7 @@ type PickUnbounded<T, Keys extends keyof T>
  * Creates an object composed of the picked `data` properties.
  *
  * @param keys - The property names.
- * @signature pick([prop1, prop2])(object)
+ * @signature pick(keys)(data)
  * @example
  *    pipe({ a: 1, b: 2, c: 3, d: 4 }, pick(['a', 'd'])) // => { a: 1, d: 4 }
  * @dataLast
@@ -100,7 +100,7 @@ export function pick<
  *
  * @param data - The target object.
  * @param keys - The property names.
- * @signature pick(object, [prop1, prop2])
+ * @signature pick(data, keys)
  * @example
  *    pick({ a: 1, b: 2, c: 3, d: 4 }, ['a', 'd']) // => { a: 1, d: 4 }
  * @dataFirst
@@ -111,8 +111,11 @@ export function pick<
   const Keys extends ReadonlyArray<KeysOfUnion<T>>,
 >(data: T, keys: Keys): PickFromArray<T, Keys>;
 
-export function pick(...args: ReadonlyArray<unknown>): unknown {
-  return curry(pickImplementation, 2, args);
+export function pick(
+  dataOrKeys: object | ReadonlyArray<PropertyKey>,
+  keys?: ReadonlyArray<PropertyKey>,
+): unknown {
+  return curry2(pickImplementation, arguments.length, dataOrKeys, keys);
 }
 
 function pickImplementation<

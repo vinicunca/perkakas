@@ -1,4 +1,4 @@
-import { curry } from './curry';
+import { curry2 } from './internal/curry-by-arity';
 import { withPrecision } from './internal/with-precision';
 
 /**
@@ -38,6 +38,14 @@ export function round(value: number, precision: number): number;
  */
 export function round(precision: number): (value: number) => number;
 
-export function round(...args: ReadonlyArray<unknown>): unknown {
-  return curry(withPrecision(Math.round), 2, args);
+export function round(valueOrPrecision: number, precision?: number): unknown {
+  return curry2(
+    // eslint-disable-next-line ts/no-use-before-define -- implementations follow the overloaded signatures
+    roundImplementation,
+    arguments.length,
+    valueOrPrecision,
+    precision,
+  );
 }
+
+const roundImplementation = withPrecision(Math.round);

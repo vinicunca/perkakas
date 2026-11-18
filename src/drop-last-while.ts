@@ -1,5 +1,6 @@
+import type { ArrayCallback } from './internal/types/callback';
+import type { DataLastBuilder } from './internal/types/data-last-builder';
 import type { IterableContainer } from './internal/types/iterable-container';
-import { curry } from './curry';
 
 /**
  * Removes elements from the end of the array until the predicate returns false.
@@ -17,8 +18,8 @@ import { curry } from './curry';
  */
 export function dropLastWhile<T extends IterableContainer>(
   data: T,
-  predicate: (item: T[number], index: number, data: T) => boolean,
-): Array<T[number]>;
+  predicate: ArrayCallback<T, boolean>,
+): T[number][];
 
 /**
  * Removes elements from the end of the array until the predicate returns false.
@@ -34,12 +35,27 @@ export function dropLastWhile<T extends IterableContainer>(
  * @category Array
  */
 export function dropLastWhile<T extends IterableContainer>(
-  predicate: (item: T[number], index: number, data: T) => boolean,
-): (data: T) => Array<T[number]>;
+  predicate: ArrayCallback<T, boolean>,
+): (data: T) => T[number][];
 
-export function dropLastWhile(...args: ReadonlyArray<unknown>): unknown {
-  return curry(dropLastWhileImplementation, 2, args);
+export function dropLastWhile(
+  dataOrPredicate:
+    IterableContainer | ArrayCallback<IterableContainer, boolean>,
+  predicate?: ArrayCallback<IterableContainer, boolean>,
+): unknown {
+  return typeof dataOrPredicate === 'function'
+    // eslint-disable-next-line ts/no-use-before-define -- implementations follow the overloaded signatures
+    ? dataLast(dataOrPredicate)
+    : dropLastWhileImplementation(
+        dataOrPredicate,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
+        predicate,
+      );
 }
+
+const dataLast: DataLastBuilder<typeof dropLastWhileImplementation> =
+  (predicate) => (data) =>
+    dropLastWhileImplementation(data, predicate);
 
 function dropLastWhileImplementation<T extends IterableContainer>(
   data: T,

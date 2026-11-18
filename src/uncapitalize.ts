@@ -1,4 +1,4 @@
-import { curry } from './curry';
+import { curry1 } from './internal/curry-by-arity';
 
 /**
  * Makes the first character of a string lowercase while leaving the rest
@@ -49,8 +49,8 @@ export function uncapitalize<T extends string>(data: T): Uncapitalize<T>;
  */
 export function uncapitalize(): <T extends string>(data: T) => Uncapitalize<T>;
 
-export function uncapitalize(...args: ReadonlyArray<unknown>): unknown {
-  return curry(uncapitalizeImplementation, 1, args);
+export function uncapitalize(data?: string): unknown {
+  return curry1(uncapitalizeImplementation, arguments.length, data);
 }
 
 function uncapitalizeImplementation<T extends string>(data: T): Uncapitalize<T> {

@@ -1,12 +1,11 @@
+import type { IsEqualFunction } from './internal/types/is-equal-function';
 import type { LazyEvaluator } from './internal/types/lazy-evaluator';
-import { curryWithLazy } from './internal/curry-with-lazy';
+import { curryWithLazy3 } from './internal/curry-with-lazy-by-arity';
 import { SKIP_ITEM } from './internal/lazy-control';
-
-type IsEqual<T, Other> = (data: T, other: Other) => boolean;
 
 /**
  * Excludes the values from `other` array.
- * Elements are compared by custom comparator isEquals.
+ * Elements are compared by custom comparator isEqual.
  *
  * @param data - The source array.
  * @param other - The values to exclude.
@@ -26,12 +25,12 @@ type IsEqual<T, Other> = (data: T, other: Other) => boolean;
 export function differenceWith<T, Other>(
   data: ReadonlyArray<T>,
   other: ReadonlyArray<Other>,
-  isEqual: IsEqual<T, Other>,
+  isEqual: IsEqualFunction<T, Other>,
 ): Array<T>;
 
 /**
  * Excludes the values from `other` array.
- * Elements are compared by custom comparator isEquals.
+ * Elements are compared by custom comparator isEqual.
  *
  * @param other - The values to exclude.
  * @param isEqual - The comparator.
@@ -48,22 +47,28 @@ export function differenceWith<T, Other>(
  */
 export function differenceWith<T, Other>(
   other: ReadonlyArray<Other>,
-  isEqual: IsEqual<T, Other>,
+  isEqual: IsEqualFunction<T, Other>,
 ): (data: ReadonlyArray<T>) => Array<T>;
 
-export function differenceWith(...args: ReadonlyArray<unknown>): unknown {
-  return curryWithLazy(
+export function differenceWith(
+  dataOrOther: ReadonlyArray<unknown>,
+  otherOrIsEqual?: ReadonlyArray<unknown> | IsEqualFunction,
+  isEqual?: IsEqualFunction,
+): unknown {
+  return curryWithLazy3(
     differenceWithImplementation,
-    3,
     lazyImplementation,
-    args,
+    arguments.length,
+    dataOrOther,
+    otherOrIsEqual,
+    isEqual,
   );
 }
 
 function differenceWithImplementation<T, Other>(
   data: ReadonlyArray<T>,
   other: ReadonlyArray<Other>,
-  isEqual: IsEqual<T, Other>,
+  isEqual: IsEqualFunction<T, Other>,
 ): Array<T> {
   const result: Array<T> = [];
   for (const value of data) {
@@ -74,9 +79,12 @@ function differenceWithImplementation<T, Other>(
   return result;
 }
 
-function lazyImplementation<T, Other>(other: ReadonlyArray<Other>, isEqual: IsEqual<T, Other>): LazyEvaluator<T> {
-  return (value) =>
+const lazyImplementation =
+  <T, Other>([other, isEqual]: readonly [
+    other: ReadonlyArray<Other>,
+    isEqual: IsEqualFunction<T, Other>,
+  ]): LazyEvaluator<T> =>
+  (value) =>
     other.every((otherValue) => !isEqual(value, otherValue))
       ? value
       : SKIP_ITEM;
-}

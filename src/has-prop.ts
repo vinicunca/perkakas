@@ -1,6 +1,6 @@
 import type { KeysOfUnion, Simplify } from 'type-fest';
+import { curry2 } from './internal/curry-by-arity';
 import type { IsBounded } from './internal/types/is-bounded';
-import { curry } from './curry';
 
 // Arrays route to the `boolean`-returning overload below: their `keyof`
 // includes prototype methods (`push`, `pop`, …) that aren't own properties
@@ -82,8 +82,11 @@ export function hasProp<T extends object>(
   key: KeysOfUnion<T>,
 ): (data: T) => boolean;
 
-export function hasProp(...args: ReadonlyArray<unknown>): unknown {
-  return curry(hasPropImplementation, 2, args);
+export function hasProp(
+  dataOrKey: object | PropertyKey,
+  key?: PropertyKey,
+): unknown {
+  return curry2(hasPropImplementation, arguments.length, dataOrKey, key);
 }
 
 // eslint-disable-next-line slop/no-trivial-functions

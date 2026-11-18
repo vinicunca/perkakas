@@ -1,6 +1,8 @@
-import type { LazySlot } from './lazy-control';
-import type { LazyEvaluatorFactory } from './lazy-data-last-implementation';
-import { createLazySlot, MANY, SKIP_ITEM } from './lazy-control';
+import { createLazySlot, MANY, SKIP_ITEM, type LazySlot } from './lazy-control';
+import type {
+  LazyArgument,
+  LazyEvaluatorFactory,
+} from './lazy-data-last-implementation';
 import { LAST, STOP } from './make-stoppable';
 import { UNEXPECTED_ACCESS_SENTINEL } from './unexpected-access-sentinel';
 
@@ -12,15 +14,15 @@ import { UNEXPECTED_ACCESS_SENTINEL } from './unexpected-access-sentinel';
  *
  * @param input - The data to run through the step.
  * @param lazy - The lazy implementation the step's evaluator is built from.
- * @param lazyArgs - The arguments the evaluator is built with.
+ * @param lazyArgument - The argument the evaluator is built with.
  * @see runFusedSequence
  */
 export function iterableDataFirst<P extends ReadonlyArray<unknown>>(
   input: Iterable<unknown>,
   lazy: LazyEvaluatorFactory<ReadonlyArray<unknown>, P>,
-  lazyArgs: P,
+  lazyArgument: LazyArgument<P>,
 ): unknown {
-  const lazyEvaluator = lazy(...lazyArgs);
+  const lazyEvaluator = lazy(lazyArgument);
 
   // `dataBuffer` exists only when the evaluator requires `data`, so it doubles
   // as the flag for filling it.

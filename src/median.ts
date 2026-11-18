@@ -1,5 +1,5 @@
+import { curry1 } from './internal/curry-by-arity';
 import type { IterableContainer } from './internal/types/iterable-container';
-import { curry } from './curry';
 
 type Median<T extends IterableContainer<number>>
   = | (T extends readonly [] ? never : number)
@@ -50,8 +50,8 @@ export function median(): <T extends IterableContainer<number>>(
   data: T,
 ) => Median<T>;
 
-export function median(...args: ReadonlyArray<unknown>): unknown {
-  return curry(medianImplementation, 1, args);
+export function median(data?: IterableContainer<number>): unknown {
+  return curry1(medianImplementation, arguments.length, data);
 }
 
 const numberComparator = (a: number, b: number): number => a - b;

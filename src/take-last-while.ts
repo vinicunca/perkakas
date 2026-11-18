@@ -1,7 +1,8 @@
+import type { ArrayCallback } from './internal/types/callback';
+import type { DataLastBuilder } from './internal/types/data-last-builder';
 import type { IterableContainer } from './internal/types/iterable-container';
 import type { NarrowedArray } from './internal/types/narrowed-array';
 import type { NonRefinedFilteredArray } from './internal/types/non-refined-filtered-array';
-import { curry } from './curry';
 
 /**
  * Returns elements from the end of the array until the predicate returns false.
@@ -56,9 +57,24 @@ export function takeLastWhile<
   predicate: (item: T[number], index: number, data: T) => IsItemIncluded,
 ): (data: T) => NonRefinedFilteredArray<T, IsItemIncluded>;
 
-export function takeLastWhile(...args: ReadonlyArray<unknown>): unknown {
-  return curry(takeLastWhileImplementation, 2, args);
+export function takeLastWhile(
+  dataOrPredicate:
+    IterableContainer | ArrayCallback<IterableContainer, boolean>,
+  predicate?: ArrayCallback<IterableContainer, boolean>,
+): unknown {
+  return typeof dataOrPredicate === 'function'
+    // eslint-disable-next-line ts/no-use-before-define -- implementations follow the overloaded signatures
+    ? dataLast(dataOrPredicate)
+    : takeLastWhileImplementation(
+        dataOrPredicate,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
+        predicate,
+      );
 }
+
+const dataLast: DataLastBuilder<typeof takeLastWhileImplementation> =
+  (predicate) => (data) =>
+    takeLastWhileImplementation(data, predicate);
 
 function takeLastWhileImplementation<T extends IterableContainer>(
   data: T,

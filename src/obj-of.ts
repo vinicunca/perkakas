@@ -1,4 +1,4 @@
-import { curry } from './curry';
+import { curry2 } from './internal/curry-by-arity';
 
 /**
  * Creates an object containing a single `key:value` pair.
@@ -25,8 +25,8 @@ export function objOf<T, K extends string>(value: T, key: K): Record<K, T>;
  */
 export function objOf<T, K extends string>(key: K): (value: T) => Record<K, T>;
 
-export function objOf(...args: ReadonlyArray<unknown>): unknown {
-  return curry(objOfImplementation, 2, args);
+export function objOf(valueOrKey: unknown, key?: string): unknown {
+  return curry2(objOfImplementation, arguments.length, valueOrKey, key);
 }
 
 function objOfImplementation<T, K extends string>(value: T, key: K): Record<K, T> {

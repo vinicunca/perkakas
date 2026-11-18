@@ -1,5 +1,5 @@
 import type { Join } from 'type-fest';
-import { curry } from './curry';
+import { curry2 } from './internal/curry-by-arity';
 
 // Copied from type-fest, from the Join type.
 type JoinableItem = bigint | boolean | number | string | null | undefined;
@@ -51,8 +51,11 @@ export function join<
   Glue extends string,
 >(glue: Glue): (data: T) => Join<T, Glue>;
 
-export function join(...args: ReadonlyArray<unknown>): unknown {
-  return curry(joinImplementation, 2, args);
+export function join(
+  dataOrGlue: ReadonlyArray<JoinableItem> | string,
+  glue?: string,
+): unknown {
+  return curry2(joinImplementation, arguments.length, dataOrGlue, glue);
 }
 
 function joinImplementation(data: ReadonlyArray<unknown>, glue: string): string {

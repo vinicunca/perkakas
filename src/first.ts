@@ -1,12 +1,9 @@
 import type { StoppableLazyEvaluator } from './internal/make-stoppable';
 import type { First } from './internal/types/first';
 import type { IterableContainer } from './internal/types/iterable-container';
-import { curryWithLazy } from './internal/curry-with-lazy';
+import { curryWithLazy1 } from './internal/curry-with-lazy-by-arity';
 import { makeReducing } from './internal/make-reducing';
-import {
-  lastLazyValue,
-  makeStoppable,
-} from './internal/make-stoppable';
+import { lastLazyValue, makeStoppable } from './internal/make-stoppable';
 
 /**
  * Gets the first element of `array`.
@@ -14,7 +11,7 @@ import {
  * @param data - The array.
  * @returns The first element of the array.
  * @signature
- *    first(array)
+ *    first(data)
  * @example
  *    first([1, 2, 3]) // => 1
  *    first([]) // => undefined
@@ -29,7 +26,7 @@ export function first<T extends IterableContainer>(data: T): First<T>;
  *
  * @returns The first element of the array.
  * @signature
- *    first()(array)
+ *    first()(data)
  * @example
  *    pipe(
  *      [1, 2, 4, 8, 16],
@@ -43,9 +40,14 @@ export function first<T extends IterableContainer>(data: T): First<T>;
  */
 export function first(): <T extends IterableContainer>(data: T) => First<T>;
 
-export function first(...args: ReadonlyArray<unknown>): unknown {
-  // eslint-disable-next-line ts/no-use-before-define -- implementations follow the overloaded signatures
-  return curryWithLazy(firstImplementation, 1, lazyImplementation, args);
+export function first(data?: IterableContainer): unknown {
+  return curryWithLazy1(
+    firstImplementation,
+    // eslint-disable-next-line ts/no-use-before-define -- implementations follow the overloaded signatures
+    lazyImplementation,
+    arguments.length,
+    data,
+  );
 }
 
 function firstImplementation<T>([item]: ReadonlyArray<T>): T | undefined {

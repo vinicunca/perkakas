@@ -1,18 +1,10 @@
-import type {
-  IntRange,
-  IsNever,
-  IsNumericLiteral,
-  LessThan,
-  Subtract,
-  ValueOf,
-} from 'type-fest';
 import type { IntRangeInclusive } from './internal/types/int-range-inclusive';
 import type { IterableContainer } from './internal/types/iterable-container';
 import type { NTuple } from './internal/types/n-tuple';
 import type { NonEmptyArray } from './internal/types/non-empty-array';
-import type { PartialArray } from './internal/types/partial-array';
 import type { TupleParts } from './internal/types/tuple-parts';
-import { curry } from './curry';
+import type { IntRange, IsNever, IsNumericLiteral, LessThan, Subtract, ValueOf } from 'type-fest';
+import { curry2 } from './internal/curry-by-arity';
 
 // This prevents typescript from failing on complex arrays and large chunks. It
 // allows the typing to remain useful even when very large chunks are needed,
@@ -192,12 +184,12 @@ type TuplePrefix<T extends IterableContainer> = [
 ];
 
 /**
- * Split an array into groups the length of `size`. If `array` can't be split evenly, the final chunk will be the remaining elements.
+ * Split an array into groups the length of `size`. If `data` can't be split evenly, the final chunk will be the remaining elements.
  *
- * @param array - The array.
+ * @param data - The array.
  * @param size - The length of the chunk.
  * @signature
- *    chunk(array, size)
+ *    chunk(data, size)
  * @example
  *    chunk(['a', 'b', 'c', 'd'], 2) // => [['a', 'b'], ['c', 'd']]
  *    chunk(['a', 'b', 'c', 'd'], 3) // => [['a', 'b', 'c'], ['d']]
@@ -205,16 +197,16 @@ type TuplePrefix<T extends IterableContainer> = [
  * @category Array
  */
 export function chunk<T extends IterableContainer, N extends number>(
-  array: T,
+  data: T,
   size: N,
 ): Chunk<T, N>;
 
 /**
- * Split an array into groups the length of `size`. If `array` can't be split evenly, the final chunk will be the remaining elements.
+ * Split an array into groups the length of `size`. If `data` can't be split evenly, the final chunk will be the remaining elements.
  *
  * @param size - The length of the chunk.
  * @signature
- *    chunk(size)(array)
+ *    chunk(size)(data)
  * @example
  *    chunk(2)(['a', 'b', 'c', 'd']) // => [['a', 'b'], ['c', 'd']]
  *    chunk(3)(['a', 'b', 'c', 'd']) // => [['a', 'b', 'c'], ['d']]
@@ -223,10 +215,13 @@ export function chunk<T extends IterableContainer, N extends number>(
  */
 export function chunk<N extends number>(
   size: N,
-): <T extends IterableContainer>(array: T) => Chunk<T, N>;
+): <T extends IterableContainer>(data: T) => Chunk<T, N>;
 
-export function chunk(...args: ReadonlyArray<unknown>): unknown {
-  return curry(chunkImplementation, 2, args);
+export function chunk(
+  dataOrSize: IterableContainer | number,
+  size?: number,
+): unknown {
+  return curry2(chunkImplementation, arguments.length, dataOrSize, size);
 }
 
 function chunkImplementation<T>(data: ReadonlyArray<T>, size: number): Array<Array<T>> {

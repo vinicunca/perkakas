@@ -1,4 +1,4 @@
-import { curry } from './curry';
+import { curry2 } from './internal/curry-by-arity';
 
 /**
  * Multiplies two numbers.
@@ -31,8 +31,16 @@ export function multiply(value: number, multiplicand: number): number;
 export function multiply(multiplicand: bigint): (value: bigint) => bigint;
 export function multiply(multiplicand: number): (value: number) => number;
 
-export function multiply(...args: ReadonlyArray<unknown>): unknown {
-  return curry(multiplyImplementation, 2, args);
+export function multiply(
+  valueOrMultiplicand: bigint | number,
+  multiplicand?: bigint | number,
+): unknown {
+  return curry2(
+    multiplyImplementation,
+    arguments.length,
+    valueOrMultiplicand,
+    multiplicand,
+  );
 }
 
 // The implementation only uses `number` types, but that's just because it's

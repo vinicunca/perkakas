@@ -1,12 +1,9 @@
-import type { IsInteger } from 'type-fest';
 import type { LazyResult, LazySlot } from './internal/lazy-control';
+import type { DataLastBuilder } from './internal/types/data-last-builder';
 import type { IterableContainer } from './internal/types/iterable-container';
-import type { LazyEvaluator } from './internal/types/lazy-evaluator';
-import {
-
-  manyLazyValues,
-} from './internal/lazy-control';
-import { lazyDataLastImplementation } from './internal/lazy-data-last-implementation';
+import type { IsInteger } from 'type-fest';
+import { manyLazyValues } from './internal/lazy-control';
+import { withLazyImplementation } from './internal/lazy-data-last-implementation';
 
 type FlatArray<
   T,
@@ -118,14 +115,17 @@ export function flat(
 ): unknown {
   return typeof dataOrDepth === 'object'
     ? flatImplementation(dataOrDepth, depth)
-    : lazyDataLastImplementation(
-        flatImplementation,
-        dataOrDepth === undefined
-          ? []
-          : [dataOrDepth],
+    : withLazyImplementation(
+        // eslint-disable-next-line ts/no-use-before-define -- implementations follow the overloaded signatures
+        dataLast(dataOrDepth),
         lazyImplementation,
+        dataOrDepth,
       );
 }
+
+const dataLast: DataLastBuilder<typeof flatImplementation> =
+  (depth) => (data) =>
+    flatImplementation(data, depth);
 
 function flatImplementation(data: IterableContainer, depth?: number): IterableContainer {
   return depth === undefined

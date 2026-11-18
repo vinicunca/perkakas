@@ -1,4 +1,4 @@
-import { curry } from './curry';
+import { curry2 } from './internal/curry-by-arity';
 import { withPrecision } from './internal/with-precision';
 
 /**
@@ -38,6 +38,14 @@ export function ceil(value: number, precision: number): number;
  */
 export function ceil(precision: number): (value: number) => number;
 
-export function ceil(...args: ReadonlyArray<unknown>): unknown {
-  return curry(withPrecision(Math.ceil), 2, args);
+export function ceil(valueOrPrecision: number, precision?: number): unknown {
+  return curry2(
+    // eslint-disable-next-line ts/no-use-before-define -- implementations follow the overloaded signatures
+    ceilImplementation,
+    arguments.length,
+    valueOrPrecision,
+    precision,
+  );
 }
+
+const ceilImplementation = withPrecision(Math.ceil);

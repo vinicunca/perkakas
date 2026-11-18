@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { keys } from './keys';
+import { pipe } from './pipe';
 
 describe('dataFirst', () => {
   it('work with arrays', () => {
@@ -20,5 +21,11 @@ describe('dataFirst', () => {
 
   it('should turn numbers to strings', () => {
     expect(keys({ 1: 'hello' })).toStrictEqual(['1']);
+  });
+});
+
+describe('dataLast', () => {
+  it('works with objects', () => {
+    expect(pipe({ a: 1 }, keys())).toStrictEqual(['a']);
   });
 });

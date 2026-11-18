@@ -1,5 +1,5 @@
+import { curry2 } from './internal/curry-by-arity';
 import type { IterableContainer } from './internal/types/iterable-container';
-import { curry } from './curry';
 
 /**
  * Merge two or more arrays. This method does not change the existing arrays,
@@ -42,8 +42,11 @@ export function concat<T2 extends IterableContainer>(
   other: T2,
 ): <T1 extends IterableContainer>(data: T1) => [...T1, ...T2];
 
-export function concat(...args: ReadonlyArray<unknown>): unknown {
-  return curry(concatImplementation, 2, args);
+export function concat(
+  dataOrOther: IterableContainer,
+  other?: IterableContainer,
+): unknown {
+  return curry2(concatImplementation, arguments.length, dataOrOther, other);
 }
 
 function concatImplementation<

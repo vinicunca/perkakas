@@ -1,5 +1,5 @@
+import { curry1 } from './internal/curry-by-arity';
 import type { IterableContainer } from './internal/types/iterable-container';
-import { curry } from './curry';
 
 type Only<T extends IterableContainer> = T extends
   | readonly [...Array<unknown>, unknown, unknown]
@@ -40,8 +40,8 @@ export function only<T extends IterableContainer>(data: T): Only<T>;
  */
 export function only<T extends IterableContainer>(): (data: T) => Only<T>;
 
-export function only(...args: ReadonlyArray<unknown>): unknown {
-  return curry(onlyImplementation, 1, args);
+export function only(data?: IterableContainer): unknown {
+  return curry1(onlyImplementation, arguments.length, data);
 }
 
 function onlyImplementation<T>(data: ReadonlyArray<T>): T | undefined {

@@ -1,5 +1,5 @@
 /* eslint-disable slop/no-chained-type-assertions */
-import { curry } from './curry';
+import { curry2 } from './internal/curry-by-arity';
 
 /**
  * Performs a *deep structural* comparison between two values to determine if
@@ -77,8 +77,13 @@ export function isDeepEqual<T, S extends T>(
 ): (data: T) => data is S;
 export function isDeepEqual<T>(other: T): (data: T) => boolean;
 
-export function isDeepEqual(...args: ReadonlyArray<unknown>): unknown {
-  return curry(isDeepEqualImplementation, 2, args);
+export function isDeepEqual(dataOrOther: unknown, other?: unknown): unknown {
+  return curry2(
+    isDeepEqualImplementation,
+    arguments.length,
+    dataOrOther,
+    other,
+  );
 }
 
 // eslint-disable-next-line sonarjs/cognitive-complexity

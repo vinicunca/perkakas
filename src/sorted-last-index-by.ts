@@ -3,8 +3,14 @@
  * which is exactly what `{}` means.
  */
 
-import { curry } from './curry';
 import { binarySearchCutoffIndex } from './internal/binary-search-cutoff-index';
+import { curry3 } from './internal/curry-by-arity';
+
+type ValueFunction<T = unknown> = (
+  item: T,
+  index: number | undefined,
+  data: ReadonlyArray<T>,
+) => {};
 
 /**
  * Find the insertion position (index) of an item in an array with items sorted
@@ -42,11 +48,7 @@ import { binarySearchCutoffIndex } from './internal/binary-search-cutoff-index';
 export function sortedLastIndexBy<T>(
   data: ReadonlyArray<T>,
   item: T,
-  valueFunction: (
-    item: T,
-    index: number | undefined,
-    data: ReadonlyArray<T>,
-  ) => {},
+  valueFunction: ValueFunction<T>,
 ): number;
 
 /**
@@ -86,29 +88,31 @@ export function sortedLastIndexBy<T = never>(
   // We first try to infer T through the callback to allow the type to be pulled
   // from the call site it is used in (like `pipe`).
   item: NoInfer<T>,
-  valueFunction: (
-    item: NoInfer<T>,
-    index: number | undefined,
-    data: ReadonlyArray<NoInfer<T>>,
-  ) => {},
+  valueFunction: ValueFunction<NoInfer<T>>,
 ): (data: ReadonlyArray<T>) => number;
 
 export function sortedLastIndexBy<T>(
   // Otherwise we allow T to be inferred directly from the operand.
   item: T,
-  valueFunction: (
-    item: NoInfer<T>,
-    index: number | undefined,
-    data: ReadonlyArray<NoInfer<T>>,
-  ) => {},
+  valueFunction: ValueFunction<NoInfer<T>>,
 ): (data: ReadonlyArray<NoInfer<T>>) => number;
 
-export function sortedLastIndexBy(...args: ReadonlyArray<unknown>): unknown {
-  return curry(sortedLastIndexByImplementation, 3, args);
+export function sortedLastIndexBy(
+  dataOrItem: unknown,
+  itemOrValueFunction?: unknown,
+  valueFunction?: ValueFunction,
+): unknown {
+  return curry3(
+    sortedLastIndexByImplementation,
+    arguments.length,
+    dataOrItem,
+    itemOrValueFunction,
+    valueFunction,
+  );
 }
 
 function sortedLastIndexByImplementation<T>(
-  array: ReadonlyArray<T>,
+  data: ReadonlyArray<T>,
   item: T,
   valueFunction: (
     item: T,
@@ -116,12 +120,12 @@ function sortedLastIndexByImplementation<T>(
     data: ReadonlyArray<T>,
   ) => {},
 ): number {
-  const value = valueFunction(item, undefined /* index */, array);
+  const value = valueFunction(item, undefined /* index */, data);
   return binarySearchCutoffIndex(
-    array,
+    data,
     // The only difference between the regular implementation and the "last"
     // variation is that we consider the pivot with equality too, so that we
     // skip all equal values in addition to the lower ones.
-    (pivot, index) => valueFunction(pivot, index, array) <= value,
+    (pivot, index) => valueFunction(pivot, index, data) <= value,
   );
 }

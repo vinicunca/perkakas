@@ -1,6 +1,6 @@
+import { curry1 } from './internal/curry-by-arity';
 import type { EnumerableStringKeyedValueOf } from './internal/types/enumerable-string-keyed-value-of';
 import type { IterableContainer } from './internal/types/iterable-container';
-import { curry } from './curry';
 
 type Values<T extends object> = T extends IterableContainer
   ? Array<T[number]>
@@ -38,6 +38,6 @@ export function values<T extends object>(data: T): Values<T>;
  */
 export function values(): <T extends object>(data: T) => Values<T>;
 
-export function values(...args: ReadonlyArray<unknown>): unknown {
-  return curry(Object.values, 1, args);
+export function values(data?: object): unknown {
+  return curry1(Object.values, arguments.length, data);
 }

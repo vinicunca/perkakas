@@ -1,5 +1,5 @@
 import type { Join, Words } from 'type-fest';
-import { curry } from './curry';
+import { curry1 } from './internal/curry-by-arity';
 import { words } from './internal/words';
 
 type KebabCase<S extends string> = string extends S
@@ -61,8 +61,8 @@ export function toKebabCase<S extends string>(data: S): KebabCase<S>;
  */
 export function toKebabCase(): <S extends string>(data: S) => KebabCase<S>;
 
-export function toKebabCase(...args: ReadonlyArray<unknown>): unknown {
-  return curry(toKebabCaseImplementation, 1, args);
+export function toKebabCase(data?: string): unknown {
+  return curry1(toKebabCaseImplementation, arguments.length, data);
 }
 
 function toKebabCaseImplementation<S extends string>(data: S): KebabCase<S> {

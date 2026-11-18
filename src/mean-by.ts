@@ -1,11 +1,12 @@
-import { curry } from './curry';
+import type { ArrayCallback } from './internal/types/callback';
+import type { DataLastBuilder } from './internal/types/data-last-builder';
 
 /**
  * Returns the mean of the elements of an array using the provided predicate.
  *
- * @param fn - Predicate function.
+ * @param callbackfn - Predicate function.
  * @signature
- *   meanBy(fn)(array)
+ *   meanBy(callbackfn)(data)
  * @example
  *    pipe(
  *      [{a: 5}, {a: 1}, {a: 3}],
@@ -16,16 +17,16 @@ import { curry } from './curry';
  */
 
 export function meanBy<T>(
-  fn: (value: T, index: number, data: ReadonlyArray<T>) => number,
-): (items: ReadonlyArray<T>) => number;
+  callbackfn: ArrayCallback<ReadonlyArray<T>, number>,
+): (data: ReadonlyArray<T>) => number;
 
 /**
  * Returns the mean of the elements of an array using the provided predicate.
  *
- * @param items - The array.
- * @param fn - Predicate function.
+ * @param data - The array.
+ * @param callbackfn - Predicate function.
  * @signature
- *   meanBy(array, fn)
+ *   meanBy(data, callbackfn)
  * @example
  *    meanBy(
  *      [{a: 5}, {a: 1}, {a: 3}],
@@ -36,26 +37,44 @@ export function meanBy<T>(
  */
 
 export function meanBy<T>(
-  items: ReadonlyArray<T>,
-  fn: (value: T, index: number, data: ReadonlyArray<T>) => number,
+  data: ReadonlyArray<T>,
+  callbackfn: ArrayCallback<ReadonlyArray<T>, number>,
 ): number;
 
-export function meanBy(...args: ReadonlyArray<unknown>): unknown {
-  return curry(meanByImplementation, 2, args);
+export function meanBy(
+  dataOrCallbackfn:
+    ReadonlyArray<unknown> | ArrayCallback<ReadonlyArray<unknown>, number>,
+  callbackfn?: ArrayCallback<ReadonlyArray<unknown>, number>,
+): unknown {
+  return typeof dataOrCallbackfn === 'function'
+    // eslint-disable-next-line ts/no-use-before-define -- implementations follow the overloaded signatures
+    ? dataLast(dataOrCallbackfn)
+    : meanByImplementation(
+        dataOrCallbackfn,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
+        callbackfn,
+      );
 }
 
-function meanByImplementation<T>(array: ReadonlyArray<T>, fn: (value: T, index: number, data: ReadonlyArray<T>) => number): number {
-  if (array.length === 0) {
-    return Number.NaN;
+const dataLast: DataLastBuilder<typeof meanByImplementation> =
+  (callbackfn) => (data) =>
+    meanByImplementation(data, callbackfn);
+
+const meanByImplementation = <T>(
+  data: ReadonlyArray<T>,
+  callbackfn: (value: T, index: number, data: ReadonlyArray<T>) => number,
+): number => {
+  if (data.length === 0) {
+    return NaN;
   }
 
   let sum = 0;
 
   let index = 0;
-  for (const item of array) {
-    sum += fn(item, index, array);
+  for (const item of data) {
+    sum += callbackfn(item, index, data);
     index += 1;
   }
 
-  return sum / array.length;
-}
+  return sum / data.length;
+};

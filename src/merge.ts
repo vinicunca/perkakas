@@ -1,5 +1,5 @@
 import type { Merge } from 'type-fest';
-import { curry } from './curry';
+import { curry2 } from './internal/curry-by-arity';
 
 /**
  * Merges two objects into one by combining their properties, effectively
@@ -53,8 +53,8 @@ export function merge<T, Source>(data: T, source: Source): Merge<T, Source>;
  */
 export function merge<Source>(source: Source): <T>(data: T) => Merge<T, Source>;
 
-export function merge(...args: ReadonlyArray<unknown>): unknown {
-  return curry(mergeImplementation, 2, args);
+export function merge(dataOrSource: unknown, source?: unknown): unknown {
+  return curry2(mergeImplementation, arguments.length, dataOrSource, source);
 }
 
 function mergeImplementation<T, Source>(data: T, source: Source): Merge<T, Source> {

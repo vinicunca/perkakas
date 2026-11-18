@@ -117,7 +117,9 @@ describe('data_first', () => {
     // implementation.
     // @ts-expect-error [ts2322] -- The invalid result is the input under test.
     expect(() => mapToObj([1], () => 1)).toThrow(
-      new TypeError('fn is not a function or its return value is not iterable'),
+      new TypeError(
+        'mapper is not a function or its return value is not iterable',
+      ),
     );
   });
 
@@ -190,7 +192,9 @@ describe('data_last', () => {
         // @ts-expect-error [ts2322] -- The invalid result is the input under test.
         mapToObj(() => 1),
       )).toThrow(
-      new TypeError('fn is not a function or its return value is not iterable'),
+      new TypeError(
+        'mapper is not a function or its return value is not iterable',
+      ),
     );
   });
 });

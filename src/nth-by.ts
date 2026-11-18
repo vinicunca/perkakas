@@ -1,11 +1,7 @@
-import type { OrderRule } from './internal/curry-order-rules';
+import type { OrderRules } from './internal/curry-order-rules';
 import type { CompareFunction } from './internal/types/compare-function';
 import type { IterableContainer } from './internal/types/iterable-container';
-import type { NonEmptyArray } from './internal/types/non-empty-array';
-import {
-  curryOrderRulesWithArgument,
-
-} from './internal/curry-order-rules';
+import { curryOrderRulesWithArgument } from './internal/curry-order-rules';
 import { quickSelect } from './internal/quick-select';
 
 /**
@@ -27,7 +23,7 @@ import { quickSelect } from './internal/quick-select';
 export function nthBy<T extends IterableContainer>(
   data: T,
   index: number,
-  ...rules: Readonly<NonEmptyArray<OrderRule<T[number]>>>
+  ...rules: OrderRules<T[number]>
 ): T[number] | undefined;
 
 /**
@@ -47,7 +43,7 @@ export function nthBy<T extends IterableContainer>(
  */
 export function nthBy<T extends IterableContainer>(
   index: number,
-  ...rules: Readonly<NonEmptyArray<OrderRule<T[number]>>>
+  ...rules: OrderRules<T[number]>
 ): (data: T) => T[number] | undefined;
 
 export function nthBy(...args: ReadonlyArray<unknown>): unknown {

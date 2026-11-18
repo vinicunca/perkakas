@@ -1,5 +1,6 @@
 import type { BoundedPartial } from './internal/types/bounded-partial';
-import { curry } from './curry';
+import type { ArrayCallback } from './internal/types/callback';
+import type { DataLastBuilder } from './internal/types/data-last-builder';
 
 /**
  * Categorize and count elements in an array using a defined callback function.
@@ -20,11 +21,7 @@ import { curry } from './curry';
  */
 export function countBy<T, K extends PropertyKey>(
   data: ReadonlyArray<T>,
-  categorizationFn: (
-    value: T,
-    index: number,
-    data: ReadonlyArray<T>,
-  ) => K | undefined,
+  categorizationFn: ArrayCallback<ReadonlyArray<T>, K | undefined>,
 ): BoundedPartial<Record<K, number>>;
 
 /**
@@ -44,16 +41,28 @@ export function countBy<T, K extends PropertyKey>(
  * @category Array
  */
 export function countBy<T, K extends PropertyKey>(
-  categorizationFn: (
-    value: T,
-    index: number,
-    data: ReadonlyArray<T>,
-  ) => K | undefined,
+  categorizationFn: ArrayCallback<ReadonlyArray<T>, K | undefined>,
 ): (data: ReadonlyArray<T>) => BoundedPartial<Record<K, number>>;
 
-export function countBy(...args: ReadonlyArray<unknown>): unknown {
-  return curry(countByImplementation, 2, args);
+export function countBy(
+  dataOrCategorizationFn:
+    | ReadonlyArray<unknown>
+    | ArrayCallback<ReadonlyArray<unknown>, PropertyKey | undefined>,
+  categorizationFn?: ArrayCallback<ReadonlyArray<unknown>, PropertyKey | undefined>,
+): unknown {
+  return typeof dataOrCategorizationFn === 'function'
+    // eslint-disable-next-line ts/no-use-before-define -- implementations follow the overloaded signatures
+    ? dataLast(dataOrCategorizationFn)
+    : countByImplementation(
+        dataOrCategorizationFn,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
+        categorizationFn,
+      );
 }
+
+const dataLast: DataLastBuilder<typeof countByImplementation> =
+  (categorizationFn) => (data) =>
+    countByImplementation(data, categorizationFn);
 
 function countByImplementation<T>(data: ReadonlyArray<T>, categorizationFn: (
   value: T,

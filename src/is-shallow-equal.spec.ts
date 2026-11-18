@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { isShallowEqual } from './is-shallow-equal';
+import { pipe } from './pipe';
 
 describe('primitives', () => {
   it('undefined', () => {
@@ -159,5 +160,15 @@ describe('shallow inequality', () => {
     expect(isShallowEqual({ a }, {
       a: { b: 1 },
     })).toBe(false);
+  });
+});
+
+describe('data-last', () => {
+  it('equal', () => {
+    expect(pipe({ a: 1 }, isShallowEqual({ a: 1 }))).toBe(true);
+  });
+
+  it('not equal', () => {
+    expect(pipe({ a: 1 }, isShallowEqual({ a: 2 }))).toBe(false);
   });
 });

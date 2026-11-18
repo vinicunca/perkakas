@@ -1,4 +1,4 @@
-import { curry } from './curry';
+import { curry2 } from './internal/curry-by-arity';
 
 /**
  * Divides two numbers.
@@ -31,8 +31,16 @@ export function divide(value: number, divisor: number): number;
 export function divide(divisor: bigint): (value: bigint) => bigint;
 export function divide(divisor: number): (value: number) => number;
 
-export function divide(...args: ReadonlyArray<unknown>): unknown {
-  return curry(divideImplementation, 2, args);
+export function divide(
+  valueOrDivisor: bigint | number,
+  divisor?: bigint | number,
+): unknown {
+  return curry2(
+    divideImplementation,
+    arguments.length,
+    valueOrDivisor,
+    divisor,
+  );
 }
 
 // The implementation only uses `number` types, but that's just because it's

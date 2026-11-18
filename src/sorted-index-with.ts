@@ -1,5 +1,6 @@
-import { curry } from './curry';
 import { binarySearchCutoffIndex } from './internal/binary-search-cutoff-index';
+import type { ArrayCallback } from './internal/types/callback';
+import type { DataLastBuilder } from './internal/types/data-last-builder';
 
 /**
  * Performs a **binary search** for the index of the item at which the predicate
@@ -37,7 +38,7 @@ import { binarySearchCutoffIndex } from './internal/binary-search-cutoff-index';
  */
 export function sortedIndexWith<T>(
   data: ReadonlyArray<T>,
-  predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
+  predicate: ArrayCallback<ReadonlyArray<T>, boolean>,
 ): number;
 
 /**
@@ -73,9 +74,24 @@ export function sortedIndexWith<T>(
  * @category Array
  */
 export function sortedIndexWith<T>(
-  predicate: (value: T, index: number, data: ReadonlyArray<T>) => boolean,
+  predicate: ArrayCallback<ReadonlyArray<T>, boolean>,
 ): (data: ReadonlyArray<T>) => number;
 
-export function sortedIndexWith(...args: ReadonlyArray<unknown>): unknown {
-  return curry(binarySearchCutoffIndex, 2, args);
+export function sortedIndexWith(
+  dataOrPredicate:
+    ReadonlyArray<unknown> | ArrayCallback<ReadonlyArray<unknown>, boolean>,
+  predicate?: ArrayCallback<ReadonlyArray<unknown>, boolean>,
+): unknown {
+  return typeof dataOrPredicate === 'function'
+    // eslint-disable-next-line ts/no-use-before-define -- implementations follow the overloaded signatures
+    ? dataLast(dataOrPredicate)
+    : binarySearchCutoffIndex(
+        dataOrPredicate,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overloads guarantee the rest.
+        predicate,
+      );
 }
+
+const dataLast: DataLastBuilder<typeof binarySearchCutoffIndex> =
+  (predicate) => (data) =>
+    binarySearchCutoffIndex(data, predicate);
