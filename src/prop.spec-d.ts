@@ -1,4 +1,5 @@
 import { describe, expectTypeOf, it } from 'vitest';
+import { $typed } from '../test/$typed';
 import { map } from './map';
 import { pipe } from './pipe';
 import { prop } from './prop';
@@ -6,6 +7,7 @@ import { sortBy } from './sort-by';
 import { stringToPath } from './string-to-path';
 
 declare const SYMBOL: unique symbol;
+declare const NESTED: { a: { b: Array<{ c: { d: number } }> } };
 
 interface InterfaceWithIndexSignature {
   [key: string]: number;
@@ -547,34 +549,171 @@ describe('unbounded records (remeda issue #1274)', () => {
   });
 });
 
-describe('with stringToPath', () => {
-  const DATA = {} as { a: { b: Array<{ c: { d: number } }> } };
+it('wide key without an index signature', () => {
+  // @ts-expect-error [ts2769] -- without a spread every key is validated, and `string` isn't a key of the data
+  prop({} as { a: number }, $typed<string>());
+});
 
+describe('with stringToPath', () => {
   it('with valid paths', () => {
-    expectTypeOf(prop(DATA, ...stringToPath('a'))).toEqualTypeOf<{
+    expectTypeOf(prop(NESTED, ...stringToPath('a'))).toEqualTypeOf<{
       b: Array<{ c: { d: number } }>;
     }>();
-    expectTypeOf(prop(DATA, ...stringToPath('a.b'))).toEqualTypeOf<
+    expectTypeOf(prop(NESTED, ...stringToPath('a.b'))).toEqualTypeOf<
       Array<{ c: { d: number } }>
     >();
-    expectTypeOf(prop(DATA, ...stringToPath('a.b[0]'))).toExtend<
+    expectTypeOf(prop(NESTED, ...stringToPath('a.b[0]'))).toExtend<
       { c: { d: number } } | undefined
     >();
-    expectTypeOf(prop(DATA, ...stringToPath('a.b[0].c'))).toExtend<
+    expectTypeOf(prop(NESTED, ...stringToPath('a.b[0].c'))).toExtend<
       { d: number } | undefined
     >();
-    expectTypeOf(prop(DATA, ...stringToPath('a.b[0].c.d'))).toEqualTypeOf<
+    expectTypeOf(prop(NESTED, ...stringToPath('a.b[0].c.d'))).toEqualTypeOf<
       number | undefined
     >();
   });
 
   it('with invalid paths', () => {
-    // @ts-expect-error [ts2769] -- 'x' is not a key of DATA
-    prop(DATA, ...stringToPath('x.y'));
-    // @ts-expect-error [ts2769] -- 'e' is not a key of DATA.a.b[0].c.d
-    prop(DATA, ...stringToPath('a.b[0].c.d.e'));
-    // @ts-expect-error [ts2769] -- 1 is not a key of DATA.a.b[0].c.d
-    prop(DATA, ...stringToPath('a.b[0].c.d[1]'));
+    // @ts-expect-error [ts2769] -- 'x' is not a key of NESTED
+    prop(NESTED, ...stringToPath('x.y'));
+    // @ts-expect-error [ts2769] -- 'e' is not a key of NESTED.a.b[0].c.d
+    prop(NESTED, ...stringToPath('a.b[0].c.d.e'));
+    // @ts-expect-error [ts2769] -- 1 is not a key of NESTED.a.b[0].c.d
+    prop(NESTED, ...stringToPath('a.b[0].c.d[1]'));
+  });
+});
+
+describe('path of unknown length', () => {
+  it('non-empty array', () => {
+    expectTypeOf(
+      prop(NESTED, ...$typed<[string, ...Array<string>]>()),
+    ).toBeUnknown();
+  });
+
+  it('stringToPath on a non-literal string', () => {
+    expectTypeOf(prop(NESTED, ...stringToPath($typed<string>()))).toBeUnknown();
+  });
+
+  it('generic data', () => {
+    // eslint-disable-next-line ts/explicit-function-return-type -- only how `Data` reaches `prop` matters here, not how the wrapper is written.
+    const propAt = <Data extends { a: unknown }>(data: Data) =>
+      prop(data, ...$typed<Array<string>>());
+
+    expectTypeOf(propAt({ a: 1 })).toBeUnknown();
+  });
+
+  describe('keys before the spread', () => {
+    it('valid literal keys', () => {
+      expectTypeOf(
+        prop(NESTED, 'a', 'b', 0, ...$typed<Array<string>>()),
+      ).toBeUnknown();
+    });
+
+    it('invalid first key', () => {
+      prop(
+        NESTED,
+        // @ts-expect-error [ts2345] -- 'x' is not a key of NESTED
+        'x',
+        ...$typed<Array<string>>(),
+      );
+    });
+
+    it('invalid deep key', () => {
+      prop(
+        NESTED,
+        // @ts-expect-error [ts2345] -- 'x' is not a key of NESTED.a.b[0]; TypeScript reports it on the first key of the path
+        'a',
+        'b',
+        0,
+        'x',
+        ...$typed<Array<string>>(),
+      );
+    });
+
+    it('invalid key after a wide key', () => {
+      prop(
+        $typed<Record<string, { a: number }>>(),
+        // @ts-expect-error [ts2345] -- 'x' is not a key of the record's values; TypeScript reports it on the first key of the path
+        $typed<string>(),
+        'x',
+        ...$typed<Array<string>>(),
+      );
+    });
+
+    it('key of one member after a union key', () => {
+      expectTypeOf(
+        prop(
+          $typed<{ a: { b: number }; c: { d: number } }>(),
+          $typed<'a' | 'c'>(),
+          'b',
+          ...$typed<Array<string>>(),
+        ),
+      ).toBeUnknown();
+    });
+
+    it('template-literal key', () => {
+      prop(
+        $typed<{ a: number }>(),
+        // @ts-expect-error [ts2345] -- `a${string}` is checked like a literal key, and it isn't a key of the data
+        $typed<`a${string}`>(),
+        ...$typed<Array<string>>(),
+      );
+    });
+
+    it('ten literal keys', () => {
+      expectTypeOf(
+        prop(
+          $typed<{
+            a: {
+              b: {
+                c: { d: { e: { f: { g: { h: { i: { j: { k: 11 } } } } } } } };
+              };
+            };
+          }>(),
+          'a',
+          'b',
+          'c',
+          'd',
+          'e',
+          'f',
+          'g',
+          'h',
+          'i',
+          'j',
+          ...$typed<Array<string>>(),
+        ),
+      ).toBeUnknown();
+    });
+  });
+
+  describe('data-last', () => {
+    it('possibly empty path', () => {
+      pipe(
+        NESTED,
+        prop(
+          // @ts-expect-error [ts2556] -- no data-last overload takes a spread that might be empty
+          ...$typed<Array<string>>(),
+        ),
+      );
+    });
+
+    it('non-empty path', () => {
+      pipe(
+        NESTED,
+        prop(
+          // @ts-expect-error [ts2345] -- the call resolves against the data-first overload, which reads the first key as the data
+          ...$typed<[string, ...Array<string>]>(),
+        ),
+      );
+    });
+  });
+
+  it('string data', () => {
+    prop(
+      // @ts-expect-error [ts2345] -- strings can't be used as data: a string first argument dispatches to data-last at runtime
+      'hello',
+      ...$typed<Array<string>>(),
+    );
   });
 });
 
@@ -592,5 +731,75 @@ describe('prevents unsupported data types', () => {
   it('symbol', () => {
     // @ts-expect-error [ts2769] -- symbols can't be used as data.
     prop(SYMBOL, 'description');
+  });
+});
+
+describe('known issues!', () => {
+  it('data typed `{}`', () => {
+    // Data typed `{}` (e.g., `unknown` without `null` and `undefined`) is
+    // accepted with a path of unknown length, but when it's a string or a
+    // number at runtime the call returns a function instead of the property.
+    // Narrowing with `typeof data === 'object'` avoids it.
+    expectTypeOf(
+      // eslint-disable-next-line ts/no-empty-object-type -- `{}` is what `unknown` narrows to without `null` and `undefined`, the type this pins.
+      prop($typed<{}>(), ...$typed<Array<string>>()),
+    ).toBeUnknown();
+  });
+
+  it('generic data with literal keys before the spread', () => {
+    // Inside a generic function, a literal key before a spread is rejected even
+    // when the data's constraint has it. Casting the data to its constraint
+    // (e.g., `data as { a: unknown }`) works.
+    // eslint-disable-next-line ts/explicit-function-return-type -- the issue only shows up inside a generic function wrapper; only how `Data` reaches `prop` matters here, not how the wrapper is written.
+    const propA = <Data extends { a: unknown }>(data: Data) =>
+      prop(
+        data,
+        // @ts-expect-error [ts2345] -- every `Data` has `a`, but the key is rejected
+        'a',
+        ...$typed<Array<string>>(),
+      );
+
+    propA({ a: 1 });
+  });
+
+  it('union of literal paths', () => {
+    // A union of paths is rejected even when each of them is a valid path.
+    // Calling `prop` once per path works.
+    prop(
+      $typed<{ a: { b: number } }>(),
+      // @ts-expect-error [ts2345] -- both paths are valid, but the union is rejected
+      ...$typed<['a'] | ['a', 'b']>(),
+    );
+  });
+
+  it('generic path of unknown length', () => {
+    // Inside a generic function, a path typed by a type parameter is rejected
+    // even when its constraint is a plain array. Casting the path to its
+    // constraint (e.g., `path as readonly string[]`) works.
+    // eslint-disable-next-line ts/explicit-function-return-type -- the issue only shows up inside a generic function wrapper; only how `Path` reaches `prop` matters here, not how the wrapper is written.
+    const propAt = <Path extends ReadonlyArray<string>>(path: Path) =>
+      prop(
+        { a: 1 },
+        // @ts-expect-error [ts2345] -- `prop` accepts `Path`'s constraint, `readonly string[]`, but not `Path` itself
+        ...path,
+      );
+
+    propAt(['a']);
+  });
+
+  it('stringToPath on a generic string', () => {
+    // Inside a generic function, `stringToPath` on a string typed by a type
+    // parameter is rejected even when its constraint is a plain `string`.
+    // Casting the string to its constraint (e.g.,
+    // `stringToPath(path as string)`) works.
+    // eslint-disable-next-line ts/explicit-function-return-type -- the issue only shows up inside a generic function wrapper; only how `Path` reaches `prop` matters here, not how the wrapper is written.
+    const propAt = <Path extends string>(path: Path) =>
+      prop(
+        { a: 1 },
+        // @ts-expect-error [ts2345] -- `prop` accepts `stringToPath` on a plain `string`, but not on `Path`
+        ...stringToPath(path),
+      );
+
+    propAt('a');
   });
 });

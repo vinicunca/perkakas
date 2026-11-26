@@ -12,7 +12,7 @@ export type LazyStep = {
   itemIndex: number;
 } & (
   | {
-    readonly requiresData: true;
+    readonly collectsData: true;
     /**
      * Notice the array is mutable, we will be adding items as the pipe is
      * evaluating them. It is shared with every invocation of the evaluator.
@@ -20,8 +20,12 @@ export type LazyStep = {
     readonly data: Array<unknown>;
   }
   | {
-    readonly requiresData: false;
-    readonly data: typeof UNEXPECTED_ACCESS_SENTINEL;
+    readonly collectsData?: never;
+    /**
+     * The sentinel for an evaluator that doesn't require data, or the array
+     * input itself for the first step.
+     */
+    readonly data: typeof UNEXPECTED_ACCESS_SENTINEL | ReadonlyArray<unknown>;
   }
 );
 
@@ -32,6 +36,8 @@ export type LazyStep = {
  *
  * @param functions - The functions of the pipe.
  * @param startIndex - The index of the first function in the sequence.
+ * @param input - The value the sequence will run on. When it is an array, a
+ * first step that requires `data` gets it as its `data`.
  * @returns One step per function in the sequence, each with its own fresh
  * evaluator, ready for a single `runFusedSequence` call. The length of the
  * result is the number of functions the sequence covers.
@@ -40,6 +46,7 @@ export type LazyStep = {
 export function buildFusedSequence(
   functions: ReadonlyArray<UnaryFunction | LazyUnaryFunction>,
   startIndex: number,
+  input: unknown,
 ): ReadonlyArray<LazyStep> {
   const fusedSequence: Array<LazyStep> = [];
 
@@ -51,21 +58,19 @@ export function buildFusedSequence(
     }
 
     const lazyEvaluator = currentFunction.lazy(currentFunction.lazyArgument);
-    fusedSequence.push(
-      lazyEvaluator.requiresData
-        ? {
-            lazyEvaluator,
-            itemIndex: 0,
-            requiresData: true,
-            data: [],
-          }
-        : {
-            lazyEvaluator,
-            itemIndex: 0,
-            requiresData: false,
-            data: UNEXPECTED_ACCESS_SENTINEL,
-          },
-    );
+    if (!lazyEvaluator.requiresData) {
+      fusedSequence.push({ lazyEvaluator, itemIndex: 0, data: UNEXPECTED_ACCESS_SENTINEL });
+    } else if (index === startIndex && Array.isArray(input)) {
+      // The first step sees the complete array, as in its data-first call.
+      fusedSequence.push({ lazyEvaluator, itemIndex: 0, data: input });
+    } else {
+      fusedSequence.push({
+        lazyEvaluator,
+        itemIndex: 0,
+        data: [],
+        collectsData: true,
+      });
+    }
 
     if (currentFunction.lazy.isReducing) {
       // Functions that reduce to a value always end the sequence.
@@ -140,7 +145,7 @@ function processItem(
   ) {
     const step = fusedSequence[stepIndex]!;
 
-    if (step.requiresData) {
+    if (step.collectsData) {
       step.data.push(currentItem);
     }
 

@@ -11,3 +11,6 @@ shellEmulator: true
 
 allowBuilds:
   esbuild: true
+
+catalog:
+  esbuild: ^0.28.2

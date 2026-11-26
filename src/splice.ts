@@ -1,5 +1,5 @@
+import type { DataLastBuilder } from './internal/types/data-last-builder';
 import type { IterableContainer } from './internal/types/iterable-container';
-import { curryOn } from './internal/curry-on';
 
 /**
  * Removes elements from an array and, optionally, inserts new elements in
@@ -63,9 +63,35 @@ export function splice<T extends IterableContainer>(
   replacement?: ReadonlyArray<T[number]>,
 ): (data: T) => Array<T[number]>;
 
-export function splice(...args: ReadonlyArray<unknown>): unknown {
-  return curryOn(($) => typeof $ === 'number', spliceImplementation, args);
+export function splice(
+  dataOrStart: IterableContainer | number,
+  startOrDeleteCount: number,
+  deleteCountOrReplacement?: number | ReadonlyArray<unknown>,
+  replacement?: ReadonlyArray<unknown>,
+): unknown {
+  // The optional `replacement` makes both call styles accept 3 arguments, so
+  // the dispatch checks the type of the first one instead of the argument
+  // count.
+  return typeof dataOrStart === 'number'
+    // eslint-disable-next-line ts/no-use-before-define -- The helpers follow the public overloads.
+    ? dataLast(
+        dataOrStart,
+        startOrDeleteCount,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-last overload guarantees the rest.
+        deleteCountOrReplacement,
+      )
+    : spliceImplementation(
+        dataOrStart,
+        startOrDeleteCount,
+        // @ts-expect-error [ts2345] -- `typeof` narrows only the first parameter; the data-first overload guarantees the rest.
+        deleteCountOrReplacement,
+        replacement,
+      );
 }
+
+const dataLast: DataLastBuilder<typeof spliceImplementation>
+  = (start, deleteCount, replacement) => (data) =>
+    spliceImplementation(data, start, deleteCount, replacement);
 
 function spliceImplementation<T extends IterableContainer>(
   data: T,

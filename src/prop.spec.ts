@@ -188,6 +188,13 @@ it('mixed arrays and objects', () => {
   expect(prop(data, 2, 'c')).toBe('mouse');
 });
 
+it('empty path', () => {
+  const data = { a: 1 };
+  const path: Array<string> = [];
+
+  expect(prop(data, ...path)).toBe(data);
+});
+
 // @see https://github.com/lodash/lodash/blob/4.17/test/test.js#L19394
 describe('lodash spec', () => {
   it('should get string keyed property values', () => {

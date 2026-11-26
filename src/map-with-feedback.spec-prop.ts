@@ -12,7 +12,8 @@ test.prop([
   'data-first and data-last produce the same result',
   (data, reducerOf, initialValue) => {
     // The reducer ignores `data`, which differs between the calling styles on
-    // purpose: the whole input data-first, the items so far in `pipe`.
+    // purpose: the whole input data-first, the items so far after
+    // `forceFusion()`.
     const reducer = (
       previousValue: number,
       currentValue: unknown,

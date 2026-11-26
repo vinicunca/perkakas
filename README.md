@@ -23,3 +23,7 @@ pipe(
 Documentation: https://vinicunca.dev/perkakas
 
 Perkakas is a fork of [Remeda](https://github.com/remeda/remeda). MIT licensed.
+
+## Package size checks
+
+CI checks the unpacked package size and tracks minified and gzipped bundle sizes. Run `pnpm run build` followed by `pnpm run test:size` to check them locally. If a bundle size changes as expected, update the snapshot with `pnpm run test:size -u`. Update the package baseline in [test/size.spec.ts](test/size.spec.ts) when an expected change exceeds the 3% threshold.

@@ -18,3 +18,19 @@ jobs:
       node-versions: '22,24'
       # The `lint` script runs with `--fix`, which would hide errors in CI
       lint: pnpm exec eslint .
+
+  size:
+    name: Package and bundle sizes
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup JS
+        uses: vinicunca/workflows/setup-js@main
+        with:
+          node-version: 24.22.1
+          persist-credentials: false
+
+      - name: Build
+        run: pnpm run build
+
+      - name: Check package and bundle sizes
+        run: pnpm run test:size

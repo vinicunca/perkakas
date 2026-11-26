@@ -11,7 +11,7 @@ test.prop([
   'data-first and a fused sequence produce the same result',
   (data, predicateOf) => {
     // The predicate ignores `data`, which differs between the two on purpose:
-    // the whole input data-first, the items so far in a fused sequence.
+    // the whole input data-first, the items so far after `forceFusion()`.
     const predicate = (value: unknown, index: number): boolean =>
       predicateOf(value, index);
 

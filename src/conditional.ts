@@ -3,8 +3,8 @@
  * generally, but these eslint rules can't detect that.
  */
 
+import type { DataLastBuilder } from './internal/types/data-last-builder';
 import type { GuardType } from './internal/types/guard-type';
-import { curryOn } from './internal/curry-on';
 
 type Case<
   In,
@@ -721,9 +721,31 @@ export function conditional<
   | Return9
   | Fallback;
 
-export function conditional(...args: ReadonlyArray<unknown>): unknown {
-  return curryOn(isCase, conditionalImplementation, args);
+export function conditional(
+  dataOrCase: unknown,
+  ...cases: ReadonlyArray<unknown>
+): unknown {
+  // The number of cases varies, so the argument count can't tell the call
+  // styles apart; the dispatch checks whether the first argument is shaped
+  // like a case instead.
+  return isCase(dataOrCase)
+    // eslint-disable-next-line ts/no-use-before-define -- The helpers follow the public overloads.
+    ? dataLast(
+        dataOrCase,
+        // @ts-expect-error [ts2345] -- The overloads guarantee that every argument after the first is a case or the fallback; the implementation signature types them `unknown` because the optional `fallback` also admits `undefined`.
+        ...cases,
+      )
+    : conditionalImplementation(
+        dataOrCase,
+        // @ts-expect-error [ts2345] -- The overloads guarantee that every argument after the first is a case or the fallback; the implementation signature types them `unknown` because the optional `fallback` also admits `undefined`.
+        ...cases,
+      );
 }
+
+const dataLast: DataLastBuilder<typeof conditionalImplementation>
+  = (...cases) =>
+    (data) =>
+      conditionalImplementation(data, ...cases);
 
 function conditionalImplementation<In, Out>(
   data: In,

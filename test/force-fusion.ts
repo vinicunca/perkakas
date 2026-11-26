@@ -10,6 +10,9 @@ import { makeStoppable } from '../src/internal/make-stoppable';
  * can, but passes every item through, so the rest of the sequence sees them
  * all.
  *
+ * Put this step before a function to test it with the items processed so far.
+ * The first step on an array receives the full input.
+ *
  * When the sequence doesn't fuse (the step is alone, or `pipe` no longer fuses
  * it), the step throws, so a test that relies on it can't quietly pass on the
  * data-first implementations instead.

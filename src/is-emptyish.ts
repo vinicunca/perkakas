@@ -1,5 +1,6 @@
 import type {
   HasRequiredKeys,
+  HasWritableKeys,
   IsAny,
   IsEqual,
   IsNever,
@@ -8,10 +9,9 @@ import type {
   Tagged,
   ValueOf,
 } from 'type-fest';
-import type { HasWritableKeys } from './internal/types/has-writable-keys';
 import type { TupleParts } from './internal/types/tuple-parts';
 
-// eslint-disable-next-line ts/no-unused-vars -- we use a non-exported unique symbol to prevent users from faking our return type.
+// eslint-disable-next-line ts/no-unused-vars, unused-imports/no-unused-vars -- we use a non-exported unique symbol to prevent users from faking our return type.
 declare const EMPTYISH_BRAND: unique symbol;
 
 // Because our function is a type-predicate and it narrows the input based on

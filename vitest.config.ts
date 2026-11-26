@@ -38,6 +38,12 @@ export default defineConfig({
           isolate: false,
         },
       },
+      {
+        test: {
+          name: 'size',
+          include: ['test/size.spec.ts'],
+        },
+      },
     ],
   },
 });

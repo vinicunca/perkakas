@@ -2,7 +2,7 @@ import type { OrderRules } from './internal/curry-order-rules';
 import type { CompareFunction } from './internal/types/compare-function';
 import type { IterableContainer } from './internal/types/iterable-container';
 import { curryOrderRulesWithArgument } from './internal/curry-order-rules';
-import { quickSelect } from './internal/quick-select';
+import { swapInPlace } from './internal/swap-in-place';
 
 /**
  * Retrieves the element that would be at the given index if the array were sorted according to specified rules. This function uses the *QuickSelect* algorithm running at an average complexity of *O(n)*. Semantically it is equivalent to `sortBy(data, ...rules).at(index)` which would run at *O(nlogn)*.
@@ -50,13 +50,84 @@ export function nthBy(...args: ReadonlyArray<unknown>): unknown {
   return curryOrderRulesWithArgument(nthByImplementation, args);
 }
 
-function nthByImplementation<T>(data: ReadonlyArray<T>, compareFn: CompareFunction<T>, index: number): T | undefined {
-  return quickSelect(
-    data,
-    // Allow negative indices gracefully
-    index >= 0
-      ? index
-      : data.length + index,
-    compareFn,
-  );
+function nthByImplementation<T>(
+  data: ReadonlyArray<T>,
+  compareFn: CompareFunction<T>,
+  index: number,
+): T | undefined {
+  // Negative indices count back from the end, like `Array.prototype.at`.
+  const absoluteIndex = index >= 0
+    ? index
+    : data.length + index;
+  return absoluteIndex < 0 || absoluteIndex >= data.length
+    ? // QuickSelect only works on indices within the array.
+    undefined
+    : quickSelect(
+        // QuickSelect partitions the array in place, so it runs on a copy.
+        data.concat(),
+        0,
+        data.length - 1,
+        absoluteIndex,
+        compareFn,
+      );
+}
+
+/**
+ * Finds the item that would be at `index` if `data` were sorted, by
+ * partitioning only the range that contains it.
+ *
+ * @see https://en.wikipedia.org/wiki/Quickselect
+ */
+function quickSelect<T>(
+  data: Array<T>,
+  left: number,
+  right: number,
+  index: number,
+  compareFn: CompareFunction<T>,
+): T {
+  if (left === right) {
+    return data[left]!;
+  }
+
+  const pivotIndex = partition(data, left, right, compareFn);
+
+  return index === pivotIndex
+    ? // `partition` leaves the pivot at its sorted position, so if that is
+  // `index`, the pivot is the item.
+    data[index]!
+    : quickSelect(
+        data,
+        // We continue by recursing into the partition where index would be
+        index < pivotIndex
+          ? left
+          : pivotIndex + 1,
+        index < pivotIndex
+          ? pivotIndex - 1
+          : right,
+        index,
+        compareFn,
+      );
+}
+
+function partition<T>(
+  data: Array<T>,
+  left: number,
+  right: number,
+  compareFn: CompareFunction<T>,
+): number {
+  const pivot = data[right]!;
+
+  let i = left;
+  for (let j = left; j < right; j++) {
+    if (compareFn(data[j]!, pivot) < 0) {
+      // Items that sort before the pivot go to the front of the range.
+      swapInPlace(data, i, j);
+      i += 1;
+    }
+  }
+
+  swapInPlace(data, i, right);
+
+  // The location of the pivot by the end of the partition function.
+  return i;
 }

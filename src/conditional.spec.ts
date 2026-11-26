@@ -105,4 +105,16 @@ describe('runtime (dataLast)', () => {
 
     expect(value).toBe('center');
   });
+
+  it('runs the first case when it matches', () => {
+    expect(
+      pipe(
+        'Jokic',
+        conditional([
+          isDeepEqual('Jokic'),
+          () => 'center',
+        ], constant('bench')),
+      ),
+    ).toBe('center');
+  });
 });

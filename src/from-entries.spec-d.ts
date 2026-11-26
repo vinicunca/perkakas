@@ -203,4 +203,23 @@ describe('non-readonly inputs', () => {
 
     expectTypeOf(result).toEqualTypeOf<Record<string, 123>>();
   });
+
+  it('symbol keys', () => {
+    expectTypeOf(
+      fromEntries([
+        [
+          Symbol('a'),
+          123,
+        ],
+      ] as Array<[symbol, 123]>),
+    ).toEqualTypeOf<Record<symbol, 123>>();
+  });
+
+  it('string and number keys', () => {
+    expectTypeOf(
+      fromEntries([
+        ['a', 123],
+      ] as Array<[string | number, 123]>),
+    ).toEqualTypeOf<Record<string, 123>>();
+  });
 });
